@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { LabCommandHandlers } from './labs';
 import { ServiceCommandHandlers } from './services';
+import { BlockCommandHandlers } from './blocks';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateController, SubstrateService } from './substrate.handler';
 
@@ -9,19 +10,18 @@ import { SubstrateController, SubstrateService } from './substrate.handler';
   imports: [
     ElasticsearchModule.registerAsync({
       useFactory: async () => ({
-        node: process.env.ELASTICSEARCH_NODE
+        node: process.env.ELASTICSEARCH_NODE,
       }),
     }),
     CqrsModule,
   ],
   exports: [ElasticsearchModule],
-  controllers: [
-    SubstrateController,
-  ],
+  controllers: [SubstrateController],
   providers: [
     SubstrateService,
     ...LabCommandHandlers,
     ...ServiceCommandHandlers,
+    ...BlockCommandHandlers,
   ],
 })
 export class SubstrateModule {}
