@@ -88,14 +88,15 @@ export class SubstrateService implements OnModuleInit {
      * */
     const endBlock = currentBlockNumber;
     const chunkSize = 200;
-    let iStart = lastBlockNumber;
-    let iEnd = currentBlockNumber;
-    if (iEnd - iStart > chunkSize) {
-      iEnd = iStart + chunkSize;
+    let chunkStart = lastBlockNumber;
+    let chunkEnd = currentBlockNumber;
+    // If chunkEnd is more than chunkSize, set chunkEnd to chunkSize
+    if (chunkEnd - chunkStart > chunkSize) {
+      chunkEnd = chunkStart + chunkSize;
     }
-    while (iStart < endBlock) {
-      this.logger.log(`Syncing block ${iStart} - ${iEnd}`);
-      for (let i = iStart; i <= iEnd; i++) {
+    while (chunkStart < endBlock) {
+      this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
+      for (let i = chunkStart; i <= chunkEnd; i++) {
         // Get block by block number
         const blockHash = await this.api.rpc.chain.getBlockHash(i);
         const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
@@ -119,10 +120,15 @@ export class SubstrateService implements OnModuleInit {
         }
       }
       // Remember the last block number processed
-      await this.commandBus.execute(new SetLastBlockCommand(iEnd));
+      await this.commandBus.execute(new SetLastBlockCommand(chunkEnd));
 
-      iStart = iEnd + 1;
-      iEnd = iEnd + chunkSize > endBlock ? endBlock : iEnd + chunkSize;
+      // set chunkStart to 1 block after chunkEnd
+      chunkStart = chunkEnd + 1;
+      // if chunkEnd + chunkSize is more than endBlock,
+      // set chunkEnd to endBlock
+      // else set chunkEnd to (chunkEnd + chunkSize)
+      chunkEnd =
+        chunkEnd + chunkSize > endBlock ? endBlock : chunkEnd + chunkSize;
     }
   }
 }

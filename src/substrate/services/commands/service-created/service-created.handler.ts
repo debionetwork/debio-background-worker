@@ -13,11 +13,17 @@ export class ServiceCreatedHandler
   async execute(command: ServiceCreatedCommand) {
     const { services: service } = command;
 
+    /**
+     * FIXME:
+     * Before indexing service data, need to retrieve its lab data
+     * In order to get the lab's country and city.
+     * Currently, when handling service created event in sync block,
+     * There are cases where the lab data is not found
+     */
     let resp;
-    let hit = false;
-    const maxRetries = 5;
+    const maxRetries = 20;
     let tries = 0;
-    while (!hit && tries < maxRetries) {
+    while (tries < maxRetries) {
       tries += 1;
       resp = await this.elasticsearchService.search({
         index: 'labs',
@@ -28,7 +34,6 @@ export class ServiceCreatedHandler
         },
       });
       if (resp.body.hits.hits.length > 0) {
-        hit = true;
         break;
       }
     }
