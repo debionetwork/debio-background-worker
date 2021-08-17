@@ -5,20 +5,22 @@ import { LabRegisteredCommand } from './lab-registered.command';
 
 @Injectable()
 @CommandHandler(LabRegisteredCommand)
-export class LabRegisteredHandler implements ICommandHandler<LabRegisteredCommand> {
+export class LabRegisteredHandler
+  implements ICommandHandler<LabRegisteredCommand>
+{
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: LabRegisteredCommand) {
     const { labs: lab } = command;
     await this.elasticsearchService.index({
-        index: 'labs',
-        id: lab.account_id,
-        body: {
-          account_id: lab.account_id,
-          services: lab.services,
-          certifications: lab.certifications,
-          info: lab.info
-        }
-      });
+      index: 'labs',
+      id: lab.account_id,
+      body: {
+        account_id: lab.account_id,
+        services: lab.services,
+        certifications: lab.certifications,
+        info: lab.info,
+      },
+    });
   }
 }

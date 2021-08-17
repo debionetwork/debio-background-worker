@@ -5,7 +5,9 @@ import { ServiceDeletedCommand } from './service-deleted.command';
 
 @Injectable()
 @CommandHandler(ServiceDeletedCommand)
-export class ServiceDeletedHandler implements ICommandHandler<ServiceDeletedCommand> {
+export class ServiceDeletedHandler
+  implements ICommandHandler<ServiceDeletedCommand>
+{
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: ServiceDeletedCommand) {
@@ -20,13 +22,14 @@ export class ServiceDeletedHandler implements ICommandHandler<ServiceDeletedComm
       id: service.owner_id,
       body: {
         script: {
-          lang: "painless",
-          source: "ctx._source.services.remove(ctx._source.services.indexOf(params.id));",
+          lang: 'painless',
+          source:
+            'ctx._source.services.remove(ctx._source.services.indexOf(params.id));',
           params: {
-            id: service.id 
-          }
-        }
-      }
+            id: service.id,
+          },
+        },
+      },
     });
   }
 }
