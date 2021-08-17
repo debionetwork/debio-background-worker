@@ -1,8 +1,8 @@
-import { LabInfo } from "./lab-info";
+import { LabInfo } from './lab-info';
 
 export class Lab {
-    account_id: string;
-    services: string[];
-    certifications: string[];
-    info: LabInfo;
+  account_id: string;
+  services: string[];
+  certifications: string[];
+  info: LabInfo;
 }

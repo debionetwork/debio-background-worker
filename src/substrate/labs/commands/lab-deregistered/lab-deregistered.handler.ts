@@ -5,7 +5,9 @@ import { LabDeregisteredCommand } from './lab-deregistered.command';
 
 @Injectable()
 @CommandHandler(LabDeregisteredCommand)
-export class LabDeregisteredHandler implements ICommandHandler<LabDeregisteredCommand> {
+export class LabDeregisteredHandler
+  implements ICommandHandler<LabDeregisteredCommand>
+{
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: LabDeregisteredCommand) {
@@ -21,9 +23,9 @@ export class LabDeregisteredHandler implements ICommandHandler<LabDeregisteredCo
         query: {
           match: {
             owner_id: lab.account_id,
-          }
-        }
-      }
+          },
+        },
+      },
     });
   }
 }

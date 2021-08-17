@@ -11,16 +11,16 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
   async execute(command: LabUpdatedCommand) {
     const { labs: lab } = command;
     await this.elasticsearchService.update({
-        index: 'labs',
-        id: lab.account_id,
-        body: {
-          doc: {
-            account_id: lab.account_id,
-            services: lab.services,
-            certifications: lab.certifications,
-            info: lab.info
-          }
-        }
-      });
+      index: 'labs',
+      id: lab.account_id,
+      body: {
+        doc: {
+          account_id: lab.account_id,
+          services: lab.services,
+          certifications: lab.certifications,
+          info: lab.info,
+        },
+      },
+    });
   }
 }

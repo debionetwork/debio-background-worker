@@ -5,7 +5,9 @@ import { ServiceUpdatedCommand } from './service-updated.command';
 
 @Injectable()
 @CommandHandler(ServiceUpdatedCommand)
-export class ServiceUpdatedHandler implements ICommandHandler<ServiceUpdatedCommand> {
+export class ServiceUpdatedHandler
+  implements ICommandHandler<ServiceUpdatedCommand>
+{
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: ServiceUpdatedCommand) {
@@ -17,9 +19,9 @@ export class ServiceUpdatedHandler implements ICommandHandler<ServiceUpdatedComm
         doc: {
           id: service.id,
           owner_id: service.owner_id,
-          info: service.info
-        }
-      }
+          info: service.info,
+        },
+      },
     });
   }
 }
