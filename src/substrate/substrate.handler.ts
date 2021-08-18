@@ -45,11 +45,11 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async handleEvent(event: Event) {
-    this.logger.log(
-      `Handling substrate event: ${event.section}.${event.method}`,
-    );
     const eventSection = eventRoutes[event.section];
     if (eventSection) {
+      this.logger.log(
+        `Handling substrate event: ${event.section}.${event.method}`,
+      );
       const eventMethod = new eventSection[event.method]();
       eventMethod[event.section] = event.data[0];
       await this.commandBus.execute(eventMethod);
@@ -57,17 +57,17 @@ export class SubstrateService implements OnModuleInit {
   }
 
   listenToEvents() {
-    this.api.query.system.events((events) => {
-      events.forEach((record) => {
-        const { event } = record;
-        this.handleEvent(event);
-      });
+    this.api.query.system.events(async (events) => {
+      for(let i = 0; i < events.length; i++){
+        const { event } = events[i];
+        await this.handleEvent(event);
+      }
     });
   }
 
   listenToNewBlock() {
-    this.api.rpc.chain.subscribeNewHeads((header: Header) => {
-      this.commandBus.execute(
+    this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
+      await this.commandBus.execute(
         new SetLastBlockCommand(header.number.toNumber()),
       );
     });

@@ -15,10 +15,12 @@ export class LabDeregisteredHandler
     await this.elasticsearchService.delete({
       index: 'labs',
       id: lab.account_id,
+      refresh: 'wait_for',
     });
 
     await this.elasticsearchService.deleteByQuery({
       index: 'services',
+      refresh: true,
       body: {
         query: {
           match: {

@@ -15,11 +15,13 @@ export class ServiceDeletedHandler
     await this.elasticsearchService.delete({
       index: 'services',
       id: service.id,
+      refresh: 'wait_for',
     });
 
     await this.elasticsearchService.update({
       index: 'labs',
       id: service.owner_id,
+      refresh: 'wait_for',
       body: {
         script: {
           lang: 'painless',

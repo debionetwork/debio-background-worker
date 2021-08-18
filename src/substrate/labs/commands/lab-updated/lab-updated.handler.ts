@@ -13,6 +13,7 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
     await this.elasticsearchService.update({
       index: 'labs',
       id: lab.account_id,
+      refresh: 'wait_for',
       body: {
         doc: {
           account_id: lab.account_id,

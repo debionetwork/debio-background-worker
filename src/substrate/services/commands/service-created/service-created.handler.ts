@@ -12,31 +12,14 @@ export class ServiceCreatedHandler
 
   async execute(command: ServiceCreatedCommand) {
     const { services: service } = command;
-
-    /**
-     * FIXME:
-     * Before indexing service data, need to retrieve its lab data
-     * In order to get the lab's country and city.
-     * Currently, when handling service created event in sync block,
-     * There are cases where the lab data is not found
-     */
-    let resp;
-    const maxRetries = 20;
-    let tries = 0;
-    while (tries < maxRetries) {
-      tries += 1;
-      resp = await this.elasticsearchService.search({
-        index: 'labs',
-        body: {
-          query: {
-            match: { _id: service.owner_id.toString() },
-          },
+    const resp = await this.elasticsearchService.search({
+      index: 'labs',
+      body: {
+        query: {
+          match: { _id: service.owner_id.toString() },
         },
-      });
-      if (resp.body.hits.hits.length > 0) {
-        break;
-      }
-    }
+      },
+    });
 
     let serviceBody = {
       id: service.id,
@@ -55,26 +38,20 @@ export class ServiceCreatedHandler
         country,
         city,
       };
-    } catch (err) {
-      console.log(err);
-    }
-
-    try {
+      
       await this.elasticsearchService.index({
         index: 'services',
         id: service.id,
+        refresh: 'wait_for',
         body: {
           ...serviceBody,
         },
       });
-    } catch (err) {
-      console.log(err);
-    }
-
-    try {
+      
       await this.elasticsearchService.update({
         index: 'labs',
         id: service.owner_id,
+        refresh: 'wait_for',
         body: {
           script: {
             lang: 'painless',
@@ -84,7 +61,6 @@ export class ServiceCreatedHandler
             },
           },
         },
-        retry_on_conflict: 6,
       });
     } catch (err) {
       console.log("[this.elasticsearchService.update({index: 'labs', })]", err);
