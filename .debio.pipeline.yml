@@ -130,19 +130,19 @@ steps:
 kind: secret
 name: devel_host
 get:
-  path: drone_development/faucet
+  path: drone_development/deploy_target
   name: devel_host
 ---
 kind: secret
 name: devel_key
 get:
-  path: drone_development/faucet
+  path: drone_development/deploy_target
   name: devel_key
 ---
 kind: secret
 name: devel_uname
 get:
-  path: drone_development/faucet
+  path: drone_development/deploy_target
   name: devel_uname
 ---
 kind: secret
