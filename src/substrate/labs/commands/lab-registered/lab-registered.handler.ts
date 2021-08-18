@@ -14,6 +14,7 @@ export class LabRegisteredHandler
     const { labs: lab } = command;
     await this.elasticsearchService.index({
       index: 'labs',
+      refresh: 'wait_for',
       id: lab.account_id,
       body: {
         account_id: lab.account_id,

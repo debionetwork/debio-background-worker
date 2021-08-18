@@ -15,6 +15,7 @@ export class ServiceUpdatedHandler
     await this.elasticsearchService.update({
       index: 'services',
       id: service.id,
+      refresh: 'wait_for',
       body: {
         doc: {
           id: service.id,
