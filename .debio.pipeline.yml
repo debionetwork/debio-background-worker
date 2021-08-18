@@ -33,7 +33,7 @@ steps:
       - /data/drone_data/debio_toolkit -approval -repo=debionetwork/debio-indexer -id=${DRONE_PULL_REQUEST}
     when:
       branch:
-        - development
+        - master
 
   - name: build - devel
     pull: if-not-exists
@@ -51,7 +51,7 @@ steps:
       - docker push hub.debio.network/debio_indexer_dev:latest
     when:
       branch:
-        - development
+        - master
 
   - name: merge pull request
     pull: if-not-exists
@@ -63,7 +63,7 @@ steps:
       - /data/drone_data/debio_toolkit -merge -repo=debionetwork/debio-indexer -id=${DRONE_PULL_REQUEST}
     when:
       branch:
-        - development
+        - master
 
   - name: reload service - devel
     pull: if-not-exists
@@ -85,7 +85,7 @@ steps:
         - docker run -d --network=host --name=debio_indexer_dev --env=DEBIOENV=development -v /etc/localtime:/etc/localtime:ro --restart=always hub.debio.network/debio_indexer_dev:latest
     when:
       branch:
-        - development
+        - master
 
   - name: notify deployment
     image: appleboy/drone-discord
@@ -124,7 +124,7 @@ steps:
     when:
       status: [ success, failure ]
       branch:
-        - development
+        - master
 
 ---
 kind: secret
