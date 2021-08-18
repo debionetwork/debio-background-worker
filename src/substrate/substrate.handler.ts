@@ -1,5 +1,5 @@
 import types from '../../types.json';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Controller } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Header, Event } from '@polkadot/types/interfaces';
@@ -14,7 +14,7 @@ import {
   ServiceUpdatedCommand,
   ServiceDeletedCommand,
 } from './services';
-import { SetLastBlockCommand, GetLastBlockCommand } from './blocks';
+import { SetLastBlockCommand, GetLastBlockQuery } from './blocks';
 
 const eventRoutes = {
   labs: {
@@ -33,7 +33,8 @@ const eventRoutes = {
 export class SubstrateService implements OnModuleInit {
   private api: ApiPromise;
   private readonly logger: Logger = new Logger(SubstrateService.name);
-  constructor(private commandBus: CommandBus) {}
+  constructor(private commandBus: CommandBus,
+    private queryBus: QueryBus) {}
 
   async onModuleInit() {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
@@ -75,8 +76,8 @@ export class SubstrateService implements OnModuleInit {
   async syncBlock() {
     let lastBlockNumber = 1;
     try {
-      lastBlockNumber = await this.commandBus.execute(
-        new GetLastBlockCommand(),
+      lastBlockNumber = await this.queryBus.execute(
+        new GetLastBlockQuery(),
       );
     } catch (err) {
       this.logger.log(err);

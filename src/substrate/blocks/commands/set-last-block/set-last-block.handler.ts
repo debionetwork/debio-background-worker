@@ -14,6 +14,7 @@ export class SetLastBlockHandler
     await this.elasticsearchService.index({
       index: 'last-block-number',
       id: 'last-block-number',
+      refresh: 'wait_for',
       body: {
         last_block_number: command.blockNumber,
       },

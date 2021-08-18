@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, IQueryHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { GetLastBlockCommand } from './get-last-block.command';
+import { GetLastBlockQuery } from './get-last-block.query';
 
 @Injectable()
-@CommandHandler(GetLastBlockCommand)
+@CommandHandler(GetLastBlockQuery)
 export class GetLastBlockHandler
-  implements ICommandHandler<GetLastBlockCommand>
+  implements IQueryHandler<GetLastBlockQuery>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
