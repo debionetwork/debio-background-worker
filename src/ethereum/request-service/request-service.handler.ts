@@ -3,7 +3,6 @@ import { Controller } from '@nestjs/common';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import {
   EthersContract,
-  EthersSigner,
   SmartContract,
 } from 'nestjs-ethers';
 import { SetLastBlockCommand, GetLastBlockQuery } from './blocks';
@@ -20,7 +19,6 @@ export class RequestServiceService implements OnModuleInit {
   private readonly logger: Logger = new Logger(RequestServiceService.name);
   constructor(
     private readonly ethersContract: EthersContract,
-    private readonly ethersSigner: EthersSigner,
     private commandBus: CommandBus,
     private queryBus: QueryBus,
   ) {}
@@ -84,10 +82,10 @@ export class RequestServiceService implements OnModuleInit {
     while (chunkStart < chunkEnd) {
       this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
       
-      this.contract.filters.Transfer(
-        null,
-        '0x42D57aAA086Ee6575Ddd3b502af1b07aEa91E495',
-      );
+      // this.contract.filters.Transfer(
+      //   null,
+      //   '0x42D57aAA086Ee6575Ddd3b502af1b07aEa91E495',
+      // );
 
       // Remember the last block number processed
       await this.commandBus.execute(new SetLastBlockCommand(chunkEnd));

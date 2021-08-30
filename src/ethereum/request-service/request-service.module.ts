@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { EthersModule } from 'nestjs-ethers';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
+import { RequestServiceCommandHandlers } from './request-service';
 import { RequestServiceController, RequestServiceService } from './request-service.handler';
 
 @Module({
@@ -21,6 +23,9 @@ import { RequestServiceController, RequestServiceService } from './request-servi
   controllers: [RequestServiceController],
   providers: [
     RequestServiceService,
+    ...BlockCommandHandlers,
+    ...BlockQueryHandlers,
+    ...RequestServiceCommandHandlers
   ],
 })
 export class RequestServiceModule {}

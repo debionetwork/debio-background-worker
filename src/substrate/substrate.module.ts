@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { LabCommandHandlers } from './labs';
 import { ServiceCommandHandlers } from './services';
-import { BlockCommandHandlers } from './blocks';
+import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateController, SubstrateService } from './substrate.handler';
 
@@ -22,6 +22,7 @@ import { SubstrateController, SubstrateService } from './substrate.handler';
     ...LabCommandHandlers,
     ...ServiceCommandHandlers,
     ...BlockCommandHandlers,
+    ...BlockQueryHandlers
   ],
 })
 export class SubstrateModule {}

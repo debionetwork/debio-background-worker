@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CommandHandler, IQueryHandler } from '@nestjs/cqrs';
+import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { GetLastBlockQuery } from './get-last-block.query';
 
 @Injectable()
-@CommandHandler(GetLastBlockQuery)
+@QueryHandler(GetLastBlockQuery)
 export class GetLastBlockHandler
   implements IQueryHandler<GetLastBlockQuery>
 {
