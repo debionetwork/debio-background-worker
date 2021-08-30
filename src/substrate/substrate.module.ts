@@ -1,21 +1,14 @@
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
 import { LabCommandHandlers } from './labs';
 import { ServiceCommandHandlers } from './services';
+import { CommonModule } from 'src/common/common.module';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateController, SubstrateService } from './substrate.handler';
 
 @Module({
-  imports: [
-    ElasticsearchModule.registerAsync({
-      useFactory: async () => ({
-        node: process.env.ELASTICSEARCH_NODE,
-      }),
-    }),
-    CqrsModule,
+  imports:[
+    CommonModule,
   ],
-  exports: [ElasticsearchModule],
   controllers: [SubstrateController],
   providers: [
     SubstrateService,

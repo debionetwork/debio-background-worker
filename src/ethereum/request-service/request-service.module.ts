@@ -1,25 +1,18 @@
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
 import { EthersModule } from 'nestjs-ethers';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
+import { CommonModule } from 'src/common/common.module';
 import { RequestServiceCommandHandlers } from './request-service';
+import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { RequestServiceController, RequestServiceService } from './request-service.handler';
 
 @Module({
-  imports: [    
+  imports: [
     EthersModule.forRoot({
       network: process.env.WEB3_RPC,
       useDefaultProvider: true,
     }),
-    ElasticsearchModule.registerAsync({
-      useFactory: async () => ({
-        node: process.env.ELASTICSEARCH_NODE,
-      }),
-    }),
-    CqrsModule,
+    CommonModule,
   ],
-  exports: [ElasticsearchModule],
   controllers: [RequestServiceController],
   providers: [
     RequestServiceService,

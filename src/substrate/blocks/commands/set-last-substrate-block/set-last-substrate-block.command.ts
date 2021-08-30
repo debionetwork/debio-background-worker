@@ -1,3 +1,3 @@
-export class SetLastBlockCommand {
+export class SetLastSubstrateBlockCommand {
   constructor(public readonly blockNumber: number) {}
 }

@@ -5,7 +5,7 @@ import {
   EthersContract,
   SmartContract,
 } from 'nestjs-ethers';
-import { SetLastBlockCommand, GetLastBlockQuery } from './blocks';
+import { SetLastRequestServiceBlockCommand, GetLastRequestServiceBlockQuery } from './blocks';
 import { CreateServiceRequestCommand } from './request-service';
 import ABI from './request-service-abi.json';
 
@@ -46,8 +46,9 @@ export class RequestServiceService implements OnModuleInit {
 
   listenToNewBlock() {
     this.contract.provider.on('block', async (blockNumber) => {
+      this.logger.log(`Syncing Request Service Block: ${blockNumber}`)
       await this.commandBus.execute(
-        new SetLastBlockCommand(blockNumber),
+        new SetLastRequestServiceBlockCommand(blockNumber),
       );
     });
   }
@@ -59,8 +60,9 @@ export class RequestServiceService implements OnModuleInit {
     let lastBlockNumber = minimalStartingBlock;
     try {
       const savedLastBlock = await this.queryBus.execute(
-        new GetLastBlockQuery(),
+        new GetLastRequestServiceBlockQuery(),
       );
+      this.logger.log(savedLastBlock)
       if(savedLastBlock > minimalStartingBlock){
         lastBlockNumber = savedLastBlock
       }
@@ -68,11 +70,12 @@ export class RequestServiceService implements OnModuleInit {
       this.logger.log(err);
     }
     const endBlock = await this.contract.provider.getBlockNumber();
+    this.logger.log(endBlock)
     
     /**
      * Process logs in chunks of blocks
      * */
-    const chunkSize = 200;
+    const chunkSize = 10000;
     let chunkStart = lastBlockNumber;
     let chunkEnd = endBlock;
     // If chunkEnd is more than chunkSize, set chunkEnd to chunkSize
@@ -88,7 +91,7 @@ export class RequestServiceService implements OnModuleInit {
       // );
 
       // Remember the last block number processed
-      await this.commandBus.execute(new SetLastBlockCommand(chunkEnd));
+      await this.commandBus.execute(new SetLastRequestServiceBlockCommand(chunkEnd));
 
       // set chunkStart to 1 block after chunkEnd
       chunkStart = chunkEnd + 1;

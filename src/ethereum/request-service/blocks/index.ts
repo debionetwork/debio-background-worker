@@ -1,13 +1,13 @@
-export * from './commands/set-last-block/set-last-block.command';
-export * from './queries/get-last-block/get-last-block.query';
+export * from './commands/set-last-request-service-block/set-last-request-service-block.command';
+export * from './queries/get-last-request-service-block/get-last-request-service-block.query';
 
-import { SetLastBlockHandler } from './commands/set-last-block/set-last-block.handler';
-import { GetLastBlockHandler } from './queries/get-last-block/get-last-block.handler';
+import { SetLastRequestServiceBlockHandler } from './commands/set-last-request-service-block/set-last-request-service-block.handler';
+import { GetLastRequestServiceBlockHandler } from './queries/get-last-request-service-block/get-last-request-service-block.handler';
 
 
 export const BlockCommandHandlers = [
-    SetLastBlockHandler
+    SetLastRequestServiceBlockHandler
 ];
 export const BlockQueryHandlers = [
-    GetLastBlockHandler
+    GetLastRequestServiceBlockHandler
 ];

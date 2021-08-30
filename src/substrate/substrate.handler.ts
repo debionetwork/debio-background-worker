@@ -14,7 +14,7 @@ import {
   ServiceUpdatedCommand,
   ServiceDeletedCommand,
 } from './services';
-import { SetLastBlockCommand, GetLastBlockQuery } from './blocks';
+import { SetLastSubstrateBlockCommand, GetLastSubstrateBlockQuery } from './blocks';
 
 const eventRoutes = {
   labs: {
@@ -67,8 +67,9 @@ export class SubstrateService implements OnModuleInit {
 
   listenToNewBlock() {
     this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
+      this.logger.log(`Syncing Substrate Block: ${header.number.toNumber()}`)
       await this.commandBus.execute(
-        new SetLastBlockCommand(header.number.toNumber()),
+        new SetLastSubstrateBlockCommand(header.number.toNumber()),
       );
     });
   }
@@ -77,7 +78,7 @@ export class SubstrateService implements OnModuleInit {
     let lastBlockNumber = 1;
     try {
       lastBlockNumber = await this.queryBus.execute(
-        new GetLastBlockQuery(),
+        new GetLastSubstrateBlockQuery(),
       );
     } catch (err) {
       this.logger.log(err);
@@ -88,7 +89,7 @@ export class SubstrateService implements OnModuleInit {
      * Process logs in chunks of blocks
      * */
     const endBlock = currentBlockNumber;
-    const chunkSize = 200;
+    const chunkSize = 1000;
     let chunkStart = lastBlockNumber;
     let chunkEnd = currentBlockNumber;
     // If chunkEnd is more than chunkSize, set chunkEnd to chunkSize
@@ -121,7 +122,7 @@ export class SubstrateService implements OnModuleInit {
         }
       }
       // Remember the last block number processed
-      await this.commandBus.execute(new SetLastBlockCommand(chunkEnd));
+      await this.commandBus.execute(new SetLastSubstrateBlockCommand(chunkEnd));
 
       // set chunkStart to 1 block after chunkEnd
       chunkStart = chunkEnd + 1;

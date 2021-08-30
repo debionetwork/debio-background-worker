@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { SetLastBlockCommand } from './set-last-block.command';
+import { SetLastSubstrateBlockCommand } from './set-last-substrate-block.command';
 
 @Injectable()
-@CommandHandler(SetLastBlockCommand)
-export class SetLastBlockHandler
-  implements ICommandHandler<SetLastBlockCommand>
+@CommandHandler(SetLastSubstrateBlockCommand)
+export class SetLastSubstrateBlockHandler
+  implements ICommandHandler<SetLastSubstrateBlockCommand>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: SetLastBlockCommand) {
+  async execute(command: SetLastSubstrateBlockCommand) {
     await this.elasticsearchService.index({
-      index: 'last-block-number',
-      id: 'last-block-number',
+      index: 'last-block-number-substrate',
+      id: 'last-block-number-substrate',
       refresh: 'wait_for',
       body: {
         last_block_number: command.blockNumber,
