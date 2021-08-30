@@ -5,6 +5,9 @@ import { CommonModule } from 'src/common/common.module';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { SubstrateController, SubstrateService } from './substrate.handler';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
+
 @Module({
   imports:[
     CommonModule,

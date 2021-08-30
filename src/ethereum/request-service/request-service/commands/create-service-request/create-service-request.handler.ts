@@ -13,10 +13,10 @@ export class CreateServiceRequestHandler
   async execute(command: CreateServiceRequestCommand) {
     await this.elasticsearchService.index({
       index: 'create-service-request',
-      id: 'create-service-request',
+      id: command.request.hash,
       refresh: 'wait_for',
       body: {
-        request: command.args[0],
+        request: command.request,
       },
     });
   }

@@ -5,6 +5,9 @@ import { RequestServiceCommandHandlers } from './request-service';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { RequestServiceController, RequestServiceService } from './request-service.handler';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
+
 @Module({
   imports: [
     EthersModule.forRoot({

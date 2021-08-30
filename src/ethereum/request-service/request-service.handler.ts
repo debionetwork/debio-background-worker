@@ -38,8 +38,9 @@ export class RequestServiceService implements OnModuleInit {
     // Map events
     for(var key in eventRoutes){
       this.contract.on(key, async (...args) => {
-        const eventMethod = new eventRoutes[key](args);
-        await this.commandBus.execute(eventMethod);
+        const eventMethod = new eventRoutes[key](args[0]);
+        this.logger.log(`Received ${key} with data: ${args[0]}`)
+        this.commandBus.execute(eventMethod)
       });
     }
   }
@@ -62,7 +63,6 @@ export class RequestServiceService implements OnModuleInit {
       const savedLastBlock = await this.queryBus.execute(
         new GetLastRequestServiceBlockQuery(),
       );
-      this.logger.log(savedLastBlock)
       if(savedLastBlock > minimalStartingBlock){
         lastBlockNumber = savedLastBlock
       }
@@ -70,7 +70,6 @@ export class RequestServiceService implements OnModuleInit {
       this.logger.log(err);
     }
     const endBlock = await this.contract.provider.getBlockNumber();
-    this.logger.log(endBlock)
     
     /**
      * Process logs in chunks of blocks
