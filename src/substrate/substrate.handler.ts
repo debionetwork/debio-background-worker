@@ -14,7 +14,7 @@ import {
   ServiceUpdatedCommand,
   ServiceDeletedCommand,
 } from './services';
-import { SetLastSubstrateBlockCommand, GetLastSubstrateBlockQuery } from './blocks';
+import { SetLastSubstrateBlockCommand, DeleteAllIndexesCommand, GetLastSubstrateBlockQuery } from './blocks';
 
 const eventRoutes = {
   labs: {
@@ -67,6 +67,33 @@ export class SubstrateService implements OnModuleInit {
 
   listenToNewBlock() {
     this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
+      // check if env is development
+      if(process.env.NODE_ENV === 'development') {
+        this.logger.log('running some code in development mode');
+
+        let lastBlockNumber = 1;
+
+        try {
+          lastBlockNumber = await this.queryBus.execute(
+            new GetLastSubstrateBlockQuery(),
+          );
+        } catch(err) {
+          this.logger.log(err);
+        }
+
+        // condition to check if last_block_number is higher than next block number
+        if(lastBlockNumber > header.number.toNumber()) {
+          try {
+            // delete all indexes
+            await this.commandBus.execute(
+              new DeleteAllIndexesCommand(),
+            );
+          } catch(err) {
+            this.logger.log(err);
+          }
+        }
+      }
+      
       this.logger.log(`Syncing Substrate Block: ${header.number.toNumber()}`)
       await this.commandBus.execute(
         new SetLastSubstrateBlockCommand(header.number.toNumber()),
