@@ -69,8 +69,6 @@ export class SubstrateService implements OnModuleInit {
     this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
       // check if env is development
       if(process.env.NODE_ENV === 'development') {
-        this.logger.log('running some code in development mode');
-
         let lastBlockNumber = 1;
 
         try {
