@@ -14,6 +14,14 @@ import {
   ServiceUpdatedCommand,
   ServiceDeletedCommand,
 } from './services';
+import {
+  OrderCancelledCommand,
+  OrderCreatedCommand,
+  OrderFailedCommand,
+  OrderFulfilledCommand,
+  OrderPaidCommand,
+  OrderRefundedCommand
+} from './orders';
 import { SetLastSubstrateBlockCommand, DeleteAllIndexesCommand, GetLastSubstrateBlockQuery } from './blocks';
 
 const eventRoutes = {
@@ -21,6 +29,14 @@ const eventRoutes = {
     LabRegistered: LabRegisteredCommand,
     LabUpdated: LabUpdatedCommand,
     LabDeregistered: LabDeregisteredCommand,
+  },
+  orders: {
+    OrderCreated: OrderCreatedCommand,
+    OrderPaid: OrderPaidCommand,
+    OrderFulfilled: OrderFulfilledCommand,
+    OrderRefunded: OrderRefundedCommand,
+    OrderCancelled: OrderCancelledCommand,
+    OrderFailed: OrderFailedCommand,
   },
   services: {
     ServiceCreated: ServiceCreatedCommand,
@@ -44,7 +60,18 @@ export class SubstrateService implements OnModuleInit {
     });
   }
 
+
   async handleEvent(event: Event) {
+    this.logger.log(
+      `Handling substrate event: ${event.section}.${event.method}`,
+    );
+      console.log(event.data[0]);
+    // if(event.section === 'orders') {
+    //   console.log(event.data[0]);
+    //   console.log(event.data[0]['status']['isUnpaid']);
+    //   console.log(event.data[0]['status']['asUnpaid']);
+    //   console.log(event.data[0]['created_at']);
+    // }
     const eventSection = eventRoutes[event.section];
     if (eventSection) {
       this.logger.log(
