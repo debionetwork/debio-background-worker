@@ -69,26 +69,20 @@ export class SubstrateService implements OnModuleInit {
     this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
       // check if env is development
       if(process.env.NODE_ENV === 'development') {
-        let lastBlockNumber = 1;
-
         try {
-          lastBlockNumber = await this.queryBus.execute(
+          let lastBlockNumber = await this.queryBus.execute(
             new GetLastSubstrateBlockQuery(),
           );
+
+          // check if last_block_number is higher than next block number
+          if(lastBlockNumber > header.number.toNumber()) {
+              // delete all indexes
+              await this.commandBus.execute(
+                new DeleteAllIndexesCommand(),
+              );
+          }
         } catch(err) {
           this.logger.log(err);
-        }
-
-        // condition to check if last_block_number is higher than next block number
-        if(lastBlockNumber > header.number.toNumber()) {
-          try {
-            // delete all indexes
-            await this.commandBus.execute(
-              new DeleteAllIndexesCommand(),
-            );
-          } catch(err) {
-            this.logger.log(err);
-          }
         }
       }
       
