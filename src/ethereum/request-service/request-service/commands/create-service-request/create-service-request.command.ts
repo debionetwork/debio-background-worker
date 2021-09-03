@@ -1,9 +1,8 @@
-import { RequestModel } from "../../models/request";
+import { RequestModel } from '../../models/request';
 
 export class CreateServiceRequestCommand {
   request: RequestModel;
-  constructor(args: Array<Object>) {
+  constructor(args: Array<unknown>) {
     this.request = new RequestModel(args);
   }
 }
-  
