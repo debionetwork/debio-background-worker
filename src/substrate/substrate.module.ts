@@ -9,16 +9,14 @@ import { SubstrateController, SubstrateService } from './substrate.handler';
 require('dotenv').config();
 
 @Module({
-  imports:[
-    CommonModule,
-  ],
+  imports: [CommonModule],
   controllers: [SubstrateController],
   providers: [
     SubstrateService,
     ...LabCommandHandlers,
     ...ServiceCommandHandlers,
     ...BlockCommandHandlers,
-    ...BlockQueryHandlers
+    ...BlockQueryHandlers,
   ],
 })
 export class SubstrateModule {}

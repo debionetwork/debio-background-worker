@@ -14,9 +14,6 @@ require('dotenv').config();
     }),
     CqrsModule,
   ],
-  exports: [
-    ElasticsearchModule,
-    CqrsModule,
-  ],
+  exports: [ElasticsearchModule, CqrsModule],
 })
 export class CommonModule {}

@@ -38,7 +38,7 @@ export class ServiceCreatedHandler
         country,
         city,
       };
-      
+
       await this.elasticsearchService.index({
         index: 'services',
         id: service.id,
@@ -47,7 +47,7 @@ export class ServiceCreatedHandler
           ...serviceBody,
         },
       });
-      
+
       await this.elasticsearchService.update({
         index: 'labs',
         id: service.owner_id,
@@ -57,7 +57,7 @@ export class ServiceCreatedHandler
             lang: 'painless',
             source: 'ctx._source.services.add(params);',
             params: {
-	      ...serviceBody
+              ...serviceBody,
             },
           },
         },

@@ -1,11 +1,11 @@
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Controller } from '@nestjs/common';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import { EthersContract, SmartContract } from 'nestjs-ethers';
 import {
-  EthersContract,
-  SmartContract,
-} from 'nestjs-ethers';
-import { SetLastRequestServiceBlockCommand, GetLastRequestServiceBlockQuery } from './blocks';
+  SetLastRequestServiceBlockCommand,
+  GetLastRequestServiceBlockQuery,
+} from './blocks';
 import { CreateServiceRequestCommand } from './request-service';
 import ABI from './request-service-abi.json';
 
@@ -33,21 +33,21 @@ export class RequestServiceService implements OnModuleInit {
       this.logger.log(err);
     }
   }
-  
+
   listenToEvents() {
     // Map events
-    for(var key in eventRoutes){
+    for (const key in eventRoutes) {
       this.contract.on(key, async (...args) => {
         const eventMethod = new eventRoutes[key](args[0]);
-        this.logger.log(`Received ${key} with data: ${args[0]}`)
-        this.commandBus.execute(eventMethod)
+        this.logger.log(`Received ${key} with data: ${args[0]}`);
+        this.commandBus.execute(eventMethod);
       });
     }
   }
 
   listenToNewBlock() {
     this.contract.provider.on('block', async (blockNumber) => {
-      this.logger.log(`Syncing Request Service Block: ${blockNumber}`)
+      this.logger.log(`Syncing Request Service Block: ${blockNumber}`);
       await this.commandBus.execute(
         new SetLastRequestServiceBlockCommand(blockNumber),
       );
@@ -56,21 +56,23 @@ export class RequestServiceService implements OnModuleInit {
 
   async syncBlock() {
     // The furthest block is the minimalStartingBlock
-    const minimalStartingBlock: number = parseInt(process.env.MINIMAL_STARTING_BLOCK);
+    const minimalStartingBlock: number = parseInt(
+      process.env.MINIMAL_STARTING_BLOCK,
+    );
     // Set last block number to minimalStartingBlock by default
     let lastBlockNumber = minimalStartingBlock;
     try {
       const savedLastBlock = await this.queryBus.execute(
         new GetLastRequestServiceBlockQuery(),
       );
-      if(savedLastBlock > minimalStartingBlock){
-        lastBlockNumber = savedLastBlock
+      if (savedLastBlock > minimalStartingBlock) {
+        lastBlockNumber = savedLastBlock;
       }
     } catch (err) {
       this.logger.log(err);
     }
     const endBlock = await this.contract.provider.getBlockNumber();
-    
+
     /**
      * Process logs in chunks of blocks
      * */
@@ -83,14 +85,16 @@ export class RequestServiceService implements OnModuleInit {
     }
     while (chunkStart < chunkEnd) {
       this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
-      
+
       // this.contract.filters.Transfer(
       //   null,
       //   '0x42D57aAA086Ee6575Ddd3b502af1b07aEa91E495',
       // );
 
       // Remember the last block number processed
-      await this.commandBus.execute(new SetLastRequestServiceBlockCommand(chunkEnd));
+      await this.commandBus.execute(
+        new SetLastRequestServiceBlockCommand(chunkEnd),
+      );
 
       // set chunkStart to 1 block after chunkEnd
       chunkStart = chunkEnd + 1;

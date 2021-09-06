@@ -6,9 +6,6 @@ import { RequestServiceModule } from './ethereum/ethereum.module';
 require('dotenv').config();
 
 @Module({
-  imports: [
-    SubstrateModule,
-    RequestServiceModule,
-  ],
+  imports: [SubstrateModule, RequestServiceModule],
 })
 export class AppModule {}
