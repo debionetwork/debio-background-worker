@@ -11,13 +11,9 @@ export class DeleteAllIndexesHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute() {
-    console.log('deleteAllIndexesHandler');
-    try {
-      this.elasticsearchService.indices.delete({
+    return this.elasticsearchService.indices.delete({
         index: ['labs', 'services'],
-      });
-    } catch (err) {
-      console.log(err);
-    }
+        ignore_unavailable: true
+    });
   }
 }
