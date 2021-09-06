@@ -49,8 +49,7 @@ const eventRoutes = {
 export class SubstrateService implements OnModuleInit {
   private api: ApiPromise;
   private readonly logger: Logger = new Logger(SubstrateService.name);
-  constructor(private commandBus: CommandBus,
-    private queryBus: QueryBus) {}
+  constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   async onModuleInit() {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
@@ -85,7 +84,7 @@ export class SubstrateService implements OnModuleInit {
 
   listenToEvents() {
     this.api.query.system.events(async (events) => {
-      for(let i = 0; i < events.length; i++){
+      for (let i = 0; i < events.length; i++) {
         const { event } = events[i];
         await this.handleEvent(event);
       }
@@ -95,25 +94,24 @@ export class SubstrateService implements OnModuleInit {
   listenToNewBlock() {
     this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
       // check if env is development
-      if(process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === 'development') {
         try {
-          let lastBlockNumber = await this.queryBus.execute(
+          const lastBlockNumber = await this.queryBus.execute(
             new GetLastSubstrateBlockQuery(),
           );
 
           // check if last_block_number is higher than next block number
-          if(lastBlockNumber > header.number.toNumber()) {
-              // delete all indexes
-              await this.commandBus.execute(
-                new DeleteAllIndexesCommand(),
-              );
+          if (lastBlockNumber > header.number.toNumber()) {
+            console.log('haha');
+            // delete all indexes
+            await this.commandBus.execute(new DeleteAllIndexesCommand());
           }
-        } catch(err) {
+        } catch (err) {
           this.logger.log(err);
         }
       }
-      
-      this.logger.log(`Syncing Substrate Block: ${header.number.toNumber()}`)
+
+      this.logger.log(`Syncing Substrate Block: ${header.number.toNumber()}`);
       await this.commandBus.execute(
         new SetLastSubstrateBlockCommand(header.number.toNumber()),
       );

@@ -7,9 +7,7 @@ import { GetLastSubstrateBlockHandler } from './queries/get-last-substrate-block
 import { DeleteAllIndexesHandler } from './commands/delete-all-indexes/delete-all-indexes.handler';
 
 export const BlockCommandHandlers = [
-    SetLastSubstrateBlockHandler,
-    DeleteAllIndexesHandler
+  SetLastSubstrateBlockHandler,
+  DeleteAllIndexesHandler,
 ];
-export const BlockQueryHandlers = [
-    GetLastSubstrateBlockHandler
-];
+export const BlockQueryHandlers = [GetLastSubstrateBlockHandler];

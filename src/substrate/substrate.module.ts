@@ -10,9 +10,7 @@ import { OrderCommandHandlers } from './orders';
 require('dotenv').config();
 
 @Module({
-  imports:[
-    CommonModule,
-  ],
+  imports: [CommonModule],
   controllers: [SubstrateController],
   providers: [
     SubstrateService,
@@ -20,7 +18,7 @@ require('dotenv').config();
     ...ServiceCommandHandlers,
     ...OrderCommandHandlers,
     ...BlockCommandHandlers,
-    ...BlockQueryHandlers
+    ...BlockQueryHandlers,
   ],
 })
 export class SubstrateModule {}
