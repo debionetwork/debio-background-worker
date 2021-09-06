@@ -22,7 +22,11 @@ import {
   OrderPaidCommand,
   OrderRefundedCommand
 } from './orders';
-import { SetLastSubstrateBlockCommand, DeleteAllIndexesCommand, GetLastSubstrateBlockQuery } from './blocks';
+import { 
+  SetLastSubstrateBlockCommand, 
+  DeleteAllIndexesCommand, 
+  GetLastSubstrateBlockQuery
+} from './blocks';
 
 const eventRoutes = {
   labs: {
@@ -61,16 +65,6 @@ export class SubstrateService implements OnModuleInit {
 
 
   async handleEvent(event: Event) {
-    this.logger.log(
-      `Handling substrate event: ${event.section}.${event.method}`,
-    );
-      console.log(event.data[0]);
-    // if(event.section === 'orders') {
-    //   console.log(event.data[0]);
-    //   console.log(event.data[0]['status']['isUnpaid']);
-    //   console.log(event.data[0]['status']['asUnpaid']);
-    //   console.log(event.data[0]['created_at']);
-    // }
     const eventSection = eventRoutes[event.section];
     if (eventSection) {
       this.logger.log(
