@@ -13,8 +13,6 @@ export class OrderFailedHandler
 
   async execute(command: OrderFailedCommand) {
     const { orders: order } = command;
-
-    console.log(order.status == OrderStatus.Failed)
     
     return this.elasticsearchService.update({
       index: 'orders',
