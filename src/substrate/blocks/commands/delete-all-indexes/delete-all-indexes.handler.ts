@@ -12,7 +12,7 @@ export class DeleteAllIndexesHandler
 
   async execute() {
     return this.elasticsearchService.indices.delete({
-        index: ['labs', 'services'],
+        index: ['labs', 'services', 'orders'],
         ignore_unavailable: true
     });
   }

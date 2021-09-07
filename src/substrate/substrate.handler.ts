@@ -15,9 +15,17 @@ import {
   ServiceDeletedCommand,
 } from './services';
 import {
-  SetLastSubstrateBlockCommand,
-  DeleteAllIndexesCommand,
-  GetLastSubstrateBlockQuery,
+  OrderCancelledCommand,
+  OrderCreatedCommand,
+  OrderFailedCommand,
+  OrderFulfilledCommand,
+  OrderPaidCommand,
+  OrderRefundedCommand
+} from './orders';
+import { 
+  SetLastSubstrateBlockCommand, 
+  DeleteAllIndexesCommand, 
+  GetLastSubstrateBlockQuery
 } from './blocks';
 
 const eventRoutes = {
@@ -25,6 +33,14 @@ const eventRoutes = {
     LabRegistered: LabRegisteredCommand,
     LabUpdated: LabUpdatedCommand,
     LabDeregistered: LabDeregisteredCommand,
+  },
+  orders: {
+    OrderCreated: OrderCreatedCommand,
+    OrderPaid: OrderPaidCommand,
+    OrderFulfilled: OrderFulfilledCommand,
+    OrderRefunded: OrderRefundedCommand,
+    OrderCancelled: OrderCancelledCommand,
+    OrderFailed: OrderFailedCommand,
   },
   services: {
     ServiceCreated: ServiceCreatedCommand,
@@ -47,6 +63,7 @@ export class SubstrateService implements OnModuleInit {
     });
   }
 
+
   async handleEvent(event: Event) {
     const eventSection = eventRoutes[event.section];
     if (eventSection) {
@@ -55,7 +72,11 @@ export class SubstrateService implements OnModuleInit {
       );
       const eventMethod = new eventSection[event.method]();
       eventMethod[event.section] = event.data[0];
-      await this.commandBus.execute(eventMethod);
+      try {
+        await this.commandBus.execute(eventMethod);
+      } catch(err) {
+        this.logger.log(`Handling substrate catch : ${err.name}, ${err.message}, ${err.stack}`);
+      }
     }
   }
 

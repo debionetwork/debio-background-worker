@@ -4,6 +4,7 @@ import { ServiceCommandHandlers } from './services';
 import { CommonModule } from 'src/common/common.module';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { SubstrateController, SubstrateService } from './substrate.handler';
+import { OrderCommandHandlers } from './orders';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -15,6 +16,7 @@ require('dotenv').config();
     SubstrateService,
     ...LabCommandHandlers,
     ...ServiceCommandHandlers,
+    ...OrderCommandHandlers,
     ...BlockCommandHandlers,
     ...BlockQueryHandlers,
   ],
