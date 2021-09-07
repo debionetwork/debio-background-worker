@@ -8,7 +8,7 @@ import {
 } from './blocks';
 import { CreateServiceRequestCommand } from './request-service';
 import ABI from './request-service-abi.json';
-import { BlockMetadata } from './request-service/models/blockMetaData';
+import { BlockMetadata } from './request-service/models/blockMetadata';
 
 const eventRoutes = {
   ServiceRequestCreated: CreateServiceRequestCommand,
