@@ -72,7 +72,11 @@ export class SubstrateService implements OnModuleInit {
       );
       const eventMethod = new eventSection[event.method]();
       eventMethod[event.section] = event.data[0];
-      await this.commandBus.execute(eventMethod);
+      try {
+        await this.commandBus.execute(eventMethod);
+      } catch(err) {
+        this.logger.log(`Handling substrate catch : ${err.name}, ${err.message}, ${err.stack}`);
+      }
     }
   }
 
