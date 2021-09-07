@@ -8,6 +8,7 @@ import {
 } from './blocks';
 import { CreateServiceRequestCommand } from './request-service';
 import ABI from './request-service-abi.json';
+import { BlockMetadata } from './request-service/models/blockMetaData';
 
 const eventRoutes = {
   ServiceRequestCreated: CreateServiceRequestCommand,
@@ -38,11 +39,17 @@ export class RequestServiceService implements OnModuleInit {
     // Map events
     for (const key in eventRoutes) {
       this.contract.on(key, async (...args) => {
-        const eventMethod = new eventRoutes[key](args[0]);
-        this.logger.log(`Received ${key} with data: ${args[0]}`);
-        this.commandBus.execute(eventMethod);
+        const { blockNumber, blockHash, transactionHash } = args[1];
+        const blockMetadata = { blockNumber, blockHash, transactionHash };
+        this.handleEvent(key, args[0], blockMetadata);
       });
     }
+  }
+
+  handleEvent(key, eventArgs, blockMetadata: BlockMetadata) {
+    const eventMethod = new eventRoutes[key](eventArgs, blockMetadata);
+    this.logger.log(`Received ${key} with data: ${eventArgs}`);
+    this.commandBus.execute(eventMethod);
   }
 
   listenToNewBlock() {
@@ -86,10 +93,23 @@ export class RequestServiceService implements OnModuleInit {
     while (chunkStart < chunkEnd) {
       this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
 
-      // this.contract.filters.Transfer(
-      //   null,
-      //   '0x42D57aAA086Ee6575Ddd3b502af1b07aEa91E495',
-      // );
+      const serviceRequestCreatedFilter =
+        this.contract.filters.ServiceRequestCreated(null);
+      const serviceRequestCreatedEvents = await this.contract.queryFilter(
+        serviceRequestCreatedFilter,
+        chunkStart,
+        chunkEnd,
+      );
+      for (const event of serviceRequestCreatedEvents) {
+        const { args, blockNumber, blockHash, transactionHash } = event;
+        await this.handleEvent('ServiceRequestCreated', args[0], {
+          blockNumber,
+          blockHash,
+          transactionHash,
+        });
+      }
+      // TODO:
+      // Handle Other Service Request Events
 
       // Remember the last block number processed
       await this.commandBus.execute(
