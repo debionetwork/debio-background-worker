@@ -38,6 +38,7 @@ export class OrderCreatedHandler
     })();
 
     const service_info = ( () => {
+      console.log(service.body.hits.hits)
       const { _source } = service.body.hits.hits[0];
       const { info } = _source;
       return info
