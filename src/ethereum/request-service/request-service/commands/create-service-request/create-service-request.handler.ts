@@ -17,6 +17,7 @@ export class CreateServiceRequestHandler
       refresh: 'wait_for',
       body: {
         request: command.request,
+        blockMetadata: command.blockMetadata,
       },
     });
   }
