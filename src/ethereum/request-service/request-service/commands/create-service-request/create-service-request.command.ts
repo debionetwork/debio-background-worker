@@ -1,4 +1,4 @@
-import { BlockMetadata } from '../../models/blockMetaData';
+import { BlockMetadata } from '../../models/blockMetadata';
 import { RequestModel } from '../../models/request';
 
 export class CreateServiceRequestCommand {
