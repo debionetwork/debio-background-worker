@@ -24,5 +24,23 @@ export class ServiceUpdatedHandler
         },
       },
     });
+
+    await this.elasticsearchService.updateByQuery({
+      index: 'orders',
+      body: {
+        query: {
+          match: { 
+            service_id: service.id.toString(),
+          }
+        },
+        script: {
+          source: "ctx._source.service_info = params.new_service_info",
+          lang: 'painless',
+          params: {
+            new_service_info: service.info
+          }
+        }
+      }
+    });
   }
 }
