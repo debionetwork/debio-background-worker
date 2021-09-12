@@ -17,11 +17,28 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
       body: {
         doc: {
           account_id: lab.account_id,
-          services: lab.services,
           certifications: lab.certifications,
           info: lab.info,
         },
       },
+    });
+
+    await this.elasticsearchService.updateByQuery({
+      index: 'orders',
+      body: {
+        query: {
+          match: { 
+            seller_id: lab.account_id.toString(),
+          }
+        },
+        script: {
+          source: "ctx._source.lab_info = params.new_lab_info",
+          lang: 'painless',
+          params: {
+            new_lab_info: lab.info
+          }
+        }
+      }
     });
   }
 }

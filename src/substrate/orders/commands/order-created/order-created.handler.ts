@@ -12,6 +12,36 @@ export class OrderCreatedHandler
 
   async execute(command: OrderCreatedCommand) {
     const { orders: order } = command;
+
+    const lab = await this.elasticsearchService.search({
+      index: 'labs',
+      body: {
+        query: {
+          match: { _id: order.seller_id.toString() },
+        },
+      },
+    });
+
+    const service = await this.elasticsearchService.search({
+      index: 'services',
+      body: {
+        query: {
+          match: { _id: order.service_id.toString() },
+        },
+      },
+    });
+    
+    const lab_info = ( () => {
+      const { _source } = lab.body.hits.hits[0];
+      const { info } = _source;
+      return info
+    })();
+
+    const service_info = ( () => {
+      const { _source } = service.body.hits.hits[0];
+      const { info } = _source;
+      return info
+    })();
     
     return this.elasticsearchService.index({
       index: 'orders',
@@ -29,7 +59,9 @@ export class OrderCreatedHandler
         additional_prices: order.additional_prices,
         status: order.status,
         created_at: order.created_at,
-        updated_at: order.updated_at
+        updated_at: order.updated_at,
+        lab_info: lab_info,
+        service_info: service_info,
       },
     }).catch((error) => {
       throw(error)
