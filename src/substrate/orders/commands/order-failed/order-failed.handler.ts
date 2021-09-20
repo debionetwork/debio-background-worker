@@ -30,9 +30,9 @@ export class OrderFailedHandler
           prices: order.prices,
           additional_prices: order.additional_prices,
           status: order.status,
-          created_at: order.created_at,
-          updated_at: order.updated_at
-        }
+          created_at: order.created_at.toString(),
+          updated_at: order.updated_at.toString(),
+        },
       },
     }).catch((error) => {
       throw(error)
