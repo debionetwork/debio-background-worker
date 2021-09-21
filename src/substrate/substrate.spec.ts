@@ -1,6 +1,5 @@
 import { CommandBus, CqrsModule } from "@nestjs/cqrs";
 import { Test, TestingModule } from "@nestjs/testing";
-import { BlockCommandHandlers, BlockQueryHandlers } from "../ethereum/request-service/blocks";
 import { CommonModule } from "../common/common.module";
 import { DeleteAllIndexesHandler } from "./blocks/commands/delete-all-indexes/delete-all-indexes.handler";
 import { SetLastSubstrateBlockHandler } from "./blocks/commands/set-last-substrate-block/set-last-substrate-block.handler";
