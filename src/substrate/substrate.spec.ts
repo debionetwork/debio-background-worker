@@ -358,7 +358,9 @@ describe("Substrate Indexer", () => {
 			expect(labUpdateHandlerSpy).toBeCalled();
 			expect(labUpdateHandlerSpy).toBeCalledWith(labUpdatedCommand);
 		});
+	});
 
+	describe("Service Handler", () => {
 		it("Service Created Handler", async () => {
 			const service: Services = createMockService();
 			
@@ -388,7 +390,9 @@ describe("Substrate Indexer", () => {
 			expect(serviceUpdatedHandlerSpy).toBeCalled();
 			expect(serviceUpdatedHandlerSpy).toBeCalledWith(serviceUpdatedCommand);
 		});
+	});
 
+	describe("Order Handler", () => {
 		it("Order Cancelled Handler", async () => {
 			const order: Orders = createMockOrder(OrderStatus.Cancelled);
 			
@@ -448,7 +452,9 @@ describe("Substrate Indexer", () => {
 			expect(orderRefundedHandlerSpy).toBeCalled();
 			expect(orderRefundedHandlerSpy).toBeCalledWith(orderRefundedCommand);
 		});
+	});
 
+	describe("Block", () => {
 		it("Delete All Indexes Handler", async () => {
 			const deleteAllIndexesHandlerSpy = jest.spyOn(deleteAllIndexesHandler, 'execute');
 			await deleteAllIndexesHandler.execute();
