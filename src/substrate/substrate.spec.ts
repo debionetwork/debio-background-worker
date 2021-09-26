@@ -30,7 +30,19 @@ import { Orders } from "./orders/models/orders";
 import { Currency } from "./orders/models/currency";
 import { OrderStatus } from "./orders/models/order-status";
 import { GetLastSubstrateBlockHandler } from "./blocks/queries/get-last-substrate-block/get-last-substrate-block.handler";
-import { SetLastSubstrateBlockCommand } from "./blocks";
+import { CancelOrderBlockCommand, CreateOrderBlockCommand, CreateServiceBlockCommand, DeleteServiceBlockCommand, DeregisterLabBlockCommand, FailedOrderBlockCommand, FulfillOrderBlockCommand, PaidOrderBlockCommand, RefundedOrderBlockCommand, RegisterLabBlockCommand, SetLastSubstrateBlockCommand, UpdateLabBlockCommand, UpdateServiceBlockCommand } from "./blocks";
+import { CreateOrderBlockHandler } from "./blocks/commands/create-order-block/create-order-block.handler";
+import { CancelOrderBlockHandler } from "./blocks/commands/cancel-order-block/cancel-order-block.handler";
+import { PaidOrderBlockHandler } from "./blocks/commands/paid-order-block/paid-order-block.handler";
+import { FulfillOrderBlockHandler } from "./blocks/commands/fulfill-order-block/fulfill-order-block.handler";
+import { RefundedOrderBlockHandler } from "./blocks/commands/refunded-order-block/refunded-order-block.handler";
+import { FailedOrderBlockHandler } from "./blocks/commands/failed-order-block/failed-order-block.handler";
+import { CreateServiceBlockHandler } from "./blocks/commands/create-service-block/create-service-block.handler";
+import { DeleteServiceBlockHandler } from "./blocks/commands/delete-service-block/delete-service-block.handler";
+import { UpdateServiceBlockHandler } from "./blocks/commands/update-service-block/update-service-block.handler";
+import { RegisterLabBlockHandler } from "./blocks/commands/register-lab-block/register-lab-block.handler";
+import { DeregisterLabBlockHandler } from "./blocks/commands/deregister-lab-block/deregister-lab-block.handler";
+import { UpdateLabBlockHandler } from "./blocks/commands/update-lab-block/update-lab-block.handler";
 
 describe("Substrate Indexer", () => {
 	let substrateController: SubstrateController;
@@ -51,6 +63,20 @@ describe("Substrate Indexer", () => {
 	let deleteAllIndexesHandler: DeleteAllIndexesHandler;
 	let setLastSubstrateBlockHandler: SetLastSubstrateBlockHandler;
 	let getLastSubstrateBlockHandler: GetLastSubstrateBlockHandler;
+
+	// event with block number
+	let createOrderBlockHandler: CreateOrderBlockHandler;
+	let cancelOrderBlockHandler: CancelOrderBlockHandler;
+	let paidOrderBlockHandler: PaidOrderBlockHandler;
+	let fulfillOrderBlockHandler: FulfillOrderBlockHandler;
+	let refundedOrderBlockHandler: RefundedOrderBlockHandler;
+	let failedOrderBlockHandler: FailedOrderBlockHandler;
+	let createServiceBlockHandler: CreateServiceBlockHandler;
+	let deleteServiceBlockHandler: DeleteServiceBlockHandler;
+	let updateServiceBlockHandler: UpdateServiceBlockHandler;
+	let registerLabBlockHandler: RegisterLabBlockHandler;
+	let deregisterLabBlockHandler: DeregisterLabBlockHandler;
+	let updateLabBlockHandler: UpdateLabBlockHandler;
 
 	const substrateServiceProvider = {
 		provide: SubstrateService,
@@ -236,6 +262,18 @@ describe("Substrate Indexer", () => {
 				...OrderCommandHandlers,
 				SetLastSubstrateBlockHandler,
 				DeleteAllIndexesHandler,
+				CancelOrderBlockHandler,
+				CreateOrderBlockHandler,
+				FailedOrderBlockHandler,
+				FulfillOrderBlockHandler,
+				PaidOrderBlockHandler,
+				RefundedOrderBlockHandler,
+				CreateServiceBlockHandler,
+				DeleteServiceBlockHandler,
+				UpdateServiceBlockHandler,
+				DeregisterLabBlockHandler,
+				RegisterLabBlockHandler,
+				UpdateLabBlockHandler,
 				GetLastSubstrateBlockHandler,
 			]
 		}).compile();
@@ -258,6 +296,20 @@ describe("Substrate Indexer", () => {
 		deleteAllIndexesHandler = module.get<DeleteAllIndexesHandler>(DeleteAllIndexesHandler);
 		setLastSubstrateBlockHandler = module.get<SetLastSubstrateBlockHandler>(SetLastSubstrateBlockHandler);
 		getLastSubstrateBlockHandler = module.get<GetLastSubstrateBlockHandler>(GetLastSubstrateBlockHandler);
+
+		// event block number
+		createOrderBlockHandler = module.get<CreateOrderBlockHandler>(CreateOrderBlockHandler);
+		cancelOrderBlockHandler = module.get<CancelOrderBlockHandler>(CancelOrderBlockHandler);
+		paidOrderBlockHandler = module.get<PaidOrderBlockHandler>(PaidOrderBlockHandler);
+		fulfillOrderBlockHandler = module.get<FulfillOrderBlockHandler>(FulfillOrderBlockHandler);
+		refundedOrderBlockHandler = module.get<RefundedOrderBlockHandler>(RefundedOrderBlockHandler);
+		failedOrderBlockHandler = module.get<FailedOrderBlockHandler>(FailedOrderBlockHandler);
+		createServiceBlockHandler = module.get<CreateServiceBlockHandler>(CreateServiceBlockHandler);
+		deleteServiceBlockHandler = module.get<DeleteServiceBlockHandler>(DeleteServiceBlockHandler);
+		updateServiceBlockHandler = module.get<UpdateServiceBlockHandler>(UpdateServiceBlockHandler);
+		registerLabBlockHandler = module.get<RegisterLabBlockHandler>(RegisterLabBlockHandler);
+		deregisterLabBlockHandler = module.get<DeregisterLabBlockHandler>(DeregisterLabBlockHandler);
+		updateLabBlockHandler = module.get<UpdateLabBlockHandler>(UpdateLabBlockHandler);
 	});
 
 	describe("Substrate", () => {
@@ -475,6 +527,156 @@ describe("Substrate Indexer", () => {
 			await getLastSubstrateBlockHandler.execute();
 			expect(getLastSubstrateBlockHandlerSpy).toBeCalled();
 			expect(getLastSubstrateBlockHandlerSpy).toHaveReturned();
+		});
+
+		it("Create Order Event Block Number Handler", async () => {
+			const order: Orders = createMockOrder(OrderStatus.Unpaid);
+			const createOrderBlockHandlerSpy = jest.spyOn(createOrderBlockHandler, 'execute');
+			const createOrderBlockCommand: CreateOrderBlockCommand = new CreateOrderBlockCommand(123, order);
+			await createOrderBlockHandler.execute(createOrderBlockCommand);
+			expect(createOrderBlockHandlerSpy).toBeCalled();
+			expect(createOrderBlockHandlerSpy).toBeCalledWith(createOrderBlockCommand);
+		});
+
+		it("Cancel Order Event Block Number Handler", async () => {
+			const order: Orders = createMockOrder(OrderStatus.Cancelled);
+			const cancelOrderBlockHandlerSpy = jest.spyOn(cancelOrderBlockHandler, 'execute');
+			const cancelOrderBlockCommand: CancelOrderBlockCommand = new CancelOrderBlockCommand(123, order);
+			await cancelOrderBlockHandler.execute(cancelOrderBlockCommand);
+			expect(cancelOrderBlockHandlerSpy).toBeCalled();
+			expect(cancelOrderBlockHandlerSpy).toBeCalledWith(cancelOrderBlockCommand);
+		});
+
+		it("Paid Order Event Block Number Handler", async () => {
+			const order: Orders = createMockOrder(OrderStatus.Paid);
+			const paidOrderBlockHandlerSpy = jest.spyOn(paidOrderBlockHandler, 'execute');
+			const paidOrderBlockCommand: PaidOrderBlockCommand = new PaidOrderBlockCommand(123, order);
+			await paidOrderBlockHandler.execute(paidOrderBlockCommand);
+			expect(paidOrderBlockHandlerSpy).toBeCalled();
+			expect(paidOrderBlockHandlerSpy).toBeCalledWith(paidOrderBlockCommand);
+		});
+
+		it("Fulfill Order Event Block Number Handler", async () => {
+			const order: Orders = createMockOrder(OrderStatus.Fulfilled);
+			const fulfillOrderBlockHandlerSpy = jest.spyOn(fulfillOrderBlockHandler, 'execute');
+			const fulfillOrderBlockCommand: FulfillOrderBlockCommand = new FulfillOrderBlockCommand(123, order);
+			await fulfillOrderBlockHandler.execute(fulfillOrderBlockCommand);
+			expect(fulfillOrderBlockHandlerSpy).toBeCalled();
+			expect(fulfillOrderBlockHandlerSpy).toBeCalledWith(fulfillOrderBlockCommand);
+		});
+
+		it("Refunded Order Event Block Number Handler", async () => {
+			const order: Orders = createMockOrder(OrderStatus.Refunded);
+			const refundedOrderBlockHandlerSpy = jest.spyOn(refundedOrderBlockHandler, 'execute');
+			const refundedOrderBlockCommand: RefundedOrderBlockCommand = new RefundedOrderBlockCommand(123, order);
+			await refundedOrderBlockHandler.execute(refundedOrderBlockCommand);
+			expect(refundedOrderBlockHandlerSpy).toBeCalled();
+			expect(refundedOrderBlockHandlerSpy).toBeCalledWith(refundedOrderBlockCommand);
+		});
+
+		it("Failed Order Event Block Number Handler", async () => {
+			const order: Orders = createMockOrder(OrderStatus.Failed);
+			const failedOrderBlockHandlerSpy = jest.spyOn(failedOrderBlockHandler, 'execute');
+			const failedOrderBlockCommand: FailedOrderBlockCommand = new FailedOrderBlockCommand(123, order);
+			await failedOrderBlockHandler.execute(failedOrderBlockCommand);
+			expect(failedOrderBlockHandlerSpy).toBeCalled();
+			expect(failedOrderBlockHandlerSpy).toBeCalledWith(failedOrderBlockCommand);
+		});
+
+		it("Create Service Event Block Number Handler", async () => {
+			const service: Services = createMockService();
+			const createServiceBlockHandlerSpy = jest.spyOn(createServiceBlockHandler, 'execute');
+			const createServiceBlockCommand: CreateServiceBlockCommand = new CreateServiceBlockCommand(123, service);
+			await createServiceBlockHandler.execute(createServiceBlockCommand);
+			expect(createServiceBlockHandlerSpy).toBeCalled();
+			expect(createServiceBlockHandlerSpy).toBeCalledWith(createServiceBlockCommand);
+		});
+
+		it("Delete Service Event Block Number Handler", async () => {
+			const service: Services = createMockService();
+			const deleteServiceBlockHandlerSpy = jest.spyOn(deleteServiceBlockHandler, 'execute');
+			const deleteServiceBlockCommand: DeleteServiceBlockCommand = new DeleteServiceBlockCommand(123, service);
+			await deleteServiceBlockHandler.execute(deleteServiceBlockCommand);
+			expect(deleteServiceBlockHandlerSpy).toBeCalled();
+			expect(deleteServiceBlockHandlerSpy).toBeCalledWith(deleteServiceBlockCommand);
+		});
+
+		it("Update Service Event Block Number Handler", async () => {
+			const service: Services = createMockService();
+			const updateServiceBlockHandlerSpy = jest.spyOn(updateServiceBlockHandler, 'execute');
+			const updateServiceBlockCommand: UpdateServiceBlockCommand = new UpdateServiceBlockCommand(123, service);
+			await updateServiceBlockHandler.execute(updateServiceBlockCommand);
+			expect(updateServiceBlockHandlerSpy).toBeCalled();
+			expect(updateServiceBlockHandlerSpy).toBeCalledWith(updateServiceBlockCommand);
+		});
+
+		it("Register Lab Event Block Number Handler", async () => {
+			const lab = createMockLab({
+				address: "Jakarta",
+				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
+				city: "ID-JK",
+				country: "ID",
+				email: "email@labdnafavorit.com",
+				latitude: null,
+				longitude: null,
+				name: "Laboratorium DNA Favourites",
+				profile_image: null,
+				region: "ID-JK",
+				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
+				certifications: [],
+				services: []
+			});
+			const registerLabBlockHandlerSpy = jest.spyOn(registerLabBlockHandler, 'execute');
+			const registerLabBlockCommand: RegisterLabBlockCommand = new RegisterLabBlockCommand(123, lab);
+			await registerLabBlockHandler.execute(registerLabBlockCommand);
+			expect(registerLabBlockHandlerSpy).toBeCalled();
+			expect(registerLabBlockHandlerSpy).toBeCalledWith(registerLabBlockCommand);
+		});
+
+		it("Deregister Lab Event Block Number Handler", async () => {
+			const lab = createMockLab({
+				address: "Jakarta",
+				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
+				city: "ID-JK",
+				country: "ID",
+				email: "email@labdnafavorit.com",
+				latitude: null,
+				longitude: null,
+				name: "Laboratorium DNA Favourites",
+				profile_image: null,
+				region: "ID-JK",
+				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
+				certifications: [],
+				services: []
+			});
+			const deregisterLabBlockHandlerSpy = jest.spyOn(deregisterLabBlockHandler, 'execute');
+			const deregisterLabBlockCommand: DeregisterLabBlockCommand = new DeregisterLabBlockCommand(123, lab);
+			await deregisterLabBlockHandler.execute(deregisterLabBlockCommand);
+			expect(deregisterLabBlockHandlerSpy).toBeCalled();
+			expect(deregisterLabBlockHandlerSpy).toBeCalledWith(deregisterLabBlockCommand);
+		});
+
+		it("Update Lab Event Block Number Handler", async () => {
+			const lab = createMockLab({
+				address: "Jakarta",
+				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
+				city: "ID-JK",
+				country: "ID",
+				email: "email@labdnafavorit.com",
+				latitude: null,
+				longitude: null,
+				name: "Laboratorium DNA Favourites",
+				profile_image: null,
+				region: "ID-JK",
+				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
+				certifications: [],
+				services: []
+			});
+			const updateLabBlockHandlerSpy = jest.spyOn(updateLabBlockHandler, 'execute');
+			const updateLabBlockCommand: UpdateLabBlockCommand = new UpdateLabBlockCommand(123, lab);
+			await updateLabBlockHandler.execute(updateLabBlockCommand);
+			expect(updateLabBlockHandlerSpy).toBeCalled();
+			expect(updateLabBlockHandlerSpy).toBeCalledWith(updateLabBlockCommand);
 		});
 	});
 });
