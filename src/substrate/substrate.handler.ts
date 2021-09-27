@@ -25,7 +25,19 @@ import {
 import { 
   SetLastSubstrateBlockCommand, 
   DeleteAllIndexesCommand, 
-  GetLastSubstrateBlockQuery
+  GetLastSubstrateBlockQuery,
+	CancelOrderBlockCommand,
+	CreateOrderBlockCommand,
+	FailedOrderBlockCommand,
+	FulfillOrderBlockCommand,
+	PaidOrderBlockCommand,
+	RefundedOrderBlockCommand,
+	CreateServiceBlockCommand,
+	DeleteServiceBlockCommand,
+	UpdateServiceBlockCommand,
+	DeregisterLabBlockCommand,
+	RegisterLabBlockCommand,
+	UpdateLabBlockCommand,
 } from './blocks';
 
 const eventRoutes = {
@@ -48,6 +60,27 @@ const eventRoutes = {
     ServiceDeleted: ServiceDeletedCommand,
   },
 };
+
+const eventRoutesBlock = {
+  labs: {
+    LabRegistered: RegisterLabBlockCommand,
+    LabUpdated: UpdateLabBlockCommand,
+    LabDeregistered: DeregisterLabBlockCommand,
+  },
+  orders: {
+    OrderCreated: CreateOrderBlockCommand,
+    OrderPaid: PaidOrderBlockCommand,
+    OrderFulfilled: FulfillOrderBlockCommand,
+    OrderRefunded: RefundedOrderBlockCommand,
+    OrderCancelled: CancelOrderBlockCommand,
+    OrderFailed: FailedOrderBlockCommand,
+  },
+  services: {
+    ServiceCreated: CreateServiceBlockCommand,
+    ServiceUpdated: UpdateServiceBlockCommand,
+    ServiceDeleted: DeleteServiceBlockCommand,
+  },
+}
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -89,8 +122,25 @@ export class SubstrateService implements OnModuleInit {
     });
   }
 
+	async handleEventBlock(blockNumber: number, event: Event) {
+    const eventSection = eventRoutesBlock[event.section];
+    if (eventSection) {
+      this.logger.log(
+        `Handling substrate block event: ${event.section}.${event.method}`,
+      );
+      const eventMethod = new eventSection[event.method](blockNumber, event.data[0]);
+      try {
+        await this.commandBus.execute(eventMethod);
+      } catch(err) {
+        this.logger.log(`Handling substrate catch : ${err.name}, ${err.message}, ${err.stack}`);
+      }
+    }
+	}
+
   listenToNewBlock() {
     this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
+			const blockNumber = header.number.toNumber();
+
       // check if env is development
       if (process.env.NODE_ENV === 'development') {
         try {
@@ -99,7 +149,7 @@ export class SubstrateService implements OnModuleInit {
           );
 
           // check if last_block_number is higher than next block number
-          if (lastBlockNumber > header.number.toNumber()) {
+          if (lastBlockNumber > blockNumber) {
             console.log('haha');
             // delete all indexes
             await this.commandBus.execute(new DeleteAllIndexesCommand());
@@ -109,9 +159,28 @@ export class SubstrateService implements OnModuleInit {
         }
       }
 
-      this.logger.log(`Syncing Substrate Block: ${header.number.toNumber()}`);
+			const blockHash = await this.api.rpc.chain.getBlockHash(blockNumber);
+			
+			const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
+
+			const allRecords = await this.api.query.system.events.at(signedBlock.block.header.hash);
+
+			signedBlock.block.extrinsics.forEach((val, index) => {
+				this.logger.log(`signedBlock index: ${index}`);
+				allRecords
+					.filter(({ phase }) =>
+						phase.isApplyExtrinsic &&
+						phase.asApplyExtrinsic.eq(index)
+					)
+					.forEach(async ({ event }) => {
+						await this.handleEventBlock(blockNumber, event);
+					});
+			});
+			
+			this.logger.log(`Syncing Substrate Block: ${blockNumber}`);
+
       await this.commandBus.execute(
-        new SetLastSubstrateBlockCommand(header.number.toNumber()),
+        new SetLastSubstrateBlockCommand(blockNumber),
       );
     });
   }
