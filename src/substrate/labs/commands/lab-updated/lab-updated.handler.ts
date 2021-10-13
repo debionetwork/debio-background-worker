@@ -20,6 +20,21 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
           certifications: lab.certifications,
           info: lab.info,
         },
+        script: {
+          lang: 'painless',
+          source: `
+            for(int i = 0; i < ctx._source.services.length; i++) {
+              ctx._source.services[i].country = params.country;
+              ctx._source.services[i].city = params.city;
+              ctx._source.services[i].region = params.region;
+            }
+          `,
+          params: {
+            country: lab.info.country,
+            city: lab.info.city,
+            region: lab.info.region,
+          }
+        }
       },
     });
 

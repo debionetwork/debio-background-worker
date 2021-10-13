@@ -27,16 +27,18 @@ export class ServiceCreatedHandler
       info: service.info,
       country: '',
       city: '',
+      region: '',
     };
 
     try {
       const { _source } = resp.body.hits.hits[0];
       const { info } = _source;
-      const { country, city } = info;
+      const { country, city, region } = info;
       serviceBody = {
         ...serviceBody,
         country,
         city,
+        region
       };
 
       await this.elasticsearchService.index({
