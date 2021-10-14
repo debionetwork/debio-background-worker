@@ -52,8 +52,7 @@
     "description": "Text",
     "test_result_sample": "Text",
     "long_description": "Option<Text>",
-    "image": "Option<Text>",
-    "dna_collection_process": "Option<Text>"
+    "image": "Option<Text>"
   },
   "DurationType": {
     "_enum": [
@@ -122,12 +121,8 @@
       "Registered",
       "Arrived",
       "Rejected",
-      "Success",
-      "Failed",
       "QualityControlled",
-      "GenotypedSequenced",
-      "Reviewed",
-      "Computed",
+      "WetWork",
       "ResultReady"
     ]
   },
@@ -259,4 +254,3 @@
   "HospitalCertificationInfoOf": "HospitalCertificationInfo",
   "HospitalCertificationIdOf": "H256"
 }
-

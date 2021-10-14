@@ -203,7 +203,6 @@ describe("Substrate Indexer", () => {
 		service_info.test_result_sample = "";
 		service_info.long_description = null;
 		service_info.image = "mdi-weight-lifter";
-		service_info.dna_collection_process = null;
 
 		const service: Services = new Services();
 		service.info = service_info;
