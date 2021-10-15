@@ -40,6 +40,7 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
 
     await this.elasticsearchService.updateByQuery({
       index: 'orders',
+      ignore_unavailable: true,
       body: {
         query: {
           match: { 
