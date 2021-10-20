@@ -18,5 +18,5 @@ export const OrderCommandHandlers = [
     OrderFulfilledHandler,
     OrderRefundedHandler,
     OrderCancelledHandler,
-    OrderFailedHandler
+    OrderFailedHandler,
 ]
