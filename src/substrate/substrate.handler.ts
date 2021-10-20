@@ -99,7 +99,7 @@ export class SubstrateService implements OnModuleInit {
 
   async handleEvent(blockMetaData: BlockMetaData, event: Event) {
     const eventSection = eventRoutes[event.section];
-    console.log(event);
+    
     if (eventSection) {
       this.logger.log(
         `Handling substrate event: ${event.section}.${event.method}`,
