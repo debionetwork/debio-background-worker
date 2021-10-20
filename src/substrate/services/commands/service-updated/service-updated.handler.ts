@@ -23,6 +23,7 @@ export class ServiceUpdatedHandler
           id: service.id,
           owner_id: service.owner_id,
           info: service.info,
+          blockMetaData: command.blockMetaData,
         },
       },
     });
