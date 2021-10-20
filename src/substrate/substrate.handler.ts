@@ -4,6 +4,7 @@ import { Controller } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Header, Event } from '@polkadot/types/interfaces';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import { BlockMetaData } from './models/blockMetaData'
 import {
   LabRegisteredCommand,
   LabUpdatedCommand,
@@ -20,24 +21,24 @@ import {
   OrderFailedCommand,
   OrderFulfilledCommand,
   OrderPaidCommand,
-  OrderRefundedCommand
+  OrderRefundedCommand,
 } from './orders';
 import { 
   SetLastSubstrateBlockCommand, 
   DeleteAllIndexesCommand, 
   GetLastSubstrateBlockQuery,
-	CancelOrderBlockCommand,
-	CreateOrderBlockCommand,
-	FailedOrderBlockCommand,
-	FulfillOrderBlockCommand,
-	PaidOrderBlockCommand,
-	RefundedOrderBlockCommand,
-	CreateServiceBlockCommand,
-	DeleteServiceBlockCommand,
-	UpdateServiceBlockCommand,
-	DeregisterLabBlockCommand,
-	RegisterLabBlockCommand,
-	UpdateLabBlockCommand,
+	// CancelOrderBlockCommand,
+	// CreateOrderBlockCommand,
+	// FailedOrderBlockCommand,
+	// FulfillOrderBlockCommand,
+	// PaidOrderBlockCommand,
+	// RefundedOrderBlockCommand,
+	// CreateServiceBlockCommand,
+	// DeleteServiceBlockCommand,
+	// UpdateServiceBlockCommand,
+	// DeregisterLabBlockCommand,
+	// RegisterLabBlockCommand,
+	// UpdateLabBlockCommand,
 } from './blocks';
 
 const eventRoutes = {
@@ -61,26 +62,26 @@ const eventRoutes = {
   },
 };
 
-const eventRoutesBlock = {
-  labs: {
-    LabRegistered: RegisterLabBlockCommand,
-    LabUpdated: UpdateLabBlockCommand,
-    LabDeregistered: DeregisterLabBlockCommand,
-  },
-  orders: {
-    OrderCreated: CreateOrderBlockCommand,
-    OrderPaid: PaidOrderBlockCommand,
-    OrderFulfilled: FulfillOrderBlockCommand,
-    OrderRefunded: RefundedOrderBlockCommand,
-    OrderCancelled: CancelOrderBlockCommand,
-    OrderFailed: FailedOrderBlockCommand,
-  },
-  services: {
-    ServiceCreated: CreateServiceBlockCommand,
-    ServiceUpdated: UpdateServiceBlockCommand,
-    ServiceDeleted: DeleteServiceBlockCommand,
-  },
-}
+// const eventRoutesBlock = {
+//   labs: {
+//     LabRegistered: RegisterLabBlockCommand,
+//     LabUpdated: UpdateLabBlockCommand,
+//     LabDeregistered: DeregisterLabBlockCommand,
+//   },
+//   orders: {
+//     OrderCreated: CreateOrderBlockCommand,
+//     OrderPaid: PaidOrderBlockCommand,
+//     OrderFulfilled: FulfillOrderBlockCommand,
+//     OrderRefunded: RefundedOrderBlockCommand,
+//     OrderCancelled: CancelOrderBlockCommand,
+//     OrderFailed: FailedOrderBlockCommand,
+//   },
+//   services: {
+//     ServiceCreated: CreateServiceBlockCommand,
+//     ServiceUpdated: UpdateServiceBlockCommand,
+//     ServiceDeleted: DeleteServiceBlockCommand,
+//   },
+// }
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -96,15 +97,16 @@ export class SubstrateService implements OnModuleInit {
     });
   }
 
-
-  async handleEvent(event: Event) {
+  async handleEvent(blockMetaData: BlockMetaData, event: Event) {
     const eventSection = eventRoutes[event.section];
+    console.log(event);
     if (eventSection) {
       this.logger.log(
         `Handling substrate event: ${event.section}.${event.method}`,
       );
       const eventMethod = new eventSection[event.method]();
       eventMethod[event.section] = event.data[0];
+      eventMethod['blockMetaData'] = blockMetaData;
       try {
         await this.commandBus.execute(eventMethod);
       } catch(err) {
@@ -115,27 +117,36 @@ export class SubstrateService implements OnModuleInit {
 
   listenToEvents() {
     this.api.query.system.events(async (events) => {
+      const currentBlock = await this.api.rpc.chain.getBlock();
+      const currentBlockNumber = currentBlock.block.header.number.toNumber();
+      const blockHash = await this.api.rpc.chain.getBlockHash(currentBlockNumber);
+
+      const blockMetaData: BlockMetaData = {
+        blockNumber: currentBlockNumber,
+        blockHash: blockHash.toString()
+      }
+
       for (let i = 0; i < events.length; i++) {
         const { event } = events[i];
-        await this.handleEvent(event);
+        await this.handleEvent(blockMetaData, event);
       }
     });
   }
 
-	async handleEventBlock(blockNumber: number, event: Event) {
-    const eventSection = eventRoutesBlock[event.section];
-    if (eventSection) {
-      this.logger.log(
-        `Handling substrate block event: ${event.section}.${event.method}`,
-      );
-      const eventMethod = new eventSection[event.method](blockNumber, event.data[0]);
-      try {
-        await this.commandBus.execute(eventMethod);
-      } catch(err) {
-        this.logger.log(`Handling substrate catch : ${err.name}, ${err.message}, ${err.stack}`);
-      }
-    }
-	}
+	// async handleEventBlock(blockMetaData: BlockMetaData, event: Event) {
+  //   const eventSection = eventRoutesBlock[event.section];
+  //   if (eventSection) {
+  //     this.logger.log(
+  //       `Handling substrate block event: ${event.section}.${event.method}`,
+  //     );
+  //     const eventMethod = new eventSection[event.method](blockMetaData, event.data[0]);
+  //     try {
+  //       await this.commandBus.execute(eventMethod);
+  //     } catch(err) {
+  //       this.logger.log(`Handling substrate catch : ${err.name}, ${err.message}, ${err.stack}`);
+  //     }
+  //   }
+	// }
 
   listenToNewBlock() {
     this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
@@ -159,23 +170,27 @@ export class SubstrateService implements OnModuleInit {
         }
       }
 
-			const blockHash = await this.api.rpc.chain.getBlockHash(blockNumber);
+			// const blockHash = await this.api.rpc.chain.getBlockHash(blockNumber);
 			
-			const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
+			// const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
 
-			const allRecords = await this.api.query.system.events.at(signedBlock.block.header.hash);
+			// const allRecords = await this.api.query.system.events.at(signedBlock.block.header.hash);
 
-			signedBlock.block.extrinsics.forEach((val, index) => {
-				this.logger.log(`signedBlock index: ${index}`);
-				allRecords
-					.filter(({ phase }) =>
-						phase.isApplyExtrinsic &&
-						phase.asApplyExtrinsic.eq(index)
-					)
-					.forEach(async ({ event }) => {
-						await this.handleEventBlock(blockNumber, event);
-					});
-			});
+      // const blockMetaData: BlockMetaData = {
+      //   blockNumber: blockNumber,
+      //   blockHash: blockHash.toString()
+      // }
+			// signedBlock.block.extrinsics.forEach((val, index) => {
+			// 	this.logger.log(`signedBlock index: ${index}`);
+			// 	allRecords
+			// 		.filter(({ phase }) =>
+			// 			phase.isApplyExtrinsic &&
+			// 			phase.asApplyExtrinsic.eq(index)
+			// 		)
+			// 		.forEach(async ({ event }) => {
+			// 			await this.handleEventBlock(blockMetaData, event);
+			// 		});
+			// });
 			
 			this.logger.log(`Syncing Substrate Block: ${blockNumber}`);
 
@@ -217,6 +232,10 @@ export class SubstrateService implements OnModuleInit {
         const allEventRecords = await this.api.query.system.events.at(
           signedBlock.block.header.hash,
         );
+        const blockMetaData: BlockMetaData = {
+          blockNumber: i,
+          blockHash: blockHash.toString()
+        }
         for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
           const {
             method: { method, section },
@@ -228,7 +247,7 @@ export class SubstrateService implements OnModuleInit {
           );
 
           for (const { event } of events) {
-            await this.handleEvent(event);
+            await this.handleEvent(blockMetaData, event);
           }
         }
       }
