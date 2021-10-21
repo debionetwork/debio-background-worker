@@ -31,6 +31,7 @@ export class OrderPaidHandler
           status: order.status,
           created_at: order.created_at.toString(),
           updated_at: order.updated_at.toString(),
+          blockMetaData: command.blockMetaData,
         },
       },
     }).catch((error) => {

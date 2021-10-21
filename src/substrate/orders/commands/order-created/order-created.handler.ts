@@ -28,6 +28,7 @@ export class OrderCreatedHandler
 			updated_at: order.updated_at.toString(),
 			lab_info: {},
 			service_info: {},
+      blockMetaData: command.blockMetaData,
 		};
 
     const lab = await this.elasticsearchService.search({

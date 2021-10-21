@@ -28,6 +28,7 @@ export class ServiceCreatedHandler
       country: '',
       city: '',
       region: '',
+      blockMetaData: command.blockMetaData,
     };
 
     try {

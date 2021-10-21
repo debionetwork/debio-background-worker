@@ -15,14 +15,14 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
       id: lab.account_id,
       refresh: 'wait_for',
       body: {
-        doc: {
-          account_id: lab.account_id,
-          certifications: lab.certifications,
-          info: lab.info,
-        },
         script: {
           lang: 'painless',
           source: `
+          ctx._source.account_id = params.account_id;
+          ctx._source.certifications = params.certifications;
+          ctx._source.info = params.info;
+          ctx._source.blockMetaData = params.blockMetaData;
+
             for(int i = 0; i < ctx._source.services.length; i++) {
               ctx._source.services[i].country = params.country;
               ctx._source.services[i].city = params.city;
@@ -30,6 +30,10 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
             }
           `,
           params: {
+            account_id: lab.account_id,
+            certifications: lab.certifications,
+            info: lab.info,
+            blockMetaData: command.blockMetaData,
             country: lab.info.country,
             city: lab.info.city,
             region: lab.info.region,

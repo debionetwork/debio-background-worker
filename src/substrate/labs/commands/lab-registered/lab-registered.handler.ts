@@ -21,6 +21,7 @@ export class LabRegisteredHandler
         services: lab.services,
         certifications: lab.certifications,
         info: lab.info,
+        blockMetaData: command.blockMetaData,
       },
     });
   }
