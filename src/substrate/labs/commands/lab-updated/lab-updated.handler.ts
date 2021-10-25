@@ -18,10 +18,11 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
         script: {
           lang: 'painless',
           source: `
-          ctx._source.account_id = params.account_id;
-          ctx._source.certifications = params.certifications;
-          ctx._source.info = params.info;
-          ctx._source.blockMetaData = params.blockMetaData;
+            ctx._source.account_id = params.account_id;
+            ctx._source.certifications = params.certifications;
+            ctx._source.info = params.info;
+            ctx._source.blockMetaData = params.blockMetaData;
+            ctx._source.verification_status = params.verification_status,
 
             for(int i = 0; i < ctx._source.services.length; i++) {
               ctx._source.services[i].country = params.country;
@@ -32,6 +33,7 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
           params: {
             account_id: lab.account_id,
             certifications: lab.certifications,
+            verification_status: lab.verification_status,
             info: lab.info,
             blockMetaData: command.blockMetaData,
             country: lab.info.country,
