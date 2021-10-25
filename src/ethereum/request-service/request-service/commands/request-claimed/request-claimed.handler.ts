@@ -11,11 +11,21 @@ export class RequestClaimedHandler implements ICommandHandler<RequestClaimedComm
     async execute(command: RequestClaimedCommand) {
         await this.elasticSearchService.update({
             index: 'create-service-request',
-            id: command.request.hash,
+            id: command.request.request_hash,
+            refresh: 'wait_for',
             body: {
-                doc: {
-                    request: command.request,
-                    blockMetadata: command.blockMetadata,
+                script: {
+                    lang: 'painless',
+                    source: `
+                        ctx._source.request.lab_address.add(params.lab_address);
+                        ctx._source.request.request_status: params.status;
+                        ctx._source.blockMetadata = params.blockMetaData;
+                    `,
+                    params: {
+                      lab_address: command.request.lab_address,
+                      status: "1",
+                      blockMetaData: command.blockMetadata
+                    },
                 }
             }
         })

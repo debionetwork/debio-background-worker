@@ -9,4 +9,5 @@ export class ServiceInfo {
   test_result_sample: string;
   long_description?: string;
   image?: string;
+  dna_collection_process?: string;
 }

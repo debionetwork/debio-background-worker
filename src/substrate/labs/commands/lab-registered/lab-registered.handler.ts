@@ -20,6 +20,7 @@ export class LabRegisteredHandler
         account_id: lab.account_id,
         services: lab.services,
         certifications: lab.certifications,
+        verification_status: lab.verification_status,
         info: lab.info,
         blockMetaData: command.blockMetaData,
       },
