@@ -40,6 +40,7 @@ import {
 	// RegisterLabBlockCommand,
 	// UpdateLabBlockCommand,
 } from './blocks';
+import { DataStakedCommand } from './genetic-testing';
 
 const eventRoutes = {
   labs: {
@@ -60,6 +61,9 @@ const eventRoutes = {
     ServiceUpdated: ServiceUpdatedCommand,
     ServiceDeleted: ServiceDeletedCommand,
   },
+  geneticTesting: {
+    DataStaked: DataStakedCommand,
+  }
 };
 
 // const eventRoutesBlock = {
@@ -206,61 +210,62 @@ export class SubstrateService implements OnModuleInit {
       lastBlockNumber = await this.queryBus.execute(
         new GetLastSubstrateBlockQuery(),
       );
-    } catch (err) {
-      this.logger.log(err);
-    }
-    const currentBlock = await this.api.rpc.chain.getBlock();
-    const currentBlockNumber = currentBlock.block.header.number.toNumber();
-    /**
-     * Process logs in chunks of blocks
-     * */
-    const endBlock = currentBlockNumber;
-    const chunkSize = 1000;
-    let chunkStart = lastBlockNumber;
-    let chunkEnd = currentBlockNumber;
-    // If chunkEnd is more than chunkSize, set chunkEnd to chunkSize
-    if (chunkEnd - chunkStart > chunkSize) {
-      chunkEnd = chunkStart + chunkSize;
-    }
-    while (chunkStart < endBlock) {
-      this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
-      for (let i = chunkStart; i <= chunkEnd; i++) {
-        // Get block by block number
-        const blockHash = await this.api.rpc.chain.getBlockHash(i);
-        const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
-        // Get the event records in the block
-        const allEventRecords = await this.api.query.system.events.at(
-          signedBlock.block.header.hash,
-        );
-        const blockMetaData: BlockMetaData = {
-          blockNumber: i,
-          blockHash: blockHash.toString()
-        }
-        for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
-          const {
-            method: { method, section },
-          } = signedBlock.block.extrinsics[j];
-
-          const events = allEventRecords.filter(
-            ({ phase }) =>
-              phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(j),
+      const currentBlock = await this.api.rpc.chain.getBlock();
+      const currentBlockNumber = currentBlock.block.header.number.toNumber();
+      /**
+       * Process logs in chunks of blocks
+       * */
+      const endBlock = currentBlockNumber;
+      const chunkSize = 1000;
+      let chunkStart = lastBlockNumber;
+      let chunkEnd = currentBlockNumber;
+      // If chunkEnd is more than chunkSize, set chunkEnd to chunkSize
+      if (chunkEnd - chunkStart > chunkSize) {
+        chunkEnd = chunkStart + chunkSize;
+      }
+      while (chunkStart < endBlock) {
+        this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
+        for (let i = chunkStart; i <= chunkEnd; i++) {
+          // Get block by block number
+          const blockHash = await this.api.rpc.chain.getBlockHash(i);
+          const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
+          // Get the event records in the block
+          const allEventRecords = await this.api.query.system.events.at(
+            signedBlock.block.header.hash,
           );
+          const blockMetaData: BlockMetaData = {
+            blockNumber: i,
+            blockHash: blockHash.toString()
+          }
+          for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
+            const {
+              method: { method, section },
+            } = signedBlock.block.extrinsics[j];
+            console.log(method, section)
+            const events = allEventRecords.filter(
+              ({ phase }) =>
+                phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(j),
+            );
 
-          for (const { event } of events) {
-            await this.handleEvent(blockMetaData, event);
+            for (const { event } of events) {
+              await this.handleEvent(blockMetaData, event);
+            }
           }
         }
-      }
-      // Remember the last block number processed
-      await this.commandBus.execute(new SetLastSubstrateBlockCommand(chunkEnd));
+        // Remember the last block number processed
+        await this.commandBus.execute(new SetLastSubstrateBlockCommand(chunkEnd));
 
-      // set chunkStart to 1 block after chunkEnd
-      chunkStart = chunkEnd + 1;
-      // if chunkEnd + chunkSize is more than endBlock,
-      // set chunkEnd to endBlock
-      // else set chunkEnd to (chunkEnd + chunkSize)
-      chunkEnd =
-        chunkEnd + chunkSize > endBlock ? endBlock : chunkEnd + chunkSize;
+        // set chunkStart to 1 block after chunkEnd
+        chunkStart = chunkEnd + 1;
+        // if chunkEnd + chunkSize is more than endBlock,
+        // set chunkEnd to endBlock
+        // else set chunkEnd to (chunkEnd + chunkSize)
+        chunkEnd =
+          chunkEnd + chunkSize > endBlock ? endBlock : chunkEnd + chunkSize;
+      }
+      
+    } catch (err) {
+      this.logger.log(err);
     }
   }
 }
