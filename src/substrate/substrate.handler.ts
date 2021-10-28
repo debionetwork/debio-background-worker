@@ -108,9 +108,9 @@ export class SubstrateService implements OnModuleInit {
       this.logger.log(
         `Handling substrate event: ${event.section}.${event.method}`,
       );
-      const eventMethod = new eventSection[event.method]();
-      eventMethod[event.section] = event.data[0];
-      eventMethod['blockMetaData'] = blockMetaData;
+      
+      const eventMethod = new eventSection[event.method](event.data, blockMetaData);
+      
       try {
         await this.commandBus.execute(eventMethod);
       } catch(err) {
