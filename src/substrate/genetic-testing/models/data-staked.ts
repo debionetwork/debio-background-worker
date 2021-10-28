@@ -1,5 +1,3 @@
 export class DataStaked {
-    from: string;
-    hash_data_bounty: string;
-    order_id: string;
+    constructor(public from: string, public hash_data_bounty: string, public order_id: string) {}
 }
