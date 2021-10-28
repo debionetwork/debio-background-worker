@@ -5,6 +5,7 @@ import { CommonModule } from 'src/common/common.module';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { SubstrateController, SubstrateService } from './substrate.handler';
 import { OrderCommandHandlers } from './orders';
+import { GeneticTestingCommandHandlers } from './genetic-testing';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -19,6 +20,7 @@ require('dotenv').config();
     ...OrderCommandHandlers,
     ...BlockCommandHandlers,
     ...BlockQueryHandlers,
+    ...GeneticTestingCommandHandlers,
   ],
 })
 export class SubstrateModule {}
