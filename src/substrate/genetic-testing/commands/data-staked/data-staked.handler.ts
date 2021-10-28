@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ElasticsearchService } from "@nestjs/elasticsearch";
-import { Orders } from "src/substrate/orders/models/orders";
 import { DataStakedCommand } from "./data-staked.command";
 
 @Injectable()
