@@ -1,4 +1,4 @@
-import { ServiceFlow } from './service-flow';
+import { ServiceFlow } from 'src/substrate/models/service-flow';
 import { ServiceInfo } from './service-info';
 
 export class Service {

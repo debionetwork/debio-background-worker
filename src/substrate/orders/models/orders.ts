@@ -1,6 +1,6 @@
 import { Price } from "src/substrate/services/models/price";
+import { ServiceFlow } from "src/substrate/models/service-flow";
 import { Currency } from "./currency";
-import { OrderFlow } from "./order-flow";
 import { OrderStatus } from "./order-status";
 
 export class Orders {
@@ -13,7 +13,7 @@ export class Orders {
 	currency: Currency;
 	prices: Price[];
 	additional_prices: Price[];
-	order_flow: OrderFlow;
+	order_flow: ServiceFlow;
 	status: OrderStatus;
 	created_at: BigInt;
 	updated_at: BigInt;
