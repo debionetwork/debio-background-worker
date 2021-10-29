@@ -9,6 +9,7 @@ import {
   LabRegisteredCommand,
   LabUpdatedCommand,
   LabDeregisteredCommand,
+  LabUpdateVerificationStatusCommand,
 } from './labs';
 import {
   ServiceCreatedCommand,
@@ -27,18 +28,6 @@ import {
   SetLastSubstrateBlockCommand, 
   DeleteAllIndexesCommand, 
   GetLastSubstrateBlockQuery,
-	// CancelOrderBlockCommand,
-	// CreateOrderBlockCommand,
-	// FailedOrderBlockCommand,
-	// FulfillOrderBlockCommand,
-	// PaidOrderBlockCommand,
-	// RefundedOrderBlockCommand,
-	// CreateServiceBlockCommand,
-	// DeleteServiceBlockCommand,
-	// UpdateServiceBlockCommand,
-	// DeregisterLabBlockCommand,
-	// RegisterLabBlockCommand,
-	// UpdateLabBlockCommand,
 } from './blocks';
 import { DataStakedCommand } from './genetic-testing';
 
@@ -47,6 +36,7 @@ const eventRoutes = {
     LabRegistered: LabRegisteredCommand,
     LabUpdated: LabUpdatedCommand,
     LabDeregistered: LabDeregisteredCommand,
+    LabUpdateVerificationStatus: LabUpdateVerificationStatusCommand,
   },
   orders: {
     OrderCreated: OrderCreatedCommand,
@@ -65,27 +55,6 @@ const eventRoutes = {
     DataStaked: DataStakedCommand,
   }
 };
-
-// const eventRoutesBlock = {
-//   labs: {
-//     LabRegistered: RegisterLabBlockCommand,
-//     LabUpdated: UpdateLabBlockCommand,
-//     LabDeregistered: DeregisterLabBlockCommand,
-//   },
-//   orders: {
-//     OrderCreated: CreateOrderBlockCommand,
-//     OrderPaid: PaidOrderBlockCommand,
-//     OrderFulfilled: FulfillOrderBlockCommand,
-//     OrderRefunded: RefundedOrderBlockCommand,
-//     OrderCancelled: CancelOrderBlockCommand,
-//     OrderFailed: FailedOrderBlockCommand,
-//   },
-//   services: {
-//     ServiceCreated: CreateServiceBlockCommand,
-//     ServiceUpdated: UpdateServiceBlockCommand,
-//     ServiceDeleted: DeleteServiceBlockCommand,
-//   },
-// }
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -137,21 +106,6 @@ export class SubstrateService implements OnModuleInit {
     });
   }
 
-	// async handleEventBlock(blockMetaData: BlockMetaData, event: Event) {
-  //   const eventSection = eventRoutesBlock[event.section];
-  //   if (eventSection) {
-  //     this.logger.log(
-  //       `Handling substrate block event: ${event.section}.${event.method}`,
-  //     );
-  //     const eventMethod = new eventSection[event.method](blockMetaData, event.data[0]);
-  //     try {
-  //       await this.commandBus.execute(eventMethod);
-  //     } catch(err) {
-  //       this.logger.log(`Handling substrate catch : ${err.name}, ${err.message}, ${err.stack}`);
-  //     }
-  //   }
-	// }
-
   listenToNewBlock() {
     this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
 			const blockNumber = header.number.toNumber();
@@ -173,28 +127,6 @@ export class SubstrateService implements OnModuleInit {
           this.logger.log(err);
         }
       }
-
-			// const blockHash = await this.api.rpc.chain.getBlockHash(blockNumber);
-			
-			// const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
-
-			// const allRecords = await this.api.query.system.events.at(signedBlock.block.header.hash);
-
-      // const blockMetaData: BlockMetaData = {
-      //   blockNumber: blockNumber,
-      //   blockHash: blockHash.toString()
-      // }
-			// signedBlock.block.extrinsics.forEach((val, index) => {
-			// 	this.logger.log(`signedBlock index: ${index}`);
-			// 	allRecords
-			// 		.filter(({ phase }) =>
-			// 			phase.isApplyExtrinsic &&
-			// 			phase.asApplyExtrinsic.eq(index)
-			// 		)
-			// 		.forEach(async ({ event }) => {
-			// 			await this.handleEventBlock(blockMetaData, event);
-			// 		});
-			// });
 			
 			this.logger.log(`Syncing Substrate Block: ${blockNumber}`);
 
@@ -241,7 +173,7 @@ export class SubstrateService implements OnModuleInit {
             const {
               method: { method, section },
             } = signedBlock.block.extrinsics[j];
-            console.log(method, section)
+            
             const events = allEventRecords.filter(
               ({ phase }) =>
                 phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(j),
