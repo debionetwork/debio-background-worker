@@ -22,7 +22,7 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
             ctx._source.certifications = params.certifications;
             ctx._source.info = params.info;
             ctx._source.blockMetaData = params.blockMetaData;
-            ctx._source.verification_status = params.verification_status,
+            ctx._source.verification_status = params.verification_status;
 
             for(int i = 0; i < ctx._source.services.length; i++) {
               ctx._source.services[i].country = params.country;
