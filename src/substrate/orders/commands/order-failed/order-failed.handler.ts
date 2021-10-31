@@ -32,6 +32,7 @@ export class OrderFailedHandler
           status: order.status,
           created_at: order.created_at.toString(),
           updated_at: order.updated_at.toString(),
+          order_flow: order.order_flow,
           blockMetaData: command.blockMetaData,
         },
       },

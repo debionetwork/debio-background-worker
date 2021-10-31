@@ -28,6 +28,7 @@ export class OrderCreatedHandler
 			updated_at: order.updated_at.toString(),
 			lab_info: {},
 			service_info: {},
+      order_flow: order.order_flow,
       blockMetaData: command.blockMetaData,
 		};
 

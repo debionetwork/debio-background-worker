@@ -29,6 +29,7 @@ export class ServiceCreatedHandler
       city: '',
       region: '',
       blockMetaData: command.blockMetaData,
+      service_flow: command.services.service_flow,
     };
 
     try {
