@@ -38,6 +38,17 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
           },
           blockMetaData: command.blockMetaData,
       }
-    })
+    });
+
+    await this.elasticsearchService.update({
+      index: 'orders',
+      id: command.dataStaked.order_id,
+      refresh: 'wait_for',
+      body: {
+        doc: {
+          bounty: true,
+        }
+      }
+    });
   }
 }
