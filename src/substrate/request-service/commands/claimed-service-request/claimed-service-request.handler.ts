@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ElasticsearchService } from "@nestjs/elasticsearch";
-import { RequestClaimedCommand } from "./request-claimed.command";
+import { ClaimedServiceRequestCommand } from "./claimed-service-request.command";
 
 @Injectable()
-@CommandHandler(RequestClaimedCommand)
-export class RequestClaimedHandler implements ICommandHandler<RequestClaimedCommand> {
+@CommandHandler(ClaimedServiceRequestCommand)
+export class ClaimedServiceRequestHandler implements ICommandHandler<ClaimedServiceRequestCommand> {
     constructor(private readonly elasticSearchService: ElasticsearchService) {}
 
-    async execute(command: RequestClaimedCommand) {
+    async execute(command: ClaimedServiceRequestCommand) {
         await this.elasticSearchService.update({
             index: 'create-service-request',
             id: command.request.request_hash,

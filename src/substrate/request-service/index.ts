@@ -1,10 +1,10 @@
 export * from './commands/create-service-request/create-service-request.command';
-export * from './commands/request-claimed/request-claimed.command';
+export * from './commands/claimed-service-request/claimed-service-request.command';
 
 import { CreateServiceRequestHandler } from './commands/create-service-request/create-service-request.handler';
-import { RequestClaimedHandler } from './commands/request-claimed/request-claimed.handler';
+import { ClaimedServiceRequestHandler } from './commands/claimed-service-request/claimed-service-request.handler';
 
 export const RequestServiceCommandHandlers = [
     CreateServiceRequestHandler, 
-    RequestClaimedHandler
+    ClaimedServiceRequestHandler
 ];
