@@ -29,6 +29,10 @@ import {
   DeleteAllIndexesCommand, 
   GetLastSubstrateBlockQuery,
 } from './blocks';
+import {
+  CreateServiceRequestCommand,
+  ClaimedServiceRequestCommand,
+} from './request-service';
 import { DataStakedCommand } from './genetic-testing';
 
 const eventRoutes = {
@@ -53,6 +57,10 @@ const eventRoutes = {
   },
   geneticTesting: {
     DataStaked: DataStakedCommand,
+  },
+  serviceRequest: {
+    ServiceRequestCreated: CreateServiceRequestCommand,
+    ServiceRequestClaimed: ClaimedServiceRequestCommand,
   }
 };
 
