@@ -5,6 +5,6 @@ import { CreateServiceRequestHandler } from './commands/create-service-request/c
 import { ClaimedServiceRequestHandler } from './commands/claimed-service-request/claimed-service-request.handler';
 
 export const RequestServiceCommandHandlers = [
-    CreateServiceRequestHandler, 
-    ClaimedServiceRequestHandler
+  CreateServiceRequestHandler, 
+  ClaimedServiceRequestHandler
 ];
