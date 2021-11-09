@@ -32,7 +32,7 @@ import {
 import {
   CreateServiceRequestCommand,
   ClaimedServiceRequestCommand,
-} from './request-service';
+} from './service-request';
 import { DataStakedCommand } from './genetic-testing';
 
 const eventRoutes = {
