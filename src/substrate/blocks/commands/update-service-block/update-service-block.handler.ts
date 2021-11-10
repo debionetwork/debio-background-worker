@@ -19,7 +19,7 @@ export class UpdateServiceBlockHandler
 				doc: {
 					block_number: command.blockNumber,
 					id: command.services.id,
-					owner_id: command.services.owner_id,
+					owner_id: command.services.ownerId,
 					info: command.services.info,
 				},
 				doc_as_upsert: true,

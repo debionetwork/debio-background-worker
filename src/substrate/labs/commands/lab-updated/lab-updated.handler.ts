@@ -12,7 +12,7 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
     const { labs: lab } = command;
     await this.elasticsearchService.update({
       index: 'labs',
-      id: lab.account_id,
+      id: lab.accountId,
       refresh: 'wait_for',
       body: {
         script: {
@@ -31,9 +31,9 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
             }
           `,
           params: {
-            account_id: lab.account_id,
+            account_id: lab.accountId,
             certifications: lab.certifications,
-            verification_status: lab.verification_status,
+            verification_status: lab.verificationStatus,
             info: lab.info,
             blockMetaData: command.blockMetaData,
             country: lab.info.country,
@@ -50,7 +50,7 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
       body: {
         query: {
           match: { 
-            seller_id: lab.account_id.toString(),
+            seller_id: lab.accountId.toString(),
           }
         },
         script: {

@@ -14,7 +14,7 @@ export class LabDeregisteredHandler
     const { labs: lab } = command;
     await this.elasticsearchService.delete({
       index: 'labs',
-      id: lab.account_id,
+      id: lab.accountId,
       refresh: 'wait_for',
     });
 
@@ -24,7 +24,7 @@ export class LabDeregisteredHandler
       body: {
         query: {
           match: {
-            owner_id: lab.account_id,
+            owner_id: lab.accountId,
           },
         },
       },

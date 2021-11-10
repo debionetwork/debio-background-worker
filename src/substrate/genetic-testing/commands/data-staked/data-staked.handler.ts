@@ -13,7 +13,7 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
       index: 'orders',
       body: {
         query: {
-          match: { _id: command.dataStaked.order_id },
+          match: { _id: command.dataStaked.orderId },
         },
       },
     });
@@ -22,11 +22,11 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
 
     await this.elasticsearchService.index({
       index: 'data-bounty',
-      id: command.dataStaked.order_id,
+      id: command.dataStaked.orderId,
       refresh: 'wait_for',
       body: {
-          order_id: command.dataStaked.order_id,
-          hash_data_bounty: command.dataStaked.hash_data_bounty,
+          order_id: command.dataStaked.orderId,
+          hash_data_bounty: command.dataStaked.hashDataBounty,
           from: command.dataStaked.from,
           info: {
             service_id: order.service_id,
@@ -42,7 +42,7 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
 
     await this.elasticsearchService.update({
       index: 'orders',
-      id: command.dataStaked.order_id,
+      id: command.dataStaked.orderId,
       refresh: 'wait_for',
       body: {
         doc: {

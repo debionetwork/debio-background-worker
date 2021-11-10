@@ -13,10 +13,10 @@ import { OrderCancelledHandler } from './commands/order-cancelled/order-cancelle
 import { OrderFailedHandler } from './commands/order-failed/order-failed.handler';
 
 export const OrderCommandHandlers = [
-    OrderCreatedHandler,
-    OrderPaidHandler,
-    OrderFulfilledHandler,
-    OrderRefundedHandler,
-    OrderCancelledHandler,
-    OrderFailedHandler,
+  OrderCreatedHandler,
+  OrderPaidHandler,
+  OrderFulfilledHandler,
+  OrderRefundedHandler,
+  OrderCancelledHandler,
+  OrderFailedHandler,
 ]

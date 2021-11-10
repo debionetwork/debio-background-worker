@@ -1,4 +1,3 @@
-import types from '../../types.json';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Controller } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
@@ -29,6 +28,10 @@ import {
   DeleteAllIndexesCommand, 
   GetLastSubstrateBlockQuery,
 } from './blocks';
+import {
+  CreateServiceRequestCommand,
+  ClaimedServiceRequestCommand,
+} from './service-request';
 import { DataStakedCommand } from './genetic-testing';
 
 const eventRoutes = {
@@ -53,6 +56,10 @@ const eventRoutes = {
   },
   geneticTesting: {
     DataStaked: DataStakedCommand,
+  },
+  serviceRequest: {
+    ServiceRequestCreated: CreateServiceRequestCommand,
+    ServiceRequestClaimed: ClaimedServiceRequestCommand,
   }
 };
 
@@ -66,7 +73,6 @@ export class SubstrateService implements OnModuleInit {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
     this.api = await ApiPromise.create({
       provider: wsProvider,
-      types: types,
     });
   }
 

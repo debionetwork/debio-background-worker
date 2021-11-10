@@ -1,4 +1,4 @@
 export enum Currency {
-    DAI = "DAI",
-    ETH = "ETH",
+  DAI = "DAI",
+  ETH = "ETH",
 }

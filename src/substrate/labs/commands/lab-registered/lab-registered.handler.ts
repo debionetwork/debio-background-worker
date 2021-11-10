@@ -15,12 +15,12 @@ export class LabRegisteredHandler
     await this.elasticsearchService.index({
       index: 'labs',
       refresh: 'wait_for',
-      id: lab.account_id,
+      id: lab.accountId,
       body: {
-        account_id: lab.account_id,
+        account_id: lab.accountId,
         services: lab.services,
         certifications: lab.certifications,
-        verification_status: lab.verification_status,
+        verification_status: lab.verificationStatus,
         info: lab.info,
         blockMetaData: command.blockMetaData,
       },

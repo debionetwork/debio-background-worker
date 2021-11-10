@@ -43,6 +43,7 @@ import { UpdateServiceBlockHandler } from "./blocks/commands/update-service-bloc
 import { RegisterLabBlockHandler } from "./blocks/commands/register-lab-block/register-lab-block.handler";
 import { DeregisterLabBlockHandler } from "./blocks/commands/deregister-lab-block/deregister-lab-block.handler";
 import { UpdateLabBlockHandler } from "./blocks/commands/update-lab-block/update-lab-block.handler";
+import { BlockMetaData } from "./models/blockMetaData";
 
 describe("Substrate Indexer", () => {
 	let substrateController: SubstrateController;
@@ -227,7 +228,7 @@ describe("Substrate Indexer", () => {
 		order.customer_box_public_key = "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e9f8c39a74";
 		order.seller_id = "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zHRuvJNU";
 		order.dna_sample_tracking_id = "29C78CYDIUT3H75Z3229C";
-		order.currency = Currency.Dai;
+		order.currency = Currency.DAI;
 		order.prices = [ first_price ];
 		order.additional_prices = [ second_price ];
 		order.status = status;
@@ -235,6 +236,13 @@ describe("Substrate Indexer", () => {
 		order.updated_at = BigInt("1632212142000");
 
 		return order;
+	}
+
+	function mockBlockNumber(): BlockMetaData {
+		return {
+			blockHash: "",
+			blockNumber: 1,
+		}
 	}
 
 	beforeAll(async () => {
@@ -355,7 +363,7 @@ describe("Substrate Indexer", () => {
 			});
 			
 			const labDeregisteredHandlerSpy = jest.spyOn(labDeregisteredHandler, 'execute');
-			const labDeregisteredCommand: LabDeregisteredCommand = new LabDeregisteredCommand(lab);
+			const labDeregisteredCommand: LabDeregisteredCommand = new LabDeregisteredCommand([lab], mockBlockNumber());
 			await labDeregisteredHandler.execute(labDeregisteredCommand);
 			expect(labDeregisteredHandlerSpy).toBeCalled();
 			expect(labDeregisteredHandlerSpy).toBeCalledWith(labDeregisteredCommand);
@@ -380,7 +388,7 @@ describe("Substrate Indexer", () => {
 			});
 			
 			const labRegisteredHandlerSpy = jest.spyOn(labRegisteredHandler, 'execute');
-			const labRegisteredCommand: LabDeregisteredCommand = new LabRegisteredCommand(lab);
+			const labRegisteredCommand: LabDeregisteredCommand = new LabRegisteredCommand([lab], mockBlockNumber());
 			await labRegisteredHandler.execute(labRegisteredCommand);
 			expect(labRegisteredHandlerSpy).toBeCalled();
 			expect(labRegisteredHandlerSpy).toBeCalledWith(labRegisteredCommand);
@@ -404,7 +412,7 @@ describe("Substrate Indexer", () => {
 			});
 			
 			const labUpdateHandlerSpy = jest.spyOn(labUpdatedHandler, 'execute');
-			const labUpdatedCommand: LabUpdatedCommand = new LabUpdatedCommand(lab);
+			const labUpdatedCommand: LabUpdatedCommand = new LabUpdatedCommand([lab], mockBlockNumber());
 			await labUpdatedHandler.execute(labUpdatedCommand);
 			expect(labUpdateHandlerSpy).toBeCalled();
 			expect(labUpdateHandlerSpy).toBeCalledWith(labUpdatedCommand);
@@ -416,7 +424,7 @@ describe("Substrate Indexer", () => {
 			const service: Services = createMockService();
 			
 			const serviceCreatedHandlerSpy = jest.spyOn(serviceCreatedHandler, 'execute');
-			const serviceCreatedCommand: ServiceCreatedCommand = new ServiceCreatedCommand(service);
+			const serviceCreatedCommand: ServiceCreatedCommand = new ServiceCreatedCommand([service], mockBlockNumber());
 			await serviceCreatedHandler.execute(serviceCreatedCommand);
 			expect(serviceCreatedHandlerSpy).toBeCalled();
 			expect(serviceCreatedHandlerSpy).toBeCalledWith(serviceCreatedCommand);
@@ -426,7 +434,7 @@ describe("Substrate Indexer", () => {
 			const service: Services = createMockService();
 			
 			const serviceDeletedHandlerSpy = jest.spyOn(serviceDeletedHandler, 'execute');
-			const serviceDeletedCommand: ServiceDeletedCommand = new ServiceDeletedCommand(service);
+			const serviceDeletedCommand: ServiceDeletedCommand = new ServiceDeletedCommand([service], mockBlockNumber());
 			await serviceDeletedHandler.execute(serviceDeletedCommand);
 			expect(serviceDeletedHandlerSpy).toBeCalled();
 			expect(serviceDeletedHandlerSpy).toBeCalledWith(serviceDeletedCommand);
@@ -436,7 +444,7 @@ describe("Substrate Indexer", () => {
 			const service: Services = createMockService();
 			
 			const serviceUpdatedHandlerSpy = jest.spyOn(serviceUpdatedHandler, 'execute');
-			const serviceUpdatedCommand: ServiceUpdatedCommand = new ServiceUpdatedCommand(service);
+			const serviceUpdatedCommand: ServiceUpdatedCommand = new ServiceUpdatedCommand([service], mockBlockNumber());
 			await serviceUpdatedHandler.execute(serviceUpdatedCommand);
 			expect(serviceUpdatedHandlerSpy).toBeCalled();
 			expect(serviceUpdatedHandlerSpy).toBeCalledWith(serviceUpdatedCommand);
@@ -448,7 +456,7 @@ describe("Substrate Indexer", () => {
 			const order: Orders = createMockOrder(OrderStatus.Cancelled);
 			
 			const orderCancelledHandlerSpy = jest.spyOn(orderCancelledHandler, 'execute');
-			const orderCancelledCommand: OrderCancelledCommand = new OrderCancelledCommand(order);
+			const orderCancelledCommand: OrderCancelledCommand = new OrderCancelledCommand([order], mockBlockNumber());
 			await orderCancelledHandler.execute(orderCancelledCommand);
 			expect(orderCancelledHandlerSpy).toBeCalled();
 			expect(orderCancelledHandlerSpy).toBeCalledWith(orderCancelledCommand);
@@ -458,7 +466,7 @@ describe("Substrate Indexer", () => {
 			const order: Orders = createMockOrder(OrderStatus.Unpaid);
 			
 			const orderCreatedHandlerSpy = jest.spyOn(orderCreatedHandler, 'execute');
-			const orderCreatedCommand: OrderCreatedCommand = new OrderCreatedCommand(order);
+			const orderCreatedCommand: OrderCreatedCommand = new OrderCreatedCommand([order], mockBlockNumber());
 			await orderCreatedHandler.execute(orderCreatedCommand);
 			expect(orderCreatedHandlerSpy).toBeCalled();
 			expect(orderCreatedHandlerSpy).toBeCalledWith(orderCreatedCommand);
@@ -468,7 +476,7 @@ describe("Substrate Indexer", () => {
 			const order: Orders = createMockOrder(OrderStatus.Failed);
 			
 			const orderFailedHandlerSpy = jest.spyOn(orderFailedHandler, 'execute');
-			const orderFailedCommand: OrderFailedCommand = new OrderFailedCommand(order);
+			const orderFailedCommand: OrderFailedCommand = new OrderFailedCommand([order], mockBlockNumber());
 			await orderFailedHandler.execute(orderFailedCommand);
 			expect(orderFailedHandlerSpy).toBeCalled();
 			expect(orderFailedHandlerSpy).toBeCalledWith(orderFailedCommand);
@@ -478,7 +486,7 @@ describe("Substrate Indexer", () => {
 			const order: Orders = createMockOrder(OrderStatus.Failed);
 			
 			const orderFulfilledHandlerSpy = jest.spyOn(orderFulfilledHandler, 'execute');
-			const orderFulfilledCommand: OrderFulfilledCommand = new OrderFulfilledCommand(order);
+			const orderFulfilledCommand: OrderFulfilledCommand = new OrderFulfilledCommand([order], mockBlockNumber());
 			await orderFulfilledHandler.execute(orderFulfilledCommand);
 			expect(orderFulfilledHandlerSpy).toBeCalled();
 			expect(orderFulfilledHandlerSpy).toBeCalledWith(orderFulfilledCommand);
@@ -488,7 +496,7 @@ describe("Substrate Indexer", () => {
 			const order: Orders = createMockOrder(OrderStatus.Paid);
 			
 			const orderPaidHandlerSpy = jest.spyOn(orderPaidHandler, 'execute');
-			const orderPaidCommand: OrderPaidCommand = new OrderPaidCommand(order);
+			const orderPaidCommand: OrderPaidCommand = new OrderPaidCommand([order], mockBlockNumber());
 			await orderPaidHandler.execute(orderPaidCommand);
 			expect(orderPaidHandlerSpy).toBeCalled();
 			expect(orderPaidHandlerSpy).toBeCalledWith(orderPaidCommand);
@@ -498,7 +506,7 @@ describe("Substrate Indexer", () => {
 			const order: Orders = createMockOrder(OrderStatus.Refunded);
 			
 			const orderRefundedHandlerSpy = jest.spyOn(orderRefundedHandler, 'execute');
-			const orderRefundedCommand: OrderRefundedCommand = new OrderRefundedCommand(order);
+			const orderRefundedCommand: OrderRefundedCommand = new OrderRefundedCommand([order], mockBlockNumber());
 			await orderRefundedHandler.execute(orderRefundedCommand);
 			expect(orderRefundedHandlerSpy).toBeCalled();
 			expect(orderRefundedHandlerSpy).toBeCalledWith(orderRefundedCommand);
