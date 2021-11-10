@@ -13,12 +13,12 @@ export class RegisterLabBlockHandler
   async execute(command: RegisterLabBlockCommand) {
     await this.elasticsearchService.update({
       index: 'register-lab',
-      id: command.labs.account_id,
+      id: command.labs.accountId,
       refresh: 'wait_for',
       body: {
 				doc: {
 					block_number: command.blockNumber,
-					account_id: command.labs.account_id,
+					account_id: command.labs.accountId,
 					services: command.labs.services,
 					certifications: command.labs.certifications,
 					info: command.labs.info,
