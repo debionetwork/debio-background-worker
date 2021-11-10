@@ -16,20 +16,20 @@ export class ServiceCreatedHandler
       index: 'labs',
       body: {
         query: {
-          match: { _id: service.owner_id.toString() },
+          match: { _id: service.ownerId.toString() },
         },
       },
     });
 
     let serviceBody = {
       id: service.id,
-      owner_id: service.owner_id,
+      owner_id: service.ownerId,
       info: service.info,
       country: '',
       city: '',
       region: '',
       blockMetaData: command.blockMetaData,
-      service_flow: command.services.service_flow,
+      service_flow: command.services.serviceFlow,
     };
 
     try {
@@ -54,7 +54,7 @@ export class ServiceCreatedHandler
 
       await this.elasticsearchService.update({
         index: 'labs',
-        id: service.owner_id,
+        id: service.ownerId,
         refresh: 'wait_for',
         body: {
           script: {

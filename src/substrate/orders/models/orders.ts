@@ -5,16 +5,16 @@ import { OrderStatus } from "./order-status";
 
 export class Orders {
 	id: string;
-	service_id: string;
-	customer_id: string;
-	customer_box_public_key: string;
-	seller_id: string;
-	dna_sample_tracking_id: string;
+	serviceId: string;
+	customerId: string;
+	customerBoxPublicKey: string;
+	sellerId: string;
+	dnaSampleTrackingId: string;
 	currency: Currency;
 	prices: Price[];
-	additional_prices: Price[];
-	order_flow: ServiceFlow;
+	additionalPrices: Price[];
+	orderFlow: ServiceFlow;
 	status: OrderStatus;
-	created_at: BigInt;
-	updated_at: BigInt;
+	createdAt: BigInt;
+	updatedAt: BigInt;
 }

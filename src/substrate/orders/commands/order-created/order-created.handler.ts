@@ -15,20 +15,20 @@ export class OrderCreatedHandler
 
 		const orderBody = {
 			id: order.id,
-			service_id: order.service_id,
-			customer_id: order.customer_id,
-			customer_box_public_key: order.customer_box_public_key,
-			seller_id: order.seller_id,
-			dna_sample_tracking_id: order.dna_sample_tracking_id,
+			service_id: order.serviceId,
+			customer_id: order.customerId,
+			customer_box_public_key: order.customerBoxPublicKey,
+			seller_id: order.sellerId,
+			dna_sample_tracking_id: order.dnaSampleTrackingId,
 			currency: order.currency,
 			prices: order.prices,
-			additional_prices: order.additional_prices,
+			additional_prices: order.additionalPrices,
 			status: order.status,
-			created_at: order.created_at.toString(),
-			updated_at: order.updated_at.toString(),
+			created_at: order.createdAt.toString(),
+			updated_at: order.updatedAt.toString(),
 			lab_info: {},
 			service_info: {},
-      order_flow: order.order_flow,
+      order_flow: order.orderFlow,
       blockMetaData: command.blockMetaData,
 		};
 
@@ -36,7 +36,7 @@ export class OrderCreatedHandler
       index: 'labs',
       body: {
         query: {
-          match: { _id: order.seller_id.toString() },
+          match: { _id: order.sellerId.toString() },
         },
       },
     });
@@ -47,7 +47,7 @@ export class OrderCreatedHandler
       index: 'services',
       body: {
         query: {
-          match: { _id: order.service_id.toString() },
+          match: { _id: order.serviceId.toString() },
         },
       },
     });

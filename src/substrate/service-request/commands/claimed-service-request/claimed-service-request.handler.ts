@@ -12,7 +12,7 @@ export class ClaimedServiceRequestHandler implements ICommandHandler<ClaimedServ
   async execute(command: ClaimedServiceRequestCommand) {
     await this.elasticSearchService.update({
       index: 'create-service-request',
-      id: command.request.request_hash,
+      id: command.request.requestHash,
       refresh: 'wait_for',
       body: {
         script: {
@@ -23,7 +23,7 @@ export class ClaimedServiceRequestHandler implements ICommandHandler<ClaimedServ
             ctx._source.blockMetadata = params.blockMetaData;
           `,
           params: {
-            lab_address: command.request.lab_address,
+            lab_address: command.request.labAddress,
             status: RequestStatus.Claimed,
             blockMetaData: command.blockMetadata
           },

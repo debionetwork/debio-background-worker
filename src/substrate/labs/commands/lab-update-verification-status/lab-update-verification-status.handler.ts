@@ -13,11 +13,11 @@ export class LabUpdateVerificationStatusHandler implements ICommandHandler<LabUp
 
     await this.elasticsearchService.update({
       index: 'labs',
-      id: lab.account_id,
+      id: lab.accountId,
       refresh: 'wait_for',
       body: {
         doc: {
-          verification_status: lab.verification_status,
+          verification_status: lab.verificationStatus,
         }
       }
     });

@@ -31,7 +31,7 @@ export class ServiceDeletedHandler
         index: 'labs',
         body: {
           query: {
-            match: { _id: service.owner_id.toString() },
+            match: { _id: service.ownerId.toString() },
           },
         },
       });
@@ -46,7 +46,7 @@ export class ServiceDeletedHandler
     try {
       await this.elasticsearchService.update({
         index: 'labs',
-        id: service.owner_id.toString(),
+        id: service.ownerId.toString(),
         refresh: 'wait_for',
         body: {
           script: {
