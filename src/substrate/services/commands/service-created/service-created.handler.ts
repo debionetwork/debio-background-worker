@@ -12,14 +12,18 @@ export class ServiceCreatedHandler
 
   async execute(command: ServiceCreatedCommand) {
     const { services: service } = command;
+    
+    const ownerId = service.ownerId.toString();
+
     const resp = await this.elasticsearchService.search({
       index: 'labs',
       body: {
         query: {
-          match: { _id: service.ownerId },
+          match: { _id: ownerId },
         },
-      },
+      }
     });
+
 
     let serviceBody = {
       id: service.id,
@@ -54,7 +58,7 @@ export class ServiceCreatedHandler
 
       await this.elasticsearchService.update({
         index: 'labs',
-        id: service.ownerId,
+        id: ownerId,
         refresh: 'wait_for',
         body: {
           script: {
