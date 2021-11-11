@@ -34,7 +34,7 @@ export class ServiceInfo {
     this.dna_collection_process = decoder.decode(_dnaCollectionProcess);
     this.test_result_sample = decoder.decode(_testResultSample);
     this.long_description = _longDescription;
-    this.image = _image;
+    this.image = decoder.decode(_image);
   }
 
   name: string;

@@ -26,7 +26,7 @@ export class LabInfo {
     this.address = decoder.decode(_address);
     this.latitude = _latitude;
     this.longitude = _longitude;
-    this.profile_image = _profileImage;
+    this.profile_image = decoder.decode(_profileImage);
   }
 
   box_public_key: String;
