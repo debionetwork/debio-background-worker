@@ -3,7 +3,7 @@ import { Lab } from '../../models/lab';
 
 export class LabRegisteredCommand {
   labs: Lab;
-  constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
+  constructor(data: Array<Lab>, public readonly blockMetaData: BlockMetaData) {
     this.labs = data[0];
   }
 }

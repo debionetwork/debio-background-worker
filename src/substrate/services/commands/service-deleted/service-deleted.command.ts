@@ -3,7 +3,7 @@ import { Service } from '../../models/service';
 
 export class ServiceDeletedCommand {
   services: Service;
-  constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
+  constructor(data: Array<Service>, public readonly blockMetaData: BlockMetaData) {
     this.services = data[0];
   }
 }

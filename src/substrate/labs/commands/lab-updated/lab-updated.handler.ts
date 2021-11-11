@@ -10,6 +10,24 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
 
   async execute(command: LabUpdatedCommand) {
     const { labs: lab } = command;
+    
+    const decoder = new TextDecoder();
+
+    const info = {
+      box_public_key: lab.info.boxPublicKey,
+      name: decoder.decode(lab.info.name),
+      email: decoder.decode(lab.info.email),
+      country: decoder.decode(lab.info.country),
+      region: decoder.decode(lab.info.region),
+      city: decoder.decode(lab.info.city),
+      address: decoder.decode(lab.info.address),
+      phone_number: decoder.decode(lab.info.phoneNumber),
+      website: decoder.decode(lab.info.website),
+      latitude: decoder.decode(lab.info.latitude),
+      longitude: decoder.decode(lab.info.longitude),
+      profile_image: decoder.decode(lab.info.profileImage)
+    };
+
     await this.elasticsearchService.update({
       index: 'labs',
       id: lab.accountId,
@@ -34,11 +52,11 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
             account_id: lab.accountId,
             certifications: lab.certifications,
             verification_status: lab.verificationStatus,
-            info: lab.info,
+            info: info,
             blockMetaData: command.blockMetaData,
-            country: lab.info.country,
-            city: lab.info.city,
-            region: lab.info.region,
+            country: decoder.decode(lab.info.country),
+            city: decoder.decode(lab.info.city),
+            region: decoder.decode(lab.info.region),
           }
         }
       },
@@ -50,14 +68,14 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
       body: {
         query: {
           match: { 
-            seller_id: lab.accountId.toString(),
+            seller_id: lab.accountId,
           }
         },
         script: {
           source: "ctx._source.lab_info = params.new_lab_info",
           lang: 'painless',
           params: {
-            new_lab_info: lab.info
+            new_lab_info: info
           }
         }
       }
