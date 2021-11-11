@@ -1,5 +1,5 @@
 export class Price {
-  constructor(_component: any, _value: any) {
+  constructor(_component: any, _value: number) {
     const decoder = new TextDecoder();
 
     this.component = decoder.decode(_component);
