@@ -16,7 +16,7 @@ export class ServiceUpdatedHandler
 
     await this.elasticsearchService.update({
       index: 'services',
-      id: service.id.toString(),
+      id: service.id,
       refresh: 'wait_for',
       body: {
         doc: {
@@ -45,7 +45,7 @@ export class ServiceUpdatedHandler
         index: 'labs',
         body: {
           query: {
-            match: { _id: service.ownerId.toString() },
+            match: { _id: service.ownerId },
           },
         },
       });
@@ -54,7 +54,7 @@ export class ServiceUpdatedHandler
       const { country, city, region } = info;
 
       serviceIndexToDelete = _source.services.findIndex(
-        (s) => s.id == service.id.toString(),
+        (s) => s.id == service.id,
       );
       
       serviceBody = {
@@ -70,7 +70,7 @@ export class ServiceUpdatedHandler
     try {
       await this.elasticsearchService.update({
         index: 'labs',
-        id: service.ownerId.toString(),
+        id: service.ownerId,
         refresh: 'wait_for',
         body: {
           script: {
@@ -100,7 +100,7 @@ export class ServiceUpdatedHandler
         },
         query: {
           match: { 
-            service_id: service.id.toString(),
+            service_id: service.id,
           }
         },
       }

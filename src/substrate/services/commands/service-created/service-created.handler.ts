@@ -16,7 +16,7 @@ export class ServiceCreatedHandler
       index: 'labs',
       body: {
         query: {
-          match: { _id: service.ownerId.toString() },
+          match: { _id: service.ownerId },
         },
       },
     });
