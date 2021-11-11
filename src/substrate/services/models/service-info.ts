@@ -15,6 +15,8 @@ export class ServiceInfo {
     const decoder = new TextDecoder();
 
     this.name = decoder.decode(_name);
+
+    this.prices_by_currency = [];
     
     for (let i = 0; i < _pricesByCurrency.length; i++) {
       const pbc: PriceByCurrency = new PriceByCurrency(
@@ -29,10 +31,10 @@ export class ServiceInfo {
     this.expected_duration = decoder.decode(_expectedDuration);
     this.category = decoder.decode(_category);
     this.description = decoder.decode(_description);
-    this.dna_collection_process = _dnaCollectionProcess === null ? null : decoder.decode(_dnaCollectionProcess);
+    this.dna_collection_process = decoder.decode(_dnaCollectionProcess);
     this.test_result_sample = decoder.decode(_testResultSample);
-    this.long_description = _longDescription === null ? null : decoder.decode(_longDescription);
-    this.image = _image === null ? null : decoder.decode(_image);
+    this.long_description = _longDescription;
+    this.image = _image;
   }
 
   name: string;
