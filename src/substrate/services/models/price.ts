@@ -1,4 +1,4 @@
 export class Price {
-  component: string;
+  component: Uint8Array;
   value: number;
 }

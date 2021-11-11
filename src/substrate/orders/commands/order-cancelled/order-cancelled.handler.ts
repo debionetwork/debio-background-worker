@@ -12,6 +12,25 @@ export class OrderCancelledHandler
 
   async execute(command: OrderCancelledCommand) {
     const { orders: order } = command;
+
+    const additional_prices = [];
+    const prices = [];
+
+    for (let i = 0; i < order.additionalPrices.length; i++) {
+      const currorder = order.additionalPrices[i];
+      additional_prices.push({
+        component: currorder.component,
+        value: currorder.value
+      })
+    }
+    
+    for (let i = 0; i < order.additionalPrices.length; i++) {
+      const currprice = order.prices[i];
+      prices.push({
+        component: currprice.component,
+        value: currprice.value
+      })
+    }
     
     return this.elasticsearchService.update({
       index: 'orders',

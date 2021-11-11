@@ -3,7 +3,7 @@ import { Orders } from "../../models/orders";
 
 export class OrderFulfilledCommand {
   orders: Orders;
-  constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
+  constructor(data: Array<Orders>, public readonly blockMetaData: BlockMetaData) {
     this.orders = data[0];
   }
 }
