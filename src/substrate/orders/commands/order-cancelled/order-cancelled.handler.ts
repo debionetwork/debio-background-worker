@@ -12,6 +12,8 @@ export class OrderCancelledHandler
 
   async execute(command: OrderCancelledCommand) {
     const { orders: order } = command;
+    
+    const decoder = new TextDecoder();
 
     const additional_prices = [];
     const prices = [];
@@ -19,7 +21,7 @@ export class OrderCancelledHandler
     for (let i = 0; i < order.additionalPrices.length; i++) {
       const currorder = order.additionalPrices[i];
       additional_prices.push({
-        component: currorder.component,
+        component: decoder.decode(currorder.component),
         value: currorder.value
       })
     }
@@ -27,7 +29,7 @@ export class OrderCancelledHandler
     for (let i = 0; i < order.additionalPrices.length; i++) {
       const currprice = order.prices[i];
       prices.push({
-        component: currprice.component,
+        component: decoder.decode(currprice.component),
         value: currprice.value
       })
     }
@@ -45,8 +47,8 @@ export class OrderCancelledHandler
           seller_id: order.sellerId,
           dna_sample_tracking_id: order.dnaSampleTrackingId,
           currency: order.currency,
-          prices: order.prices,
-          additional_prices: order.additionalPrices,
+          prices: prices,
+          additional_prices: additional_prices,
           status: order.status,
           created_at: order.createdAt.toString(),
           updated_at: order.updatedAt.toString(),
