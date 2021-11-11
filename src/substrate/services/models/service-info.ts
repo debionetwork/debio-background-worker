@@ -28,7 +28,7 @@ export class ServiceInfo {
       this.prices_by_currency.push(pbc);
     }
 
-    this.expected_duration = decoder.decode(_expectedDuration);
+    this.expected_duration = _expectedDuration;
     this.category = decoder.decode(_category);
     this.description = decoder.decode(_description);
     this.dna_collection_process = decoder.decode(_dnaCollectionProcess);
