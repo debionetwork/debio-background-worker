@@ -1,13 +1,47 @@
 import { PriceByCurrency } from './price-by-currency';
 
 export class ServiceInfo {
-  name: Uint8Array;
-  pricesByCurrency: PriceByCurrency[];
-  expectedDuration: string;
-  category: Uint8Array;
-  description: Uint8Array;
-  dnaCollectionProcess?: Uint8Array;
-  testResultSample: Uint8Array;
-  longDescription?: Uint8Array;
-  image?: Uint8Array;
+  constructor(
+    _name: any,
+    _pricesByCurrency: Array<any>,
+    _expectedDuration: any,
+    _category: any,
+    _description: any,
+    _dnaCollectionProcess: any,
+    _testResultSample: any,
+    _longDescription: any,
+    _image: any
+  ) {
+    const decoder = new TextDecoder();
+
+    this.name = decoder.decode(_name);
+    
+    for (let i = 0; i < _pricesByCurrency.length; i++) {
+      const pbc: PriceByCurrency = new PriceByCurrency(
+        _pricesByCurrency[i]["currency"],
+        _pricesByCurrency[i]["totalPrice"],
+        _pricesByCurrency[i]["priceComponents"],
+        _pricesByCurrency[i]["additionalPrices"]
+      );
+      this.prices_by_currency.push(pbc);
+    }
+
+    this.expected_duration = decoder.decode(_expectedDuration);
+    this.category = decoder.decode(_category);
+    this.description = decoder.decode(_description);
+    this.dna_collection_process = _dnaCollectionProcess === null ? null : decoder.decode(_dnaCollectionProcess);
+    this.test_result_sample = decoder.decode(_testResultSample);
+    this.long_description = _longDescription === null ? null : decoder.decode(_longDescription);
+    this.image = _image === null ? null : decoder.decode(_image);
+  }
+
+  name: string;
+  prices_by_currency: PriceByCurrency[];
+  expected_duration: string;
+  category: string;
+  description: string;
+  dna_collection_process?: string;
+  test_result_sample: string;
+  long_description?: string;
+  image?: string;
 }
