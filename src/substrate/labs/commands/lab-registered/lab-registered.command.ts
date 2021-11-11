@@ -4,7 +4,6 @@ import { Lab } from '../../models/lab';
 export class LabRegisteredCommand {
   labs: Lab;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
-    console.log(data[0]);
     this.labs = new Lab(
       data[0]["accountId"],
       data[0]["services"],

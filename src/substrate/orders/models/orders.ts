@@ -26,10 +26,14 @@ export class Orders {
 			this.dnaSampleTrackingId = _dnaSampleTrackingId;
 			this.currency = _currency;
 
+			this.prices = [];
+
 			for (let i = 0; i < _prices.length; i++) {
 				const price: Price = new Price(_prices[i]["component"], _prices[i]["value"]);
 				this.prices.push(price);
 			}
+
+			this.additionalPrices = [];
 
 			for (let i = 0; i < _additionalPrices.length; i++) {
 				const price: Price = new Price(_prices[i]["component"], _prices[i]["value"]);
