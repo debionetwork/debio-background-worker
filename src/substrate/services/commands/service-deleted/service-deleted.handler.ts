@@ -18,7 +18,7 @@ export class ServiceDeletedHandler
     try {
       await this.elasticsearchService.delete({
         index: 'services',
-        id: service.id.toString(),
+        id: service.id,
         refresh: 'wait_for',
       });
     } catch (err) {
@@ -31,13 +31,13 @@ export class ServiceDeletedHandler
         index: 'labs',
         body: {
           query: {
-            match: { _id: service.ownerId.toString() },
+            match: { _id: service.ownerId },
           },
         },
       });
       const { _source } = resp.body.hits.hits[0];
       serviceIndexToDelete = _source.services.findIndex(
-        (s) => s.id == service.id.toString(),
+        (s) => s.id == service.id,
       );
     } catch (err) {
       this.logger.log('elasticsearchService.search labs error :', err);

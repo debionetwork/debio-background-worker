@@ -8,7 +8,7 @@ export class PriceByCurrency {
     _additionalPrices: Array<any>
   ) {
     this.currency = _currency;
-    this.total_price = _totalPrice;
+    this.total_price = _totalPrice.toString();
 
     this.price_components = [];
 
@@ -25,7 +25,7 @@ export class PriceByCurrency {
     }
   }
   currency: string;
-  total_price: number;
+  total_price: string;
   price_components: Price[];
   additional_prices: Price[];
 }
