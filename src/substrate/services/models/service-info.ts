@@ -14,8 +14,6 @@ export class ServiceInfo {
   ) {
     const decoder = new TextDecoder();
 
-    this.name = decoder.decode(_name);
-
     this.prices_by_currency = [];
     
     for (let i = 0; i < _pricesByCurrency.length; i++) {
@@ -25,16 +23,18 @@ export class ServiceInfo {
         _pricesByCurrency[i]["priceComponents"],
         _pricesByCurrency[i]["additionalPrices"]
       );
+
       this.prices_by_currency.push(pbc);
     }
 
-    this.expected_duration = _expectedDuration;
-    this.category = decoder.decode(_category);
-    this.description = decoder.decode(_description);
+    this.name                   = decoder.decode(_name);
+    this.expected_duration      = _expectedDuration;
+    this.category               = decoder.decode(_category);
+    this.description            = decoder.decode(_description);
     this.dna_collection_process = decoder.decode(_dnaCollectionProcess);
-    this.test_result_sample = decoder.decode(_testResultSample);
-    this.long_description = _longDescription;
-    this.image = _image;
+    this.test_result_sample     = decoder.decode(_testResultSample);
+    this.long_description       = _longDescription instanceof Uint8Array ? decoder.decode(_longDescription) : null;
+    this.image                  = _image instanceof Uint8Array ? decoder.decode(_image) : null;
   }
 
   name: string;

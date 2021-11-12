@@ -8,9 +8,10 @@ export class Lab {
     _certifications: Array<any>, 
     _verificationStatus: any,
     _info: any) {
-      this.accountId = _accountId;
-      this.services = _services;
+      this.accountId          = _accountId;
+      this.services           = _services;
       this.verificationStatus = _verificationStatus;
+      
       this.info = new LabInfo(
         _info["boxPublicKey"],
         _info["name"],
