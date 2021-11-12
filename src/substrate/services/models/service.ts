@@ -8,8 +8,9 @@ export class Service {
     _info: any,
     _serviceFlow: any
   ) {
-    this.id = _id;
-    this.ownerId = _ownerId;
+    this.id       = _id;
+    this.ownerId  = _ownerId;
+
     this.info = new ServiceInfo(
       _info["name"],
       _info["pricesByCurrency"],

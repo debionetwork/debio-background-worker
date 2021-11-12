@@ -16,17 +16,17 @@ export class LabInfo {
     const decoder = new TextDecoder();
 
     this.box_public_key = _boxPublicKey;
-    this.name = decoder.decode(_name);
-    this.email = decoder.decode(_email);
-    this.phone_number = decoder.decode(_phoneNumber);
-    this.website = decoder.decode(_website);
-    this.country = decoder.decode(_country);
-    this.region = decoder.decode(_region);
-    this.city = decoder.decode(_city);
-    this.address = decoder.decode(_address);
-    this.latitude = _latitude;
-    this.longitude = _longitude;
-    this.profile_image = decoder.decode(_profileImage);
+    this.name           = decoder.decode(_name);
+    this.email          = decoder.decode(_email);
+    this.phone_number   = decoder.decode(_phoneNumber);
+    this.website        = decoder.decode(_website);
+    this.country        = decoder.decode(_country);
+    this.region         = decoder.decode(_region);
+    this.city           = decoder.decode(_city);
+    this.address        = decoder.decode(_address);
+    this.latitude       = _latitude instanceof Uint8Array ? decoder.decode(_latitude) : null;
+    this.longitude      = _longitude instanceof Uint8Array ? decoder.decode(_longitude) : null;
+    this.profile_image  = _profileImage instanceof Uint8Array ? decoder.decode(_profileImage) : null;
   }
 
   box_public_key: String;
