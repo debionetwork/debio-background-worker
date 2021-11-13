@@ -1,0 +1,4 @@
+.maintain
+.env
+Dockerfile
+.pipeline.yml
