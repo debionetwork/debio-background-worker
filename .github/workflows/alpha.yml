@@ -84,7 +84,7 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}
 
   publish-draft-release:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     needs: [build-and-publish-docker-image]
 
