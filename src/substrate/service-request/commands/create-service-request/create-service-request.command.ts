@@ -6,7 +6,7 @@ export class CreateServiceRequestCommand {
   blockMetadata: BlockMetadata;
   constructor(args: Array<any>, blockMetadata: BlockMetadata) {
     this.request = new RequestModel(
-      args[1]["hash"],
+      args[1]["hash_"],
       args[1]["requesterAddress"],
       args[1]["labAddress"],
       args[1]["country"],
