@@ -18,13 +18,13 @@ export class Orders {
 		_orderFlow: any,
 		_createdAt: BigInt,
 		_updatedAt: BigInt) {
-			this.id = _id;
-			this.serviceId = _serviceId;
-			this.customerId = _customerId;
+			this.id 									= _id;
+			this.serviceId 						= _serviceId;
+			this.customerId 					= _customerId;
 			this.customerBoxPublicKey = _customerBoxPublicKey;
-			this.sellerId = _sellerId;
-			this.dnaSampleTrackingId = _dnaSampleTrackingId;
-			this.currency = _currency;
+			this.sellerId 						= _sellerId;
+			this.dnaSampleTrackingId 	= _dnaSampleTrackingId;
+			this.currency 						= _currency;
 
 			this.prices = [];
 
@@ -40,10 +40,10 @@ export class Orders {
 				this.additionalPrices.push(price);
 			}
 
-			this.orderFlow = _orderFlow;
-			this.status = _status;
-			this.createdAt = _createdAt.toString();
-			this.updatedAt = _updatedAt.toString();
+			this.orderFlow 	= _orderFlow;
+			this.status 		= _status;
+			this.createdAt 	= _createdAt.toString();
+			this.updatedAt 	= _updatedAt.toString();
 	}
 
 	id: string;

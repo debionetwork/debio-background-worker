@@ -1,8 +1,8 @@
 export enum OrderStatus {
-  Unpaid = "Unpaid",
-  Paid = "Paid",
+  Unpaid    = "Unpaid",
+  Paid      = "Paid",
   Fulfilled = "Fulfilled",
-  Refunded = "Refunded",
+  Refunded  = "Refunded",
   Cancelled = "Cancelled",
-  Failed = "Failed",
+  Failed    = "Failed",
 }

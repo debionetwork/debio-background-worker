@@ -7,8 +7,8 @@ export class PriceByCurrency {
     _priceComponents: Array<any>,
     _additionalPrices: Array<any>
   ) {
-    this.currency = _currency;
-    this.total_price = _totalPrice.toString();
+    this.currency     = _currency;
+    this.total_price  = _totalPrice.toString();
 
     this.price_components = [];
 
