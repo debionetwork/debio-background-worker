@@ -3,8 +3,7 @@ import { RequestModel } from '../../models/request';
 
 export class CreateServiceRequestCommand {
   request: RequestModel;
-  blockMetadata: BlockMetadata;
-  constructor(args: Array<any>, blockMetadata: BlockMetadata) {
+  constructor(args: Array<any>, public readonly blockMetadata: BlockMetadata) {
     this.request = new RequestModel(
       args[1]["hash_"],
       args[1]["requesterAddress"],
@@ -17,6 +16,5 @@ export class CreateServiceRequestCommand {
       args[1]["status"],
       args[1]["unstakedAt"]
     );
-    this.blockMetadata = blockMetadata;
   }
 }
