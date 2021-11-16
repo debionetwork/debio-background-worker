@@ -9,7 +9,7 @@ export class RequestModel {
     _region: any,
     _city: any,
     _serviceCategory: any,
-    _stakingAmount: BigInt,
+    _stakingAmount: any,
     _status: any,
     _unstakedAt: any
   ) {
