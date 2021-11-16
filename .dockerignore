@@ -1,5 +1,4 @@
 .maintain
-.env
 Dockerfile
 .pipeline.yml
 .github
