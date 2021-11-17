@@ -11,6 +11,8 @@ export class RequestModel {
     _serviceCategory: any,
     _stakingAmount: any,
     _status: any,
+    _created_at: any,
+    _updated_at: any,
     _unstakedAt: any
   ) {
     const decoder = new TextDecoder();
@@ -24,6 +26,8 @@ export class RequestModel {
     this.service_category   = decoder.decode(_serviceCategory);
     this.staking_amount     = _stakingAmount.toString();
     this.status             = _status;
+    this.created_at         = _created_at.toString();
+    this.updated_at         = _updated_at.toString();
     this.unstaked_at        = _unstakedAt.toString();
   }
 
@@ -36,5 +40,7 @@ export class RequestModel {
   service_category: string;
   staking_amount: string;
   status: RequestStatus;
+  created_at: string;
+  updated_at: string;
   unstaked_at: string;
 }

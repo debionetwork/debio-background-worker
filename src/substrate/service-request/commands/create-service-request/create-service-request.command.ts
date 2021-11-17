@@ -14,6 +14,8 @@ export class CreateServiceRequestCommand {
       args[1]["serviceCategory"],
       args[1]["stakingAmount"],
       args[1]["status"],
+      args[1]["createdAt"],
+      args[1]["updatedAt"],
       args[1]["unstakedAt"]
     );
   }
