@@ -18,16 +18,19 @@ export class LabDeregisteredHandler
       refresh: 'wait_for',
     });
 
-    await this.elasticsearchService.deleteByQuery({
-      index: 'services',
-      refresh: true,
-      body: {
-        query: {
-          match: {
-            owner_id: lab.accountId,
+    if (lab.services.length > 0) {
+      await this.elasticsearchService.deleteByQuery({
+        index: 'services',
+        refresh: true,
+        allow_no_indices: true,
+        body: {
+          query: {
+            match: {
+              owner_id: lab.accountId,
+            },
           },
         },
-      },
-    });
+      });
+    }
   }
 }
