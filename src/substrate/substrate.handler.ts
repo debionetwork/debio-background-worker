@@ -31,6 +31,9 @@ import {
 import {
   CreateServiceRequestCommand,
   ClaimedServiceRequestCommand,
+  ProcessedServiceRequestCommand,
+  FinalizedServiceRequestCommand,
+  UnstakedServiceRequestCommand
 } from './service-request';
 import { DataStakedCommand } from './genetic-testing';
 
@@ -60,6 +63,9 @@ const eventRoutes = {
   serviceRequest: {
     ServiceRequestCreated: CreateServiceRequestCommand,
     ServiceRequestClaimed: ClaimedServiceRequestCommand,
+    ServiceRequestProcessed: ProcessedServiceRequestCommand,
+    ServiceRequestFinalized: FinalizedServiceRequestCommand,
+    ServiceRequestUnstaked: UnstakedServiceRequestCommand
   }
 };
 
@@ -77,48 +83,50 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async handleEvent(blockMetaData: BlockMetaData, event: Event) {
-    const eventSection = eventRoutes[event.section];
-    
-    if (eventSection && eventSection[event.method]) {
-      this.logger.log(
-        `Handling substrate event: ${event.section}.${event.method}`,
-      );
+    try {
+      const eventSection = eventRoutes[event.section];
       
-      const eventMethod = new eventSection[event.method](event.data, blockMetaData);
-      
-      try {
+      if (eventSection && eventSection[event.method]) {
+        this.logger.log(`Handling substrate event: ${event.section}.${event.method}`);
+        
+        const eventMethod = new eventSection[event.method](event.data, blockMetaData);
+        
         await this.commandBus.execute(eventMethod);
-      } catch(err) {
-        this.logger.log(`Handling substrate catch : ${err.name}, ${err.message}, ${err.stack}`);
       }
+    } catch (err) {
+      this.logger.log(`Handling substrate catch : ${err.name}, ${err.message}, ${err.stack}`);
     }
   }
 
   listenToEvents() {
     this.api.query.system.events(async (events) => {
-      const currentBlock = await this.api.rpc.chain.getBlock();
-      const currentBlockNumber = currentBlock.block.header.number.toNumber();
-      const blockHash = await this.api.rpc.chain.getBlockHash(currentBlockNumber);
-
-      const blockMetaData: BlockMetaData = {
-        blockNumber: currentBlockNumber,
-        blockHash: blockHash.toString()
-      }
-
-      for (let i = 0; i < events.length; i++) {
-        const { event } = events[i];
-        await this.handleEvent(blockMetaData, event);
+      try {
+        const currentBlock        = await this.api.rpc.chain.getBlock();
+        const currentBlockNumber  = currentBlock.block.header.number.toNumber();
+        const blockHash           = await this.api.rpc.chain.getBlockHash(currentBlockNumber);
+  
+        const blockMetaData: BlockMetaData = {
+          blockNumber: currentBlockNumber,
+          blockHash: blockHash.toString()
+        }
+  
+        for (let i = 0; i < events.length; i++) {
+          const { event } = events[i];
+          await this.handleEvent(blockMetaData, event);
+        }
+      } catch (err) {
+        this.logger.log(`Handling listen to event catch : ${err.name}, ${err.message}, ${err.stack}`);
       }
     });
   }
 
   listenToNewBlock() {
     this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
-			const blockNumber = header.number.toNumber();
+      try {
+        const blockNumber = header.number.toNumber();
 
-      // check if env is development
-      if (process.env.NODE_ENV === 'development') {
-        try {
+        // check if env is development
+        if (process.env.NODE_ENV === 'development') {
           const lastBlockNumber = await this.queryBus.execute(
             new GetLastSubstrateBlockQuery(),
           );
@@ -129,16 +137,16 @@ export class SubstrateService implements OnModuleInit {
             // delete all indexes
             await this.commandBus.execute(new DeleteAllIndexesCommand());
           }
-        } catch (err) {
-          this.logger.log(err);
         }
-      }
-			
-			this.logger.log(`Syncing Substrate Block: ${blockNumber}`);
+        
+        this.logger.log(`Syncing Substrate Block: ${blockNumber}`);
 
-      await this.commandBus.execute(
-        new SetLastSubstrateBlockCommand(blockNumber),
-      );
+        await this.commandBus.execute(
+          new SetLastSubstrateBlockCommand(blockNumber),
+        );
+      } catch (err) {
+        this.logger.log(`Handling listen to new block catch : ${err.name}, ${err.message}, ${err.stack}`);
+      }
     });
   }
 
@@ -198,12 +206,10 @@ export class SubstrateService implements OnModuleInit {
         // if chunkEnd + chunkSize is more than endBlock,
         // set chunkEnd to endBlock
         // else set chunkEnd to (chunkEnd + chunkSize)
-        chunkEnd =
-          chunkEnd + chunkSize > endBlock ? endBlock : chunkEnd + chunkSize;
+        chunkEnd = chunkEnd + chunkSize > endBlock ? endBlock : chunkEnd + chunkSize;
       }
-      
     } catch (err) {
-      this.logger.log(err);
+      this.logger.log(`Handling sync block catch : ${err.name}, ${err.message}, ${err.stack}`);
     }
   }
 }

@@ -30,7 +30,7 @@ import { Orders } from "./orders/models/orders";
 import { Currency } from "./orders/models/currency";
 import { OrderStatus } from "./orders/models/order-status";
 import { GetLastSubstrateBlockHandler } from "./blocks/queries/get-last-substrate-block/get-last-substrate-block.handler";
-import { CancelOrderBlockCommand, CreateOrderBlockCommand, CreateServiceBlockCommand, DeleteServiceBlockCommand, DeregisterLabBlockCommand, FailedOrderBlockCommand, FulfillOrderBlockCommand, PaidOrderBlockCommand, RefundedOrderBlockCommand, RegisterLabBlockCommand, SetLastSubstrateBlockCommand, UpdateLabBlockCommand, UpdateServiceBlockCommand } from "./blocks";
+import { SetLastSubstrateBlockCommand } from "./blocks";
 import { CreateOrderBlockHandler } from "./blocks/commands/create-order-block/create-order-block.handler";
 import { CancelOrderBlockHandler } from "./blocks/commands/cancel-order-block/cancel-order-block.handler";
 import { PaidOrderBlockHandler } from "./blocks/commands/paid-order-block/paid-order-block.handler";
@@ -152,6 +152,8 @@ describe("Substrate Indexer", () => {
 		city,
 		country,
 		email,
+		phone_number,
+		website,
 		latitude,
 		longitude,
 		name,
@@ -159,9 +161,23 @@ describe("Substrate Indexer", () => {
 		region,
 		account_id,
 		certifications,
+		verification_status,
 		services,
 	}) => {
-		const labInfo: LabInfo = new LabInfo();
+		const labInfo: LabInfo = new LabInfo(
+			box_public_key, 
+			name, 
+			email, 
+			phone_number, 
+			website, 
+			country, 
+			region, 
+			city, 
+			address, 
+			latitude, 
+			longitude, 
+			profile_image
+		);
 		labInfo.address = address;
 		labInfo.box_public_key = box_public_key;
 		labInfo.city = city;
@@ -172,68 +188,62 @@ describe("Substrate Indexer", () => {
 		labInfo.name = name;
 		labInfo.profile_image = profile_image;
 		labInfo.region = region;
-		const lab: Lab = new Lab();
-		lab.account_id = account_id;
-		lab.certifications = certifications;
-		lab.info = labInfo;
-		lab.services = services;
+		const lab: Lab = new Lab(account_id, services, certifications, verification_status, labInfo);
 
 		return lab;
 	}
 
 	function createMockService(): Services {
-		const first_price: Price = new Price();
-		first_price.component = "testing_price";
-		first_price.value = 15;
-		const second_price: Price = new Price();
-		second_price.component = "qc_price";
-		second_price.value = 5;
+		const first_price: Price = new Price("testing_price", 15);
+		const second_price: Price = new Price("qc_price", 5);
 
-		const prices_by_currency: PriceByCurrency = new PriceByCurrency();
-		prices_by_currency.currency = "Dai";
-		prices_by_currency.total_price = 20;
-		prices_by_currency.price_components = [ first_price ];
-		prices_by_currency.additional_prices = [ second_price ];
+		const prices_by_currency: PriceByCurrency = new PriceByCurrency(
+			"Dai", 
+			20, 
+			[ first_price ], 
+			[ second_price ]
+		);
 
-		const service_info: ServiceInfo = new ServiceInfo();
-		service_info.name = "Exercise";
-		service_info.prices_by_currency = [ prices_by_currency ];
-		service_info.expected_duration = "";
-		service_info.category = "Targeted Gene Panel Sequencing";
-		service_info.description = "Find an effective workout based on your genetic code to maximize your workout gains.";
-		service_info.test_result_sample = "";
-		service_info.long_description = null;
-		service_info.image = "mdi-weight-lifter";
+		const service_info: ServiceInfo = new ServiceInfo(
+			"Exercise", 
+			[ prices_by_currency ],
+			"",
+			"Targeted Gene Panel Sequencing",
+			"Find an effective workout based on your genetic code to maximize your workout gains.",
+			"",
+			"",
+			null,
+			"mdi-weight-lifter");
 
-		const service: Services = new Services();
-		service.info = service_info;
-		service.id = "0x9c60a2a58e07018954c9f1dc3650fdee96968933b192ed12711a997da7d3a96c";
-		service.owner_id = "5EFb5C9AjhGnejq1f8k7bPGgAdQV4iM84EjwdopHhJidftfi";
+		const service: Services = new Services(
+			service_info, 
+			"0x9c60a2a58e07018954c9f1dc3650fdee96968933b192ed12711a997da7d3a96c",
+			"5EFb5C9AjhGnejq1f8k7bPGgAdQV4iM84EjwdopHhJidftfi",
+			""
+		);
 
 		return service;
 	}
 
 	function createMockOrder(status: OrderStatus): Orders {
-		const first_price: Price = new Price();
-		first_price.component = "testing_price";
-		first_price.value = 15;
-		const second_price: Price = new Price();
-		second_price.component = "qc_price";
-		second_price.value = 5;
+		const first_price: Price = new Price("testing_price", 15);
+		const second_price: Price = new Price("qc_price", 5);
 
-		const order: Orders = new Orders();
-		order.id = "0xff667c9c1d315f8871d7739236905404806e201930d555bcf91f786a4f34d253";
-		order.service_id = "0x713e03730daf4715aaf7b018d54a9855d08860ce12a3cc57b5bb7dc1bc1a9309";
-		order.customer_id = "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zHRuvJNU";
-		order.customer_box_public_key = "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e9f8c39a74";
-		order.seller_id = "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zHRuvJNU";
-		order.dna_sample_tracking_id = "29C78CYDIUT3H75Z3229C";
-		order.currency = Currency.DAI;
-		order.prices = [ first_price ];
-		order.additional_prices = [ second_price ];
-		order.status = status;
-		order.created_at = BigInt("1632212142000");
-		order.updated_at = BigInt("1632212142000");
+		const order: Orders = new Orders(
+			"0xff667c9c1d315f8871d7739236905404806e201930d555bcf91f786a4f34d253",
+			"0x713e03730daf4715aaf7b018d54a9855d08860ce12a3cc57b5bb7dc1bc1a9309",
+			"5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zHRuvJNU",
+			"0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e9f8c39a74",
+			"5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zHRuvJNU",
+			"29C78CYDIUT3H75Z3229C",
+			Currency.DAI,
+			[ first_price ],
+			[ second_price ],
+			status,
+			"",
+			BigInt("1632212142000"),
+			BigInt("1632212142000")
+		);
 
 		return order;
 	}
@@ -352,6 +362,8 @@ describe("Substrate Indexer", () => {
 				city: "ID-JK",
 				country: "ID",
 				email: "email@labdnafavorit.com",
+				phone_number: "+8272282",
+				website: "http://localhost",
 				latitude: null,
 				longitude: null,
 				name: "Laboratorium DNA Favourites",
@@ -359,6 +371,7 @@ describe("Substrate Indexer", () => {
 				region: "ID-JK",
 				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
 				certifications: [],
+				verification_status: "",
 				services: []
 			});
 			
@@ -377,6 +390,8 @@ describe("Substrate Indexer", () => {
 				city: "ID-JK",
 				country: "ID",
 				email: "email@labdnafavorit.com",
+				phone_number: "+8272282",
+				website: "http://localhost",
 				latitude: null,
 				longitude: null,
 				name: "Laboratorium DNA Favourites",
@@ -384,6 +399,7 @@ describe("Substrate Indexer", () => {
 				region: "ID-JK",
 				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
 				certifications: [],
+				verification_status: "",
 				services: []
 			});
 			
@@ -401,6 +417,8 @@ describe("Substrate Indexer", () => {
 				city: "ID-JK",
 				country: "ID",
 				email: "email@labdnafavorit.com",
+				phone_number: "+8272282",
+				website: "http://localhost",
 				latitude: null,
 				longitude: null,
 				name: "Laboratorium DNA Favourites",
@@ -408,6 +426,7 @@ describe("Substrate Indexer", () => {
 				region: "ID-JK",
 				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
 				certifications: [],
+				verification_status: "",
 				services: []
 			});
 			
@@ -534,156 +553,6 @@ describe("Substrate Indexer", () => {
 			await getLastSubstrateBlockHandler.execute();
 			expect(getLastSubstrateBlockHandlerSpy).toBeCalled();
 			expect(getLastSubstrateBlockHandlerSpy).toHaveReturned();
-		});
-
-		it("Create Order Event Block Number Handler", async () => {
-			const order: Orders = createMockOrder(OrderStatus.Unpaid);
-			const createOrderBlockHandlerSpy = jest.spyOn(createOrderBlockHandler, 'execute');
-			const createOrderBlockCommand: CreateOrderBlockCommand = new CreateOrderBlockCommand(123, order);
-			await createOrderBlockHandler.execute(createOrderBlockCommand);
-			expect(createOrderBlockHandlerSpy).toBeCalled();
-			expect(createOrderBlockHandlerSpy).toBeCalledWith(createOrderBlockCommand);
-		});
-
-		it("Cancel Order Event Block Number Handler", async () => {
-			const order: Orders = createMockOrder(OrderStatus.Cancelled);
-			const cancelOrderBlockHandlerSpy = jest.spyOn(cancelOrderBlockHandler, 'execute');
-			const cancelOrderBlockCommand: CancelOrderBlockCommand = new CancelOrderBlockCommand(123, order);
-			await cancelOrderBlockHandler.execute(cancelOrderBlockCommand);
-			expect(cancelOrderBlockHandlerSpy).toBeCalled();
-			expect(cancelOrderBlockHandlerSpy).toBeCalledWith(cancelOrderBlockCommand);
-		});
-
-		it("Paid Order Event Block Number Handler", async () => {
-			const order: Orders = createMockOrder(OrderStatus.Paid);
-			const paidOrderBlockHandlerSpy = jest.spyOn(paidOrderBlockHandler, 'execute');
-			const paidOrderBlockCommand: PaidOrderBlockCommand = new PaidOrderBlockCommand(123, order);
-			await paidOrderBlockHandler.execute(paidOrderBlockCommand);
-			expect(paidOrderBlockHandlerSpy).toBeCalled();
-			expect(paidOrderBlockHandlerSpy).toBeCalledWith(paidOrderBlockCommand);
-		});
-
-		it("Fulfill Order Event Block Number Handler", async () => {
-			const order: Orders = createMockOrder(OrderStatus.Fulfilled);
-			const fulfillOrderBlockHandlerSpy = jest.spyOn(fulfillOrderBlockHandler, 'execute');
-			const fulfillOrderBlockCommand: FulfillOrderBlockCommand = new FulfillOrderBlockCommand(123, order);
-			await fulfillOrderBlockHandler.execute(fulfillOrderBlockCommand);
-			expect(fulfillOrderBlockHandlerSpy).toBeCalled();
-			expect(fulfillOrderBlockHandlerSpy).toBeCalledWith(fulfillOrderBlockCommand);
-		});
-
-		it("Refunded Order Event Block Number Handler", async () => {
-			const order: Orders = createMockOrder(OrderStatus.Refunded);
-			const refundedOrderBlockHandlerSpy = jest.spyOn(refundedOrderBlockHandler, 'execute');
-			const refundedOrderBlockCommand: RefundedOrderBlockCommand = new RefundedOrderBlockCommand(123, order);
-			await refundedOrderBlockHandler.execute(refundedOrderBlockCommand);
-			expect(refundedOrderBlockHandlerSpy).toBeCalled();
-			expect(refundedOrderBlockHandlerSpy).toBeCalledWith(refundedOrderBlockCommand);
-		});
-
-		it("Failed Order Event Block Number Handler", async () => {
-			const order: Orders = createMockOrder(OrderStatus.Failed);
-			const failedOrderBlockHandlerSpy = jest.spyOn(failedOrderBlockHandler, 'execute');
-			const failedOrderBlockCommand: FailedOrderBlockCommand = new FailedOrderBlockCommand(123, order);
-			await failedOrderBlockHandler.execute(failedOrderBlockCommand);
-			expect(failedOrderBlockHandlerSpy).toBeCalled();
-			expect(failedOrderBlockHandlerSpy).toBeCalledWith(failedOrderBlockCommand);
-		});
-
-		it("Create Service Event Block Number Handler", async () => {
-			const service: Services = createMockService();
-			const createServiceBlockHandlerSpy = jest.spyOn(createServiceBlockHandler, 'execute');
-			const createServiceBlockCommand: CreateServiceBlockCommand = new CreateServiceBlockCommand(123, service);
-			await createServiceBlockHandler.execute(createServiceBlockCommand);
-			expect(createServiceBlockHandlerSpy).toBeCalled();
-			expect(createServiceBlockHandlerSpy).toBeCalledWith(createServiceBlockCommand);
-		});
-
-		it("Delete Service Event Block Number Handler", async () => {
-			const service: Services = createMockService();
-			const deleteServiceBlockHandlerSpy = jest.spyOn(deleteServiceBlockHandler, 'execute');
-			const deleteServiceBlockCommand: DeleteServiceBlockCommand = new DeleteServiceBlockCommand(123, service);
-			await deleteServiceBlockHandler.execute(deleteServiceBlockCommand);
-			expect(deleteServiceBlockHandlerSpy).toBeCalled();
-			expect(deleteServiceBlockHandlerSpy).toBeCalledWith(deleteServiceBlockCommand);
-		});
-
-		it("Update Service Event Block Number Handler", async () => {
-			const service: Services = createMockService();
-			const updateServiceBlockHandlerSpy = jest.spyOn(updateServiceBlockHandler, 'execute');
-			const updateServiceBlockCommand: UpdateServiceBlockCommand = new UpdateServiceBlockCommand(123, service);
-			await updateServiceBlockHandler.execute(updateServiceBlockCommand);
-			expect(updateServiceBlockHandlerSpy).toBeCalled();
-			expect(updateServiceBlockHandlerSpy).toBeCalledWith(updateServiceBlockCommand);
-		});
-
-		it("Register Lab Event Block Number Handler", async () => {
-			const lab = createMockLab({
-				address: "Jakarta",
-				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-				city: "ID-JK",
-				country: "ID",
-				email: "email@labdnafavorit.com",
-				latitude: null,
-				longitude: null,
-				name: "Laboratorium DNA Favourites",
-				profile_image: null,
-				region: "ID-JK",
-				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
-				certifications: [],
-				services: []
-			});
-			const registerLabBlockHandlerSpy = jest.spyOn(registerLabBlockHandler, 'execute');
-			const registerLabBlockCommand: RegisterLabBlockCommand = new RegisterLabBlockCommand(123, lab);
-			await registerLabBlockHandler.execute(registerLabBlockCommand);
-			expect(registerLabBlockHandlerSpy).toBeCalled();
-			expect(registerLabBlockHandlerSpy).toBeCalledWith(registerLabBlockCommand);
-		});
-
-		it("Deregister Lab Event Block Number Handler", async () => {
-			const lab = createMockLab({
-				address: "Jakarta",
-				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-				city: "ID-JK",
-				country: "ID",
-				email: "email@labdnafavorit.com",
-				latitude: null,
-				longitude: null,
-				name: "Laboratorium DNA Favourites",
-				profile_image: null,
-				region: "ID-JK",
-				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
-				certifications: [],
-				services: []
-			});
-			const deregisterLabBlockHandlerSpy = jest.spyOn(deregisterLabBlockHandler, 'execute');
-			const deregisterLabBlockCommand: DeregisterLabBlockCommand = new DeregisterLabBlockCommand(123, lab);
-			await deregisterLabBlockHandler.execute(deregisterLabBlockCommand);
-			expect(deregisterLabBlockHandlerSpy).toBeCalled();
-			expect(deregisterLabBlockHandlerSpy).toBeCalledWith(deregisterLabBlockCommand);
-		});
-
-		it("Update Lab Event Block Number Handler", async () => {
-			const lab = createMockLab({
-				address: "Jakarta",
-				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-				city: "ID-JK",
-				country: "ID",
-				email: "email@labdnafavorit.com",
-				latitude: null,
-				longitude: null,
-				name: "Laboratorium DNA Favourites",
-				profile_image: null,
-				region: "ID-JK",
-				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
-				certifications: [],
-				services: []
-			});
-			const updateLabBlockHandlerSpy = jest.spyOn(updateLabBlockHandler, 'execute');
-			const updateLabBlockCommand: UpdateLabBlockCommand = new UpdateLabBlockCommand(123, lab);
-			await updateLabBlockHandler.execute(updateLabBlockCommand);
-			expect(updateLabBlockHandlerSpy).toBeCalled();
-			expect(updateLabBlockHandlerSpy).toBeCalledWith(updateLabBlockCommand);
 		});
 	});
 });
