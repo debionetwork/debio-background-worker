@@ -156,15 +156,15 @@ export class SubstrateService implements OnModuleInit {
       lastBlockNumber = await this.queryBus.execute(
         new GetLastSubstrateBlockQuery(),
       );
-      const currentBlock = await this.api.rpc.chain.getBlock();
-      const currentBlockNumber = currentBlock.block.header.number.toNumber();
+      const currentBlock        = await this.api.rpc.chain.getBlock();
+      const currentBlockNumber  = currentBlock.block.header.number.toNumber();
       /**
        * Process logs in chunks of blocks
        * */
-      const endBlock = currentBlockNumber;
+      const endBlock  = currentBlockNumber;
       const chunkSize = 1000;
-      let chunkStart = lastBlockNumber;
-      let chunkEnd = currentBlockNumber;
+      let chunkStart  = lastBlockNumber;
+      let chunkEnd    = currentBlockNumber;
       // If chunkEnd is more than chunkSize, set chunkEnd to chunkSize
       if (chunkEnd - chunkStart > chunkSize) {
         chunkEnd = chunkStart + chunkSize;
@@ -173,7 +173,7 @@ export class SubstrateService implements OnModuleInit {
         this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
         for (let i = chunkStart; i <= chunkEnd; i++) {
           // Get block by block number
-          const blockHash = await this.api.rpc.chain.getBlockHash(i);
+          const blockHash   = await this.api.rpc.chain.getBlockHash(i);
           const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
           // Get the event records in the block
           const allEventRecords = await this.api.query.system.events.at(
