@@ -4,12 +4,13 @@ import { Lab } from '../../models/lab';
 export class LabDeregisteredCommand {
   labs: Lab;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
+    const labData = data[0];
     this.labs = new Lab(
-      data[0]["accountId"],
-      data[0]["services"],
-      data[0]["certifications"],
-      data[0]["verificationStatus"],
-      data[0]["info"]
+      labData["accountId"],
+      labData["services"],
+      labData["certifications"],
+      labData["verificationStatus"],
+      labData["info"]
     );
   }
 }

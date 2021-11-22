@@ -4,20 +4,21 @@ import { Orders } from "../../models/orders";
 export class OrderFulfilledCommand {
   orders: Orders;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
+    const orderData = data[0];
     this.orders = new Orders(
-      data[0]["id"],
-      data[0]["serviceId"],
-      data[0]["customerId"],
-      data[0]["customerBoxPublicKey"],
-      data[0]["sellerId"],
-      data[0]["dnaSampleTrackingId"],
-      data[0]["currency"],
-      data[0]["prices"],
-      data[0]["additionalPrices"],
-      data[0]["status"],
-      data[0]["orderFlow"],
-      data[0]["createdAt"],
-      data[0]["updatedAt"]
+      orderData["id"],
+      orderData["serviceId"],
+      orderData["customerId"],
+      orderData["customerBoxPublicKey"],
+      orderData["sellerId"],
+      orderData["dnaSampleTrackingId"],
+      orderData["currency"],
+      orderData["prices"],
+      orderData["additionalPrices"],
+      orderData["status"],
+      orderData["orderFlow"],
+      orderData["createdAt"],
+      orderData["updatedAt"]
     );
   }
 }

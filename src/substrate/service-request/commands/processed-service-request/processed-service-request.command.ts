@@ -4,16 +4,17 @@ import { ServiceInvoice } from "../../models/serviceInvoice";
 export class ProcessedServiceRequestCommand {
   serviceInvoice: ServiceInvoice;
   constructor(args: Array<any>, public readonly blockMetaData: BlockMetadata) {
+    const serviceInvoiceData = args[1];
     this.serviceInvoice = new ServiceInvoice(
-      args[1]['requestHash'],
-      args[1]['orderId'],
-      args[1]['serviceId'],
-      args[1]['customerAddress'],
-      args[1]['sellerAddress'],
-      args[1]['dnaSampleTrackingId'],
-      args[1]['testingPrice'],
-      args[1]['qcPrice'],
-      args[1]['payAmount']
+      serviceInvoiceData['requestHash'],
+      serviceInvoiceData['orderId'],
+      serviceInvoiceData['serviceId'],
+      serviceInvoiceData['customerAddress'],
+      serviceInvoiceData['sellerAddress'],
+      serviceInvoiceData['dnaSampleTrackingId'],
+      serviceInvoiceData['testingPrice'],
+      serviceInvoiceData['qcPrice'],
+      serviceInvoiceData['payAmount']
     );
   }
 }
