@@ -3,26 +3,13 @@ import { ServiceInfo } from './service-info';
 
 export class Service {
   constructor(
-    _id: any,
-    _ownerId: any,
-    _info: any,
-    _serviceFlow: any
+    service: any
   ) {
-    this.id       = _id;
-    this.ownerId  = _ownerId;
+    this.id       = service.id;
+    this.ownerId  = service.ownerId;
 
-    this.info = new ServiceInfo(
-      _info["name"],
-      _info["pricesByCurrency"],
-      _info["expectedDuration"],
-      _info["category"],
-      _info["description"],
-      _info["dnaCollectionProcess"],
-      _info["testResultSample"],
-      _info["longDescription"],
-      _info["image"]
-    );
-    this.serviceFlow = _serviceFlow;
+    this.info = new ServiceInfo(service.info);
+    this.serviceFlow = service.serviceFlow;
   }
   id: string;
   ownerId: string;

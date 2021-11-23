@@ -1,23 +1,16 @@
 export class ServiceInvoice {
   constructor(
-    _requestHash: any,
-    _orderId: any,
-    _serviceId: any,
-    _customerAddress: any,
-    _sellerAddress: any,
-    _dnaSampleTrackingId: any,
-    _testingPrice: any,
-    _qcPrice: any,
-    _payAmount: any) {
-    this.requestHash          = _requestHash;
-    this.orderId              = _orderId;
-    this.serviceId            = _serviceId;
-    this.customerAddress      = _customerAddress;
-    this.sellerAddress        = _sellerAddress;
-    this.dnaSampleTrackingId  = _dnaSampleTrackingId;
-    this.testingPrice         = _testingPrice.toString();
-    this.qcPrice              = _qcPrice.toString();
-    this.payAmount            = _payAmount.toString();
+    serviceInvoice: any
+  ) {
+    this.requestHash          = serviceInvoice.requestHash;
+    this.orderId              = serviceInvoice.orderId;
+    this.serviceId            = serviceInvoice.serviceId;
+    this.customerAddress      = serviceInvoice.customerAddress;
+    this.sellerAddress        = serviceInvoice.sellerAddress;
+    this.dnaSampleTrackingId  = serviceInvoice.dnaSampleTrackingId;
+    this.testingPrice         = serviceInvoice.testingPrice;
+    this.qcPrice              = serviceInvoice.qcPrice;
+    this.payAmount            = serviceInvoice.payAmount;
   }
 
   requestHash: string;

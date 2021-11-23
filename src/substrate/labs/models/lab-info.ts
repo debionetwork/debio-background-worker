@@ -1,32 +1,19 @@
 export class LabInfo {
   constructor(
-    _boxPublicKey: any,
-    _name: any,
-    _email: any,
-    _phoneNumber: any,
-    _website: any,
-    _country: any,
-    _region: any,
-    _city: any,
-    _address: any,
-    _latitude: any,
-    _longitude: any,
-    _profileImage: any
+    info: any
   ) {
-    const decoder = new TextDecoder();
-
-    this.box_public_key = _boxPublicKey;
-    this.name           = decoder.decode(_name);
-    this.email          = decoder.decode(_email);
-    this.phone_number   = decoder.decode(_phoneNumber);
-    this.website        = decoder.decode(_website);
-    this.country        = decoder.decode(_country);
-    this.region         = decoder.decode(_region);
-    this.city           = decoder.decode(_city);
-    this.address        = decoder.decode(_address);
-    this.latitude       = _latitude instanceof Uint8Array ? decoder.decode(_latitude) : null;
-    this.longitude      = _longitude instanceof Uint8Array ? decoder.decode(_longitude) : null;
-    this.profile_image  = _profileImage instanceof Uint8Array ? decoder.decode(_profileImage) : null;
+    this.box_public_key = info.boxPublicKey;
+    this.name           = info.name;
+    this.email          = info.email;
+    this.phone_number   = info.phoneNumber;
+    this.website        = info.website;
+    this.country        = info.country;
+    this.region         = info.region;
+    this.city           = info.city;
+    this.address        = info.address;
+    this.latitude       = info.latitude;
+    this.longitude      = info.longitude;
+    this.profile_image  = info.profileImage;
   }
 
   box_public_key: String;

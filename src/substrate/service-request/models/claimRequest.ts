@@ -1,15 +1,12 @@
 export class ClaimRequestModel {
   constructor(
-    _requestHash: any,
-    _labAddress: any,
-    _serviceId: any,
-    _testingPrice: any,
-    _qcPrice: any) {
-    this.requestHash  = _requestHash;
-    this.labAddress   = _labAddress;
-    this.serviceId    = _serviceId;
-    this.testingPrice = _testingPrice.toString();
-    this.qcPrice      = _qcPrice.toString();
+    claimRequest: any
+  ) {
+    this.requestHash  = claimRequest.requestHash;
+    this.labAddress   = claimRequest.labAddress;
+    this.serviceId    = claimRequest.serviceId;
+    this.testingPrice = claimRequest.testingPrice;
+    this.qcPrice      = claimRequest.qcPrice;
   }
   requestHash: string;
   labAddress: string;
