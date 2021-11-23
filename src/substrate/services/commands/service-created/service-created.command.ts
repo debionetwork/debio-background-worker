@@ -4,11 +4,12 @@ import { Service } from '../../models/service';
 export class ServiceCreatedCommand {
   services: Service;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
+    const serviceData = data[0];
     this.services = new Service(
-      data[0]["id"],
-      data[0]["ownerId"],
-      data[0]["info"],
-      data[0]["serviceFlow"]
+      serviceData["id"],
+      serviceData["ownerId"],
+      serviceData["info"],
+      serviceData["serviceFlow"]
     );
   }
 }

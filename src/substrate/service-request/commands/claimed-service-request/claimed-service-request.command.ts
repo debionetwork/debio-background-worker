@@ -2,14 +2,15 @@ import { BlockMetadata } from "../../models/blockMetadata";
 import { ClaimRequestModel } from "../../models/claimRequest";
 
 export class ClaimedServiceRequestCommand {
-    request: ClaimRequestModel;
+    claimRequest: ClaimRequestModel;
     constructor(args: Array<any>, public readonly blockMetadata: BlockMetadata) {
-      this.request = new ClaimRequestModel(
-        args[1]["requestHash"],
-        args[1]["labAddress"],
-        args[1]["serviceId"],
-        args[1]["testingPrice"],
-        args[1]["qcPrice"]
+      const claimRequestData = args[1];
+      this.claimRequest = new ClaimRequestModel(
+        claimRequestData["requestHash"],
+        claimRequestData["labAddress"],
+        claimRequestData["serviceId"],
+        claimRequestData["testingPrice"],
+        claimRequestData["qcPrice"]
       );
     }
 }

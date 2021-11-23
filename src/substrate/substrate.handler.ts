@@ -33,7 +33,8 @@ import {
   ClaimedServiceRequestCommand,
   ProcessedServiceRequestCommand,
   FinalizedServiceRequestCommand,
-  UnstakedServiceRequestCommand
+  UnstakedServiceRequestCommand,
+  UnstakedWaitingServiceRequestCommand
 } from './service-request';
 import { DataStakedCommand } from './genetic-testing';
 
@@ -65,7 +66,8 @@ const eventRoutes = {
     ServiceRequestClaimed: ClaimedServiceRequestCommand,
     ServiceRequestProcessed: ProcessedServiceRequestCommand,
     ServiceRequestFinalized: FinalizedServiceRequestCommand,
-    ServiceRequestUnstaked: UnstakedServiceRequestCommand
+    ServiceRequestUnstaked: UnstakedServiceRequestCommand,
+    ServiceRequestWaitingForUnstaked: UnstakedWaitingServiceRequestCommand
   }
 };
 

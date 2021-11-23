@@ -59,7 +59,8 @@ export class ServiceCreatedHandler
       await this.elasticsearchService.update({
         index: 'labs',
         id: ownerId,
-        refresh: 'wait_for',
+        refresh: true,
+        retry_on_conflict: 3,
         body: {
           script: {
             lang: 'painless',
