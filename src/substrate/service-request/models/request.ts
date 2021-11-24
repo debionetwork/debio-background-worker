@@ -4,7 +4,7 @@ export class RequestModel {
   constructor(
     request: any
   ) {
-    this.hash               = request.hash;
+    this.hash               = request.hash_;
     this.requester_address  = request.requesterAddress;
     this.lab_address        = request.labAddress;
     this.country            = request.country;

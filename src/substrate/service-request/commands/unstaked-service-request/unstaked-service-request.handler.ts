@@ -1,8 +1,11 @@
-import { ICommandHandler } from "@nestjs/cqrs";
+import { Injectable } from "@nestjs/common";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ElasticsearchService } from "@nestjs/elasticsearch";
 import { RequestStatus } from "../../models/requestStatus";
 import { UnstakedServiceRequestCommand } from "./unstaked-service-request.command";
 
+@Injectable()
+@CommandHandler(UnstakedServiceRequestCommand)
 export class UnstakedServiceRequestHandler implements ICommandHandler<UnstakedServiceRequestCommand> {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 

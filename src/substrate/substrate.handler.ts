@@ -116,13 +116,6 @@ export class SubstrateService implements OnModuleInit {
   
         for (let i = 0; i < events.length; i++) {
           const { event } = events[i];
-          // const types = event.typeDef;
-          // event.data.forEach((data, index) => {
-          //   console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
-          //   console.log(`json`, data.toJSON());
-          //   console.log(`human`, data.toHuman());
-          //   console.log(`Raw`, data.toRawType())
-          // });
           await this.handleEvent(blockMetaData, event);
         }
       } catch (err) {
