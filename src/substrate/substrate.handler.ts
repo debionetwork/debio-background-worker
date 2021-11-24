@@ -1,5 +1,5 @@
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Header, Event } from '@polkadot/types/interfaces';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
@@ -37,6 +37,7 @@ import {
   UnstakedWaitingServiceRequestCommand
 } from './service-request';
 import { DataStakedCommand } from './genetic-testing';
+import { UnsubscribePromise } from '@polkadot/api/types';
 
 const eventRoutes = {
   labs: {
@@ -73,6 +74,9 @@ const eventRoutes = {
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
+  private head: any;
+  private event: any;
+  private listenStatus: boolean = false;
   private api: ApiPromise;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
@@ -100,8 +104,8 @@ export class SubstrateService implements OnModuleInit {
     }
   }
 
-  listenToEvents() {
-    this.api.query.system.events(async (events) => {
+  async listenToEvents() {
+    await this.api.query.system.events(async (events) => {
       try {
         const currentBlock        = await this.api.rpc.chain.getBlock();
         const currentBlockNumber  = currentBlock.block.header.number.toNumber();
@@ -119,11 +123,17 @@ export class SubstrateService implements OnModuleInit {
       } catch (err) {
         this.logger.log(`Handling listen to event catch : ${err.name}, ${err.message}, ${err.stack}`);
       }
+    }).then(_unsub => {
+      this.event = _unsub;
+    }).catch(err => {
+      this.logger.log(`Event listener catch error ${err.name}, ${err.message}, ${err.stack}`);
+      this.listenStatus = false;
+      this.startListen();
     });
   }
 
-  listenToNewBlock() {
-    this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
+  async listenToNewBlock() {
+    await this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
       try {
         const blockNumber = header.number.toNumber();
 
@@ -149,7 +159,13 @@ export class SubstrateService implements OnModuleInit {
       } catch (err) {
         this.logger.log(`Handling listen to new block catch : ${err.name}, ${err.message}, ${err.stack}`);
       }
-    });
+    }).then(_unsub => {
+      this.head = _unsub;
+    }).catch(err => {
+      this.logger.log(`Event listener catch error ${err.name}, ${err.message}, ${err.stack}`);
+      this.listenStatus = false;
+      this.startListen();
+    });;
   }
 
   async syncBlock() {
@@ -214,6 +230,30 @@ export class SubstrateService implements OnModuleInit {
       this.logger.log(`Handling sync block catch : ${err.name}, ${err.message}, ${err.stack}`);
     }
   }
+
+  async startListen() {
+    if (this.listenStatus) return;
+
+    this.listenStatus = true;
+    
+    if (this.head || this.event) {
+      this.head();
+      this.event();
+    }
+
+    await this.syncBlock();
+    this.listenToEvents();
+    this.listenToNewBlock();
+  }
+
+  // Delete this function after testing finished
+  stopListen() {
+    this.listenStatus = false;
+    if (this.head || this.event) {
+      this.head();
+      this.event();
+    }
+  }
 }
 
 @Controller('substrate')
@@ -224,8 +264,18 @@ export class SubstrateController {
   }
 
   async onApplicationBootstrap() {
-    await this.substrateService.syncBlock();
-    this.substrateService.listenToEvents();
-    this.substrateService.listenToNewBlock();
+    await this.substrateService.startListen();
+  }
+
+  // Delete this route get after test finished
+  @Get("/start")
+  async startProgress() {
+    await this.substrateService.startListen();
+  }
+
+  // Delete this route get after test finished
+  @Get("/stop")
+  stopProgress() {
+    this.substrateService.stopListen();
   }
 }
