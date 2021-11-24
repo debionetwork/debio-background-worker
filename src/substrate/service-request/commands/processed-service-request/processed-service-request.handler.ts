@@ -1,8 +1,11 @@
-import { ICommandHandler } from "@nestjs/cqrs";
+import { Injectable } from "@nestjs/common";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { ElasticsearchService } from "@nestjs/elasticsearch";
 import { RequestStatus } from "../../models/requestStatus";
 import { ProcessedServiceRequestCommand } from "./processed-service-request.command";
 
+@Injectable()
+@CommandHandler(ProcessedServiceRequestCommand)
 export class ProcessedServiceRequestHandler implements ICommandHandler<ProcessedServiceRequestCommand> {
   constructor(private readonly elasticSearchService: ElasticsearchService) {}
   

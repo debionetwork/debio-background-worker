@@ -2,25 +2,24 @@ import { Price } from './price';
 
 export class PriceByCurrency {
   constructor(
-    _currency: any,
-    _totalPrice: any,
-    _priceComponents: Array<any>,
-    _additionalPrices: Array<any>
+    priceByCurrency: any
   ) {
-    this.currency     = _currency;
-    this.total_price  = _totalPrice.toString();
+    this.currency     = priceByCurrency.currency;
+    this.total_price  = priceByCurrency.totalPrice.toString();
 
     this.price_components = [];
 
-    for (let i = 0; i < _priceComponents.length; i++) {
-      const price: Price = new Price(_priceComponents[i]["component"], _priceComponents[i]["value"]);
+    const priceComponents: any = priceByCurrency.priceComponents;
+    for (let i = 0; i < priceComponents.length; i++) {
+      const price: Price = new Price(priceComponents[i]);
       this.price_components.push(price);
     }
 
     this.additional_prices = [];
     
-    for (let i = 0; i < _additionalPrices.length; i++) {
-      const price: Price = new Price(_additionalPrices[i]["component"], _additionalPrices[i]["value"]);
+    const additionalPrices: any = priceByCurrency.additionalPrices;
+    for (let i = 0; i < additionalPrices.length; i++) {
+      const price: Price = new Price(additionalPrices[i]);
       this.additional_prices.push(price);
     }
   }

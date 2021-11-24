@@ -1,9 +1,7 @@
 export class Price {
-  constructor(_component: any, _value: any) {
-    const decoder = new TextDecoder();
-
-    this.component  = decoder.decode(_component);
-    this.value      = _value.toString();
+  constructor(price: any) {
+    this.component  = price.component;
+    this.value      = price.value;
   }
   component: string;
   value: string;
