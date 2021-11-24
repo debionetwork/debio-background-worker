@@ -1,4 +1,3 @@
-import types from '../../types.json';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Controller } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
@@ -82,7 +81,6 @@ export class SubstrateService implements OnModuleInit {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
     this.api = await ApiPromise.create({
       provider: wsProvider,
-      types: types,
     });
   }
 
