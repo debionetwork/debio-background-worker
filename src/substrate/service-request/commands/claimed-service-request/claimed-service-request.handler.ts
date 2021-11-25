@@ -18,9 +18,9 @@ export class ClaimedServiceRequestHandler implements ICommandHandler<ClaimedServ
         script: {
           lang: 'painless',
           source: `
-            ctx._source.request.lab_address     = params.lab_address;
-            ctx._source.request.request_status  =  params.status;
-            ctx._source.blockMetadata           = params.blockMetaData;
+            ctx._source.request.lab_address = params.lab_address;
+            ctx._source.request.status      =  params.status;
+            ctx._source.blockMetadata       = params.blockMetaData;
           `,
           params: {
             lab_address: command.claimRequest.labAddress,

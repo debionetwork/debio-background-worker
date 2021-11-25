@@ -17,10 +17,11 @@ export class UnstakedWaitingServiceRequestHandler implements ICommandHandler<Uns
       body: {
         doc: {
           request: {
-            request_status: RequestStatus.WaitingForUnstaked,
+            status: RequestStatus.WaitingForUnstaked,
             updated_at: command.request.updated_at,
             unstaked_at: command.request.unstaked_at,
-          }
+          },
+          blockMetadata: command.blockMetaData,
         }
       }
     })
