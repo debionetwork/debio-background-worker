@@ -17,10 +17,11 @@ export class UnstakedServiceRequestHandler implements ICommandHandler<UnstakedSe
       body: {
         doc: {
           request: {
-            request_status: RequestStatus.Unstaked,
+            status: RequestStatus.Unstaked,
             updated_at: command.request.updated_at,
             unstaked_at: command.request.unstaked_at,
-          }
+          },
+          blockMetadata: command.blockMetaData,
         }
       }
     })
