@@ -112,7 +112,7 @@ jobs:
             MINIMAL_STARTING_BLOCK:${{ secrets.PROD_GCP_PROJECT_ID }}/MINIMAL_STARTING_BLOCK
             REQUEST_SERVICE_CONTRACT_ADDRESS:${{ secrets.PROD_GCP_PROJECT_ID }}/REQUEST_SERVICE_CONTRACT_ADDRESS
             SUBSTRATE_URL:${{ secrets.PROD_GCP_PROJECT_ID }}/SUBSTRATE_URL
-            WEB3_RPC:${{ secrets.PROD_GCP_PROJECT_ID }}/WEB3_RPC
+            WEB3_RPC_HTTPS:${{ secrets.PROD_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
             SSH_HOST:${{ secrets.PROD_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.PROD_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.PROD_GCP_PROJECT_ID }}/SSH_KEY
@@ -138,7 +138,7 @@ jobs:
               --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
-              --set-string config.web3Rpc=${{ steps.secrets.outputs.WEB3_RPC }} \
+              --set-string config.web3Rpc=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set autoscaling.enabled=true
             kubectl rollout status deployment/debio-indexer
 
@@ -172,7 +172,7 @@ jobs:
             MINIMAL_STARTING_BLOCK:${{ secrets.PROD_GCP_PROJECT_ID }}/MINIMAL_STARTING_BLOCK
             REQUEST_SERVICE_CONTRACT_ADDRESS:${{ secrets.PROD_GCP_PROJECT_ID }}/REQUEST_SERVICE_CONTRACT_ADDRESS
             SUBSTRATE_URL:${{ secrets.PROD_GCP_PROJECT_ID }}/SUBSTRATE_URL
-            WEB3_RPC:${{ secrets.PROD_GCP_PROJECT_ID }}/WEB3_RPC
+            WEB3_RPC_HTTPS:${{ secrets.PROD_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
             SSH_HOST:${{ secrets.PROD_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.PROD_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.PROD_GCP_PROJECT_ID }}/SSH_KEY
@@ -198,6 +198,6 @@ jobs:
               --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
-              --set-string config.web3Rpc=${{ steps.secrets.outputs.WEB3_RPC }} \
+              --set-string config.web3Rpc=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set autoscaling.enabled=true
             kubectl rollout status deployment/debio-indexer
