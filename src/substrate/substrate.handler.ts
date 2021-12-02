@@ -36,8 +36,12 @@ import {
   UnstakedServiceRequestCommand,
   UnstakedWaitingServiceRequestCommand
 } from './service-request';
+import {
+  CertificationCreatedCommand,
+  CertificationUpdatedCommand,
+  CertificationDeletedCommand
+} from './certifications';
 import { DataStakedCommand } from './genetic-testing';
-import { UnsubscribePromise } from '@polkadot/api/types';
 
 const eventRoutes = {
   labs: {
@@ -69,6 +73,11 @@ const eventRoutes = {
     ServiceRequestFinalized: FinalizedServiceRequestCommand,
     ServiceRequestUnstaked: UnstakedServiceRequestCommand,
     ServiceRequestWaitingForUnstaked: UnstakedWaitingServiceRequestCommand
+  },
+  certifications: {
+    CertificationCreated: CertificationCreatedCommand,
+    CertificationUpdated: CertificationUpdatedCommand,
+    CertificationDeleted: CertificationDeletedCommand
   }
 };
 
