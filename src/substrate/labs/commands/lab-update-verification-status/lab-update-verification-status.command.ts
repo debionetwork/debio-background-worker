@@ -1,4 +1,3 @@
-import { AnyRecord } from 'dns';
 import { BlockMetaData } from '../../../models/blockMetaData';
 import { Lab } from '../../models/lab';
 

@@ -18,28 +18,6 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
       },
     });
 
-    const order = orders.body.hits.hits[0]._source;
-
-    await this.elasticsearchService.index({
-      index: 'data-bounty',
-      id: command.dataStaked.orderId,
-      refresh: 'wait_for',
-      body: {
-          order_id: command.dataStaked.orderId,
-          hash_data_bounty: command.dataStaked.hashDataBounty,
-          from: command.dataStaked.from,
-          info: {
-            service_id: order.service_id,
-            service_name: order.service_info.name,
-            category: order.service_info.category,
-            description: order.service_info.description,
-            long_description: order.service_info.long_description,
-            lab_name: order.lab_info.name,
-          },
-          blockMetaData: command.blockMetaData,
-      }
-    });
-
     await this.elasticsearchService.update({
       index: 'orders',
       id: command.dataStaked.orderId,

@@ -275,16 +275,4 @@ export class SubstrateController {
   async onApplicationBootstrap() {
     await this.substrateService.startListen();
   }
-
-  // Delete this route get after test finished
-  @Get("/start")
-  async startProgress() {
-    await this.substrateService.startListen();
-  }
-
-  // Delete this route get after test finished
-  @Get("/stop")
-  stopProgress() {
-    this.substrateService.stopListen();
-  }
 }
