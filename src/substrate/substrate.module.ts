@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LabCommandHandlers } from './labs';
 import { ServiceCommandHandlers } from './services';
-import { CommonModule } from 'src/common/common.module';
+import { CommonModule } from '../common/common.module';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { SubstrateController, SubstrateService } from './substrate.handler';
 import { OrderCommandHandlers } from './orders';
