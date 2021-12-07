@@ -1,11 +1,23 @@
-import { CommandBus, CqrsModule } from "@nestjs/cqrs";
-import { Test, TestingModule } from "@nestjs/testing";
-import { CommonModule } from "../common/common.module";
-import { ServiceCommandHandlers } from "./services";
-import { SubstrateController, SubstrateService } from "./substrate.handler";
-import { ElasticsearchModule, ElasticsearchService } from "@nestjs/elasticsearch";
-import { LabCommandHandlers } from "./labs";
-import { OrderCommandHandlers } from "./orders";
+import {
+	CommandBus,
+	CqrsModule
+} from "@nestjs/cqrs";
+import {
+	Test,
+	TestingModule
+} from "@nestjs/testing";
+import { CommonModule } from "../../src/common/common.module";
+import {
+	SubstrateController,
+	SubstrateService
+} from "../../src/substrate/substrate.handler";
+import {
+	ElasticsearchModule,
+	ElasticsearchService
+} from "@nestjs/elasticsearch";
+import { ServiceCommandHandlers } from "../../src/substrate/services";
+import { LabCommandHandlers } from "../../src/substrate/labs";
+import { OrderCommandHandlers } from "../../src/substrate/orders";
 
 describe("Substrate Indexer", () => {
 	let substrateController: SubstrateController;

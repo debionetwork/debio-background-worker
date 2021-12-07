@@ -1,13 +1,30 @@
-import { CommandBus, CqrsModule } from "@nestjs/cqrs";
-import { ElasticsearchModule, ElasticsearchService } from "@nestjs/elasticsearch";
-import { Test, TestingModule } from "@nestjs/testing";
-import { BlockMetaData } from "../models/blockMetaData";
-import { SubstrateController, SubstrateService } from "../substrate.handler";
-import { CommonModule } from "../../common/common.module";
-import { CertificationCreatedCommand, CertificationDeletedCommand, CertificationsCommandHandlers, CertificationUpdatedCommand } from ".";
-import { CertificationCreatedHandler } from "./commands/certification-created/certification-created.handler";
-import { CertificationUpdatedHandler } from "./commands/certification-updated/certification-updated.handler";
-import { CertificationDeletedHandler } from "./commands/certification-deleted/certification-deleted.handler";
+import {
+	CommandBus,
+	CqrsModule
+} from "@nestjs/cqrs";
+import {
+	ElasticsearchModule,
+	ElasticsearchService
+} from "@nestjs/elasticsearch";
+import {
+	Test,
+	TestingModule
+} from "@nestjs/testing";
+import { BlockMetaData } from "../../src/substrate/models/blockMetaData";
+import {
+	SubstrateController,
+	SubstrateService
+} from "../../src/substrate/substrate.handler";
+import { CommonModule } from "../../src/common/common.module";
+import {
+	CertificationCreatedCommand,
+	CertificationDeletedCommand,
+	CertificationsCommandHandlers,
+	CertificationUpdatedCommand
+} from "../../src/substrate/certifications";
+import { CertificationCreatedHandler } from "../../src/substrate/certifications/commands/certification-created/certification-created.handler";
+import { CertificationUpdatedHandler } from "../../src/substrate/certifications/commands/certification-updated/certification-updated.handler";
+import { CertificationDeletedHandler } from "../../src/substrate/certifications/commands/certification-deleted/certification-deleted.handler";
 
 describe("Certifications Substrate Event Handler", () => {
 	let certificationsCreatedHandler: CertificationCreatedHandler;
@@ -104,7 +121,7 @@ describe("Certifications Substrate Event Handler", () => {
 	function mockBlockNumber(): BlockMetaData {
 		return {
 			blockHash: "",
-			blockNumber: 1,
+			blockNumber: 1
 		}
 	}
 

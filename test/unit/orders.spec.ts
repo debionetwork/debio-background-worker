@@ -1,39 +1,37 @@
-import { 
-	OrderCancelledCommand, 
-	OrderCommandHandlers, 
-	OrderCreatedCommand, 
-	OrderFailedCommand, 
-	OrderFulfilledCommand, 
-	OrderPaidCommand, 
-	OrderRefundedCommand 
-} from ".";
-import { OrderCancelledHandler } from "./commands/order-cancelled/order-cancelled.handler";
-import { OrderCreatedHandler } from "./commands/order-created/order-created.handler";
-import { OrderFailedHandler } from "./commands/order-failed/order-failed.handler";
-import { OrderFulfilledHandler } from "./commands/order-fulfilled/order-fulfilled.handler";
-import { OrderPaidHandler } from "./commands/order-paid/order-paid.handler";
-import { OrderRefundedHandler } from "./commands/order-refunded/order-refunded.handler";
-import { CommonModule } from "../../common/common.module";
-import { OrderStatus } from "./models/order-status";
-import { Orders } from "./models/orders";
-import { Price } from "../services/models/price";
-import { Currency } from "./models/currency";
-import { BlockMetaData } from "../models/blockMetaData";
-import { 
-	ElasticsearchModule, 
-	ElasticsearchService 
+import {
+	OrderCancelledCommand,
+	OrderCommandHandlers,
+	OrderCreatedCommand,
+	OrderFailedCommand,
+	OrderFulfilledCommand,
+	OrderPaidCommand,
+	OrderRefundedCommand
+} from "../../src/substrate/orders";
+import { OrderCancelledHandler } from "../../src/substrate/orders/commands/order-cancelled/order-cancelled.handler";
+import { OrderCreatedHandler } from "../../src/substrate/orders/commands/order-created/order-created.handler";
+import { OrderFailedHandler } from "../../src/substrate/orders/commands/order-failed/order-failed.handler";
+import { OrderFulfilledHandler } from "../../src/substrate/orders/commands/order-fulfilled/order-fulfilled.handler";
+import { OrderPaidHandler } from "../../src/substrate/orders/commands/order-paid/order-paid.handler";
+import { OrderRefundedHandler } from "../../src/substrate/orders/commands/order-refunded/order-refunded.handler";
+import { CommonModule } from "../../src/common/common.module";
+import { OrderStatus } from "../../src/substrate/orders/models/order-status";
+import { Currency } from "../../src/substrate/orders/models/currency";
+import { BlockMetaData } from "../../src/substrate/models/blockMetaData";
+import {
+	ElasticsearchModule,
+	ElasticsearchService
 } from "@nestjs/elasticsearch";
-import { 
-	SubstrateController, 
-	SubstrateService 
-} from "../substrate.handler";
-import { 
-	CommandBus, 
-	CqrsModule 
+import {
+	SubstrateController,
+	SubstrateService
+} from "../../src/substrate/substrate.handler";
+import {
+	CommandBus,
+	CqrsModule
 } from "@nestjs/cqrs";
-import { 
-	Test, 
-	TestingModule 
+import {
+	Test,
+	TestingModule
 } from "@nestjs/testing";
 
 describe("Orders Substrate Event Handler", () => {

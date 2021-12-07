@@ -1,30 +1,36 @@
-import { 
-  Test, 
-  TestingModule 
+import {
+  Test,
+  TestingModule
 } from "@nestjs/testing";
-import { CommonModule } from "../../common/common.module";
+import { CommonModule } from "../../src/common/common.module";
+import {
+  LabCommandHandlers,
+  LabDeregisteredCommand,
+  LabRegisteredCommand,
+  LabUpdatedCommand
+} from "../../src/substrate/labs";
 import { 
-  LabCommandHandlers, 
-  LabDeregisteredCommand, 
-  LabRegisteredCommand, 
-  LabUpdatedCommand 
-} from ".";
-import { LabDeregisteredHandler } from "./commands/lab-deregistered/lab-deregistered.handler";
-import { LabRegisteredHandler } from "./commands/lab-registered/lab-registered.handler";
-import { LabUpdatedHandler } from "./commands/lab-updated/lab-updated.handler";
+	LabDeregisteredHandler 
+} from "../../src/substrate/labs/commands/lab-deregistered/lab-deregistered.handler";
 import { 
-  ElasticsearchModule, 
-  ElasticsearchService 
+	LabRegisteredHandler 
+} from "../../src/substrate/labs/commands/lab-registered/lab-registered.handler";
+import { 
+	LabUpdatedHandler 
+} from "../../src/substrate/labs/commands/lab-updated/lab-updated.handler";
+import {
+  ElasticsearchModule,
+  ElasticsearchService
 } from "@nestjs/elasticsearch";
-import { 
-  CommandBus, 
-  CqrsModule 
+import {
+  CommandBus,
+  CqrsModule
 } from "@nestjs/cqrs";
-import { 
-  SubstrateController, 
-  SubstrateService 
-} from "../substrate.handler";
-import { BlockMetaData } from "../models/blockMetaData";
+import {
+  SubstrateController,
+  SubstrateService
+} from "../../src/substrate/substrate.handler";
+import { BlockMetaData } from "../../src/substrate/models/blockMetaData";
 
 describe("Labs Substrate Event Handler", () => {
 	let labDeregisteredHandler: LabDeregisteredHandler;

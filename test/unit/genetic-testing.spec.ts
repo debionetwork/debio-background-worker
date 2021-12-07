@@ -1,11 +1,26 @@
-import { CommandBus, CqrsModule } from "@nestjs/cqrs";
-import { ElasticsearchModule, ElasticsearchService } from "@nestjs/elasticsearch";
-import { Test, TestingModule } from "@nestjs/testing";
-import { BlockMetaData } from "../models/blockMetaData";
-import { SubstrateController, SubstrateService } from "../substrate.handler";
-import { CommonModule } from "../../common/common.module";
-import { DataStakedHandler } from "./commands/data-staked/data-staked.handler";
-import { DataStakedCommand, GeneticTestingCommandHandlers } from ".";
+import {
+	CommandBus,
+	CqrsModule
+} from "@nestjs/cqrs";
+import {
+	ElasticsearchModule,
+	ElasticsearchService
+} from "@nestjs/elasticsearch";
+import {
+	Test,
+	TestingModule
+} from "@nestjs/testing";
+import { BlockMetaData } from "../../src/substrate/models/blockMetaData";
+import {
+	SubstrateController,
+	SubstrateService
+} from "../../src/substrate/substrate.handler";
+import { CommonModule } from "../../src/common/common.module";
+import { DataStakedHandler } from "../../src/substrate/genetic-testing/commands/data-staked/data-staked.handler";
+import {
+	DataStakedCommand,
+	GeneticTestingCommandHandlers
+} from "../../src/substrate/genetic-testing";
 
 describe("Genetic Testing Substrate Event Handler", () => {
 	let dataStakedHandler: DataStakedHandler;

@@ -1,23 +1,28 @@
-import { CommandBus, CqrsModule } from "@nestjs/cqrs";
-import { ElasticsearchModule, ElasticsearchService } from "@nestjs/elasticsearch";
+import {
+	CommandBus,
+	CqrsModule
+} from "@nestjs/cqrs";
 import { 
-  ServiceCommandHandlers, 
-  ServiceCreatedCommand, 
-  ServiceDeletedCommand, 
-  ServiceUpdatedCommand 
-} from ".";
-import { SubstrateController, SubstrateService } from "../substrate.handler";
-import { ServiceCreatedHandler } from "./commands/service-created/service-created.handler";
-import { ServiceDeletedHandler } from "./commands/service-deleted/service-deleted.handler";
-import { ServiceUpdatedHandler } from "./commands/service-updated/service-updated.handler";
-import { Price } from "./models/price";
-import { Service } from "./models/service";
-import { PriceByCurrency } from "./models/price-by-currency";
-import { ServiceInfo } from "./models/service-info";
-import { BlockMetaData } from "../models/blockMetaData";
+	ElasticsearchModule, 
+	ElasticsearchService 
+} from "@nestjs/elasticsearch";
 import { Test, TestingModule } from "@nestjs/testing";
-import { CommonModule } from "../../common/common.module";
-import { ServiceFlow } from "../models/service-flow";
+import {
+  ServiceCommandHandlers,
+  ServiceCreatedCommand,
+  ServiceDeletedCommand,
+  ServiceUpdatedCommand
+} from "../../src/substrate/services";
+import { CommonModule } from "../../src/common/common.module";
+import { BlockMetaData } from "../../src/substrate/models/blockMetaData";
+import { ServiceFlow } from "../../src/substrate/models/service-flow";
+import { ServiceCreatedHandler } from "../../src/substrate/services/commands/service-created/service-created.handler";
+import { ServiceDeletedHandler } from "../../src/substrate/services/commands/service-deleted/service-deleted.handler";
+import { ServiceUpdatedHandler } from "../../src/substrate/services/commands/service-updated/service-updated.handler";
+import {
+	SubstrateController,
+	SubstrateService
+} from "../../src/substrate/substrate.handler";
 
 describe("Services Substrate Event Handler", () => {
 	let serviceCreatedHandler: ServiceCreatedHandler;
