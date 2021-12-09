@@ -33,7 +33,7 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('Substrate (Get)', async () => {
+  it('/substrate (Get)', async () => {
     return request(app.getHttpServer())
       .get('/substrate')
       .expect(404);

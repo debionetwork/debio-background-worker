@@ -13,92 +13,29 @@ import {
 import {
 	SubstrateController,
 	SubstrateService
-} from "../../src/substrate/substrate.handler";
-import { CommonModule } from "../../src/common/common.module";
-import { ClaimedServiceRequestHandler } from "../../src/substrate/service-request/commands/claimed-service-request/claimed-service-request.handler";
-import { CreateServiceRequestHandler } from "../../src/substrate/service-request/commands/create-service-request/create-service-request.handler";
-import { FinalizedServiceRequestHandler } from "../../src/substrate/service-request/commands/finalized-service-request/finalized-service-request.handler";
-import { ProcessedServiceRequestHandler } from "../../src/substrate/service-request/commands/processed-service-request/processed-service-request.handler";
-import { UnstakedServiceRequestHandler } from "../../src/substrate/service-request/commands/unstaked-service-request/unstaked-service-request.handler";
-import { UnstakedWaitingServiceRequestHandler } from "../../src/substrate/service-request/commands/unstakedwaiting-service-request/unstakedwaiting-service-request.handler";
-import { ClaimedServiceRequestCommand, CreateServiceRequestCommand, FinalizedServiceRequestCommand, ProcessedServiceRequestCommand, RequestServiceCommandHandlers, UnstakedServiceRequestCommand, UnstakedWaitingServiceRequestCommand } from "../../src/substrate/service-request";
-import { RequestStatus } from "../../src/substrate/service-request/models/requestStatus";
-import { BlockMetaData } from "../../src/substrate/models/blockMetaData";
+} from "../../../src/substrate/substrate.handler";
+import { CommonModule } from "../../../src/common/common.module";
+import { ClaimedServiceRequestHandler } from "../../../src/substrate/service-request/commands/claimed-service-request/claimed-service-request.handler";
+import { CreateServiceRequestHandler } from "../../../src/substrate/service-request/commands/create-service-request/create-service-request.handler";
+import { FinalizedServiceRequestHandler } from "../../../src/substrate/service-request/commands/finalized-service-request/finalized-service-request.handler";
+import { ProcessedServiceRequestHandler } from "../../../src/substrate/service-request/commands/processed-service-request/processed-service-request.handler";
+import { UnstakedServiceRequestHandler } from "../../../src/substrate/service-request/commands/unstaked-service-request/unstaked-service-request.handler";
+import { UnstakedWaitingServiceRequestHandler } from "../../../src/substrate/service-request/commands/unstakedwaiting-service-request/unstakedwaiting-service-request.handler";
+import { ClaimedServiceRequestCommand, CreateServiceRequestCommand, FinalizedServiceRequestCommand, ProcessedServiceRequestCommand, RequestServiceCommandHandlers, UnstakedServiceRequestCommand, UnstakedWaitingServiceRequestCommand } from "../../../src/substrate/service-request";
+import { RequestStatus } from "../../../src/substrate/service-request/models/requestStatus";
+import { BlockMetaData } from "../../../src/substrate/models/blockMetaData";
+import { CommandBusProvider, ElasticSearchServiceProvider, substrateServiceProvider } from "../mock";
+
+let claimedServiceRequestHandler: ClaimedServiceRequestHandler;
+let createServiceRequestHandler: CreateServiceRequestHandler;
+let finalizedServiceRequestHandler: FinalizedServiceRequestHandler;
+let processedServiceRequestHandler: ProcessedServiceRequestHandler;
+let unstakedServiceRequestHandler: UnstakedServiceRequestHandler;
+let unstakedWaitingServiceRequestHandler: UnstakedWaitingServiceRequestHandler;
+
+let commandBus: CommandBus;
 
 describe("Service Request Substrate Event Handler", () => {
-	let claimedServiceRequestHandler: ClaimedServiceRequestHandler;
-	let createServiceRequestHandler: CreateServiceRequestHandler;
-	let finalizedServiceRequestHandler: FinalizedServiceRequestHandler;
-  let processedServiceRequestHandler: ProcessedServiceRequestHandler;
-  let unstakedServiceRequestHandler: UnstakedServiceRequestHandler;
-  let unstakedWaitingServiceRequestHandler: UnstakedWaitingServiceRequestHandler;
-
-	const substrateServiceProvider = {
-		provide: SubstrateService,
-		useFactory: () => ({
-			handleEvent: jest.fn(),
-			listenToEvents: jest.fn(),
-			listenToNewBlock: jest.fn(),
-			syncBlock: jest.fn(),
-		})
-	}
-
-	const CommandBusProvider = {
-		provide: CommandBus,
-		useFactory: () => ({
-			execute: jest.fn(),
-		})
-	}
-
-	const ElasticSearchServiceProvider = {
-		provide: ElasticsearchService,
-		useFactory: () => ({
-			indices: {
-				delete: jest.fn(),
-			},
-			delete: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			deleteByQuery: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			index: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			update: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			updateByQuery: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			search: jest.fn(
-				() => ({
-					body: {
-						hits: {
-							hits: [
-								{
-									_source: {
-										info: {}
-									}
-								}
-							]
-						}
-					},
-					catch: jest.fn(),
-				})
-			),
-		})
-	}
 
   const createMockRequest = (requestStatus: RequestStatus) => {
     return [
@@ -200,65 +137,69 @@ describe("Service Request Substrate Event Handler", () => {
     processedServiceRequestHandler        = modules.get<ProcessedServiceRequestHandler>(ProcessedServiceRequestHandler);
     unstakedServiceRequestHandler         = modules.get<UnstakedServiceRequestHandler>(UnstakedServiceRequestHandler);
     unstakedWaitingServiceRequestHandler  = modules.get<UnstakedWaitingServiceRequestHandler>(UnstakedWaitingServiceRequestHandler);
+
+		commandBus 						= modules.get<CommandBus>(CommandBus);
+		
+		await modules.init();
   });
   
-	describe("Service Request Event", () => {
-		it("Claimed Service Request Handler", async () => {
+	describe("Service Request Event Command", () => {
+		it("Claimed Service Request Command", async () => {
 			const claimRequest = createMockClaimRequest();
 			
 			const claimedServiceRequestHandlerSpy = jest.spyOn(claimedServiceRequestHandler, 'execute');
 			const claimedServiceRequestCommand: ClaimedServiceRequestCommand = new ClaimedServiceRequestCommand(claimRequest, mockBlockNumber());
-			await claimedServiceRequestHandler.execute(claimedServiceRequestCommand);
+			await commandBus.execute(claimedServiceRequestCommand);
 			expect(claimedServiceRequestHandlerSpy).toBeCalled();
 			expect(claimedServiceRequestHandlerSpy).toBeCalledWith(claimedServiceRequestCommand);
 		});
 
-		it("Create Service Request Handler", async () => {
+		it("Create Service Request Command", async () => {
 			const requestData = createMockRequest(RequestStatus.Open);
 
 			const createServiceRequestHandlerSpy = jest.spyOn(createServiceRequestHandler, 'execute');
 			const createServiceRequestCommand: CreateServiceRequestCommand = new CreateServiceRequestCommand(requestData, mockBlockNumber());
-			await createServiceRequestHandler.execute(createServiceRequestCommand);
+			await commandBus.execute(createServiceRequestCommand);
 			expect(createServiceRequestHandlerSpy).toBeCalled();
 			expect(createServiceRequestHandlerSpy).toBeCalledWith(createServiceRequestCommand);
 		});
 
-		it("Finalized Service Request Handler", async () => {
+		it("Finalized Service Request Command", async () => {
 			const serviceInvoice = createMockServiceInvoice();
 
 			const finalizedServiceRequestHandlerSpy = jest.spyOn(finalizedServiceRequestHandler, 'execute');
 			const finalizedServiceRequestCommand: FinalizedServiceRequestCommand = new FinalizedServiceRequestCommand(serviceInvoice, mockBlockNumber());
-			await finalizedServiceRequestHandler.execute(finalizedServiceRequestCommand);
+			await commandBus.execute(finalizedServiceRequestCommand);
 			expect(finalizedServiceRequestHandlerSpy).toBeCalled();
 			expect(finalizedServiceRequestHandlerSpy).toBeCalledWith(finalizedServiceRequestCommand);
 		});
     
-		it("Processed Service Request Handler", async () => {
+		it("Processed Service Request Command", async () => {
 			const serviceInvoice = createMockServiceInvoice();
 
 			const processedServiceRequestHandlerSpy = jest.spyOn(processedServiceRequestHandler, 'execute');
 			const processedServiceRequestCommand: ProcessedServiceRequestCommand = new ProcessedServiceRequestCommand(serviceInvoice, mockBlockNumber());
-			await processedServiceRequestHandler.execute(processedServiceRequestCommand);
+			await commandBus.execute(processedServiceRequestCommand);
 			expect(processedServiceRequestHandlerSpy).toBeCalled();
 			expect(processedServiceRequestHandlerSpy).toBeCalledWith(processedServiceRequestCommand);
 		});
     
-		it("Unstaked Service Request Handler", async () => {
+		it("Unstaked Service Request Command", async () => {
 			const requestData = createMockRequest(RequestStatus.Unstaked);
 
 			const unstakedServiceRequestHandlerSpy = jest.spyOn(unstakedServiceRequestHandler, 'execute');
 			const unstakedServiceRequestCommand: UnstakedServiceRequestCommand = new UnstakedServiceRequestCommand(requestData, mockBlockNumber());
-			await unstakedServiceRequestHandler.execute(unstakedServiceRequestCommand);
+			await commandBus.execute(unstakedServiceRequestCommand);
 			expect(unstakedServiceRequestHandlerSpy).toBeCalled();
 			expect(unstakedServiceRequestHandlerSpy).toBeCalledWith(unstakedServiceRequestCommand);
 		});
     
-		it("Unstaked Waiting Service Request Handler", async () => {
+		it("Unstaked Waiting Service Request Command", async () => {
 			const requestData = createMockRequest(RequestStatus.WaitingForUnstaked);
 
 			const unstakedWaitingServiceRequestHandlerSpy = jest.spyOn(unstakedWaitingServiceRequestHandler, 'execute');
 			const unstakedWaitingServiceRequestCommand: UnstakedWaitingServiceRequestCommand = new UnstakedWaitingServiceRequestCommand(requestData, mockBlockNumber());
-			await unstakedWaitingServiceRequestHandler.execute(unstakedWaitingServiceRequestCommand);
+			await commandBus.execute(unstakedWaitingServiceRequestCommand);
 			expect(unstakedWaitingServiceRequestHandlerSpy).toBeCalled();
 			expect(unstakedWaitingServiceRequestHandlerSpy).toBeCalledWith(unstakedWaitingServiceRequestCommand);
 		});

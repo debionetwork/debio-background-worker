@@ -19,7 +19,6 @@ export class CertificationDeletedHandler
       refresh: 'wait_for',
     });
 
-
     await this.elasticsearchService.update({
       index: 'labs',
       refresh: 'wait_for',

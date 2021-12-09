@@ -2,22 +2,26 @@ import {
   Test,
   TestingModule
 } from "@nestjs/testing";
-import { CommonModule } from "../../src/common/common.module";
+import { CommonModule } from "../../../src/common/common.module";
 import {
   LabCommandHandlers,
   LabDeregisteredCommand,
   LabRegisteredCommand,
-  LabUpdatedCommand
-} from "../../src/substrate/labs";
+  LabUpdatedCommand,
+	LabUpdateVerificationStatusCommand
+} from "../../../src/substrate/labs";
 import { 
 	LabDeregisteredHandler 
-} from "../../src/substrate/labs/commands/lab-deregistered/lab-deregistered.handler";
+} from "../../../src/substrate/labs/commands/lab-deregistered/lab-deregistered.handler";
 import { 
 	LabRegisteredHandler 
-} from "../../src/substrate/labs/commands/lab-registered/lab-registered.handler";
+} from "../../../src/substrate/labs/commands/lab-registered/lab-registered.handler";
 import { 
 	LabUpdatedHandler 
-} from "../../src/substrate/labs/commands/lab-updated/lab-updated.handler";
+} from "../../../src/substrate/labs/commands/lab-updated/lab-updated.handler";
+import { 
+	LabUpdateVerificationStatusHandler
+} from "../../../src/substrate/labs/commands/lab-update-verification-status/lab-update-verification-status.handler";
 import {
   ElasticsearchModule,
   ElasticsearchService
@@ -29,80 +33,19 @@ import {
 import {
   SubstrateController,
   SubstrateService
-} from "../../src/substrate/substrate.handler";
-import { BlockMetaData } from "../../src/substrate/models/blockMetaData";
+} from "../../../src/substrate/substrate.handler";
+import { BlockMetaData } from "../../../src/substrate/models/blockMetaData";
+import { CommandBusProvider, ElasticSearchServiceProvider, substrateServiceProvider } from "../mock";
+import { LabVerificationStatus } from "../../../src/substrate/labs/models/lab-verification-status";
+
+let labDeregisteredHandler: LabDeregisteredHandler;
+let labRegisteredHandler: LabRegisteredHandler;
+let labUpdatedHandler: LabUpdatedHandler;
+let labUpdateVerificationStatusHandler: LabUpdateVerificationStatusHandler;
+
+let commandBus: CommandBus;
 
 describe("Labs Substrate Event Handler", () => {
-	let labDeregisteredHandler: LabDeregisteredHandler;
-	let labRegisteredHandler: LabRegisteredHandler;
-	let labUpdatedHandler: LabUpdatedHandler;
-
-	const substrateServiceProvider = {
-		provide: SubstrateService,
-		useFactory: () => ({
-			handleEvent: jest.fn(),
-			listenToEvents: jest.fn(),
-			listenToNewBlock: jest.fn(),
-			syncBlock: jest.fn(),
-		})
-	}
-
-	const CommandBusProvider = {
-		provide: CommandBus,
-		useFactory: () => ({
-			execute: jest.fn(),
-		})
-	}
-
-	const ElasticSearchServiceProvider = {
-		provide: ElasticsearchService,
-		useFactory: () => ({
-			indices: {
-				delete: jest.fn(),
-			},
-			delete: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			deleteByQuery: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			index: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			update: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			updateByQuery: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			search: jest.fn(
-				() => ({
-					body: {
-						hits: {
-							hits: [
-								{
-									_source: {
-										info: {}
-									}
-								}
-							]
-						}
-					},
-					catch: jest.fn(),
-				})
-			),
-		})
-	}
   
 	const createMockLab = ({
 		address,
@@ -182,13 +125,18 @@ describe("Labs Substrate Event Handler", () => {
       ]
     }).compile();
     
-		labDeregisteredHandler  = modules.get<LabDeregisteredHandler>(LabDeregisteredHandler);
-		labRegisteredHandler    = modules.get<LabRegisteredHandler>(LabRegisteredHandler);
-		labUpdatedHandler       = modules.get<LabUpdatedHandler>(LabUpdatedHandler);
+		labDeregisteredHandler  						= modules.get<LabDeregisteredHandler>(LabDeregisteredHandler);
+		labRegisteredHandler    						= modules.get<LabRegisteredHandler>(LabRegisteredHandler);
+		labUpdatedHandler       						= modules.get<LabUpdatedHandler>(LabUpdatedHandler);
+		labUpdateVerificationStatusHandler 	= modules.get<LabUpdateVerificationStatusHandler>(LabUpdateVerificationStatusHandler);
+
+		commandBus						= modules.get<CommandBus>(CommandBus);
+		
+		await modules.init();
   });
   
-	describe("Lab Handler", () => {
-		it("Lab Deregistered Handler", async () => {
+	describe("Lab Command", () => {
+		it("Lab Deregistered Command", async () => {
 			const lab = createMockLab({
 				address: "Jakarta",
 				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
@@ -204,19 +152,19 @@ describe("Labs Substrate Event Handler", () => {
 				region: "ID-JK",
 				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
 				certifications: [],
-				verification_status: "",
+				verification_status: LabVerificationStatus.Verified,
 				services: []
 			});
 			
 			const labDeregisteredHandlerSpy = jest.spyOn(labDeregisteredHandler, 'execute');
 			const labDeregisteredCommand: LabDeregisteredCommand = new LabDeregisteredCommand([lab], mockBlockNumber());
-			await labDeregisteredHandler.execute(labDeregisteredCommand);
+			await commandBus.execute(labDeregisteredCommand);
 			expect(labDeregisteredHandlerSpy).toBeCalled();
 			expect(labDeregisteredHandlerSpy).toBeCalledWith(labDeregisteredCommand);
 		});
 
 		
-		it("Lab Registered Handler", async () => {
+		it("Lab Registered Command", async () => {
 			const lab = createMockLab({
 				address: "Jakarta",
 				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
@@ -232,18 +180,18 @@ describe("Labs Substrate Event Handler", () => {
 				region: "ID-JK",
 				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
 				certifications: [],
-				verification_status: "",
+				verification_status: LabVerificationStatus.Verified,
 				services: []
 			});
 			
 			const labRegisteredHandlerSpy = jest.spyOn(labRegisteredHandler, 'execute');
 			const labRegisteredCommand: LabDeregisteredCommand = new LabRegisteredCommand([lab], mockBlockNumber());
-			await labRegisteredHandler.execute(labRegisteredCommand);
+			await commandBus.execute(labRegisteredCommand);
 			expect(labRegisteredHandlerSpy).toBeCalled();
 			expect(labRegisteredHandlerSpy).toBeCalledWith(labRegisteredCommand);
 		});
 
-		it("Lab Updated Handler", async () => {
+		it("Lab Updated Command", async () => {
 			const lab = createMockLab({
 				address: "Jakarta",
 				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
@@ -259,15 +207,42 @@ describe("Labs Substrate Event Handler", () => {
 				region: "ID-JK",
 				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
 				certifications: [],
-				verification_status: "",
+				verification_status: LabVerificationStatus.Verified,
 				services: []
 			});
 			
 			const labUpdateHandlerSpy = jest.spyOn(labUpdatedHandler, 'execute');
 			const labUpdatedCommand: LabUpdatedCommand = new LabUpdatedCommand([lab], mockBlockNumber());
-			await labUpdatedHandler.execute(labUpdatedCommand);
+			await commandBus.execute(labUpdatedCommand);
 			expect(labUpdateHandlerSpy).toBeCalled();
 			expect(labUpdateHandlerSpy).toBeCalledWith(labUpdatedCommand);
+		});
+
+		it("Lab Updated Verification Status Command", async () => {
+			const lab = createMockLab({
+				address: "Jakarta",
+				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
+				city: "ID-JK",
+				country: "ID",
+				email: "email@labdnafavorit.com",
+				phone_number: "+8272282",
+				website: "http://localhost",
+				latitude: null,
+				longitude: null,
+				name: "Laboratorium DNA Favourites",
+				profile_image: null,
+				region: "ID-JK",
+				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
+				certifications: [],
+				verification_status: LabVerificationStatus.Verified,
+				services: []
+			});
+			
+			const labUpdateVerificationStatusHandlerSpy = jest.spyOn(labUpdateVerificationStatusHandler, 'execute');
+			const labUpdatedVerificationStatusCommand: LabUpdateVerificationStatusCommand = new LabUpdateVerificationStatusCommand([lab], mockBlockNumber());
+			await commandBus.execute(labUpdatedVerificationStatusCommand);
+			expect(labUpdateVerificationStatusHandlerSpy).toBeCalled();
+			expect(labUpdateVerificationStatusHandlerSpy).toBeCalledWith(labUpdatedVerificationStatusCommand);
 		});
 	});
 });

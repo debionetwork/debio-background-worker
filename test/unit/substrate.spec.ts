@@ -18,79 +18,12 @@ import {
 import { ServiceCommandHandlers } from "../../src/substrate/services";
 import { LabCommandHandlers } from "../../src/substrate/labs";
 import { OrderCommandHandlers } from "../../src/substrate/orders";
+import { CommandBusProvider, ElasticSearchServiceProvider, substrateServiceProvider } from "./mock";
 
 describe("Substrate Indexer", () => {
 	let substrateController: SubstrateController;
 	let substrateService: SubstrateService;
 	let commandBus: CommandBus;
-
-	const substrateServiceProvider = {
-		provide: SubstrateService,
-		useFactory: () => ({
-			handleEvent: jest.fn(),
-			listenToEvents: jest.fn(),
-			listenToNewBlock: jest.fn(),
-			syncBlock: jest.fn(),
-			startListen: jest.fn()
-		})
-	}
-
-	const CommandBusProvider = {
-		provide: CommandBus,
-		useFactory: () => ({
-			execute: jest.fn(),
-		})
-	}
-
-	const ElasticSearchServiceProvider = {
-		provide: ElasticsearchService,
-		useFactory: () => ({
-			indices: {
-				delete: jest.fn(),
-			},
-			delete: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			deleteByQuery: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			index: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			update: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			updateByQuery: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			search: jest.fn(
-				() => ({
-					body: {
-						hits: {
-							hits: [
-								{
-									_source: {
-										info: {}
-									}
-								}
-							]
-						}
-					},
-					catch: jest.fn(),
-				})
-			),
-		})
-	}
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({

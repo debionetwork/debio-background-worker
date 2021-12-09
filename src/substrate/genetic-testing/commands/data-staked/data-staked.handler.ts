@@ -9,15 +9,6 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: DataStakedCommand) {
-    const orders = await this.elasticsearchService.search({
-      index: 'orders',
-      body: {
-        query: {
-          match: { _id: command.dataStaked.orderId },
-        },
-      },
-    });
-
     await this.elasticsearchService.update({
       index: 'orders',
       id: command.dataStaked.orderId,
@@ -25,7 +16,19 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
       body: {
         doc: {
           bounty: true,
+          hash_bounty: command.dataStaked.hashDataBounty
         }
+      }
+    });
+    
+    await this.elasticsearchService.index({
+      index: 'data-bounty',
+      id: command.dataStaked.orderId,
+      refresh: 'wait_for',
+      body: {
+          order_id: command.dataStaked.orderId,
+          hash_data_bounty: command.dataStaked.hashDataBounty,
+          blockMetaData: command.blockMetaData,
       }
     });
   }

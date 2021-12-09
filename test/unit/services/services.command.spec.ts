@@ -12,90 +12,27 @@ import {
   ServiceCreatedCommand,
   ServiceDeletedCommand,
   ServiceUpdatedCommand
-} from "../../src/substrate/services";
-import { CommonModule } from "../../src/common/common.module";
-import { BlockMetaData } from "../../src/substrate/models/blockMetaData";
-import { ServiceFlow } from "../../src/substrate/models/service-flow";
-import { ServiceCreatedHandler } from "../../src/substrate/services/commands/service-created/service-created.handler";
-import { ServiceDeletedHandler } from "../../src/substrate/services/commands/service-deleted/service-deleted.handler";
-import { ServiceUpdatedHandler } from "../../src/substrate/services/commands/service-updated/service-updated.handler";
+} from "../../../src/substrate/services";
+import { CommonModule } from "../../../src/common/common.module";
+import { BlockMetaData } from "../../../src/substrate/models/blockMetaData";
+import { ServiceFlow } from "../../../src/substrate/models/service-flow";
+import { ServiceCreatedHandler } from "../../../src/substrate/services/commands/service-created/service-created.handler";
+import { ServiceDeletedHandler } from "../../../src/substrate/services/commands/service-deleted/service-deleted.handler";
+import { ServiceUpdatedHandler } from "../../../src/substrate/services/commands/service-updated/service-updated.handler";
 import {
 	SubstrateController,
 	SubstrateService
-} from "../../src/substrate/substrate.handler";
+} from "../../../src/substrate/substrate.handler";
+import { CommandBusProvider, ElasticSearchServiceProvider, substrateServiceProvider } from "../mock";
+
+let serviceCreatedHandler: ServiceCreatedHandler;
+let serviceDeletedHandler: ServiceDeletedHandler;
+let serviceUpdatedHandler: ServiceUpdatedHandler;
+
+let commandBus: CommandBus;
 
 describe("Services Substrate Event Handler", () => {
-	let serviceCreatedHandler: ServiceCreatedHandler;
-	let serviceDeletedHandler: ServiceDeletedHandler;
-	let serviceUpdatedHandler: ServiceUpdatedHandler;
 
-	const substrateServiceProvider = {
-		provide: SubstrateService,
-		useFactory: () => ({
-			handleEvent: jest.fn(),
-			listenToEvents: jest.fn(),
-			listenToNewBlock: jest.fn(),
-			syncBlock: jest.fn(),
-		})
-	}
-
-	const CommandBusProvider = {
-		provide: CommandBus,
-		useFactory: () => ({
-			execute: jest.fn(),
-		})
-	}
-
-	const ElasticSearchServiceProvider = {
-		provide: ElasticsearchService,
-		useFactory: () => ({
-			indices: {
-				delete: jest.fn(),
-			},
-			delete: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			deleteByQuery: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			index: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			update: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			updateByQuery: jest.fn(
-				() => ({
-					catch: jest.fn(),
-				})
-			),
-			search: jest.fn(
-				() => ({
-					body: {
-						hits: {
-							hits: [
-								{
-									_source: {
-										info: {}
-									}
-								}
-							]
-						}
-					},
-					catch: jest.fn(),
-				})
-			),
-		})
-	}
-  
 	function createMockService() {
 		const first_price = {
 			component: "testing_price", 
@@ -172,35 +109,39 @@ describe("Services Substrate Event Handler", () => {
 		serviceCreatedHandler = modules.get<ServiceCreatedHandler>(ServiceCreatedHandler);
 		serviceDeletedHandler = modules.get<ServiceDeletedHandler>(ServiceDeletedHandler);
 		serviceUpdatedHandler = modules.get<ServiceUpdatedHandler>(ServiceUpdatedHandler);
+
+		commandBus 						= modules.get<CommandBus>(CommandBus);
+		
+		await modules.init();
   });
   
-	describe("Service Handler", () => {
-		it("Service Created Handler", async () => {
+	describe("Service Command", () => {
+		it("Service Created Command", async () => {
 			const service = createMockService();
 			
 			const serviceCreatedHandlerSpy = jest.spyOn(serviceCreatedHandler, 'execute');
 			const serviceCreatedCommand: ServiceCreatedCommand = new ServiceCreatedCommand([service], mockBlockNumber());
-			await serviceCreatedHandler.execute(serviceCreatedCommand);
+			await commandBus.execute(serviceCreatedCommand);
 			expect(serviceCreatedHandlerSpy).toBeCalled();
 			expect(serviceCreatedHandlerSpy).toBeCalledWith(serviceCreatedCommand);
 		});
 
-		it("Service Deleted Handler", async () => {
+		it("Service Deleted Command", async () => {
 			const service = createMockService();
 			
 			const serviceDeletedHandlerSpy = jest.spyOn(serviceDeletedHandler, 'execute');
 			const serviceDeletedCommand: ServiceDeletedCommand = new ServiceDeletedCommand([service], mockBlockNumber());
-			await serviceDeletedHandler.execute(serviceDeletedCommand);
+			await commandBus.execute(serviceDeletedCommand);
 			expect(serviceDeletedHandlerSpy).toBeCalled();
 			expect(serviceDeletedHandlerSpy).toBeCalledWith(serviceDeletedCommand);
 		});
 
-		it("Service Updated Handler", async () => {
+		it("Service Updated Command", async () => {
 			const service = createMockService();
 			
 			const serviceUpdatedHandlerSpy = jest.spyOn(serviceUpdatedHandler, 'execute');
 			const serviceUpdatedCommand: ServiceUpdatedCommand = new ServiceUpdatedCommand([service], mockBlockNumber());
-			await serviceUpdatedHandler.execute(serviceUpdatedCommand);
+			await commandBus.execute(serviceUpdatedCommand);
 			expect(serviceUpdatedHandlerSpy).toBeCalled();
 			expect(serviceUpdatedHandlerSpy).toBeCalledWith(serviceUpdatedCommand);
 		});
