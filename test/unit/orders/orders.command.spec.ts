@@ -115,6 +115,32 @@ describe("Orders Substrate Event Handler", () => {
 
 		await modules.init();
   });
+
+  describe("Lab Handler", () => {
+		it("Lab cancelled handler defined", () => {
+			expect(orderCancelledHandler).toBeDefined();
+		});
+		
+		it("Lab created handler defined", () => {
+			expect(orderCreatedHandler).toBeDefined();
+		});
+		
+		it("Lab failed handler defined", () => {
+			expect(orderFailedHandler).toBeDefined();
+		});
+		
+		it("Lab fulfilled status handler defined", () => {
+			expect(orderFulfilledHandler).toBeDefined();
+		});
+		
+		it("Lab paid status handler defined", () => {
+			expect(orderPaidHandler).toBeDefined();
+		});
+		
+		it("Lab refunded status handler defined", () => {
+			expect(orderRefundedHandler).toBeDefined();
+		});
+	});
   
 	describe("Order Command", () => {
 		it("Order Cancelled Command", async () => {

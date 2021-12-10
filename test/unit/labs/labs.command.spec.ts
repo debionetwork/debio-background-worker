@@ -134,6 +134,24 @@ describe("Labs Substrate Event Handler", () => {
 		
 		await modules.init();
   });
+
+  describe("Lab Handler", () => {
+		it("Lab deregistered handler defined", () => {
+			expect(labDeregisteredHandler).toBeDefined();
+		});
+		
+		it("Lab registered handler defined", () => {
+			expect(labRegisteredHandler).toBeDefined();
+		});
+		
+		it("Lab updated handler defined", () => {
+			expect(labUpdatedHandler).toBeDefined();
+		});
+		
+		it("Lab verification status handler defined", () => {
+			expect(labUpdateVerificationStatusHandler).toBeDefined();
+		});
+	});
   
 	describe("Lab Command", () => {
 		it("Lab Deregistered Command", async () => {

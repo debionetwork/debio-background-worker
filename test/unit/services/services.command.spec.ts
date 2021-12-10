@@ -114,7 +114,21 @@ describe("Services Substrate Event Handler", () => {
 		
 		await modules.init();
   });
-  
+
+  describe("Service Handler", () => {
+		it("Service created handler defined", () => {
+			expect(serviceCreatedHandler).toBeDefined();
+		});
+		
+		it("Service deleted handler defined", () => {
+			expect(serviceDeletedHandler).toBeDefined();
+		});
+		
+		it("Service updated handler defined", () => {
+			expect(serviceUpdatedHandler).toBeDefined();
+		});
+	});
+
 	describe("Service Command", () => {
 		it("Service Created Command", async () => {
 			const service = createMockService();

@@ -75,6 +75,12 @@ describe("Genetic Testing Substrate Event Handler", () => {
 		
 		await modules.init();
   });
+
+  describe("Data Staked Handler defined", () => {
+		it("Data Staked handler", () => {
+			expect(dataStakedHandler).toBeDefined();
+		});
+	});
   
 	describe("Data Staked Event Command", () => {
 		it("Data Staked Command", async () => {

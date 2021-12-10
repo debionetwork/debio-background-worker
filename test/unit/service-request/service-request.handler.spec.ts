@@ -116,6 +116,32 @@ describe("Service Request Substrate Event Handler", () => {
 		
 		await modules.init();
   });
+
+  describe("Service Request Handler", () => {
+		it("Claimed service request handler defined", () => {
+			expect(claimedServiceRequestHandler).toBeDefined();
+		});
+		
+		it("Created service request handler defined", () => {
+			expect(createServiceRequestHandler).toBeDefined();
+		});
+		
+		it("Finalized service request handler defined", () => {
+			expect(finalizedServiceRequestHandler).toBeDefined();
+		});
+		
+		it("Processed service request handler defined", () => {
+			expect(processedServiceRequestHandler).toBeDefined();
+		});
+		
+		it("Unstaked service request handler defined", () => {
+			expect(unstakedServiceRequestHandler).toBeDefined();
+		});
+		
+		it("Unstaked waiting service request handler defined", () => {
+			expect(unstakedWaitingServiceRequestHandler).toBeDefined();
+		});
+	});
   
 	describe("Service Request Event", () => {
 		it("Claimed Service Request Handler", async () => {

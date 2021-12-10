@@ -95,7 +95,21 @@ describe("Certifications Substrate Event Handler", () => {
 		
 		await modules.init();
   });
-  
+
+  describe("Certification Handler defined", () => {
+		it("Certification created handler", () => {
+			expect(certificationsCreatedHandler).toBeDefined();
+		});
+		
+		it("Certification updated handler", () => {
+			expect(certificationsUpdatedHandler).toBeDefined();
+		});
+		
+		it("Certification deleted handler", () => {
+			expect(certificationsDeletedHandler).toBeDefined();
+		});
+	});
+
 	describe("Certification Command", () => {
 		it("Certification Created Command", async () => {
 			const certifications = createMockCertifications();
