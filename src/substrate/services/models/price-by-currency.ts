@@ -5,7 +5,7 @@ export class PriceByCurrency {
     priceByCurrency: any
   ) {
     this.currency     = priceByCurrency.currency;
-    this.total_price  = priceByCurrency.totalPrice.toString();
+    this.total_price  = priceByCurrency.totalPrice;
 
     this.price_components = [];
 

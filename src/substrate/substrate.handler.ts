@@ -1,5 +1,5 @@
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Header, Event } from '@polkadot/types/interfaces';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
@@ -274,17 +274,5 @@ export class SubstrateController {
 
   async onApplicationBootstrap() {
     await this.substrateService.startListen();
-  }
-
-  // Delete this route get after test finished
-  @Get("/start")
-  async startProgress() {
-    await this.substrateService.startListen();
-  }
-
-  // Delete this route get after test finished
-  @Get("/stop")
-  stopProgress() {
-    this.substrateService.stopListen();
   }
 }

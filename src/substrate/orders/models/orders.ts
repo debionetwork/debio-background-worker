@@ -1,5 +1,5 @@
-import { Price } from "src/substrate/services/models/price";
-import { ServiceFlow } from "src/substrate/models/service-flow";
+import { Price } from "../../services/models/price";
+import { ServiceFlow } from "../../models/service-flow";
 import { Currency } from "./currency";
 import { OrderStatus } from "./order-status";
 
