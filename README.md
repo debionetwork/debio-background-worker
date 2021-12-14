@@ -1,37 +1,263 @@
 # TODO
-- [ ] Update lab.services in service-updated and service-deleted handlers
-
----
-
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- [ ] Check substrate event listener not listen event from debio-node
 
 ## Description
+Debio Indexer is service to handle event from substrate node and create index of data from event to elasticsearch.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# Substrate Handler
+When this application is execute, `SubstrateController` will called and run `onApplicationBootstrap` to start listening event from substrate node.
 
-## Installation
+In `onApplicationBootstrap` only have one line code `await this.substrateService.startListen();` this line will execute `await this.syncBlock();` to sync event substrate from last block (last block before service is shutdown) to current block, after sync old block, service will start to listen event and sync current block.
+
+## Labs Event
+Event from Lab Pallet. This event send data lab with this structure.
+```
+LabInfo {
+  box_public_key: String;
+  name: string;
+  email: string;
+  phone_number: string;
+  website: string;
+  country: string;
+  region: string;
+  city: string;
+  address: string;
+  latitude?: string;
+  longitude?: string;
+  profile_image?: string;
+}
+```
+```
+enum LabVerificationStatus {
+  Unverified  = "Unverified",
+  Verified    = "Verified",
+  Rejected    = "Rejected",
+  Revoked     = "Revoked",
+}
+```
+```
+Lab {
+  accountId: string;
+  services: string[];
+  certifications: string[];
+  verificationStatus: LabVerificationStatus;
+  info: LabInfo;
+}
+```
+
+### LabRegistered
+Execute `LabRegisteredCommand` and called `LabRegisteredHandler`.
+
+### LabUpdated
+Execute `LabUpdatedCommand` and called `LabUpdatedHandler`.
+
+### LabDeregistered
+Execute `LabDeregisteredCommand` and called `LabDeregisteredHandler`.
+
+### LabUpdateVerificationStatus
+Execute `LabUpdateVerificationStatusCommand` and called `LabUpdateVerificationStatusHandler`.
+
+## Orders Event
+Event from Orders Pallets. This event send data orders with this structure.
+```
+enum OrderStatus {
+  Unpaid    = "Unpaid",
+  Paid      = "Paid",
+  Fulfilled = "Fulfilled",
+  Refunded  = "Refunded",
+  Cancelled = "Cancelled",
+  Failed    = "Failed",
+}
+```
+```
+enum Currency {
+  DAI = "DAI",
+  ETH = "ETH",
+}
+```
+```
+Price {
+  component: string;
+  value: string;
+}
+```
+```
+Orders {
+    id: string;
+	serviceId: string;
+	customerId: string;
+	customerBoxPublicKey: string;
+	sellerId: string;
+	dnaSampleTrackingId: string;
+	currency: Currency;
+	prices: Price[];
+	additionalPrices: Price[];
+	orderFlow: ServiceFlow;
+	status: OrderStatus;
+	createdAt: string;
+	updatedAt: string;
+}
+```
+
+### OrderCreated
+Execute `OrderCreatedCommand` and called `OrderCreatedHandler`.
+### OrderPaid
+Execute `OrderPaidCommand` and called `OrderPaidHandler`.
+### OrderFulfilled
+Execute `OrderFulfilledCommand` and called `OrderFulfilledHandler`.
+### OrderRefunded
+Execute `OrderRefundedCommand` and called `OrderRefundedHandler`.
+### OrderCancelled
+Execute `OrderCancelledCommand` and called `OrderCancelledHandler`.
+### OrderFailed
+Execute `OrderFailedCommand` and called `OrderFailedHandler`.
+## Services Event
+Event from Services Pallets. This event send data services with this structure.
+```
+ServiceInfo {
+    name: string;
+    prices_by_currency: PriceByCurrency[];
+    expected_duration: string;
+    category: string;
+    description: string;
+    dna_collection_process?: string;
+    test_result_sample: string;
+    long_description?: string;
+    image?: string;
+}
+```
+```
+enum ServiceFlow {
+  RequestTest           = "RequestTest",
+  StakingRequestService = "StakingRequestService"
+}
+```
+```
+Service {
+  id: string;
+  ownerId: string;
+  info: ServiceInfo;
+  serviceFlow: ServiceFlow;
+}
+```
+### ServiceCreated
+Execute `ServiceCreatedCommand` and called `ServiceCreatedHandler`.
+
+### ServiceUpdated
+Execute `ServiceUpdatedCommand` and called `ServiceUpdatedHandler`.
+
+### ServiceDeleted
+Execute `ServiceDeletedCommand` and called `ServiceDeletedHandler`.
+
+## Genetic Testing Event
+Event from Genetic Testing Pallets. This event send data data staked with this structure.
+```
+DataStaked {
+    from: string;
+    hashDataBounty: string;
+    orderId: string;
+}
+```
+### DataStaked
+Execute `DataStakedCommand` and called `DataStakedHandler`.
+
+## Service Request Event
+Event from Service Request Pallets. This event send data request, service invoice, and claim request with this structure.
+```
+enum RequestStatus {
+  Open                = "Open",
+  WaitingForUnstaked  = "WaitingForUnstaked",
+  Unstaked            = "Unstaked",
+  Claimed             = "Claimed",
+  Processed           = "Processed",
+  Finalized           = "Finalized"
+}
+```
+```
+Request {
+    hash: string;
+    requester_address: string;
+    lab_address: string;
+    country: string;
+    region: string;
+    city: string;
+    service_category: string;
+    staking_amount: string;
+    status: RequestStatus;
+    created_at: string;
+    updated_at: string;
+    unstaked_at: string;
+}
+```
+```
+ServiceInvoice {
+    requestHash: string;
+    orderId: string;
+    serviceId: string;
+    customerAddress: string;
+    sellerAddress: string;
+    dnaSampleTrackingId: string;
+    testingPrice: string;
+    qcPrice: string;
+    payAmount: string;
+}
+```
+```
+ClaimRequestModel {
+  requestHash: string;
+  labAddress: string;
+  serviceId: string;
+  testingPrice: string;
+  qcPrice: string;
+}
+```
+### ServiceRequestCreated
+Execute `CreateServiceRequestCommand` and called `CreateServiceRequestHandler`.
+
+### ServiceRequestClaimed
+Execute `ClaimedServiceRequestCommand` and called `ClaimedServiceRequestHandler`.
+
+### ServiceRequestProcessed
+Execute `ProcessedServiceRequestCommand` and called `ProcessedServiceRequestHandler`.
+
+### ServiceRequestFinalized
+Execute `FinalizedServiceRequestCommand` and called `FinalizedServiceRequestHandler`.
+
+### ServiceRequestUnstaked
+Execute `UnstakedServiceRequestCommand` and called `UnstakedServiceRequestHandler`.
+
+### ServiceRequestWaitingForUnstaked
+Execute `UnstakedWaitingServiceRequestCommand` and called `UnstakedWaitingServiceRequestHandler`.
+
+## Certifications Event
+Event from Certifications Pallets. This event send data certification with this structure.
+```
+Info {
+  title: string;
+  issuer: string;
+  month: string;
+  year: string;
+  description: string;
+  supporting_document: string;
+}
+```
+```
+Certification {
+  id: string;
+  owner_id: string;
+  info: Info
+}
+```
+### CertificationCreated
+Execute `CertificationCreatedCommand` and called `CertificationCreatedHandler`.
+
+### CertificationUpdated
+Execute `CertificationUpdatedCommand` and called `CertificationUpdatedHandler`.
+
+### CertificationDeleted
+Execute `CertificationDeletedCommand` and called `CertificationDeletedHandler`.
+
+### Installation
 
 ```bash
 $ npm install
@@ -62,17 +288,3 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
