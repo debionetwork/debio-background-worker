@@ -156,6 +156,8 @@ export class SubstrateService implements OnModuleInit {
   async listenToNewBlock() {
     await this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
       try {
+        await this.listenToEvents();
+
         const blockNumber = header.number.toNumber();
 
         // check if env is development
