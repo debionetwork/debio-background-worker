@@ -95,6 +95,20 @@ export class SubstrateService implements OnModuleInit {
     this.api = await ApiPromise.create({
       provider: wsProvider,
     });
+
+    this.api.on('connected', async () => {
+      this.logger.log(`Substrate API Connected`);
+      await this.startListen();
+    });
+
+    this.api.on('disconnected', async () => {
+      this.logger.log(`Substrate API Disconnected`);
+      await this.stopListen();
+    });
+
+    this.api.on('error', (error) => {
+      this.logger.log(`Substrate API Error: ${error}`);
+    });
   }
 
   async handleEvent(blockMetaData: BlockMetaData, event: Event) {
@@ -136,8 +150,6 @@ export class SubstrateService implements OnModuleInit {
       this.event = _unsub;
     }).catch(err => {
       this.logger.log(`Event listener catch error ${err.name}, ${err.message}, ${err.stack}`);
-      this.listenStatus = false;
-      this.startListen();
     });
   }
 
@@ -172,8 +184,6 @@ export class SubstrateService implements OnModuleInit {
       this.head = _unsub;
     }).catch(err => {
       this.logger.log(`Event listener catch error ${err.name}, ${err.message}, ${err.stack}`);
-      this.listenStatus = false;
-      this.startListen();
     });;
   }
 
@@ -255,9 +265,9 @@ export class SubstrateService implements OnModuleInit {
     this.listenToNewBlock();
   }
 
-  // Delete this function after testing finished
-  stopListen() {
+  async stopListen() {
     this.listenStatus = false;
+    
     if (this.head || this.event) {
       this.head();
       this.event();
