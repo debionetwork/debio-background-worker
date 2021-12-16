@@ -87,6 +87,7 @@ export class SubstrateService implements OnModuleInit {
   private event: any;
   private listenStatus: boolean = false;
   private api: ApiPromise;
+  private lastBlockNumber: number = 0;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
@@ -151,20 +152,26 @@ export class SubstrateService implements OnModuleInit {
         const blockNumber = header.number.toNumber();
         const blockHash   = await this.api.rpc.chain.getBlockHash(blockNumber);
 
-        const lastBlockNumber = await this.queryBus.execute(
-          new GetLastSubstrateBlockQuery(),
-        );
-
-        if (lastBlockNumber == blockNumber) return;
+        if (this.lastBlockNumber == 0) {
+          this.lastBlockNumber = await this.queryBus.execute(
+            new GetLastSubstrateBlockQuery(),
+          );
+        }
 
         // check if env is development
         if (process.env.NODE_ENV === 'development') {
           // check if last_block_number is higher than next block number
-          if (lastBlockNumber > blockNumber) {
+          if (this.lastBlockNumber > blockNumber) {
             console.log('haha');
             // delete all indexes
             await this.commandBus.execute(new DeleteAllIndexesCommand());
           }
+        }
+
+        if (this.lastBlockNumber == blockNumber) {
+          return;
+        } else {
+          this.lastBlockNumber = blockNumber;
         }
         
         this.logger.log(`Syncing Substrate Block: ${blockNumber}`);
