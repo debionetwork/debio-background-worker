@@ -153,19 +153,38 @@ export class SubstrateService implements OnModuleInit {
     });
   }
 
+  async eventFromBlock(blockNumber: number, blockHash: string | Uint8Array) {
+    const apiAt = await this.api.at(blockHash);
+
+    const allEventsFromBlock = await apiAt.query.system.events();
+
+    const events = allEventsFromBlock.filter(({ phase }) => phase.isApplyExtrinsic);
+
+    const blockMetaData: BlockMetaData = {
+      blockNumber: blockNumber,
+      blockHash: blockHash.toString()
+    }
+  
+    for (let i = 0; i < events.length; i++) {
+      const { event } = events[i];
+      await this.handleEvent(blockMetaData, event);
+    }
+  }
+
   async listenToNewBlock() {
     await this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
       try {
-        await this.listenToEvents();
-
         const blockNumber = header.number.toNumber();
+        const blockHash   = await this.api.rpc.chain.getBlockHash(blockNumber);
+
+        const lastBlockNumber = await this.queryBus.execute(
+          new GetLastSubstrateBlockQuery(),
+        );
+
+        if (lastBlockNumber == blockNumber) return;
 
         // check if env is development
         if (process.env.NODE_ENV === 'development') {
-          const lastBlockNumber = await this.queryBus.execute(
-            new GetLastSubstrateBlockQuery(),
-          );
-
           // check if last_block_number is higher than next block number
           if (lastBlockNumber > blockNumber) {
             console.log('haha');
@@ -176,6 +195,8 @@ export class SubstrateService implements OnModuleInit {
         
         this.logger.log(`Syncing Substrate Block: ${blockNumber}`);
 
+        await this.eventFromBlock(blockNumber, blockHash);
+        
         await this.commandBus.execute(
           new SetLastSubstrateBlockCommand(blockNumber),
         );
@@ -214,14 +235,16 @@ export class SubstrateService implements OnModuleInit {
           // Get block by block number
           const blockHash   = await this.api.rpc.chain.getBlockHash(i);
           const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
+
+          const apiAt = await this.api.at(signedBlock.block.header.hash);
           // Get the event records in the block
-          const allEventRecords = await this.api.query.system.events.at(
-            signedBlock.block.header.hash,
-          );
+          const allEventRecords = await apiAt.query.system.events();
+
           const blockMetaData: BlockMetaData = {
             blockNumber: i,
             blockHash: blockHash.toString()
           }
+          
           for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
             const {
               method: { method, section },
