@@ -127,32 +127,6 @@ export class SubstrateService implements OnModuleInit {
     }
   }
 
-  async listenToEvents() {
-    await this.api.query.system.events(async (events) => {
-      try {
-        const currentBlock        = await this.api.rpc.chain.getBlock();
-        const currentBlockNumber  = currentBlock.block.header.number.toNumber();
-        const blockHash           = await this.api.rpc.chain.getBlockHash(currentBlockNumber);
-  
-        const blockMetaData: BlockMetaData = {
-          blockNumber: currentBlockNumber,
-          blockHash: blockHash.toString()
-        }
-  
-        for (let i = 0; i < events.length; i++) {
-          const { event } = events[i];
-          await this.handleEvent(blockMetaData, event);
-        }
-      } catch (err) {
-        this.logger.log(`Handling listen to event catch : ${err.name}, ${err.message}, ${err.stack}`);
-      }
-    }).then(_unsub => {
-      this.event = _unsub;
-    }).catch(err => {
-      this.logger.log(`Event listener catch error ${err.name}, ${err.message}, ${err.stack}`);
-    });
-  }
-
   async eventFromBlock(blockNumber: number, blockHash: string | Uint8Array) {
     const apiAt = await this.api.at(blockHash);
 
@@ -244,7 +218,7 @@ export class SubstrateService implements OnModuleInit {
             blockNumber: i,
             blockHash: blockHash.toString()
           }
-          
+
           for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
             const {
               method: { method, section },
@@ -286,7 +260,6 @@ export class SubstrateService implements OnModuleInit {
     }
 
     await this.syncBlock();
-    this.listenToEvents();
     this.listenToNewBlock();
   }
 
