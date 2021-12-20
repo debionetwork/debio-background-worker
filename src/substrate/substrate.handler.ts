@@ -87,28 +87,12 @@ export class SubstrateService implements OnModuleInit {
   private event: any;
   private listenStatus: boolean = false;
   private api: ApiPromise;
+  private wsProvider: WsProvider;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   async onModuleInit() {
-    const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
-    this.api = await ApiPromise.create({
-      provider: wsProvider,
-    });
-
-    this.api.on('connected', async () => {
-      this.logger.log(`Substrate API Connected`);
-      await this.startListen();
-    });
-
-    this.api.on('disconnected', async () => {
-      this.logger.log(`Substrate API Disconnected`);
-      await this.stopListen();
-    });
-
-    this.api.on('error', (error) => {
-      this.logger.log(`Substrate API Error: ${error}`);
-    });
+    this.wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
   }
 
   async handleEvent(blockMetaData: BlockMetaData, event: Event) {
@@ -254,11 +238,33 @@ export class SubstrateService implements OnModuleInit {
     if (this.listenStatus) return;
 
     this.listenStatus = true;
-    
+
     if (this.head || this.event) {
       this.head();
       this.event();
     }
+    
+    this.api = await ApiPromise.create({
+      provider: this.wsProvider,
+    });
+
+    this.api.on('connected', () => {
+      this.logger.log(`Substrate API Connected`);
+    });
+
+    this.api.on('disconnected', async () => {
+      this.logger.log(`Substrate API Disconnected`);
+      await this.stopListen();
+      await this.startListen();
+    });
+
+    this.api.on('error', async (error) => {
+      this.logger.log(`Substrate API Error: ${error}`);
+      await this.stopListen();
+      await this.startListen();
+    });
+
+    await this.api.isReady;
 
     await this.syncBlock();
     this.listenToEvents();
@@ -267,7 +273,11 @@ export class SubstrateService implements OnModuleInit {
 
   async stopListen() {
     this.listenStatus = false;
-    
+
+    if (this.api) {
+      delete this.api;
+    }
+
     if (this.head || this.event) {
       this.head();
       this.event();
