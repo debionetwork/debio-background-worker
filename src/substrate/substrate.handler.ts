@@ -273,7 +273,11 @@ export class SubstrateService implements OnModuleInit {
 
   async stopListen() {
     this.listenStatus = false;
-    
+
+    if (this.api) {
+      delete this.api;
+    }
+
     if (this.head || this.event) {
       this.head();
       this.event();
