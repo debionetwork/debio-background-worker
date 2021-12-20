@@ -248,7 +248,7 @@ export class SubstrateService implements OnModuleInit {
       provider: this.wsProvider,
     });
 
-    this.api.on('connected', async () => {
+    this.api.on('connected', () => {
       this.logger.log(`Substrate API Connected`);
     });
 
@@ -264,11 +264,11 @@ export class SubstrateService implements OnModuleInit {
       await this.startListen();
     });
 
-    this.api.on("ready", async () => {
-      await this.syncBlock();
-      this.listenToEvents();
-      this.listenToNewBlock();
-    });
+    await this.api.isReady;
+
+    await this.syncBlock();
+    this.listenToEvents();
+    this.listenToNewBlock();
   }
 
   async stopListen() {
