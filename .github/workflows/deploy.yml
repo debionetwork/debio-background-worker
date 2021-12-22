@@ -4,7 +4,7 @@ on:
   release:
     types: [published]
   workflow_run:
-    workflows: ['Main automation']
+    workflows: ['Builder']
     branches: [main]
     types:
       - completed
@@ -14,8 +14,7 @@ concurrency:
 
 jobs:
   compute-build-info:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} || startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     outputs:
       sha_short: ${{ steps.build-info.outputs.sha_short }}
       date: ${{ steps.build-info.outputs.date }}
@@ -86,7 +85,7 @@ jobs:
             helm repo update
             helm upgrade debio-indexer debio/debio-indexer \
               --install \
-              --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }}-${{ needs.compute-build-info.outputs.date }} \
+              --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
@@ -94,15 +93,22 @@ jobs:
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=100m \
+              --set-string resources.requests.memory=256Mi \
+              --set-string resources.limits.cpu=300m \
+              --set-string resources.limits.memory=512Mi \
+              --set replicaCount=1 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-indexer
 
   deploy-alpha-release:
-    if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'alpha')"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: [compute-build-info]
     env:
       DEPLOY: ${{ secrets.STG_DEPLOY }}
+    if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'alpha')"
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
@@ -155,15 +161,22 @@ jobs:
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=100m \
+              --set-string resources.requests.memory=256Mi \
+              --set-string resources.limits.cpu=300m \
+              --set-string resources.limits.memory=512Mi \
+              --set replicaCount=1 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-indexer
 
   deploy-beta-release:
-    if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'beta')"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: [compute-build-info]
     env:
       DEPLOY: ${{ secrets.TESTNET_DEPLOY }}
+    if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'beta')"
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
@@ -216,15 +229,22 @@ jobs:
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=100m \
+              --set-string resources.requests.memory=256Mi \
+              --set-string resources.limits.cpu=300m \
+              --set-string resources.limits.memory=512Mi \
+              --set replicaCount=1 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-indexer
 
   deploy-pre-release:
-    if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'rc')"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: [compute-build-info]
     env:
       DEPLOY: ${{ secrets.MAINNET_DEPLOY }}
+    if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'rc')"
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
@@ -269,7 +289,7 @@ jobs:
             helm repo update
             helm upgrade debio-indexer debio/debio-indexer \
               --install \
-              --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }}-${{ needs.compute-build-info.outputs.date }} \
+              --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
@@ -277,12 +297,19 @@ jobs:
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=100m \
+              --set-string resources.requests.memory=256Mi \
+              --set-string resources.limits.cpu=300m \
+              --set-string resources.limits.memory=512Mi \
+              --set replicaCount=1 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-indexer
 
   deploy-release:
     if: "startsWith(github.ref, 'refs/tags/') && !github.event.release.prerelease"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: [compute-build-info]
     env:
       DEPLOY: ${{ secrets.MAINNET_DEPLOY }}
@@ -330,7 +357,7 @@ jobs:
             helm repo update
             helm upgrade debio-indexer debio/debio-indexer \
               --install \
-              --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }}-${{ needs.compute-build-info.outputs.date }} \
+              --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
@@ -338,5 +365,12 @@ jobs:
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=100m \
+              --set-string resources.requests.memory=256Mi \
+              --set-string resources.limits.cpu=300m \
+              --set-string resources.limits.memory=512Mi \
+              --set replicaCount=1 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-indexer
