@@ -42,6 +42,7 @@ import {
   CertificationDeletedCommand
 } from './certifications';
 import { DataStakedCommand } from './genetic-testing';
+import { ProcessEnvProxy } from 'src/common/process-env/process-env.proxy';
 
 const eventRoutes = {
   labs: {
@@ -83,16 +84,19 @@ const eventRoutes = {
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
-  private head: any;
-  private event: any;
-  private listenStatus: boolean = false;
+  private head;
+  private listenStatus = false;
   private api: ApiPromise;
+  private lastBlockNumber = 0;
   private wsProvider: WsProvider;
   private readonly logger: Logger = new Logger(SubstrateService.name);
-  constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
+  constructor(
+    private commandBus: CommandBus, 
+    private queryBus: QueryBus,
+    private process: ProcessEnvProxy) {}
 
-  async onModuleInit() {
-    this.wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
+  onModuleInit() {
+    this.wsProvider = new WsProvider(this.process.env.SUBSTRATE_URL);
   }
 
   async handleEvent(blockMetaData: BlockMetaData, event: Event) {
@@ -111,53 +115,55 @@ export class SubstrateService implements OnModuleInit {
     }
   }
 
-  async listenToEvents() {
-    await this.api.query.system.events(async (events) => {
-      try {
-        const currentBlock        = await this.api.rpc.chain.getBlock();
-        const currentBlockNumber  = currentBlock.block.header.number.toNumber();
-        const blockHash           = await this.api.rpc.chain.getBlockHash(currentBlockNumber);
+  async eventFromBlock(blockNumber: number, blockHash: string | Uint8Array) {
+    const apiAt = await this.api.at(blockHash);
+
+    const allEventsFromBlock = await apiAt.query.system.events();
+
+    const events = allEventsFromBlock.filter(({ phase }) => phase.isApplyExtrinsic);
+
+    const blockMetaData: BlockMetaData = {
+      blockNumber: blockNumber,
+      blockHash: blockHash.toString()
+    }
   
-        const blockMetaData: BlockMetaData = {
-          blockNumber: currentBlockNumber,
-          blockHash: blockHash.toString()
-        }
-  
-        for (let i = 0; i < events.length; i++) {
-          const { event } = events[i];
-          await this.handleEvent(blockMetaData, event);
-        }
-      } catch (err) {
-        this.logger.log(`Handling listen to event catch : ${err.name}, ${err.message}, ${err.stack}`);
-      }
-    }).then(_unsub => {
-      this.event = _unsub;
-    }).catch(err => {
-      this.logger.log(`Event listener catch error ${err.name}, ${err.message}, ${err.stack}`);
-    });
+    for (let i = 0; i < events.length; i++) {
+      const { event } = events[i];
+      await this.handleEvent(blockMetaData, event);
+    }
   }
 
   async listenToNewBlock() {
     await this.api.rpc.chain.subscribeNewHeads(async (header: Header) => {
       try {
         const blockNumber = header.number.toNumber();
+        const blockHash   = await this.api.rpc.chain.getBlockHash(blockNumber);
 
-        // check if env is development
-        if (process.env.NODE_ENV === 'development') {
-          const lastBlockNumber = await this.queryBus.execute(
+        if (this.lastBlockNumber == 0) {
+          this.lastBlockNumber = await this.queryBus.execute(
             new GetLastSubstrateBlockQuery(),
           );
+        }
 
+        // check if env is development
+        if (this.process.env.NODE_ENV === 'development') {
           // check if last_block_number is higher than next block number
-          if (lastBlockNumber > blockNumber) {
-            console.log('haha');
+          if (this.lastBlockNumber > blockNumber) {
             // delete all indexes
             await this.commandBus.execute(new DeleteAllIndexesCommand());
           }
         }
+
+        if (this.lastBlockNumber == blockNumber) {
+          return;
+        } else {
+          this.lastBlockNumber = blockNumber;
+        }
         
         this.logger.log(`Syncing Substrate Block: ${blockNumber}`);
 
+        await this.eventFromBlock(blockNumber, blockHash);
+        
         await this.commandBus.execute(
           new SetLastSubstrateBlockCommand(blockNumber),
         );
@@ -168,7 +174,7 @@ export class SubstrateService implements OnModuleInit {
       this.head = _unsub;
     }).catch(err => {
       this.logger.log(`Event listener catch error ${err.name}, ${err.message}, ${err.stack}`);
-    });;
+    });
   }
 
   async syncBlock() {
@@ -196,14 +202,16 @@ export class SubstrateService implements OnModuleInit {
           // Get block by block number
           const blockHash   = await this.api.rpc.chain.getBlockHash(i);
           const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
+
+          const apiAt = await this.api.at(signedBlock.block.header.hash);
           // Get the event records in the block
-          const allEventRecords = await this.api.query.system.events.at(
-            signedBlock.block.header.hash,
-          );
+          const allEventRecords = await apiAt.query.system.events();
+
           const blockMetaData: BlockMetaData = {
             blockNumber: i,
             blockHash: blockHash.toString()
           }
+
           for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
             const {
               method: { method, section },
@@ -239,9 +247,8 @@ export class SubstrateService implements OnModuleInit {
 
     this.listenStatus = true;
 
-    if (this.head || this.event) {
+    if (this.head) {
       this.head();
-      this.event();
     }
     
     this.api = await ApiPromise.create({
@@ -267,20 +274,18 @@ export class SubstrateService implements OnModuleInit {
     await this.api.isReady;
 
     await this.syncBlock();
-    this.listenToEvents();
     this.listenToNewBlock();
   }
 
-  async stopListen() {
+  stopListen() {
     this.listenStatus = false;
 
     if (this.api) {
       delete this.api;
     }
 
-    if (this.head || this.event) {
+    if (this.head) {
       this.head();
-      this.event();
     }
   }
 }
