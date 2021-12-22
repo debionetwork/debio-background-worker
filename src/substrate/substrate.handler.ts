@@ -42,6 +42,7 @@ import {
   CertificationDeletedCommand
 } from './certifications';
 import { DataStakedCommand } from './genetic-testing';
+import { ProcessEnvProxy } from 'src/common/process-env/process-env.proxy';
 
 const eventRoutes = {
   labs: {
@@ -84,16 +85,18 @@ const eventRoutes = {
 @Injectable()
 export class SubstrateService implements OnModuleInit {
   private head;
-  private event;
   private listenStatus = false;
   private api: ApiPromise;
   private lastBlockNumber = 0;
   private wsProvider: WsProvider;
   private readonly logger: Logger = new Logger(SubstrateService.name);
-  constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
+  constructor(
+    private commandBus: CommandBus, 
+    private queryBus: QueryBus,
+    private process: ProcessEnvProxy) {}
 
   onModuleInit() {
-    this.wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
+    this.wsProvider = new WsProvider(this.process.env.SUBSTRATE_URL);
   }
 
   async handleEvent(blockMetaData: BlockMetaData, event: Event) {
@@ -143,7 +146,7 @@ export class SubstrateService implements OnModuleInit {
         }
 
         // check if env is development
-        if (process.env.NODE_ENV === 'development') {
+        if (this.process.env.NODE_ENV === 'development') {
           // check if last_block_number is higher than next block number
           if (this.lastBlockNumber > blockNumber) {
             // delete all indexes
