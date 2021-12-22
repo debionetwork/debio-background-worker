@@ -85,9 +85,9 @@ const eventRoutes = {
 export class SubstrateService implements OnModuleInit {
   private head: any;
   private event: any;
-  private listenStatus: boolean = false;
+  private listenStatus = false;
   private api: ApiPromise;
-  private lastBlockNumber: number = 0;
+  private lastBlockNumber = 0;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
@@ -162,7 +162,6 @@ export class SubstrateService implements OnModuleInit {
         if (process.env.NODE_ENV === 'development') {
           // check if last_block_number is higher than next block number
           if (this.lastBlockNumber > blockNumber) {
-            console.log('haha');
             // delete all indexes
             await this.commandBus.execute(new DeleteAllIndexesCommand());
           }
