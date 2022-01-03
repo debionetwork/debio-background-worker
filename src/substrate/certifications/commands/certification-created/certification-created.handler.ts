@@ -33,7 +33,7 @@ export class CertificationCreatedHandler
       body: {
         script: {
           lang: 'painless',
-          source: 'if (ctx._source.certifications.contains(params)) { ctx._source.certifications.add(params); }',
+          source: 'ctx._source.certifications.add(params);',
           params: {
             ...certification,
           },
