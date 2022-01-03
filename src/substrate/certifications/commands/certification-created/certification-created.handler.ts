@@ -16,6 +16,7 @@ export class CertificationCreatedHandler
     await this.elasticsearchService.index({
       index: 'certifications',
       refresh: 'wait_for',
+      op_type: 'create',
       id: certification.id,
       body: {
         id: certification.id,
@@ -32,7 +33,7 @@ export class CertificationCreatedHandler
       body: {
         script: {
           lang: 'painless',
-          source: 'ctx._source.certifications.add(params);',
+          source: 'if (ctx._source.certifications.contains(params)) { ctx._source.certifications.add(params); }',
           params: {
             ...certification,
           },
