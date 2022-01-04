@@ -42,7 +42,7 @@ import {
   CertificationDeletedCommand
 } from './certifications';
 import { DataStakedCommand } from './genetic-testing';
-import { ProcessEnvProxy } from 'src/common/process-env/process-env.proxy';
+import { ProcessEnvProxy } from '../common/process-env/process-env.proxy';
 
 const eventRoutes = {
   labs: {
