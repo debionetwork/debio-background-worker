@@ -9,12 +9,12 @@ import {
   LabUpdatedCommand,
   LabDeregisteredCommand,
   LabUpdateVerificationStatusCommand,
-} from './labs';
+} from './events/labs';
 import {
   ServiceCreatedCommand,
   ServiceUpdatedCommand,
   ServiceDeletedCommand,
-} from './services';
+} from './events/services';
 import {
   OrderCancelledCommand,
   OrderCreatedCommand,
@@ -22,7 +22,7 @@ import {
   OrderFulfilledCommand,
   OrderPaidCommand,
   OrderRefundedCommand,
-} from './orders';
+} from './events/orders';
 import { 
   SetLastSubstrateBlockCommand, 
   DeleteAllIndexesCommand, 
@@ -35,13 +35,13 @@ import {
   FinalizedServiceRequestCommand,
   UnstakedServiceRequestCommand,
   UnstakedWaitingServiceRequestCommand
-} from './service-request';
+} from './events/service-request';
 import {
   CertificationCreatedCommand,
   CertificationUpdatedCommand,
   CertificationDeletedCommand
-} from './certifications';
-import { DataStakedCommand } from './genetic-testing';
+} from './events/certifications';
+import { DataStakedCommand } from './events/genetic-testing';
 import { ProcessEnvProxy } from 'src/common/process-env/process-env.proxy';
 
 const eventRoutes = {

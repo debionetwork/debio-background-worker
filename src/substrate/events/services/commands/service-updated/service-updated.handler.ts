@@ -39,53 +39,21 @@ export class ServiceUpdatedHandler
       region: '',
     };
 
-    let serviceIndexToDelete = -1;
-    try {
-      const resp = await this.elasticsearchService.search({
-        index: 'labs',
-        body: {
-          query: {
-            match: { _id: service.ownerId },
+    await this.elasticsearchService.update({
+      index: 'labs',
+      id: service.ownerId,
+      refresh: 'wait_for',
+      body: {
+        script: {
+          lang: 'painless',
+          source: 'ctx._source.services[params.index] = params.service;',
+          params: {
+            index: service.id,
+            service: serviceBody
           },
         },
-      });
-      const { _source } = resp.body.hits.hits[0];
-      const { info } = _source;
-      const { country, city, region } = info;
-
-      serviceIndexToDelete = _source.services.findIndex(
-        (s) => s.id == service.id,
-      );
-      
-      serviceBody = {
-        ...serviceBody,
-        country,
-        city,
-        region
-      };
-    } catch (err) {
-      this.logger.log('elasticsearchService.search labs error :', err);
-    }
-
-    try {
-      await this.elasticsearchService.update({
-        index: 'labs',
-        id: service.ownerId,
-        refresh: 'wait_for',
-        body: {
-          script: {
-            lang: 'painless',
-            source: 'ctx._source.services[params.index] = params.service;',
-            params: {
-              index: serviceIndexToDelete,
-              service: serviceBody
-            },
-          },
-        },
-      });
-    } catch (err) {
-      this.logger.log('elasticsearchService.update labs error', err);
-    }
+      },
+    });
 
     await this.elasticsearchService.updateByQuery({
       index: 'orders',

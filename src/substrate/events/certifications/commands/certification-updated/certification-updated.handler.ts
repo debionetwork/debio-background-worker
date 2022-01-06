@@ -34,18 +34,10 @@ export class CertificationUpdatedHandler
       body: {
         script: {
           lang: 'painless',
-          source: `
-            for(int i = 0; i < ctx._source.certifications.length; i++) {
-              if (ctx._source.certifications[i].id == params.id) {
-                ctx._source.certifications[i].id = params.id;
-                ctx._source.certifications[i].owner_id = params.owner_id;
-                ctx._source.certifications[i].info = params.info;
-                break;
-              }
-            }
-          `,
+          source: `ctx._source.certifications[params.index] = params.certification_body;`,
           params: {
-            ...certification,
+            index: certification.id,
+            certification_body: certification,
           },
         }
       }

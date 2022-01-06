@@ -1,28 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CertificationCreatedCommand } from './certification-created.command';
+import { CertificationDeletedCommand } from './certification-deleted.command';
 
 @Injectable()
-@CommandHandler(CertificationCreatedCommand)
-export class CertificationCreatedHandler
-  implements ICommandHandler<CertificationCreatedCommand>
+@CommandHandler(CertificationDeletedCommand)
+export class CertificationDeletedHandler
+  implements ICommandHandler<CertificationDeletedCommand>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
-
-  async execute(command: CertificationCreatedCommand) {
+  
+  async execute(command: CertificationDeletedCommand) {
     const { certification } = command;
 
-    await this.elasticsearchService.index({
+    await this.elasticsearchService.delete({
       index: 'certifications',
-      refresh: 'wait_for',
       id: certification.id,
-      body: {
-        id: certification.id,
-        owner_id: certification.owner_id,
-        info: certification.info,
-        blockMetaData: command.blockMetaData
-      }
+      refresh: 'wait_for',
     });
 
     await this.elasticsearchService.update({
@@ -32,9 +26,9 @@ export class CertificationCreatedHandler
       body: {
         script: {
           lang: 'painless',
-          source: 'ctx._source.certifications.add(params);',
+          source: `ctx._source.certifications.remove(params.id);`,
           params: {
-            ...certification,
+            id: certification.id
           },
         }
       }

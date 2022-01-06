@@ -59,14 +59,14 @@ export class ServiceCreatedHandler
       await this.elasticsearchService.update({
         index: 'labs',
         id: ownerId,
-        refresh: true,
-        retry_on_conflict: 3,
+        refresh: 'wait_for',
         body: {
           script: {
             lang: 'painless',
-            source: 'ctx._source.services.add(params);',
+            source: 'ctx._source.services[params.service_id] = params.service_body;',
             params: {
-              ...serviceBody,
+              service_body: serviceBody,
+              service_id: service.id
             },
           },
         },
