@@ -1,4 +1,4 @@
-import { BlockMetaData } from '../../../models/blockMetaData';
+import { BlockMetaData } from '../../../../models/blockMetaData';
 import { Service } from '../../models/service';
 
 export class ServiceDeletedCommand {

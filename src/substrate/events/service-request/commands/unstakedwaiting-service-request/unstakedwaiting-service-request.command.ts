@@ -1,4 +1,4 @@
-import { BlockMetaData } from "../../../models/blockMetaData";
+import { BlockMetaData } from "../../../../models/blockMetaData";
 import { RequestModel } from "../../models/request";
 
 export class UnstakedWaitingServiceRequestCommand {
