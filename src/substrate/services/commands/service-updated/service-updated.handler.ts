@@ -40,52 +40,46 @@ export class ServiceUpdatedHandler
     };
 
     let serviceIndexToDelete = -1;
-    try {
-      const resp = await this.elasticsearchService.search({
-        index: 'labs',
-        body: {
-          query: {
-            match: { _id: service.ownerId },
+    
+    const resp = await this.elasticsearchService.search({
+      index: 'labs',
+      body: {
+        query: {
+          match: { _id: service.ownerId },
+        },
+      },
+    });
+    const { _source } = resp.body.hits.hits[0];
+    const { info } = _source;
+    const { country, city, region } = info;
+
+    serviceIndexToDelete = _source.services.findIndex(
+      (s) => s.id == service.id,
+    );
+    
+    serviceBody = {
+      ...serviceBody,
+      country,
+      city,
+      region
+    };
+
+    await this.elasticsearchService.update({
+      index: 'labs',
+      id: service.ownerId,
+      refresh: 'wait_for',
+      body: {
+        script: {
+          lang: 'painless',
+          source: 'if (ctx._source.services_ids.contains(params.id)) { ctx._source.services[params.index] = params.service; }',
+          params: {
+            id: service.id,
+            index: serviceIndexToDelete,
+            service: serviceBody
           },
         },
-      });
-      const { _source } = resp.body.hits.hits[0];
-      const { info } = _source;
-      const { country, city, region } = info;
-
-      serviceIndexToDelete = _source.services.findIndex(
-        (s) => s.id == service.id,
-      );
-      
-      serviceBody = {
-        ...serviceBody,
-        country,
-        city,
-        region
-      };
-    } catch (err) {
-      this.logger.log('elasticsearchService.search labs error :', err);
-    }
-
-    try {
-      await this.elasticsearchService.update({
-        index: 'labs',
-        id: service.ownerId,
-        refresh: 'wait_for',
-        body: {
-          script: {
-            lang: 'painless',
-            source: 'ctx._source.services[params.index] = params.service;',
-            params: {
-              index: serviceIndexToDelete,
-              service: serviceBody
-            },
-          },
-        },
-      });
-    } catch (err) {
-      this.logger.log('elasticsearchService.update labs error', err);
-    }
+      },
+    });
 
     await this.elasticsearchService.updateByQuery({
       index: 'orders',

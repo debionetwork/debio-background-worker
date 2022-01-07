@@ -63,9 +63,10 @@ export class ServiceCreatedHandler
         body: {
           script: {
             lang: 'painless',
-            source: 'ctx._source.services.add(params);',
+            source: 'if(!ctx._source.services_ids.contains(params.id)) { ctx._source.services.add(params.service); }',
             params: {
-              ...serviceBody,
+              id: service.id,
+              service: serviceBody
             },
           },
         },
