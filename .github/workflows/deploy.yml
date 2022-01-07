@@ -94,13 +94,9 @@ jobs:
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set-string resources.requests.cpu=100m \
-              --set-string resources.requests.memory=256Mi \
+              --set-string resources.requests.memory=128Mi \
               --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=512Mi \
-              --set replicaCount=1 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=20
+              --set-string resources.limits.memory=256Mi
             kubectl rollout status deployment/debio-indexer
 
   deploy-alpha-release:
@@ -162,13 +158,9 @@ jobs:
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set-string resources.requests.cpu=100m \
-              --set-string resources.requests.memory=256Mi \
+              --set-string resources.requests.memory=128Mi \
               --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=512Mi \
-              --set replicaCount=1 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=20
+              --set-string resources.limits.memory=256Mi
             kubectl rollout status deployment/debio-indexer
 
   deploy-beta-release:
@@ -230,13 +222,9 @@ jobs:
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set-string resources.requests.cpu=100m \
-              --set-string resources.requests.memory=256Mi \
+              --set-string resources.requests.memory=128Mi \
               --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=512Mi \
-              --set replicaCount=1 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=20
+              --set-string resources.limits.memory=256Mi
             kubectl rollout status deployment/debio-indexer
 
   deploy-pre-release:
@@ -298,13 +286,9 @@ jobs:
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set-string resources.requests.cpu=100m \
-              --set-string resources.requests.memory=256Mi \
+              --set-string resources.requests.memory=128Mi \
               --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=512Mi \
-              --set replicaCount=1 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=20
+              --set-string resources.limits.memory=256Mi
             kubectl rollout status deployment/debio-indexer
 
   deploy-release:
@@ -366,11 +350,7 @@ jobs:
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set-string resources.requests.cpu=100m \
-              --set-string resources.requests.memory=256Mi \
+              --set-string resources.requests.memory=128Mi \
               --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=512Mi \
-              --set replicaCount=1 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=20
+              --set-string resources.limits.memory=256Mi
             kubectl rollout status deployment/debio-indexer
