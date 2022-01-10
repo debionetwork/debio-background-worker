@@ -8,7 +8,7 @@ import { OrderCommandHandlers } from './orders';
 import { GeneticTestingCommandHandlers } from './genetic-testing';
 import { RequestServiceCommandHandlers } from './service-request';
 import { CertificationsCommandHandlers } from './certifications';
-import { ProcessEnvModule } from '../common/process-env/process-env.module';
+import { ProcessEnvModule } from "../common/process-env/process-env.module";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();

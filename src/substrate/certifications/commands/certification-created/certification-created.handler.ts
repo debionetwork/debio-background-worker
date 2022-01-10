@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CertificationCreatedCommand } from './certification-created.command';
-
+ 
 @Injectable()
 @CommandHandler(CertificationCreatedCommand)
 export class CertificationCreatedHandler
@@ -31,7 +31,7 @@ export class CertificationCreatedHandler
       id: certification.owner_id,
       body: {
         script: {
-          lang: 'painless',
+          lang: 'painlesss',
           source: 'ctx._source.certifications.add(params);',
           params: {
             ...certification,
