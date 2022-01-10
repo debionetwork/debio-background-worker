@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CertificationCreatedCommand } from './certification-created.command';
-
+ 
 @Injectable()
 @CommandHandler(CertificationCreatedCommand)
 export class CertificationCreatedHandler
