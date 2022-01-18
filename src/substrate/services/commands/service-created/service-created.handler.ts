@@ -24,7 +24,6 @@ export class ServiceCreatedHandler
       }
     });
 
-
     let serviceBody = {
       id: service.id,
       owner_id: service.ownerId,
@@ -51,6 +50,7 @@ export class ServiceCreatedHandler
         index: 'services',
         id: service.id,
         refresh: 'wait_for',
+        op_type: 'create',
         body: {
           ...serviceBody,
         },
@@ -59,14 +59,14 @@ export class ServiceCreatedHandler
       await this.elasticsearchService.update({
         index: 'labs',
         id: ownerId,
-        refresh: true,
-        retry_on_conflict: 3,
+        refresh: 'wait_for',
         body: {
           script: {
             lang: 'painless',
-            source: 'ctx._source.services.add(params);',
+            source: 'if(!ctx._source.services_ids.contains(params.id)) { ctx._source.services.add(params.service); }',
             params: {
-              ...serviceBody,
+              id: service.id,
+              service: serviceBody
             },
           },
         },

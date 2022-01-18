@@ -26,40 +26,34 @@ export class ServiceDeletedHandler
     }
 
     let serviceIndexToDelete = -1;
-    try {
-      const resp = await this.elasticsearchService.search({
-        index: 'labs',
-        body: {
-          query: {
-            match: { _id: service.ownerId },
-          },
-        },
-      });
-      const { _source } = resp.body.hits.hits[0];
-      serviceIndexToDelete = _source.services.findIndex(
-        (s) => s.id == service.id,
-      );
-    } catch (err) {
-      this.logger.log('elasticsearchService.search labs error :', err);
-    }
 
-    try {
-      await this.elasticsearchService.update({
-        index: 'labs',
-        id: service.ownerId.toString(),
-        refresh: 'wait_for',
-        body: {
-          script: {
-            lang: 'painless',
-            source: 'ctx._source.services.remove(params.index);',
-            params: {
-              index: serviceIndexToDelete,
-            },
+    const resp = await this.elasticsearchService.search({
+      index: 'labs',
+      body: {
+        query: {
+          match: { _id: service.ownerId },
+        },
+      },
+    });
+    const { _source } = resp.body.hits.hits[0];
+    serviceIndexToDelete = _source.services.findIndex(
+      (s) => s.id == service.id,
+    );
+
+    await this.elasticsearchService.update({
+      index: 'labs',
+      id: service.ownerId.toString(),
+      refresh: 'wait_for',
+      body: {
+        script: {
+          lang: 'painless',
+          source: 'if(ctx._source.services_ids.contains(params.id)) { ctx._source.services.remove(params.index); }',
+          params: {
+            id: service.id,
+            index: serviceIndexToDelete,
           },
         },
-      });
-    } catch (err) {
-      this.logger.log('elasticsearchService.update labs error', err);
-    }
+      },
+    });
   }
 }

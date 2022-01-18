@@ -13,7 +13,7 @@ export class OrderRefundedHandler
   async execute(command: OrderRefundedCommand) {
     const { orders: order } = command;
     
-    return this.elasticsearchService.update({
+    return await this.elasticsearchService.update({
       index: 'orders',
       refresh: 'wait_for',
       id: order.id,
@@ -35,8 +35,6 @@ export class OrderRefundedHandler
           blockMetaData: command.blockMetaData,
         },
       },
-    }).catch((error) => {
-      throw(error)
     });
   }
 }

@@ -42,7 +42,7 @@ import {
   CertificationDeletedCommand
 } from './certifications';
 import { DataStakedCommand } from './genetic-testing';
-import { ProcessEnvProxy } from 'src/common/process-env/process-env.proxy';
+import { ProcessEnvProxy } from '../common/process-env/process-env.proxy';
 
 const eventRoutes = {
   labs: {
@@ -139,20 +139,11 @@ export class SubstrateService implements OnModuleInit {
         const blockNumber = header.number.toNumber();
         const blockHash   = await this.api.rpc.chain.getBlockHash(blockNumber);
 
-        if (this.lastBlockNumber == 0) {
-          const lastBlockFromDB = await this.queryBus.execute(
-            new GetLastSubstrateBlockQuery(),
-          );
-
-          if (!lastBlockFromDB) {
-            this.lastBlockNumber = blockNumber;
-          } else {
-            this.lastBlockNumber = lastBlockFromDB;
-          }
-        }
-
         // check if env is development
         if (this.process.env.NODE_ENV === 'development') {
+          this.lastBlockNumber = await this.queryBus.execute(
+            new GetLastSubstrateBlockQuery(),
+          );
           // check if last_block_number is higher than next block number
           if (this.lastBlockNumber > blockNumber) {
             // delete all indexes
