@@ -13,7 +13,7 @@ export class OrderFulfilledHandler
   async execute(command: OrderFulfilledCommand) {
     const { orders: order } = command;
     
-    return this.elasticsearchService.update({
+    return await this.elasticsearchService.update({
       index: 'orders',
       refresh: 'wait_for',
       id: order.id,
@@ -35,8 +35,6 @@ export class OrderFulfilledHandler
           blockMetaData: command.blockMetaData,
         },
       },
-    }).catch((error) => {
-      throw(error)
     });
   }
 }

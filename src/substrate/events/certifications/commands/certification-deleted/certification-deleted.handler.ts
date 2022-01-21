@@ -19,6 +19,21 @@ export class CertificationDeletedHandler
       refresh: 'wait_for',
     });
 
+    let certificationIndexToDelete = -1;
+
+    const resp = await this.elasticsearchService.search({
+      index: 'labs',
+      body: {
+        query: {
+          match: { _id: certification.owner_id },
+        },
+      },
+    });
+    const { _source } = resp.body.hits.hits[0];
+    certificationIndexToDelete = _source.certifications.findIndex(
+      (c) => c.id == certification.id,
+    );
+
     await this.elasticsearchService.update({
       index: 'labs',
       refresh: 'wait_for',
@@ -26,9 +41,15 @@ export class CertificationDeletedHandler
       body: {
         script: {
           lang: 'painless',
-          source: `ctx._source.certifications.remove(params.id);`,
+          source: `
+            if (ctx._source.certifications_ids.contains(params.id)) {
+              ctx._source.certifications.remove(params.index);
+              ctx._source.certifications_ids.remove(ctx._source.certifications_ids.indexOf(params.id))
+            }
+          `,
           params: {
-            id: certification.id
+            id: certification.id,
+            index: certificationIndexToDelete
           },
         }
       }

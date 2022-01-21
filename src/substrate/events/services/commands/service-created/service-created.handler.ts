@@ -24,7 +24,6 @@ export class ServiceCreatedHandler
       }
     });
 
-
     let serviceBody = {
       id: service.id,
       owner_id: service.ownerId,
@@ -51,6 +50,7 @@ export class ServiceCreatedHandler
         index: 'services',
         id: service.id,
         refresh: 'wait_for',
+        op_type: 'create',
         body: {
           ...serviceBody,
         },
@@ -63,10 +63,14 @@ export class ServiceCreatedHandler
         body: {
           script: {
             lang: 'painless',
-            source: 'ctx._source.services[params.service_id] = params.service_body;',
+            source: `
+              if(!ctx._source.services_ids.contains(params.id)) { 
+                ctx._source.services.add(params.service);
+                ctx._source.services_ids.add(params.id);
+              }`,
             params: {
-              service_body: serviceBody,
-              service_id: service.id
+              id: service.id,
+              service: serviceBody
             },
           },
         },

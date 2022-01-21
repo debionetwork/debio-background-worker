@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CertificationCreatedCommand } from './certification-created.command';
-
+ 
 @Injectable()
 @CommandHandler(CertificationCreatedCommand)
 export class CertificationCreatedHandler
@@ -16,6 +16,7 @@ export class CertificationCreatedHandler
     await this.elasticsearchService.index({
       index: 'certifications',
       refresh: 'wait_for',
+      op_type: 'create',
       id: certification.id,
       body: {
         id: certification.id,
@@ -32,10 +33,10 @@ export class CertificationCreatedHandler
       body: {
         script: {
           lang: 'painless',
-          source: 'ctx._source.certifications[params.index] = params.certification_body;',
+          source: 'if (!ctx._source.certifications_ids.contains(params.id)) { ctx._source.certifications_ids.add(params.id); ctx._source.certifications.add(params.certification); }',
           params: {
-            index: certification.id,
-            certification_body: certification,
+            id: certification.id,
+            certification: certification,
           },
         }
       }

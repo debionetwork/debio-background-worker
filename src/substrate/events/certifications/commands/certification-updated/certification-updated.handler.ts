@@ -26,6 +26,22 @@ export class CertificationUpdatedHandler
         }
       }
     });
+    
+
+    let certificationIndexToDelete = -1;
+
+    const resp = await this.elasticsearchService.search({
+      index: 'labs',
+      body: {
+        query: {
+          match: { _id: certification.owner_id },
+        },
+      },
+    });
+    const { _source } = resp.body.hits.hits[0];
+    certificationIndexToDelete = _source.certifications.findIndex(
+      (c) => c.id == certification.id,
+    );
 
     await this.elasticsearchService.update({
       index: 'labs',
@@ -34,10 +50,15 @@ export class CertificationUpdatedHandler
       body: {
         script: {
           lang: 'painless',
-          source: `ctx._source.certifications[params.index] = params.certification_body;`,
+          source: `
+            if (ctx._source.certifications_ids.contains(params.id)) {
+              ctx._source.certifications[params.index] = params.certification;
+            }
+          `,
           params: {
-            index: certification.id,
-            certification_body: certification,
+            id: certification.id,
+            index: certificationIndexToDelete,
+            certification: certification,
           },
         }
       }

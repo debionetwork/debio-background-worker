@@ -39,6 +39,31 @@ export class ServiceUpdatedHandler
       region: '',
     };
 
+    let serviceIndexToDelete = -1;
+    
+    const resp = await this.elasticsearchService.search({
+      index: 'labs',
+      body: {
+        query: {
+          match: { _id: service.ownerId },
+        },
+      },
+    });
+    const { _source } = resp.body.hits.hits[0];
+    const { info } = _source;
+    const { country, city, region } = info;
+
+    serviceIndexToDelete = _source.services.findIndex(
+      (s) => s.id == service.id,
+    );
+    
+    serviceBody = {
+      ...serviceBody,
+      country,
+      city,
+      region
+    };
+
     await this.elasticsearchService.update({
       index: 'labs',
       id: service.ownerId,
@@ -46,9 +71,12 @@ export class ServiceUpdatedHandler
       body: {
         script: {
           lang: 'painless',
-          source: 'ctx._source.services[params.index] = params.service;',
+          source: `if (ctx._source.services_ids.contains(params.id)) { 
+            ctx._source.services[params.index] = params.service; 
+          }`,
           params: {
-            index: service.id,
+            id: service.id,
+            index: serviceIndexToDelete,
             service: serviceBody
           },
         },
