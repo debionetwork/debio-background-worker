@@ -7,13 +7,13 @@ import {
   ServiceCreatedCommand,
   ServiceDeletedCommand,
   ServiceUpdatedCommand
-} from "../../../src/substrate/services";
-import { BlockMetaData } from "../../../src/substrate/models/blockMetaData";
-import { ServiceFlow } from "../../../src/substrate/models/service-flow";
-import { ServiceCreatedHandler } from "../../../src/substrate/services/commands/service-created/service-created.handler";
-import { ServiceDeletedHandler } from "../../../src/substrate/services/commands/service-deleted/service-deleted.handler";
-import { ServiceUpdatedHandler } from "../../../src/substrate/services/commands/service-updated/service-updated.handler";
-import { ElasticSearchServiceProvider } from "../mock";
+} from "../../../../src/substrate/events/services";
+import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
+import { ServiceFlow } from "../../../../src/substrate/models/service-flow";
+import { ServiceCreatedHandler } from "../../../../src/substrate/events/services/commands/service-created/service-created.handler";
+import { ServiceDeletedHandler } from "../../../../src/substrate/events/services/commands/service-deleted/service-deleted.handler";
+import { ServiceUpdatedHandler } from "../../../../src/substrate/events/services/commands/service-updated/service-updated.handler";
+import { ElasticSearchServiceProvider } from "../../mock";
 
 let serviceCreatedHandler: ServiceCreatedHandler;
 let serviceDeletedHandler: ServiceDeletedHandler;

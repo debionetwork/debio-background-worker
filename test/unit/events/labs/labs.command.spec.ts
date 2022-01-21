@@ -2,26 +2,26 @@ import {
   Test,
   TestingModule
 } from "@nestjs/testing";
-import { CommonModule } from "../../../src/common/common.module";
+import { CommonModule } from "../../../../src/common/common.module";
 import {
   LabCommandHandlers,
   LabDeregisteredCommand,
   LabRegisteredCommand,
   LabUpdatedCommand,
 	LabUpdateVerificationStatusCommand
-} from "../../../src/substrate/labs";
+} from "../../../../src/substrate/events/labs";
 import { 
 	LabDeregisteredHandler 
-} from "../../../src/substrate/labs/commands/lab-deregistered/lab-deregistered.handler";
+} from "../../../../src/substrate/events/labs/commands/lab-deregistered/lab-deregistered.handler";
 import { 
 	LabRegisteredHandler 
-} from "../../../src/substrate/labs/commands/lab-registered/lab-registered.handler";
+} from "../../../../src/substrate/events/labs/commands/lab-registered/lab-registered.handler";
 import { 
 	LabUpdatedHandler 
-} from "../../../src/substrate/labs/commands/lab-updated/lab-updated.handler";
+} from "../../../../src/substrate/events/labs/commands/lab-updated/lab-updated.handler";
 import { 
 	LabUpdateVerificationStatusHandler
-} from "../../../src/substrate/labs/commands/lab-update-verification-status/lab-update-verification-status.handler";
+} from "../../../../src/substrate/events/labs/commands/lab-update-verification-status/lab-update-verification-status.handler";
 import {
   ElasticsearchModule,
   ElasticsearchService
@@ -33,10 +33,14 @@ import {
 import {
   SubstrateController,
   SubstrateService
-} from "../../../src/substrate/substrate.handler";
-import { BlockMetaData } from "../../../src/substrate/models/blockMetaData";
-import { CommandBusProvider, ElasticSearchServiceProvider, substrateServiceProvider } from "../mock";
-import { LabVerificationStatus } from "../../../src/substrate/labs/models/lab-verification-status";
+} from "../../../../src/substrate/substrate.handler";
+import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
+import { 
+	CommandBusProvider, 
+	ElasticSearchServiceProvider, 
+	substrateServiceProvider 
+} from "../../mock";
+import { LabVerificationStatus } from "../../../../src/substrate/events/labs/models/lab-verification-status";
 
 let labDeregisteredHandler: LabDeregisteredHandler;
 let labRegisteredHandler: LabRegisteredHandler;

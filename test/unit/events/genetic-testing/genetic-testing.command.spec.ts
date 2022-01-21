@@ -10,18 +10,26 @@ import {
 	Test,
 	TestingModule
 } from "@nestjs/testing";
-import { BlockMetaData } from "../../../src/substrate/models/blockMetaData";
+import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
 import {
 	SubstrateController,
 	SubstrateService
-} from "../../../src/substrate/substrate.handler";
-import { CommonModule } from "../../../src/common/common.module";
-import { DataStakedHandler } from "../../../src/substrate/genetic-testing/commands/data-staked/data-staked.handler";
+} from "../../../../src/substrate/substrate.handler";
+import { 
+	CommonModule 
+} from "../../../../src/common/common.module";
+import { 
+	DataStakedHandler 
+} from "../../../../src/substrate/events/genetic-testing/commands/data-staked/data-staked.handler";
 import {
 	DataStakedCommand,
 	GeneticTestingCommandHandlers
-} from "../../../src/substrate/genetic-testing";
-import { CommandBusProvider, ElasticSearchServiceProvider, substrateServiceProvider } from "../mock";
+} from "../../../../src/substrate/events/genetic-testing";
+import { 
+	CommandBusProvider, 
+	ElasticSearchServiceProvider, 
+	substrateServiceProvider 
+} from "../../mock";
 
 let dataStakedHandler: DataStakedHandler;
 

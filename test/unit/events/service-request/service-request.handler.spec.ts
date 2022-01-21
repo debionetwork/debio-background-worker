@@ -5,16 +5,24 @@ import {
 	Test,
 	TestingModule
 } from "@nestjs/testing";
-import { ClaimedServiceRequestHandler } from "../../../src/substrate/service-request/commands/claimed-service-request/claimed-service-request.handler";
-import { CreateServiceRequestHandler } from "../../../src/substrate/service-request/commands/create-service-request/create-service-request.handler";
-import { FinalizedServiceRequestHandler } from "../../../src/substrate/service-request/commands/finalized-service-request/finalized-service-request.handler";
-import { ProcessedServiceRequestHandler } from "../../../src/substrate/service-request/commands/processed-service-request/processed-service-request.handler";
-import { UnstakedServiceRequestHandler } from "../../../src/substrate/service-request/commands/unstaked-service-request/unstaked-service-request.handler";
-import { UnstakedWaitingServiceRequestHandler } from "../../../src/substrate/service-request/commands/unstakedwaiting-service-request/unstakedwaiting-service-request.handler";
-import { ClaimedServiceRequestCommand, CreateServiceRequestCommand, FinalizedServiceRequestCommand, ProcessedServiceRequestCommand, RequestServiceCommandHandlers, UnstakedServiceRequestCommand, UnstakedWaitingServiceRequestCommand } from "../../../src/substrate/service-request";
-import { RequestStatus } from "../../../src/substrate/service-request/models/requestStatus";
-import { BlockMetaData } from "../../../src/substrate/models/blockMetaData";
-import {  ElasticSearchServiceProvider } from "../mock";
+import { ClaimedServiceRequestHandler } from "../../../../src/substrate/events/service-request//commands/claimed-service-request/claimed-service-request.handler";
+import { CreateServiceRequestHandler } from "../../../../src/substrate/events/service-request//commands/create-service-request/create-service-request.handler";
+import { FinalizedServiceRequestHandler } from "../../../../src/substrate/events/service-request//commands/finalized-service-request/finalized-service-request.handler";
+import { ProcessedServiceRequestHandler } from "../../../../src/substrate/events/service-request//commands/processed-service-request/processed-service-request.handler";
+import { UnstakedServiceRequestHandler } from "../../../../src/substrate/events/service-request//commands/unstaked-service-request/unstaked-service-request.handler";
+import { UnstakedWaitingServiceRequestHandler } from "../../../../src/substrate/events/service-request//commands/unstakedwaiting-service-request/unstakedwaiting-service-request.handler";
+import { 
+  ClaimedServiceRequestCommand, 
+  CreateServiceRequestCommand, 
+  FinalizedServiceRequestCommand, 
+  ProcessedServiceRequestCommand, 
+  RequestServiceCommandHandlers, 
+  UnstakedServiceRequestCommand, 
+  UnstakedWaitingServiceRequestCommand 
+} from "../../../../src/substrate/events/service-request/";
+import { RequestStatus } from "../../../../src/substrate/events/service-request//models/requestStatus";
+import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
+import {  ElasticSearchServiceProvider } from "../../mock";
 
 let claimedServiceRequestHandler: ClaimedServiceRequestHandler;
 let createServiceRequestHandler: CreateServiceRequestHandler;

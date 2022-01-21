@@ -5,17 +5,17 @@ import {
 	Test,
 	TestingModule
 } from "@nestjs/testing";
-import { ElasticSearchServiceProvider } from "../mock";
-import { BlockMetaData } from "../../../src/substrate/models/blockMetaData";
+import { ElasticSearchServiceProvider } from "../../mock";
+import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
 import {
 	CertificationCreatedCommand,
 	CertificationDeletedCommand,
 	CertificationsCommandHandlers,
 	CertificationUpdatedCommand
-} from "../../../src/substrate/certifications";
-import { CertificationCreatedHandler } from "../../../src/substrate/certifications/commands/certification-created/certification-created.handler";
-import { CertificationUpdatedHandler } from "../../../src/substrate/certifications/commands/certification-updated/certification-updated.handler";
-import { CertificationDeletedHandler } from "../../../src/substrate/certifications/commands/certification-deleted/certification-deleted.handler";
+} from "../../../../src/substrate/events/certifications";
+import { CertificationCreatedHandler } from "../../../../src/substrate/events/certifications/commands/certification-created/certification-created.handler";
+import { CertificationUpdatedHandler } from "../../../../src/substrate/events/certifications/commands/certification-updated/certification-updated.handler";
+import { CertificationDeletedHandler } from "../../../../src/substrate/events/certifications/commands/certification-deleted/certification-deleted.handler";
 
 let certificationsCreatedHandler: CertificationCreatedHandler;
 let certificationsUpdatedHandler: CertificationUpdatedHandler;

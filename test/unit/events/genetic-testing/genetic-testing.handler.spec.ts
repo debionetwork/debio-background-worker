@@ -5,13 +5,15 @@ import {
 	Test,
 	TestingModule
 } from "@nestjs/testing";
-import { BlockMetaData } from "../../../src/substrate/models/blockMetaData";
-import { DataStakedHandler } from "../../../src/substrate/genetic-testing/commands/data-staked/data-staked.handler";
+import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
+import { 
+	DataStakedHandler 
+} from "../../../../src/substrate/events/genetic-testing/commands/data-staked/data-staked.handler";
 import {
 	DataStakedCommand,
 	GeneticTestingCommandHandlers
-} from "../../../src/substrate/genetic-testing";
-import { ElasticSearchServiceProvider } from "../mock";
+} from "../../../../src/substrate/events/genetic-testing";
+import { ElasticSearchServiceProvider } from "../../mock";
 
 let dataStakedHandler: DataStakedHandler;
 
