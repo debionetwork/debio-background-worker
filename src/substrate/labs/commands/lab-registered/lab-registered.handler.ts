@@ -19,7 +19,9 @@ export class LabRegisteredHandler
       body: {
         account_id: lab.accountId,
         services: lab.services,
+        services_ids: lab.services,
         certifications: lab.certifications,
+        certifications_ids: lab.certifications,
         verification_status: lab.verificationStatus,
         info: lab.info,
         blockMetaData: command.blockMetaData,
