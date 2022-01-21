@@ -3,7 +3,6 @@ import {
 	CqrsModule
 } from "@nestjs/cqrs";
 import {
-	ElasticsearchModule,
 	ElasticsearchService
 } from "@nestjs/elasticsearch";
 import {
@@ -37,18 +36,18 @@ describe("Certifications Substrate Event Handler", () => {
 
 	const createMockCertifications = () => {
     const info = {
-      title: "Test1",
-      issuer: "Test Issuer",
-      month: "January",
-      year: "2021",
-      description: "Testing Mock Certification",
-      supportingDocument: null
+      title: "string",
+      issuer: "string",
+      month: "string",
+      year: "string",
+      description: "string",
+      supportingDocument: 'string'
     }
 		return {
       toHuman: jest.fn(
         () => ({
-          id: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-          ownerId: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
+          id: "string",
+          ownerId: "string",
           info: info
         })
       )
@@ -66,11 +65,6 @@ describe("Certifications Substrate Event Handler", () => {
     const modules: TestingModule = await Test.createTestingModule({
 			imports: [
 				CommonModule,
-				ElasticsearchModule.registerAsync({
-					useFactory: async () => ({
-						node: process.env.ELASTICSEARCH_NODE,
-					}),
-				}),
 				CqrsModule,
 			],
 			controllers: [

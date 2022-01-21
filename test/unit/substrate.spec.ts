@@ -12,12 +12,11 @@ import {
 	SubstrateService
 } from "../../src/substrate/substrate.handler";
 import {
-	ElasticsearchModule,
 	ElasticsearchService
 } from "@nestjs/elasticsearch";
-import { ServiceCommandHandlers } from "../../src/substrate/services";
-import { LabCommandHandlers } from "../../src/substrate/labs";
-import { OrderCommandHandlers } from "../../src/substrate/orders";
+import { ServiceCommandHandlers } from "../../src/substrate/events/services";
+import { LabCommandHandlers } from "../../src/substrate/events/labs";
+import { OrderCommandHandlers } from "../../src/substrate/events/orders";
 import { CommandBusProvider, ElasticSearchServiceProvider, substrateServiceProvider } from "./mock";
 
 describe("Substrate Indexer", () => {
@@ -29,11 +28,6 @@ describe("Substrate Indexer", () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [
 				CommonModule,
-				ElasticsearchModule.registerAsync({
-					useFactory: async () => ({
-						node: process.env.ELASTICSEARCH_NODE,
-					}),
-				}),
 				CqrsModule,
 			],
 			controllers: [SubstrateController],

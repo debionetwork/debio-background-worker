@@ -1,5 +1,5 @@
 import { Price } from "../../services/models/price";
-import { ServiceFlow } from "../../models/service-flow";
+import { ServiceFlow } from "../../../models/service-flow";
 import { Currency } from "./currency";
 import { OrderStatus } from "./order-status";
 

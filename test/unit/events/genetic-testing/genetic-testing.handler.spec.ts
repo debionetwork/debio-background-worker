@@ -23,9 +23,9 @@ describe("Genetic Testing Substrate Event Handler", () => {
   
 	const createMockDataStaked = () => {
     return [
-      "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
-      "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-      "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563"
+      "string",
+      "string",
+      "string"
     ]
   }
 

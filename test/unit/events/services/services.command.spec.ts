@@ -2,8 +2,7 @@ import {
 	CommandBus,
 	CqrsModule
 } from "@nestjs/cqrs";
-import { 
-	ElasticsearchModule, 
+import {
 	ElasticsearchService 
 } from "@nestjs/elasticsearch";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -39,39 +38,39 @@ describe("Services Substrate Event Handler", () => {
 
 	function createMockService() {
 		const first_price = {
-			component: "testing_price", 
-			value: 15
+			component: "string", 
+			value: 1
 		};
 		const second_price = {
-			component: "qc_price", 
-			value: 5
+			component: "string", 
+			value: 1
 		};
 
 		const prices_by_currency = {
-			currency: "Dai", 
-			totalPrice: 20, 
+			currency: "XX", 
+			totalPrice: 1, 
 			priceComponents: [ first_price ], 
 			additionalPrices: [ second_price ]
 		};
 
 		const service_info = {
-			name: "Exercise", 
+			name: "string", 
 			pricesByCurrency: [ prices_by_currency ],
 			expected_duration: "",
-			category: "Targeted Gene Panel Sequencing",
-			description: "Find an effective workout based on your genetic code to maximize your workout gains.",
+			category: "string",
+			description: "string",
 			dnaCollectionProcess: "",
-			testResultSample: "",
-			longDescription: null,
-			image: "mdi-weight-lifter"
+			testResultSample: "string",
+			longDescription: 'string',
+			image: "string"
 		};
 
 		return {
       toHuman: jest.fn(
         () => ({
           info: service_info,
-          id: "0x9c60a2a58e07018954c9f1dc3650fdee96968933b192ed12711a997da7d3a96c",
-          ownerId: "5EFb5C9AjhGnejq1f8k7bPGgAdQV4iM84EjwdopHhJidftfi",
+          id: "string",
+          ownerId: "string",
           serviceFlow: ServiceFlow.RequestTest
         })
       )
@@ -89,11 +88,6 @@ describe("Services Substrate Event Handler", () => {
     const modules: TestingModule = await Test.createTestingModule({
 			imports: [
 				CommonModule,
-				ElasticsearchModule.registerAsync({
-					useFactory: async () => ({
-						node: process.env.ELASTICSEARCH_NODE,
-					}),
-				}),
 				CqrsModule,
 			],
 			controllers: [

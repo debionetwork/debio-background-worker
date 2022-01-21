@@ -41,18 +41,18 @@ describe("Service Request Substrate Event Handler", () => {
       {
         toHuman: jest.fn(
           () => ({
-            hash_: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-            requesterAddress: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-            labAddress: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
-            country: "ID",
-            region: "JK",
-            city: "Jakarta",
+            hash_: "string",
+            requesterAddress: "string",
+            labAddress: "string",
+            country: "XX",
+            region: "XX",
+            city: "XX",
             serviceCategory: "Test",
             stakingAmount: "1000000000000",
             status: requestStatus,
-            createdAt: "1632212142000",
-            updatedAt: "1632212142000",
-            unstakedAt: "1632212142000"
+            createdAt: "1",
+            updatedAt: "1",
+            unstakedAt: "1"
           })
         )
       }

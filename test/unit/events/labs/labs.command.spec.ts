@@ -23,7 +23,6 @@ import {
 	LabUpdateVerificationStatusHandler
 } from "../../../../src/substrate/events/labs/commands/lab-update-verification-status/lab-update-verification-status.handler";
 import {
-  ElasticsearchModule,
   ElasticsearchService
 } from "@nestjs/elasticsearch";
 import {
@@ -51,46 +50,29 @@ let commandBus: CommandBus;
 
 describe("Labs Substrate Event Handler", () => {
   
-	const createMockLab = ({
-		address,
-		box_public_key,
-		city,
-		country,
-		email,
-		phone_number,
-		website,
-		latitude,
-		longitude,
-		name,
-		profile_image,
-		region,
-		account_id,
-		certifications,
-		verification_status,
-		services,
-	}) => {
+	const createMockLab = () => {
 		const labInfo = {
-			boxPublicKey: box_public_key, 
-			name: name, 
-			email: email, 
-			phoneNumber: phone_number, 
-			website: website, 
-			country: country, 
-			region: region, 
-			city: city, 
-			address: address, 
-			latitude: latitude, 
-			longitude: longitude, 
-			profileImage: profile_image
+			boxPublicKey: 'string', 
+			name: 'string', 
+			email: 'string', 
+			phoneNumber: 'string', 
+			website: 'string', 
+			country: 'XX', 
+			region: 'XX', 
+			city: 'XX', 
+			address: 'string', 
+			latitude: 'string', 
+			longitude: 'string', 
+			profileImage: 'string'
 		};
 
 		return {
       toHuman: jest.fn(
         () => ({
-          accountId: account_id, 
-          services: services, 
-          certifications: certifications, 
-          verificationStatus: verification_status, 
+          accountId: 'string', 
+          services: [], 
+          certifications: [], 
+          verificationStatus: [], 
           info: labInfo
         })
       )
@@ -108,11 +90,6 @@ describe("Labs Substrate Event Handler", () => {
     const modules: TestingModule = await Test.createTestingModule({
 			imports: [
 				CommonModule,
-				ElasticsearchModule.registerAsync({
-					useFactory: async () => ({
-						node: process.env.ELASTICSEARCH_NODE,
-					}),
-				}),
 				CqrsModule,
 			],
 			controllers: [
@@ -159,24 +136,7 @@ describe("Labs Substrate Event Handler", () => {
   
 	describe("Lab Command", () => {
 		it("Lab Deregistered Command", async () => {
-			const lab = createMockLab({
-				address: "Jakarta",
-				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-				city: "ID-JK",
-				country: "ID",
-				email: "email@labdnafavorit.com",
-				phone_number: "+8272282",
-				website: "http://localhost",
-				latitude: null,
-				longitude: null,
-				name: "Laboratorium DNA Favourites",
-				profile_image: null,
-				region: "ID-JK",
-				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
-				certifications: [],
-				verification_status: LabVerificationStatus.Verified,
-				services: []
-			});
+			const lab = createMockLab();
 			
 			const labDeregisteredHandlerSpy = jest.spyOn(labDeregisteredHandler, 'execute');
 			const labDeregisteredCommand: LabDeregisteredCommand = new LabDeregisteredCommand([lab], mockBlockNumber());
@@ -187,24 +147,7 @@ describe("Labs Substrate Event Handler", () => {
 
 		
 		it("Lab Registered Command", async () => {
-			const lab = createMockLab({
-				address: "Jakarta",
-				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-				city: "ID-JK",
-				country: "ID",
-				email: "email@labdnafavorit.com",
-				phone_number: "+8272282",
-				website: "http://localhost",
-				latitude: null,
-				longitude: null,
-				name: "Laboratorium DNA Favourites",
-				profile_image: null,
-				region: "ID-JK",
-				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
-				certifications: [],
-				verification_status: LabVerificationStatus.Verified,
-				services: []
-			});
+			const lab = createMockLab();
 			
 			const labRegisteredHandlerSpy = jest.spyOn(labRegisteredHandler, 'execute');
 			const labRegisteredCommand: LabDeregisteredCommand = new LabRegisteredCommand([lab], mockBlockNumber());
@@ -214,24 +157,7 @@ describe("Labs Substrate Event Handler", () => {
 		});
 
 		it("Lab Updated Command", async () => {
-			const lab = createMockLab({
-				address: "Jakarta",
-				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-				city: "ID-JK",
-				country: "ID",
-				email: "email@labdnafavorit.com",
-				phone_number: "+8272282",
-				website: "http://localhost",
-				latitude: null,
-				longitude: null,
-				name: "Laboratorium DNA Favourites",
-				profile_image: null,
-				region: "ID-JK",
-				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
-				certifications: [],
-				verification_status: LabVerificationStatus.Verified,
-				services: []
-			});
+			const lab = createMockLab();
 			
 			const labUpdateHandlerSpy = jest.spyOn(labUpdatedHandler, 'execute');
 			const labUpdatedCommand: LabUpdatedCommand = new LabUpdatedCommand([lab], mockBlockNumber());
@@ -241,24 +167,7 @@ describe("Labs Substrate Event Handler", () => {
 		});
 
 		it("Lab Updated Verification Status Command", async () => {
-			const lab = createMockLab({
-				address: "Jakarta",
-				box_public_key: "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-				city: "ID-JK",
-				country: "ID",
-				email: "email@labdnafavorit.com",
-				phone_number: "+8272282",
-				website: "http://localhost",
-				latitude: null,
-				longitude: null,
-				name: "Laboratorium DNA Favourites",
-				profile_image: null,
-				region: "ID-JK",
-				account_id: "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
-				certifications: [],
-				verification_status: LabVerificationStatus.Verified,
-				services: []
-			});
+			const lab = createMockLab();
 			
 			const labUpdateVerificationStatusHandlerSpy = jest.spyOn(labUpdateVerificationStatusHandler, 'execute');
 			const labUpdatedVerificationStatusCommand: LabUpdateVerificationStatusCommand = new LabUpdateVerificationStatusCommand([lab], mockBlockNumber());

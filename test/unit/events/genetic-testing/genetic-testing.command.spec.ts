@@ -3,7 +3,6 @@ import {
 	CqrsModule
 } from "@nestjs/cqrs";
 import {
-	ElasticsearchModule,
 	ElasticsearchService
 } from "@nestjs/elasticsearch";
 import {
@@ -39,9 +38,9 @@ describe("Genetic Testing Substrate Event Handler", () => {
   
 	const createMockDataStaked = () => {
     return [
-      "5ESGhRuAhECXu96Pz9L8pwEEd1AeVhStXX67TWE1zTEA62U",
-      "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563",
-      "0xe2829ff8b96c52401dc9f89c5ce77df95868b5c9da2b7f70f04be1e423g563"
+      "string",
+      "string",
+      "string"
     ]
   }
 
@@ -56,11 +55,6 @@ describe("Genetic Testing Substrate Event Handler", () => {
     const modules: TestingModule = await Test.createTestingModule({
 			imports: [
 				CommonModule,
-				ElasticsearchModule.registerAsync({
-					useFactory: async () => ({
-						node: process.env.ELASTICSEARCH_NODE,
-					}),
-				}),
 				CqrsModule,
 			],
 			controllers: [
