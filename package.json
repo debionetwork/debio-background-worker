@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@polkadot/api": "^6.12.1",
     "dotenv": "^10.0.0",
+    "jest-when": "^3.5.0",
     "nestjs-ethers": "^0.3.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

@@ -107,7 +107,6 @@ describe("Service Request Substrate Event Handler", () => {
   beforeAll(async () => {
     const modules: TestingModule = await Test.createTestingModule({
       providers: [
-				ElasticsearchService,
 				ElasticSearchServiceProvider,
 				...RequestServiceCommandHandlers,
       ]

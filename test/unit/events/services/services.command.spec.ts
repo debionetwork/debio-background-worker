@@ -19,8 +19,7 @@ import { ServiceCreatedHandler } from "../../../../src/substrate/events/services
 import { ServiceDeletedHandler } from "../../../../src/substrate/events/services/commands/service-deleted/service-deleted.handler";
 import { ServiceUpdatedHandler } from "../../../../src/substrate/events/services/commands/service-updated/service-updated.handler";
 import {
-	SubstrateController,
-	SubstrateService
+	SubstrateController
 } from "../../../../src/substrate/substrate.handler";
 import { 
 	CommandBusProvider, 
@@ -94,9 +93,7 @@ describe("Services Substrate Event Handler", () => {
         SubstrateController
       ],
       providers: [
-				ElasticsearchService,
 				ElasticSearchServiceProvider,
-				SubstrateService, 
 				substrateServiceProvider, 
 				CommandBus, 
 				CommandBusProvider,
@@ -131,31 +128,40 @@ describe("Services Substrate Event Handler", () => {
 		it("Service Created Command", async () => {
 			const service = createMockService();
 			
-			const serviceCreatedHandlerSpy = jest.spyOn(serviceCreatedHandler, 'execute');
+			const serviceCreatedHandlerSpy = jest.spyOn(serviceCreatedHandler, 'execute').mockImplementation();
+
 			const serviceCreatedCommand: ServiceCreatedCommand = new ServiceCreatedCommand([service], mockBlockNumber());
 			await commandBus.execute(serviceCreatedCommand);
 			expect(serviceCreatedHandlerSpy).toBeCalled();
 			expect(serviceCreatedHandlerSpy).toBeCalledWith(serviceCreatedCommand);
+
+			serviceCreatedHandlerSpy.mockClear();
 		});
 
 		it("Service Deleted Command", async () => {
 			const service = createMockService();
 			
-			const serviceDeletedHandlerSpy = jest.spyOn(serviceDeletedHandler, 'execute');
+			const serviceDeletedHandlerSpy = jest.spyOn(serviceDeletedHandler, 'execute').mockImplementation();
+
 			const serviceDeletedCommand: ServiceDeletedCommand = new ServiceDeletedCommand([service], mockBlockNumber());
 			await commandBus.execute(serviceDeletedCommand);
 			expect(serviceDeletedHandlerSpy).toBeCalled();
 			expect(serviceDeletedHandlerSpy).toBeCalledWith(serviceDeletedCommand);
+
+			serviceDeletedHandlerSpy.mockClear();
 		});
 
 		it("Service Updated Command", async () => {
 			const service = createMockService();
 			
-			const serviceUpdatedHandlerSpy = jest.spyOn(serviceUpdatedHandler, 'execute');
+			const serviceUpdatedHandlerSpy = jest.spyOn(serviceUpdatedHandler, 'execute').mockImplementation();
+
 			const serviceUpdatedCommand: ServiceUpdatedCommand = new ServiceUpdatedCommand([service], mockBlockNumber());
 			await commandBus.execute(serviceUpdatedCommand);
 			expect(serviceUpdatedHandlerSpy).toBeCalled();
 			expect(serviceUpdatedHandlerSpy).toBeCalledWith(serviceUpdatedCommand);
+
+			serviceUpdatedHandlerSpy.mockClear();
 		});
 	});
 });

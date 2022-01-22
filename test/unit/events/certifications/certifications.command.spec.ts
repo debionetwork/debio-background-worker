@@ -3,16 +3,12 @@ import {
 	CqrsModule
 } from "@nestjs/cqrs";
 import {
-	ElasticsearchService
-} from "@nestjs/elasticsearch";
-import {
 	Test,
 	TestingModule
 } from "@nestjs/testing";
 import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
 import {
-	SubstrateController,
-	SubstrateService
+	SubstrateController
 } from "../../../../src/substrate/substrate.handler";
 import { CommonModule } from "../../../../src/common/common.module";
 import {
@@ -71,9 +67,7 @@ describe("Certifications Substrate Event Handler", () => {
         SubstrateController
       ],
       providers: [
-				ElasticsearchService,
 				ElasticSearchServiceProvider,
-				SubstrateService, 
 				substrateServiceProvider, 
 				CommandBus, 
 				CommandBusProvider,
@@ -108,32 +102,40 @@ describe("Certifications Substrate Event Handler", () => {
 		it("Certification Created Command", async () => {
 			const certifications = createMockCertifications();
 			
-			const certificationCreatedHandlerSpy = jest.spyOn(certificationsCreatedHandler, 'execute');
+			const certificationCreatedHandlerSpy = jest.spyOn(certificationsCreatedHandler, 'execute').mockImplementation();
 
 			const certificationCreatedCommand: CertificationCreatedCommand = new CertificationCreatedCommand([certifications], mockBlockNumber());
 			await commandBus.execute(certificationCreatedCommand);
 			expect(certificationCreatedHandlerSpy).toBeCalled();
 			expect(certificationCreatedHandlerSpy).toBeCalledWith(certificationCreatedCommand);
+			
+			certificationCreatedHandlerSpy.mockClear();
 		});
     
 		it("Certification Updated Command", async () => {
 			const certifications = createMockCertifications();
 			
-			const certificationUpdatedHandlerSpy = jest.spyOn(certificationsUpdatedHandler, 'execute');
+			const certificationUpdatedHandlerSpy = jest.spyOn(certificationsUpdatedHandler, 'execute').mockImplementation();
+
 			const certificationUpdatedCommand: CertificationUpdatedCommand = new CertificationUpdatedCommand([certifications], mockBlockNumber());
 			await commandBus.execute(certificationUpdatedCommand);
 			expect(certificationUpdatedHandlerSpy).toBeCalled();
 			expect(certificationUpdatedHandlerSpy).toBeCalledWith(certificationUpdatedCommand);
+
+			certificationUpdatedHandlerSpy.mockClear();
 		});
 
 		it("Certification Deleted Command", async () => {
 			const certifications = createMockCertifications();
 			
-			const certificationDeletedHandlerSpy = jest.spyOn(certificationsDeletedHandler, 'execute');
+			const certificationDeletedHandlerSpy = jest.spyOn(certificationsDeletedHandler, 'execute').mockImplementation();
+
 			const certificationDeletedCommand: CertificationDeletedCommand = new CertificationDeletedCommand([certifications], mockBlockNumber());
 			await commandBus.execute(certificationDeletedCommand);
 			expect(certificationDeletedHandlerSpy).toBeCalled();
 			expect(certificationDeletedHandlerSpy).toBeCalledWith(certificationDeletedCommand);
+
+			certificationDeletedHandlerSpy.mockClear();
 		});
 	});
 });

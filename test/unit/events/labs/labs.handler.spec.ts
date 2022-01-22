@@ -26,8 +26,6 @@ import {
 } from "@nestjs/elasticsearch";
 import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
 import { ElasticSearchServiceProvider } from "../../mock";
-import { LabVerificationStatus } from "../../../../src/substrate/events/labs/models/lab-verification-status";
-
 let labDeregisteredHandler: LabDeregisteredHandler;
 let labRegisteredHandler: LabRegisteredHandler;
 let labUpdatedHandler: LabUpdatedHandler;
@@ -75,7 +73,6 @@ describe("Labs Substrate Event Handler", () => {
   beforeAll(async () => {
     const modules: TestingModule = await Test.createTestingModule({
       providers: [
-				ElasticsearchService,
 				ElasticSearchServiceProvider,
 				...LabCommandHandlers,
       ]

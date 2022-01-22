@@ -3,15 +3,11 @@ import {
 	CqrsModule
 } from "@nestjs/cqrs";
 import {
-	ElasticsearchService
-} from "@nestjs/elasticsearch";
-import {
 	Test,
 	TestingModule
 } from "@nestjs/testing";
 import {
-	SubstrateController,
-	SubstrateService
+	SubstrateController
 } from "../../../../src/substrate/substrate.handler";
 import { CommonModule } from "../../../../src/common/common.module";
 import { ClaimedServiceRequestHandler } from "../../../../src/substrate/events/service-request/commands/claimed-service-request/claimed-service-request.handler";
@@ -127,9 +123,7 @@ describe("Service Request Substrate Event Handler", () => {
         SubstrateController
       ],
       providers: [
-				ElasticsearchService,
 				ElasticSearchServiceProvider,
-				SubstrateService, 
 				substrateServiceProvider, 
 				CommandBus, 
 				CommandBusProvider,
@@ -153,61 +147,79 @@ describe("Service Request Substrate Event Handler", () => {
 		it("Claimed Service Request Command", async () => {
 			const claimRequest = createMockClaimRequest();
 			
-			const claimedServiceRequestHandlerSpy = jest.spyOn(claimedServiceRequestHandler, 'execute');
+			const claimedServiceRequestHandlerSpy = jest.spyOn(claimedServiceRequestHandler, 'execute').mockImplementation();
+
 			const claimedServiceRequestCommand: ClaimedServiceRequestCommand = new ClaimedServiceRequestCommand(claimRequest, mockBlockNumber());
 			await commandBus.execute(claimedServiceRequestCommand);
 			expect(claimedServiceRequestHandlerSpy).toBeCalled();
 			expect(claimedServiceRequestHandlerSpy).toBeCalledWith(claimedServiceRequestCommand);
+
+			claimedServiceRequestHandlerSpy.mockClear();
 		});
 
 		it("Create Service Request Command", async () => {
 			const requestData = createMockRequest(RequestStatus.Open);
 
-			const createServiceRequestHandlerSpy = jest.spyOn(createServiceRequestHandler, 'execute');
+			const createServiceRequestHandlerSpy = jest.spyOn(createServiceRequestHandler, 'execute').mockImplementation();
+
 			const createServiceRequestCommand: CreateServiceRequestCommand = new CreateServiceRequestCommand(requestData, mockBlockNumber());
 			await commandBus.execute(createServiceRequestCommand);
 			expect(createServiceRequestHandlerSpy).toBeCalled();
 			expect(createServiceRequestHandlerSpy).toBeCalledWith(createServiceRequestCommand);
+
+			createServiceRequestHandlerSpy.mockClear();
 		});
 
 		it("Finalized Service Request Command", async () => {
 			const serviceInvoice = createMockServiceInvoice();
 
-			const finalizedServiceRequestHandlerSpy = jest.spyOn(finalizedServiceRequestHandler, 'execute');
+			const finalizedServiceRequestHandlerSpy = jest.spyOn(finalizedServiceRequestHandler, 'execute').mockImplementation();
+
 			const finalizedServiceRequestCommand: FinalizedServiceRequestCommand = new FinalizedServiceRequestCommand(serviceInvoice, mockBlockNumber());
 			await commandBus.execute(finalizedServiceRequestCommand);
 			expect(finalizedServiceRequestHandlerSpy).toBeCalled();
 			expect(finalizedServiceRequestHandlerSpy).toBeCalledWith(finalizedServiceRequestCommand);
+
+			finalizedServiceRequestHandlerSpy.mockClear();
 		});
     
 		it("Processed Service Request Command", async () => {
 			const serviceInvoice = createMockServiceInvoice();
 
-			const processedServiceRequestHandlerSpy = jest.spyOn(processedServiceRequestHandler, 'execute');
+			const processedServiceRequestHandlerSpy = jest.spyOn(processedServiceRequestHandler, 'execute').mockImplementation();
+
 			const processedServiceRequestCommand: ProcessedServiceRequestCommand = new ProcessedServiceRequestCommand(serviceInvoice, mockBlockNumber());
 			await commandBus.execute(processedServiceRequestCommand);
 			expect(processedServiceRequestHandlerSpy).toBeCalled();
 			expect(processedServiceRequestHandlerSpy).toBeCalledWith(processedServiceRequestCommand);
+
+			processedServiceRequestHandlerSpy.mockClear();
 		});
     
 		it("Unstaked Service Request Command", async () => {
 			const requestData = createMockRequest(RequestStatus.Unstaked);
 
-			const unstakedServiceRequestHandlerSpy = jest.spyOn(unstakedServiceRequestHandler, 'execute');
+			const unstakedServiceRequestHandlerSpy = jest.spyOn(unstakedServiceRequestHandler, 'execute').mockImplementation();
+
 			const unstakedServiceRequestCommand: UnstakedServiceRequestCommand = new UnstakedServiceRequestCommand(requestData, mockBlockNumber());
 			await commandBus.execute(unstakedServiceRequestCommand);
 			expect(unstakedServiceRequestHandlerSpy).toBeCalled();
 			expect(unstakedServiceRequestHandlerSpy).toBeCalledWith(unstakedServiceRequestCommand);
+
+			unstakedServiceRequestHandlerSpy.mockClear();
 		});
     
 		it("Unstaked Waiting Service Request Command", async () => {
 			const requestData = createMockRequest(RequestStatus.WaitingForUnstaked);
 
-			const unstakedWaitingServiceRequestHandlerSpy = jest.spyOn(unstakedWaitingServiceRequestHandler, 'execute');
+			const unstakedWaitingServiceRequestHandlerSpy = jest.spyOn(unstakedWaitingServiceRequestHandler, 'execute').mockImplementation();
+
 			const unstakedWaitingServiceRequestCommand: UnstakedWaitingServiceRequestCommand = new UnstakedWaitingServiceRequestCommand(requestData, mockBlockNumber());
 			await commandBus.execute(unstakedWaitingServiceRequestCommand);
 			expect(unstakedWaitingServiceRequestHandlerSpy).toBeCalled();
 			expect(unstakedWaitingServiceRequestHandlerSpy).toBeCalledWith(unstakedWaitingServiceRequestCommand);
+
+			unstakedWaitingServiceRequestHandlerSpy.mockClear();
 		});
 	});
 });

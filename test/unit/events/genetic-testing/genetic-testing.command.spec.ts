@@ -3,16 +3,12 @@ import {
 	CqrsModule
 } from "@nestjs/cqrs";
 import {
-	ElasticsearchService
-} from "@nestjs/elasticsearch";
-import {
 	Test,
 	TestingModule
 } from "@nestjs/testing";
 import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
 import {
-	SubstrateController,
-	SubstrateService
+	SubstrateController
 } from "../../../../src/substrate/substrate.handler";
 import { 
 	CommonModule 
@@ -61,9 +57,7 @@ describe("Genetic Testing Substrate Event Handler", () => {
         SubstrateController
       ],
       providers: [
-				ElasticsearchService,
 				ElasticSearchServiceProvider,
-				SubstrateService, 
 				substrateServiceProvider, 
 				CommandBus, 
 				CommandBusProvider,
@@ -88,11 +82,14 @@ describe("Genetic Testing Substrate Event Handler", () => {
 		it("Data Staked Command", async () => {
 			const staked = createMockDataStaked();
 			
-			const dataStakedHandlerSpy = jest.spyOn(dataStakedHandler, 'execute');
+			const dataStakedHandlerSpy = jest.spyOn(dataStakedHandler, 'execute').mockImplementation();
+
 			const dataStakedCommand: DataStakedCommand = new DataStakedCommand(staked, mockBlockNumber());
 			await commandBus.execute(dataStakedCommand);
 			expect(dataStakedHandlerSpy).toBeCalled();
 			expect(dataStakedHandlerSpy).toBeCalledWith(dataStakedCommand);
+
+			dataStakedHandlerSpy.mockClear();
 		});
 	});
 });

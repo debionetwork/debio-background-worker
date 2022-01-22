@@ -13,7 +13,11 @@ import { ServiceFlow } from "../../../../src/substrate/models/service-flow";
 import { ServiceCreatedHandler } from "../../../../src/substrate/events/services/commands/service-created/service-created.handler";
 import { ServiceDeletedHandler } from "../../../../src/substrate/events/services/commands/service-deleted/service-deleted.handler";
 import { ServiceUpdatedHandler } from "../../../../src/substrate/events/services/commands/service-updated/service-updated.handler";
-import { ElasticSearchServiceProvider } from "../../mock";
+import { 
+	createObjectSearchLab, 
+	ElasticSearchServiceProvider 
+} from "../../mock";
+import { when } from 'jest-when';
 
 let serviceCreatedHandler: ServiceCreatedHandler;
 let serviceDeletedHandler: ServiceDeletedHandler;
@@ -74,7 +78,6 @@ describe("Services Substrate Event Handler", () => {
   beforeAll(async () => {
     const modules: TestingModule = await Test.createTestingModule({
       providers: [
-				ElasticsearchService,
 				ElasticSearchServiceProvider,
 				...ServiceCommandHandlers,
       ]
@@ -92,6 +95,29 @@ describe("Services Substrate Event Handler", () => {
 	describe("Service Handler", () => {
 		it("Service Created Handler", async () => {
 			const service = createMockService();
+			const LAB_ID = 'string';
+			const CALLED_WITH = createObjectSearchLab(LAB_ID);
+			const ES_RESULT = {
+				body: {
+					hits: {
+						hits: [
+							{
+								_source: {
+									info: {
+										country: 'XX',
+										city: 'XX',
+										region: 'XX'
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+
+			when(elasticsearchService.search)
+				.calledWith(CALLED_WITH)
+				.mockReturnValue(ES_RESULT);
 			
 			const serviceCreatedCommand: ServiceCreatedCommand = new ServiceCreatedCommand([service], mockBlockNumber());
 			await serviceCreatedHandler.execute(serviceCreatedCommand);
@@ -102,6 +128,25 @@ describe("Services Substrate Event Handler", () => {
 
 		it("Service Deleted Handler", async () => {
 			const service = createMockService();
+			const LAB_ID = 'string';
+			const CALLED_WITH = createObjectSearchLab(LAB_ID);
+			const ES_RESULT = {
+				body: {
+					hits: {
+						hits: [
+							{
+								_source: {
+									services: []
+								}
+							}
+						]
+					}
+				}
+			}
+
+			when(elasticsearchService.search)
+				.calledWith(CALLED_WITH)
+				.mockReturnValue(ES_RESULT);
 			
 			const serviceDeletedCommand: ServiceDeletedCommand = new ServiceDeletedCommand([service], mockBlockNumber());
 			await serviceDeletedHandler.execute(serviceDeletedCommand);
@@ -112,6 +157,30 @@ describe("Services Substrate Event Handler", () => {
 
 		it("Service Updated Handler", async () => {
 			const service = createMockService();
+			const LAB_ID = 'string';
+			const CALLED_WITH = createObjectSearchLab(LAB_ID);
+			const ES_RESULT = {
+				body: {
+					hits: {
+						hits: [
+							{
+								_source: {
+									services: [],
+									info: {
+										country: 'XX',
+										city: 'XX',
+										region: 'XX'
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+
+			when(elasticsearchService.search)
+				.calledWith(CALLED_WITH)
+				.mockReturnValue(ES_RESULT);
 			
 			const serviceUpdatedCommand: ServiceUpdatedCommand = new ServiceUpdatedCommand([service], mockBlockNumber());
 			await serviceUpdatedHandler.execute(serviceUpdatedCommand);

@@ -18,9 +18,6 @@ import { OrderStatus } from "../../../../src/substrate/events/orders/models/orde
 import { Currency } from "../../../../src/substrate/events/orders/models/currency";
 import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
 import {
-	ElasticsearchService
-} from "@nestjs/elasticsearch";
-import {
 	CommandBus, CqrsModule
 } from "@nestjs/cqrs";
 import {
@@ -28,8 +25,7 @@ import {
 	TestingModule
 } from "@nestjs/testing";
 import { 
-	SubstrateController, 
-	SubstrateService 
+	SubstrateController
 } from "../../../../src/substrate/substrate.handler";
 import { 
 	CommandBusProvider, 
@@ -95,9 +91,7 @@ describe("Orders Substrate Event Handler", () => {
         SubstrateController
       ],
       providers: [
-				ElasticsearchService,
 				ElasticSearchServiceProvider,
-				SubstrateService, 
 				substrateServiceProvider, 
 				CommandBus, 
 				CommandBusProvider,
@@ -147,73 +141,85 @@ describe("Orders Substrate Event Handler", () => {
 		it("Order Cancelled Command", async () => {
 			const order = createMockOrder(OrderStatus.Cancelled);
 
-			const orderCancelledHandlerSpy = jest.spyOn(orderCancelledHandler, 'execute');
+			const orderCancelledHandlerSpy = jest.spyOn(orderCancelledHandler, 'execute').mockImplementation();
 
 			const orderCancelledCommand: OrderCancelledCommand = new OrderCancelledCommand([order], mockBlockNumber());
 
 			await commandBus.execute(orderCancelledCommand);
 			expect(orderCancelledHandlerSpy).toBeCalled();
 			expect(orderCancelledHandlerSpy).toBeCalledWith(orderCancelledCommand);
+
+			orderCancelledHandlerSpy.mockClear();
 		});
 
 		it("Order Created Command", async () => {
 			const order = createMockOrder(OrderStatus.Unpaid);
 			
-			const orderCreatedHandlerSpy = jest.spyOn(orderCreatedHandler, 'execute');
+			const orderCreatedHandlerSpy = jest.spyOn(orderCreatedHandler, 'execute').mockImplementation();
 
 			const orderCreatedCommand: OrderCreatedCommand = new OrderCreatedCommand([order], mockBlockNumber());
 
 			await commandBus.execute(orderCreatedCommand);
 			expect(orderCreatedHandlerSpy).toBeCalled();
 			expect(orderCreatedHandlerSpy).toBeCalledWith(orderCreatedCommand);
+
+			orderCreatedHandlerSpy.mockClear();
 		});
 
 		it("Order Failed Command", async () => {
 			const order = createMockOrder(OrderStatus.Failed);
 			
-			const orderFailedHandlerSpy = jest.spyOn(orderFailedHandler, 'execute');
+			const orderFailedHandlerSpy = jest.spyOn(orderFailedHandler, 'execute').mockImplementation();
 
 			const orderFailedCommand: OrderFailedCommand = new OrderFailedCommand([order], mockBlockNumber());
 
 			await commandBus.execute(orderFailedCommand);
 			expect(orderFailedHandlerSpy).toBeCalled();
 			expect(orderFailedHandlerSpy).toBeCalledWith(orderFailedCommand);
+
+			orderFailedHandlerSpy.mockClear();
 		});
 
 		it("Order Fulfilled Command", async () => {
 			const order = createMockOrder(OrderStatus.Failed);
 			
-			const orderFulfilledHandlerSpy = jest.spyOn(orderFulfilledHandler, 'execute');
+			const orderFulfilledHandlerSpy = jest.spyOn(orderFulfilledHandler, 'execute').mockImplementation();
 
 			const orderFulfilledCommand: OrderFulfilledCommand = new OrderFulfilledCommand([order], mockBlockNumber());
 
 			await commandBus.execute(orderFulfilledCommand);
 			expect(orderFulfilledHandlerSpy).toBeCalled();
 			expect(orderFulfilledHandlerSpy).toBeCalledWith(orderFulfilledCommand);
+
+			orderFulfilledHandlerSpy.mockClear();
 		});
 
 		it("Order Paid Command", async () => {
 			const order = createMockOrder(OrderStatus.Paid);
 			
-			const orderPaidHandlerSpy = jest.spyOn(orderPaidHandler, 'execute');
+			const orderPaidHandlerSpy = jest.spyOn(orderPaidHandler, 'execute').mockImplementation();
 
 			const orderPaidCommand: OrderPaidCommand = new OrderPaidCommand([order], mockBlockNumber());
 
 			await commandBus.execute(orderPaidCommand);
 			expect(orderPaidHandlerSpy).toBeCalled();
 			expect(orderPaidHandlerSpy).toBeCalledWith(orderPaidCommand);
+
+			orderPaidHandlerSpy.mockClear();
 		});
 
 		it("Order Refunded Command", async () => {
 			const order = createMockOrder(OrderStatus.Refunded);
 			
-			const orderRefundedHandlerSpy = jest.spyOn(orderRefundedHandler, 'execute');
+			const orderRefundedHandlerSpy = jest.spyOn(orderRefundedHandler, 'execute').mockImplementation();
 
 			const orderRefundedCommand: OrderRefundedCommand = new OrderRefundedCommand([order], mockBlockNumber());
 
 			await commandBus.execute(orderRefundedCommand);
 			expect(orderRefundedHandlerSpy).toBeCalled();
 			expect(orderRefundedHandlerSpy).toBeCalledWith(orderRefundedCommand);
+
+			orderRefundedHandlerSpy.mockClear();
 		});
 	});
 });

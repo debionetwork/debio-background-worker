@@ -23,7 +23,12 @@ import {
 	Test,
 	TestingModule
 } from "@nestjs/testing";
-import { ElasticSearchServiceProvider } from "../../mock";
+import { 
+	createObjectSearchLab, 
+	createObjectSearchService, 
+	ElasticSearchServiceProvider 
+} from "../../mock";
+import { when } from 'jest-when';
 
 let orderCancelledHandler: OrderCancelledHandler;
 let orderCreatedHandler: OrderCreatedHandler;
@@ -76,7 +81,6 @@ describe("Orders Substrate Event Handler", () => {
   beforeAll(async () => {
     const modules: TestingModule = await Test.createTestingModule({
       providers: [
-				ElasticsearchService,
 				ElasticSearchServiceProvider,
 				...OrderCommandHandlers,
       ]
@@ -106,6 +110,44 @@ describe("Orders Substrate Event Handler", () => {
     
 		it("Order Created Handler", async () => {
 			const order = createMockOrder(OrderStatus.Cancelled);
+			const LAB_ID = 'string';
+			const LAB_CALLED_WITH = createObjectSearchLab(LAB_ID);
+			const ES_RESULT_LAB = {
+				body: {
+					hits: {
+						hits: [
+							{
+								_source: {
+									info: {}
+								}
+							}
+						]
+					}
+				}
+			}
+			const SERVICE_ID = 'string';
+			const SERVICE_CALLED_WITH = createObjectSearchService(SERVICE_ID);
+			const ES_RESULT_SERVICE = {
+				body: {
+					hits: {
+						hits: [
+							{
+								_source: {
+									info: {}
+								}
+							}
+						]
+					}
+				}
+			}
+
+			when(elasticsearchService.search)
+				.calledWith(LAB_CALLED_WITH)
+				.mockReturnValue(ES_RESULT_LAB);
+
+			when(elasticsearchService.search)
+				.calledWith(SERVICE_CALLED_WITH)
+				.mockReturnValue(ES_RESULT_SERVICE);
 
 			const orderCreatedCommand: OrderCreatedCommand = new OrderCreatedCommand([order], mockBlockNumber());
 			

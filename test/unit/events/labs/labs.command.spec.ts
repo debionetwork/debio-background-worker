@@ -23,15 +23,11 @@ import {
 	LabUpdateVerificationStatusHandler
 } from "../../../../src/substrate/events/labs/commands/lab-update-verification-status/lab-update-verification-status.handler";
 import {
-  ElasticsearchService
-} from "@nestjs/elasticsearch";
-import {
   CommandBus,
   CqrsModule
 } from "@nestjs/cqrs";
 import {
-  SubstrateController,
-  SubstrateService
+  SubstrateController
 } from "../../../../src/substrate/substrate.handler";
 import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
 import { 
@@ -39,7 +35,6 @@ import {
 	ElasticSearchServiceProvider, 
 	substrateServiceProvider 
 } from "../../mock";
-import { LabVerificationStatus } from "../../../../src/substrate/events/labs/models/lab-verification-status";
 
 let labDeregisteredHandler: LabDeregisteredHandler;
 let labRegisteredHandler: LabRegisteredHandler;
@@ -96,9 +91,7 @@ describe("Labs Substrate Event Handler", () => {
         SubstrateController
       ],
       providers: [
-				ElasticsearchService,
 				ElasticSearchServiceProvider,
-				SubstrateService, 
 				substrateServiceProvider, 
 				CommandBus, 
 				CommandBusProvider,
@@ -138,42 +131,54 @@ describe("Labs Substrate Event Handler", () => {
 		it("Lab Deregistered Command", async () => {
 			const lab = createMockLab();
 			
-			const labDeregisteredHandlerSpy = jest.spyOn(labDeregisteredHandler, 'execute');
+			const labDeregisteredHandlerSpy = jest.spyOn(labDeregisteredHandler, 'execute').mockImplementation();
+
 			const labDeregisteredCommand: LabDeregisteredCommand = new LabDeregisteredCommand([lab], mockBlockNumber());
 			await commandBus.execute(labDeregisteredCommand);
 			expect(labDeregisteredHandlerSpy).toBeCalled();
 			expect(labDeregisteredHandlerSpy).toBeCalledWith(labDeregisteredCommand);
+
+			labDeregisteredHandlerSpy.mockClear();
 		});
 
 		
 		it("Lab Registered Command", async () => {
 			const lab = createMockLab();
 			
-			const labRegisteredHandlerSpy = jest.spyOn(labRegisteredHandler, 'execute');
+			const labRegisteredHandlerSpy = jest.spyOn(labRegisteredHandler, 'execute').mockImplementation();
+
 			const labRegisteredCommand: LabDeregisteredCommand = new LabRegisteredCommand([lab], mockBlockNumber());
 			await commandBus.execute(labRegisteredCommand);
 			expect(labRegisteredHandlerSpy).toBeCalled();
 			expect(labRegisteredHandlerSpy).toBeCalledWith(labRegisteredCommand);
+
+			labRegisteredHandlerSpy.mockClear();
 		});
 
 		it("Lab Updated Command", async () => {
 			const lab = createMockLab();
 			
-			const labUpdateHandlerSpy = jest.spyOn(labUpdatedHandler, 'execute');
+			const labUpdateHandlerSpy = jest.spyOn(labUpdatedHandler, 'execute').mockImplementation();
+
 			const labUpdatedCommand: LabUpdatedCommand = new LabUpdatedCommand([lab], mockBlockNumber());
 			await commandBus.execute(labUpdatedCommand);
 			expect(labUpdateHandlerSpy).toBeCalled();
 			expect(labUpdateHandlerSpy).toBeCalledWith(labUpdatedCommand);
+
+			labUpdateHandlerSpy.mockClear();
 		});
 
 		it("Lab Updated Verification Status Command", async () => {
 			const lab = createMockLab();
 			
-			const labUpdateVerificationStatusHandlerSpy = jest.spyOn(labUpdateVerificationStatusHandler, 'execute');
+			const labUpdateVerificationStatusHandlerSpy = jest.spyOn(labUpdateVerificationStatusHandler, 'execute').mockImplementation();
+
 			const labUpdatedVerificationStatusCommand: LabUpdateVerificationStatusCommand = new LabUpdateVerificationStatusCommand([lab], mockBlockNumber());
 			await commandBus.execute(labUpdatedVerificationStatusCommand);
 			expect(labUpdateVerificationStatusHandlerSpy).toBeCalled();
 			expect(labUpdateVerificationStatusHandlerSpy).toBeCalledWith(labUpdatedVerificationStatusCommand);
+
+			labUpdateVerificationStatusHandlerSpy.mockClear();
 		});
 	});
 });

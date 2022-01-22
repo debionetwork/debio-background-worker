@@ -51,21 +51,28 @@ export const ElasticSearchServiceProvider = {
         catch: jest.fn(),
       })
     ),
-    search: jest.fn(
-      () => ({
-        body: {
-          hits: {
-            hits: [
-              {
-                _source: {
-                  info: {}
-                }
-              }
-            ]
-          }
-        },
-        catch: jest.fn(),
-      })
-    ),
+    search: jest.fn(),
   })
+}
+
+export const createObjectSearchLab = (lab_id: string) => {
+  return {
+    index: 'labs',
+    body: {
+      query: {
+        match: { _id: lab_id },
+      },
+    },
+  }
+}
+
+export const createObjectSearchService = (lab_id: string) => {
+  return {
+    index: 'services',
+    body: {
+      query: {
+        match: { _id: lab_id },
+      },
+    },
+  }
 }
