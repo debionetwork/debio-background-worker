@@ -14,10 +14,7 @@ import { ProcessEnvModule } from '../common/process-env/process-env.module';
 require('dotenv').config();
 
 @Module({
-  imports: [
-    CommonModule,
-    ProcessEnvModule
-  ],
+  imports: [CommonModule, ProcessEnvModule],
   controllers: [SubstrateController],
   providers: [
     SubstrateService,
@@ -28,7 +25,7 @@ require('dotenv').config();
     ...BlockQueryHandlers,
     ...GeneticTestingCommandHandlers,
     ...RequestServiceCommandHandlers,
-    ...CertificationsCommandHandlers
+    ...CertificationsCommandHandlers,
   ],
 })
 export class SubstrateModule {}

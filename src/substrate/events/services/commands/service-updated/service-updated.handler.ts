@@ -40,7 +40,7 @@ export class ServiceUpdatedHandler
     };
 
     let serviceIndexToDelete = -1;
-    
+
     const resp = await this.elasticsearchService.search({
       index: 'labs',
       body: {
@@ -56,12 +56,12 @@ export class ServiceUpdatedHandler
     serviceIndexToDelete = _source.services.findIndex(
       (s) => s.id == service.id,
     );
-    
+
     serviceBody = {
       ...serviceBody,
       country,
       city,
-      region
+      region,
     };
 
     await this.elasticsearchService.update({
@@ -77,7 +77,7 @@ export class ServiceUpdatedHandler
           params: {
             id: service.id,
             index: serviceIndexToDelete,
-            service: serviceBody
+            service: serviceBody,
           },
         },
       },
@@ -92,15 +92,15 @@ export class ServiceUpdatedHandler
           source: `ctx._source.service_info = params.new_service_info`,
           lang: 'painless',
           params: {
-            new_service_info: service.info
-          }
+            new_service_info: service.info,
+          },
         },
         query: {
-          match: { 
+          match: {
             service_id: service.id,
-          }
+          },
         },
-      }
+      },
     });
   }
 }

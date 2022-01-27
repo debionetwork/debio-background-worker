@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { SubstrateController, SubstrateService } from '../../src/substrate/substrate.handler';
+import {
+  SubstrateController,
+  SubstrateService,
+} from '../../src/substrate/substrate.handler';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -14,19 +17,14 @@ describe('AppController (e2e)', () => {
       listenToEvents: jest.fn(),
       listenToNewBlock: jest.fn(),
       syncBlock: jest.fn(),
-      startListen: jest.fn()
-    })
-  }
+      startListen: jest.fn(),
+    }),
+  };
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      controllers: [
-        SubstrateController
-      ],
-      providers: [
-        SubstrateService,
-        SubstrateServiceProvider
-      ],
+      controllers: [SubstrateController],
+      providers: [SubstrateService, SubstrateServiceProvider],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -34,8 +32,6 @@ describe('AppController (e2e)', () => {
   });
 
   it('/substrate (Get)', async () => {
-    return request(app.getHttpServer())
-      .get('/substrate')
-      .expect(404);
+    return request(app.getHttpServer()).get('/substrate').expect(404);
   });
 });

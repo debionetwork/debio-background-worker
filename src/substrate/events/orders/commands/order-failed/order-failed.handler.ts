@@ -6,14 +6,12 @@ import { OrderStatus } from '../../models/order-status';
 
 @Injectable()
 @CommandHandler(OrderFailedCommand)
-export class OrderFailedHandler
-  implements ICommandHandler<OrderFailedCommand>
-{
+export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: OrderFailedCommand) {
     const { orders: order } = command;
-    
+
     return await this.elasticsearchService.update({
       index: 'orders',
       refresh: 'wait_for',
@@ -36,6 +34,6 @@ export class OrderFailedHandler
           blockMetaData: command.blockMetaData,
         },
       },
-    })
+    });
   }
 }

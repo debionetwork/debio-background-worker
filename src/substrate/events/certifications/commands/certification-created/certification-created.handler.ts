@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CertificationCreatedCommand } from './certification-created.command';
- 
+
 @Injectable()
 @CommandHandler(CertificationCreatedCommand)
 export class CertificationCreatedHandler
@@ -22,8 +22,8 @@ export class CertificationCreatedHandler
         id: certification.id,
         owner_id: certification.owner_id,
         info: certification.info,
-        blockMetaData: command.blockMetaData
-      }
+        blockMetaData: command.blockMetaData,
+      },
     });
 
     await this.elasticsearchService.update({
@@ -33,13 +33,14 @@ export class CertificationCreatedHandler
       body: {
         script: {
           lang: 'painless',
-          source: 'if (!ctx._source.certifications_ids.contains(params.id)) { ctx._source.certifications_ids.add(params.id); ctx._source.certifications.add(params.certification); }',
+          source:
+            'if (!ctx._source.certifications_ids.contains(params.id)) { ctx._source.certifications_ids.add(params.id); ctx._source.certifications.add(params.certification); }',
           params: {
             id: certification.id,
             certification: certification,
           },
-        }
-      }
+        },
+      },
     });
   }
 }

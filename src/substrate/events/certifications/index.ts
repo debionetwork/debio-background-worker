@@ -9,5 +9,5 @@ import { CertificationUpdatedHandler } from './commands/certification-updated/ce
 export const CertificationsCommandHandlers = [
   CertificationCreatedHandler,
   CertificationDeletedHandler,
-  CertificationUpdatedHandler
-]
+  CertificationUpdatedHandler,
+];

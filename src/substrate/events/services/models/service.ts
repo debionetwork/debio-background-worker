@@ -2,11 +2,9 @@ import { ServiceFlow } from '../../../models/service-flow';
 import { ServiceInfo } from './service-info';
 
 export class Service {
-  constructor(
-    service: any
-  ) {
-    this.id       = service.id;
-    this.ownerId  = service.ownerId;
+  constructor(service: any) {
+    this.id = service.id;
+    this.ownerId = service.ownerId;
 
     this.info = new ServiceInfo(service.info);
     this.serviceFlow = service.serviceFlow;

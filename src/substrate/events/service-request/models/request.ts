@@ -1,21 +1,19 @@
-import { RequestStatus } from "./requestStatus";
+import { RequestStatus } from './requestStatus';
 
 export class RequestModel {
-  constructor(
-    request: any
-  ) {
-    this.hash               = request.hash_;
-    this.requester_address  = request.requesterAddress;
-    this.lab_address        = request.labAddress;
-    this.country            = request.country;
-    this.region             = request.region;
-    this.city               = request.city;
-    this.service_category   = request.serviceCategory;
-    this.staking_amount     = request.stakingAmount;
-    this.status             = request.status;
-    this.created_at         = request.createdAt;
-    this.updated_at         = request.updatedAt;
-    this.unstaked_at        = request.unstakedAt;
+  constructor(request: any) {
+    this.hash = request.hash_;
+    this.requester_address = request.requesterAddress;
+    this.lab_address = request.labAddress;
+    this.country = request.country;
+    this.region = request.region;
+    this.city = request.city;
+    this.service_category = request.serviceCategory;
+    this.staking_amount = request.stakingAmount;
+    this.status = request.status;
+    this.created_at = request.createdAt;
+    this.updated_at = request.updatedAt;
+    this.unstaked_at = request.unstakedAt;
   }
 
   hash: string;

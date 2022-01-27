@@ -1,5 +1,5 @@
 import { BlockMetaData } from '../../../../models/blockMetaData';
-import { ServiceInvoice } from "../../models/serviceInvoice";
+import { ServiceInvoice } from '../../models/serviceInvoice';
 
 export class ProcessedServiceRequestCommand {
   serviceInvoice: ServiceInvoice;

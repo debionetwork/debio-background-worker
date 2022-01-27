@@ -1,7 +1,5 @@
-import { BlockMetaData } from "../../../../models/blockMetaData";
+import { BlockMetaData } from '../../../../models/blockMetaData';
 
 export class DNATestResultSubmittedCommand {
-  constructor(args: Array<any>, public readonly blockMetaData: BlockMetaData) {
-
-  }
+  constructor(args: Array<any>, public readonly blockMetaData: BlockMetaData) {}
 }

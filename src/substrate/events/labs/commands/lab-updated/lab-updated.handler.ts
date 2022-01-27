@@ -39,8 +39,8 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
             country: lab.info.country,
             city: lab.info.city,
             region: lab.info.region,
-          }
-        }
+          },
+        },
       },
     });
 
@@ -49,18 +49,18 @@ export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
       ignore_unavailable: true,
       body: {
         query: {
-          match: { 
+          match: {
             seller_id: lab.accountId.toString(),
-          }
+          },
         },
         script: {
-          source: "ctx._source.lab_info = params.new_lab_info",
+          source: 'ctx._source.lab_info = params.new_lab_info',
           lang: 'painless',
           params: {
-            new_lab_info: lab.info
-          }
-        }
-      }
+            new_lab_info: lab.info,
+          },
+        },
+      },
     });
   }
 }

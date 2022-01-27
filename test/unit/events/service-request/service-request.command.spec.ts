@@ -1,225 +1,206 @@
+import { RequestModel } from '../../../../src/substrate/events/service-request/models/request';
 import {
-	CommandBus,
-	CqrsModule
-} from "@nestjs/cqrs";
-import {
-	Test,
-	TestingModule
-} from "@nestjs/testing";
-import {
-	SubstrateController
-} from "../../../../src/substrate/substrate.handler";
-import { CommonModule } from "../../../../src/common/common.module";
-import { ClaimedServiceRequestHandler } from "../../../../src/substrate/events/service-request/commands/claimed-service-request/claimed-service-request.handler";
-import { CreateServiceRequestHandler } from "../../../../src/substrate/events/service-request/commands/create-service-request/create-service-request.handler";
-import { FinalizedServiceRequestHandler } from "../../../../src/substrate/events/service-request/commands/finalized-service-request/finalized-service-request.handler";
-import { ProcessedServiceRequestHandler } from "../../../../src/substrate/events/service-request/commands/processed-service-request/processed-service-request.handler";
-import { UnstakedServiceRequestHandler } from "../../../../src/substrate/events/service-request/commands/unstaked-service-request/unstaked-service-request.handler";
-import { UnstakedWaitingServiceRequestHandler } from "../../../../src/substrate/events/service-request/commands/unstakedwaiting-service-request/unstakedwaiting-service-request.handler";
-import { 
-	ClaimedServiceRequestCommand, 
-	CreateServiceRequestCommand, 
-	FinalizedServiceRequestCommand, 
-	ProcessedServiceRequestCommand, 
-	RequestServiceCommandHandlers, 
-	UnstakedServiceRequestCommand, 
-	UnstakedWaitingServiceRequestCommand 
-} from "../../../../src/substrate/events/service-request";
-import { RequestStatus } from "../../../../src/substrate/events/service-request/models/requestStatus";
-import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
-import { 
-	CommandBusProvider, 
-	ElasticSearchServiceProvider, 
-	substrateServiceProvider 
-} from "../../mock";
+  ClaimedServiceRequestCommand,
+  CreateServiceRequestCommand,
+  FinalizedServiceRequestCommand,
+  ProcessedServiceRequestCommand,
+  UnstakedServiceRequestCommand,
+  UnstakedWaitingServiceRequestCommand,
+} from '../../../../src/substrate/events/service-request';
+import { RequestStatus } from '../../../../src/substrate/events/service-request/models/requestStatus';
+import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+import { ClaimRequestModel } from '../../../../src/substrate/events/service-request/models/claimRequest';
+import { ServiceInvoice } from '../../../../src/substrate/events/service-request/models/serviceInvoice';
 
-let claimedServiceRequestHandler: ClaimedServiceRequestHandler;
-let createServiceRequestHandler: CreateServiceRequestHandler;
-let finalizedServiceRequestHandler: FinalizedServiceRequestHandler;
-let processedServiceRequestHandler: ProcessedServiceRequestHandler;
-let unstakedServiceRequestHandler: UnstakedServiceRequestHandler;
-let unstakedWaitingServiceRequestHandler: UnstakedWaitingServiceRequestHandler;
+jest.mock('../../../../src/substrate/events/service-request/models/request');
+jest.mock(
+  '../../../../src/substrate/events/service-request/models/claimRequest',
+);
+jest.mock(
+  '../../../../src/substrate/events/service-request/models/serviceInvoice',
+);
 
-let commandBus: CommandBus;
-
-describe("Service Request Substrate Event Handler", () => {
-
+describe('Service Request Substrate Event Handler', () => {
   const createMockRequest = (requestStatus: RequestStatus) => {
     return [
       {},
       {
-        toHuman: jest.fn(
-          () => ({
-            hash_: "string",
-            requesterAddress: "string",
-            labAddress: "string",
-            country: "XX",
-            region: "XX",
-            city: "XX",
-            serviceCategory: "Test",
-            stakingAmount: "1000000000000",
-            status: requestStatus,
-            createdAt: "1",
-            updatedAt: "1",
-            unstakedAt: "1"
-          })
-        )
-      }
-    ]
-  }
+        toHuman: jest.fn(() => ({
+          hash_: 'string',
+          requesterAddress: 'string',
+          labAddress: 'string',
+          country: 'XX',
+          region: 'XX',
+          city: 'XX',
+          serviceCategory: 'Test',
+          stakingAmount: '1000000000000',
+          status: requestStatus,
+          createdAt: '1',
+          updatedAt: '1',
+          unstakedAt: '1',
+        })),
+      },
+    ];
+  };
 
   const createMockServiceInvoice = () => {
     return [
       {},
       {
-        toHuman: jest.fn(
-          () => ({
-            requestHash: "",
-            orderId: "",
-            serviceId: "",
-            customerAddress: "",
-            sellerAddress: "",
-            dnaSampleTrackingId: "",
-            testingPrice: "",
-            qcPrice: "",
-            payAmount: ""
-          })
-        )
-      }
-    ]
-  }
+        toHuman: jest.fn(() => ({
+          requestHash: '',
+          orderId: '',
+          serviceId: '',
+          customerAddress: '',
+          sellerAddress: '',
+          dnaSampleTrackingId: '',
+          testingPrice: '',
+          qcPrice: '',
+          payAmount: '',
+        })),
+      },
+    ];
+  };
 
   const createMockClaimRequest = (): Array<any> => {
     return [
       {},
       {
-        toHuman: jest.fn(
-          () => ({
-            requestHash: "",
-            labAddress: "",
-            serviceId: "",
-            testingPrice: "",
-            qcPrice: ""
-          })
-        )
-      }
-    ]
+        toHuman: jest.fn(() => ({
+          requestHash: '',
+          labAddress: '',
+          serviceId: '',
+          testingPrice: '',
+          qcPrice: '',
+        })),
+      },
+    ];
+  };
+
+  function mockBlockNumber(): BlockMetaData {
+    return {
+      blockHash: 'string',
+      blockNumber: 1,
+    };
   }
 
-	function mockBlockNumber(): BlockMetaData {
-		return {
-			blockHash: "",
-			blockNumber: 1,
-		}
-	}
+  describe('Service Request Created Command', () => {
+    it('should called Model and toHuman()', () => {
+      const MOCK_DATA = createMockRequest(RequestStatus.Open);
 
-  beforeAll(async () => {
-    const modules: TestingModule = await Test.createTestingModule({
-			imports: [
-				CommonModule,
-				CqrsModule,
-			],
-			controllers: [
-        SubstrateController
-      ],
-      providers: [
-				ElasticSearchServiceProvider,
-				substrateServiceProvider, 
-				CommandBus, 
-				CommandBusProvider,
-				...RequestServiceCommandHandlers,
-      ]
-    }).compile();
+      const _serviceRequestCreatedCommand: CreateServiceRequestCommand =
+        new CreateServiceRequestCommand(MOCK_DATA, mockBlockNumber());
 
-    claimedServiceRequestHandler          = modules.get<ClaimedServiceRequestHandler>(ClaimedServiceRequestHandler);
-    createServiceRequestHandler           = modules.get<CreateServiceRequestHandler>(CreateServiceRequestHandler);
-    finalizedServiceRequestHandler        = modules.get<FinalizedServiceRequestHandler>(FinalizedServiceRequestHandler);
-    processedServiceRequestHandler        = modules.get<ProcessedServiceRequestHandler>(ProcessedServiceRequestHandler);
-    unstakedServiceRequestHandler         = modules.get<UnstakedServiceRequestHandler>(UnstakedServiceRequestHandler);
-    unstakedWaitingServiceRequestHandler  = modules.get<UnstakedWaitingServiceRequestHandler>(UnstakedWaitingServiceRequestHandler);
+      expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
+      expect(RequestModel).toHaveBeenCalled();
+      expect(RequestModel).toHaveBeenCalledWith(MOCK_DATA[1].toHuman());
+    });
 
-		commandBus 						= modules.get<CommandBus>(CommandBus);
-		
-		await modules.init();
+    it('should throw error', () => {
+      expect(() => {
+        const _serviceRequestCreatedCommand: CreateServiceRequestCommand =
+          new CreateServiceRequestCommand([{}, {}], mockBlockNumber());
+      }).toThrow();
+    });
   });
-  
-	describe("Service Request Event Command", () => {
-		it("Claimed Service Request Command", async () => {
-			const claimRequest = createMockClaimRequest();
-			
-			const claimedServiceRequestHandlerSpy = jest.spyOn(claimedServiceRequestHandler, 'execute').mockImplementation();
 
-			const claimedServiceRequestCommand: ClaimedServiceRequestCommand = new ClaimedServiceRequestCommand(claimRequest, mockBlockNumber());
-			await commandBus.execute(claimedServiceRequestCommand);
-			expect(claimedServiceRequestHandlerSpy).toBeCalled();
-			expect(claimedServiceRequestHandlerSpy).toBeCalledWith(claimedServiceRequestCommand);
+  describe('Service Request Claimed Command', () => {
+    it('should called Model and toHuman()', () => {
+      const MOCK_DATA = createMockClaimRequest();
 
-			claimedServiceRequestHandlerSpy.mockClear();
-		});
+      const _serviceRequestClaimedCommand: ClaimedServiceRequestCommand =
+        new ClaimedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
 
-		it("Create Service Request Command", async () => {
-			const requestData = createMockRequest(RequestStatus.Open);
+      expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
+      expect(ClaimRequestModel).toHaveBeenCalled();
+      expect(ClaimRequestModel).toHaveBeenCalledWith(MOCK_DATA[1].toHuman());
+    });
 
-			const createServiceRequestHandlerSpy = jest.spyOn(createServiceRequestHandler, 'execute').mockImplementation();
+    it('should throw error', () => {
+      expect(() => {
+        const _serviceRequestClaimedCommand: ClaimedServiceRequestCommand =
+          new ClaimedServiceRequestCommand([{}, {}], mockBlockNumber());
+      }).toThrow();
+    });
+  });
 
-			const createServiceRequestCommand: CreateServiceRequestCommand = new CreateServiceRequestCommand(requestData, mockBlockNumber());
-			await commandBus.execute(createServiceRequestCommand);
-			expect(createServiceRequestHandlerSpy).toBeCalled();
-			expect(createServiceRequestHandlerSpy).toBeCalledWith(createServiceRequestCommand);
+  describe('Service Request Finalized Command', () => {
+    it('should called Model and toHuman()', () => {
+      const MOCK_DATA = createMockServiceInvoice();
 
-			createServiceRequestHandlerSpy.mockClear();
-		});
+      const _serviceRequestFinalizedCommand: FinalizedServiceRequestCommand =
+        new FinalizedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
 
-		it("Finalized Service Request Command", async () => {
-			const serviceInvoice = createMockServiceInvoice();
+      expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
+      expect(ServiceInvoice).toHaveBeenCalled();
+      expect(ServiceInvoice).toHaveBeenCalledWith(MOCK_DATA[1].toHuman());
+    });
 
-			const finalizedServiceRequestHandlerSpy = jest.spyOn(finalizedServiceRequestHandler, 'execute').mockImplementation();
+    it('should throw error', () => {
+      expect(() => {
+        const _serviceRequestFinalizedCommand: FinalizedServiceRequestCommand =
+          new FinalizedServiceRequestCommand([{}, {}], mockBlockNumber());
+      }).toThrow();
+    });
+  });
 
-			const finalizedServiceRequestCommand: FinalizedServiceRequestCommand = new FinalizedServiceRequestCommand(serviceInvoice, mockBlockNumber());
-			await commandBus.execute(finalizedServiceRequestCommand);
-			expect(finalizedServiceRequestHandlerSpy).toBeCalled();
-			expect(finalizedServiceRequestHandlerSpy).toBeCalledWith(finalizedServiceRequestCommand);
+  describe('Service Request Processed Command', () => {
+    it('should called Model and toHuman()', () => {
+      const MOCK_DATA = createMockServiceInvoice();
 
-			finalizedServiceRequestHandlerSpy.mockClear();
-		});
-    
-		it("Processed Service Request Command", async () => {
-			const serviceInvoice = createMockServiceInvoice();
+      const _serviceRequestProcessedCommand: ProcessedServiceRequestCommand =
+        new ProcessedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
 
-			const processedServiceRequestHandlerSpy = jest.spyOn(processedServiceRequestHandler, 'execute').mockImplementation();
+      expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
+      expect(ServiceInvoice).toHaveBeenCalled();
+      expect(ServiceInvoice).toHaveBeenCalledWith(MOCK_DATA[1].toHuman());
+    });
 
-			const processedServiceRequestCommand: ProcessedServiceRequestCommand = new ProcessedServiceRequestCommand(serviceInvoice, mockBlockNumber());
-			await commandBus.execute(processedServiceRequestCommand);
-			expect(processedServiceRequestHandlerSpy).toBeCalled();
-			expect(processedServiceRequestHandlerSpy).toBeCalledWith(processedServiceRequestCommand);
+    it('should throw error', () => {
+      expect(() => {
+        const _serviceRequestProcessedCommand: ProcessedServiceRequestCommand =
+          new ProcessedServiceRequestCommand([{}, {}], mockBlockNumber());
+      }).toThrow();
+    });
+  });
 
-			processedServiceRequestHandlerSpy.mockClear();
-		});
-    
-		it("Unstaked Service Request Command", async () => {
-			const requestData = createMockRequest(RequestStatus.Unstaked);
+  describe('Service Request Unstaked Command', () => {
+    it('should called Model and toHuman()', () => {
+      const MOCK_DATA = createMockRequest(RequestStatus.Unstaked);
 
-			const unstakedServiceRequestHandlerSpy = jest.spyOn(unstakedServiceRequestHandler, 'execute').mockImplementation();
+      const _serviceRequestUnstakedCommand: UnstakedServiceRequestCommand =
+        new UnstakedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
 
-			const unstakedServiceRequestCommand: UnstakedServiceRequestCommand = new UnstakedServiceRequestCommand(requestData, mockBlockNumber());
-			await commandBus.execute(unstakedServiceRequestCommand);
-			expect(unstakedServiceRequestHandlerSpy).toBeCalled();
-			expect(unstakedServiceRequestHandlerSpy).toBeCalledWith(unstakedServiceRequestCommand);
+      expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
+      expect(RequestModel).toHaveBeenCalled();
+      expect(RequestModel).toHaveBeenCalledWith(MOCK_DATA[1].toHuman());
+    });
 
-			unstakedServiceRequestHandlerSpy.mockClear();
-		});
-    
-		it("Unstaked Waiting Service Request Command", async () => {
-			const requestData = createMockRequest(RequestStatus.WaitingForUnstaked);
+    it('should throw error', () => {
+      expect(() => {
+        const _serviceRequestUnstakedCommand: UnstakedServiceRequestCommand =
+          new UnstakedServiceRequestCommand([{}, {}], mockBlockNumber());
+      }).toThrow();
+    });
+  });
 
-			const unstakedWaitingServiceRequestHandlerSpy = jest.spyOn(unstakedWaitingServiceRequestHandler, 'execute').mockImplementation();
+  describe('Service Request Waiting For Unstaked Command', () => {
+    it('should called Model and toHuman()', () => {
+      const MOCK_DATA = createMockRequest(RequestStatus.Unstaked);
 
-			const unstakedWaitingServiceRequestCommand: UnstakedWaitingServiceRequestCommand = new UnstakedWaitingServiceRequestCommand(requestData, mockBlockNumber());
-			await commandBus.execute(unstakedWaitingServiceRequestCommand);
-			expect(unstakedWaitingServiceRequestHandlerSpy).toBeCalled();
-			expect(unstakedWaitingServiceRequestHandlerSpy).toBeCalledWith(unstakedWaitingServiceRequestCommand);
+      const _serviceRequestWaitingForUnstakedCommand: UnstakedWaitingServiceRequestCommand =
+        new UnstakedWaitingServiceRequestCommand(MOCK_DATA, mockBlockNumber());
 
-			unstakedWaitingServiceRequestHandlerSpy.mockClear();
-		});
-	});
+      expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
+      expect(RequestModel).toHaveBeenCalled();
+      expect(RequestModel).toHaveBeenCalledWith(MOCK_DATA[1].toHuman());
+    });
+
+    it('should throw error', () => {
+      expect(() => {
+        const _serviceRequestWaitingForUnstakedCommand: UnstakedWaitingServiceRequestCommand =
+          new UnstakedWaitingServiceRequestCommand([{}, {}], mockBlockNumber());
+      }).toThrow();
+    });
+  });
 });

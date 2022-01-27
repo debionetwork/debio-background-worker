@@ -12,7 +12,7 @@ export class OrderFulfilledHandler
 
   async execute(command: OrderFulfilledCommand) {
     const { orders: order } = command;
-    
+
     return await this.elasticsearchService.update({
       index: 'orders',
       refresh: 'wait_for',

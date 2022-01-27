@@ -9,7 +9,7 @@ export class CertificationUpdatedHandler
   implements ICommandHandler<CertificationUpdatedCommand>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
-  
+
   async execute(command: CertificationUpdatedCommand) {
     const { certification } = command;
 
@@ -22,11 +22,10 @@ export class CertificationUpdatedHandler
           id: certification.id,
           owner_id: certification.owner_id,
           info: certification.info,
-          blockMetaData: command.blockMetaData
-        }
-      }
+          blockMetaData: command.blockMetaData,
+        },
+      },
     });
-    
 
     let certificationIndexToDelete = -1;
 
@@ -60,8 +59,8 @@ export class CertificationUpdatedHandler
             index: certificationIndexToDelete,
             certification: certification,
           },
-        }
-      }
+        },
+      },
     });
   }
 }

@@ -1,4 +1,4 @@
 export enum ServiceFlow {
-  RequestTest           = "RequestTest",
-  StakingRequestService = "StakingRequestService"
+  RequestTest = 'RequestTest',
+  StakingRequestService = 'StakingRequestService',
 }

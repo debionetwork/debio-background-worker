@@ -1,21 +1,19 @@
+import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { Test, TestingModule } from '@nestjs/testing';
 import {
-	ElasticsearchService
-} from "@nestjs/elasticsearch";
+  createObjectSearchLab,
+  ElasticSearchServiceProvider,
+} from '../../mock';
+import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
 import {
-	Test,
-	TestingModule
-} from "@nestjs/testing";
-import { createObjectSearchLab, ElasticSearchServiceProvider } from "../../mock";
-import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
-import {
-	CertificationCreatedCommand,
-	CertificationDeletedCommand,
-	CertificationsCommandHandlers,
-	CertificationUpdatedCommand
-} from "../../../../src/substrate/events/certifications";
-import { CertificationCreatedHandler } from "../../../../src/substrate/events/certifications/commands/certification-created/certification-created.handler";
-import { CertificationUpdatedHandler } from "../../../../src/substrate/events/certifications/commands/certification-updated/certification-updated.handler";
-import { CertificationDeletedHandler } from "../../../../src/substrate/events/certifications/commands/certification-deleted/certification-deleted.handler";
+  CertificationCreatedCommand,
+  CertificationDeletedCommand,
+  CertificationsCommandHandlers,
+  CertificationUpdatedCommand,
+} from '../../../../src/substrate/events/certifications';
+import { CertificationCreatedHandler } from '../../../../src/substrate/events/certifications/commands/certification-created/certification-created.handler';
+import { CertificationUpdatedHandler } from '../../../../src/substrate/events/certifications/commands/certification-updated/certification-updated.handler';
+import { CertificationDeletedHandler } from '../../../../src/substrate/events/certifications/commands/certification-deleted/certification-deleted.handler';
 import { when } from 'jest-when';
 
 let certificationsCreatedHandler: CertificationCreatedHandler;
@@ -24,119 +22,132 @@ let certificationsDeletedHandler: CertificationDeletedHandler;
 
 let elasticsearchService: ElasticsearchService;
 
-describe("Certifications Substrate Event Handler", () => {
-
-	const createMockCertifications = () => {
+describe('Certifications Substrate Event Handler', () => {
+  const createMockCertifications = () => {
     const info = {
-      title: "string",
-      issuer: "string",
-      month: "string",
-      year: "string",
-      description: "string",
-      supportingDocument: 'string'
-    }
-		return {
-      toHuman: jest.fn(
-        () => ({
-          id: "string",
-          ownerId: "string",
-          info: info
-        })
-      )
-    }
-  }
+      title: 'string',
+      issuer: 'string',
+      month: 'string',
+      year: 'string',
+      description: 'string',
+      supportingDocument: 'string',
+    };
+    return {
+      toHuman: jest.fn(() => ({
+        id: 'string',
+        ownerId: 'string',
+        info: info,
+      })),
+    };
+  };
 
-	function mockBlockNumber(): BlockMetaData {
-		return {
-			blockHash: "",
-			blockNumber: 1
-		}
-	}
+  function mockBlockNumber(): BlockMetaData {
+    return {
+      blockHash: '',
+      blockNumber: 1,
+    };
+  }
 
   beforeAll(async () => {
     const modules: TestingModule = await Test.createTestingModule({
       providers: [
-				ElasticSearchServiceProvider,
-        ...CertificationsCommandHandlers
-      ]
+        ElasticSearchServiceProvider,
+        ...CertificationsCommandHandlers,
+      ],
     }).compile();
-    
-		certificationsCreatedHandler  = modules.get<CertificationCreatedHandler>(CertificationCreatedHandler);
-		certificationsUpdatedHandler  = modules.get<CertificationUpdatedHandler>(CertificationUpdatedHandler);
-		certificationsDeletedHandler  = modules.get<CertificationDeletedHandler>(CertificationDeletedHandler);
-		
-		elasticsearchService 	= modules.get<ElasticsearchService>(ElasticsearchService);
-		
-		await modules.init();
+
+    certificationsCreatedHandler = modules.get<CertificationCreatedHandler>(
+      CertificationCreatedHandler,
+    );
+    certificationsUpdatedHandler = modules.get<CertificationUpdatedHandler>(
+      CertificationUpdatedHandler,
+    );
+    certificationsDeletedHandler = modules.get<CertificationDeletedHandler>(
+      CertificationDeletedHandler,
+    );
+
+    elasticsearchService =
+      modules.get<ElasticsearchService>(ElasticsearchService);
+
+    await modules.init();
   });
-  
-	describe("Certification Handler", () => {
-		it("Certification Created Handler", async () => {
-			const certifications = createMockCertifications();
-			
-			const certificationCreatedCommand: CertificationCreatedCommand = new CertificationCreatedCommand([certifications], mockBlockNumber());
-			
-			await certificationsCreatedHandler.execute(certificationCreatedCommand);
-			expect(elasticsearchService.index).toHaveBeenCalled();
-			expect(elasticsearchService.update).toHaveBeenCalled();
-		});
-    
-		it("Certification Updated Handler", async () => {
-			const CERTIFICATION_OBJECT = createMockCertifications();
-			const LAB_ID = 'string';
-			const CALLED_WITH = createObjectSearchLab(LAB_ID);
-			const ES_RESULT = {
-				body: {
-					hits: {
-						hits: [
-							{
-								_source: {
-									certifications: []
-								}
-							}
-						]
-					}
-				}
-			}
 
-			when(elasticsearchService.search)
-				.calledWith(CALLED_WITH)
-				.mockReturnValue(ES_RESULT);
-			
-			const certificationUpdatedCommand: CertificationUpdatedCommand = new CertificationUpdatedCommand([CERTIFICATION_OBJECT], mockBlockNumber());
+  describe('Certification Handler', () => {
+    it('Certification Created Handler', async () => {
+      const certifications = createMockCertifications();
 
-			await certificationsUpdatedHandler.execute(certificationUpdatedCommand);
-			expect(elasticsearchService.update).toHaveBeenCalled();
-		});
+      const certificationCreatedCommand: CertificationCreatedCommand =
+        new CertificationCreatedCommand([certifications], mockBlockNumber());
 
-		it("Certification Deleted Handler", async () => {
-			const CERTIFICATION_OBJECT = createMockCertifications();
-			const LAB_ID = 'string';
-			const CALLED_WITH = createObjectSearchLab(LAB_ID);
-			const ES_RESULT = {
-				body: {
-					hits: {
-						hits: [
-							{
-								_source: {
-									certifications: []
-								}
-							}
-						]
-					}
-				}
-			}
+      await certificationsCreatedHandler.execute(certificationCreatedCommand);
+      expect(elasticsearchService.index).toHaveBeenCalled();
+      expect(elasticsearchService.update).toHaveBeenCalled();
+    });
 
-			when(elasticsearchService.search)
-				.calledWith(CALLED_WITH)
-				.mockReturnValue(ES_RESULT);
-			
-			const certificationDeletedCommand: CertificationDeletedCommand = new CertificationDeletedCommand([CERTIFICATION_OBJECT], mockBlockNumber());
-			
-			await certificationsDeletedHandler.execute(certificationDeletedCommand);
-			expect(elasticsearchService.delete).toHaveBeenCalled();
-			expect(elasticsearchService.update).toHaveBeenCalled();
-			expect(elasticsearchService.search).toHaveBeenCalled();
-		});
-	});
+    it('Certification Updated Handler', async () => {
+      const CERTIFICATION_OBJECT = createMockCertifications();
+      const LAB_ID = 'string';
+      const CALLED_WITH = createObjectSearchLab(LAB_ID);
+      const ES_RESULT = {
+        body: {
+          hits: {
+            hits: [
+              {
+                _source: {
+                  certifications: [],
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      when(elasticsearchService.search)
+        .calledWith(CALLED_WITH)
+        .mockReturnValue(ES_RESULT);
+
+      const certificationUpdatedCommand: CertificationUpdatedCommand =
+        new CertificationUpdatedCommand(
+          [CERTIFICATION_OBJECT],
+          mockBlockNumber(),
+        );
+
+      await certificationsUpdatedHandler.execute(certificationUpdatedCommand);
+      expect(elasticsearchService.update).toHaveBeenCalled();
+    });
+
+    it('Certification Deleted Handler', async () => {
+      const CERTIFICATION_OBJECT = createMockCertifications();
+      const LAB_ID = 'string';
+      const CALLED_WITH = createObjectSearchLab(LAB_ID);
+      const ES_RESULT = {
+        body: {
+          hits: {
+            hits: [
+              {
+                _source: {
+                  certifications: [],
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      when(elasticsearchService.search)
+        .calledWith(CALLED_WITH)
+        .mockReturnValue(ES_RESULT);
+
+      const certificationDeletedCommand: CertificationDeletedCommand =
+        new CertificationDeletedCommand(
+          [CERTIFICATION_OBJECT],
+          mockBlockNumber(),
+        );
+
+      await certificationsDeletedHandler.execute(certificationDeletedCommand);
+      expect(elasticsearchService.delete).toHaveBeenCalled();
+      expect(elasticsearchService.update).toHaveBeenCalled();
+      expect(elasticsearchService.search).toHaveBeenCalled();
+    });
+  });
 });

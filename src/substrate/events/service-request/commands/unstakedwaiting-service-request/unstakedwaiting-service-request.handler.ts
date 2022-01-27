@@ -1,12 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { ElasticsearchService } from "@nestjs/elasticsearch";
-import { RequestStatus } from "../../models/requestStatus";
-import { UnstakedWaitingServiceRequestCommand } from "./unstakedwaiting-service-request.command";
+import { Injectable } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { RequestStatus } from '../../models/requestStatus';
+import { UnstakedWaitingServiceRequestCommand } from './unstakedwaiting-service-request.command';
 
 @Injectable()
 @CommandHandler(UnstakedWaitingServiceRequestCommand)
-export class UnstakedWaitingServiceRequestHandler implements ICommandHandler<UnstakedWaitingServiceRequestCommand> {
+export class UnstakedWaitingServiceRequestHandler
+  implements ICommandHandler<UnstakedWaitingServiceRequestCommand>
+{
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: UnstakedWaitingServiceRequestCommand) {
@@ -22,8 +24,8 @@ export class UnstakedWaitingServiceRequestHandler implements ICommandHandler<Uns
             unstaked_at: command.request.unstaked_at,
           },
           blockMetadata: command.blockMetaData,
-        }
-      }
-    })
+        },
+      },
+    });
   }
 }

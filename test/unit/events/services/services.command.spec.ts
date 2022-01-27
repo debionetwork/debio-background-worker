@@ -1,167 +1,115 @@
 import {
-	CommandBus,
-	CqrsModule
-} from "@nestjs/cqrs";
-import {
-	ElasticsearchService 
-} from "@nestjs/elasticsearch";
-import { Test, TestingModule } from "@nestjs/testing";
-import {
-  ServiceCommandHandlers,
   ServiceCreatedCommand,
   ServiceDeletedCommand,
-  ServiceUpdatedCommand
-} from "../../../../src/substrate/events/services";
-import { CommonModule } from "../../../../src/common/common.module";
-import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
-import { ServiceFlow } from "../../../../src/substrate/models/service-flow";
-import { ServiceCreatedHandler } from "../../../../src/substrate/events/services/commands/service-created/service-created.handler";
-import { ServiceDeletedHandler } from "../../../../src/substrate/events/services/commands/service-deleted/service-deleted.handler";
-import { ServiceUpdatedHandler } from "../../../../src/substrate/events/services/commands/service-updated/service-updated.handler";
-import {
-	SubstrateController
-} from "../../../../src/substrate/substrate.handler";
-import { 
-	CommandBusProvider, 
-	ElasticSearchServiceProvider, 
-	substrateServiceProvider 
-} from "../../mock";
+  ServiceUpdatedCommand,
+} from '../../../../src/substrate/events/services';
+import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+import { ServiceFlow } from '../../../../src/substrate/models/service-flow';
+import { Service } from '../../../../src/substrate/events/services/models/service';
 
-let serviceCreatedHandler: ServiceCreatedHandler;
-let serviceDeletedHandler: ServiceDeletedHandler;
-let serviceUpdatedHandler: ServiceUpdatedHandler;
+jest.mock('../../../../src/substrate/events/services/models/service');
 
-let commandBus: CommandBus;
-
-describe("Services Substrate Event Handler", () => {
-
-	function createMockService() {
-		const first_price = {
-			component: "string", 
-			value: 1
-		};
-		const second_price = {
-			component: "string", 
-			value: 1
-		};
-
-		const prices_by_currency = {
-			currency: "XX", 
-			totalPrice: 1, 
-			priceComponents: [ first_price ], 
-			additionalPrices: [ second_price ]
-		};
-
-		const service_info = {
-			name: "string", 
-			pricesByCurrency: [ prices_by_currency ],
-			expected_duration: "",
-			category: "string",
-			description: "string",
-			dnaCollectionProcess: "",
-			testResultSample: "string",
-			longDescription: 'string',
-			image: "string"
-		};
-
-		return {
-      toHuman: jest.fn(
-        () => ({
-          info: service_info,
-          id: "string",
-          ownerId: "string",
-          serviceFlow: ServiceFlow.RequestTest
-        })
-      )
+describe('Services Substrate Event Handler', () => {
+  function createMockService() {
+    const first_price = {
+      component: 'string',
+      value: 1,
     };
-	}
+    const second_price = {
+      component: 'string',
+      value: 1,
+    };
 
-	function mockBlockNumber(): BlockMetaData {
-		return {
-			blockHash: "",
-			blockNumber: 1,
-		}
-	}
+    const prices_by_currency = {
+      currency: 'XX',
+      totalPrice: 1,
+      priceComponents: [first_price],
+      additionalPrices: [second_price],
+    };
 
-  beforeAll(async () => {
-    const modules: TestingModule = await Test.createTestingModule({
-			imports: [
-				CommonModule,
-				CqrsModule,
-			],
-			controllers: [
-        SubstrateController
-      ],
-      providers: [
-				ElasticSearchServiceProvider,
-				substrateServiceProvider, 
-				CommandBus, 
-				CommandBusProvider,
-				...ServiceCommandHandlers,
-      ]
-    }).compile();
-    
-		serviceCreatedHandler = modules.get<ServiceCreatedHandler>(ServiceCreatedHandler);
-		serviceDeletedHandler = modules.get<ServiceDeletedHandler>(ServiceDeletedHandler);
-		serviceUpdatedHandler = modules.get<ServiceUpdatedHandler>(ServiceUpdatedHandler);
+    const service_info = {
+      name: 'string',
+      pricesByCurrency: [prices_by_currency],
+      expected_duration: '',
+      category: 'string',
+      description: 'string',
+      dnaCollectionProcess: '',
+      testResultSample: 'string',
+      longDescription: 'string',
+      image: 'string',
+    };
 
-		commandBus 						= modules.get<CommandBus>(CommandBus);
-		
-		await modules.init();
+    return {
+      toHuman: jest.fn(() => ({
+        info: service_info,
+        id: 'string',
+        ownerId: 'string',
+        serviceFlow: ServiceFlow.RequestTest,
+      })),
+    };
+  }
+
+  function mockBlockNumber(): BlockMetaData {
+    return {
+      blockHash: '',
+      blockNumber: 1,
+    };
+  }
+
+  describe('Services Created Command', () => {
+    it('should called model data and toHuman', () => {
+      const SERVICES_PARAM = createMockService();
+
+      const _servicesCreatedCommand: ServiceCreatedCommand =
+        new ServiceCreatedCommand([SERVICES_PARAM], mockBlockNumber());
+      expect(Service).toHaveBeenCalled();
+      expect(Service).toHaveBeenCalledWith(SERVICES_PARAM.toHuman());
+      expect(SERVICES_PARAM.toHuman).toHaveBeenCalled();
+    });
+
+    it('should throw error if toHuman not defined', () => {
+      expect(() => {
+        const _servicesCreatedCommand: ServiceCreatedCommand =
+          new ServiceCreatedCommand([{}], mockBlockNumber());
+      }).toThrowError();
+    });
   });
 
-  describe("Service Handler", () => {
-		it("Service created handler defined", () => {
-			expect(serviceCreatedHandler).toBeDefined();
-		});
-		
-		it("Service deleted handler defined", () => {
-			expect(serviceDeletedHandler).toBeDefined();
-		});
-		
-		it("Service updated handler defined", () => {
-			expect(serviceUpdatedHandler).toBeDefined();
-		});
-	});
+  describe('Services Updated Command', () => {
+    it('should called model data and toHuman', () => {
+      const SERVICES_PARAM = createMockService();
 
-	describe("Service Command", () => {
-		it("Service Created Command", async () => {
-			const service = createMockService();
-			
-			const serviceCreatedHandlerSpy = jest.spyOn(serviceCreatedHandler, 'execute').mockImplementation();
+      const _servicesUpdatedCommand: ServiceUpdatedCommand =
+        new ServiceUpdatedCommand([SERVICES_PARAM], mockBlockNumber());
+      expect(Service).toHaveBeenCalled();
+      expect(Service).toHaveBeenCalledWith(SERVICES_PARAM.toHuman());
+      expect(SERVICES_PARAM.toHuman).toHaveBeenCalled();
+    });
 
-			const serviceCreatedCommand: ServiceCreatedCommand = new ServiceCreatedCommand([service], mockBlockNumber());
-			await commandBus.execute(serviceCreatedCommand);
-			expect(serviceCreatedHandlerSpy).toBeCalled();
-			expect(serviceCreatedHandlerSpy).toBeCalledWith(serviceCreatedCommand);
+    it('should throw error if toHuman not defined', () => {
+      expect(() => {
+        const _servicesUpdatedCommand: ServiceUpdatedCommand =
+          new ServiceUpdatedCommand([{}], mockBlockNumber());
+      }).toThrowError();
+    });
+  });
 
-			serviceCreatedHandlerSpy.mockClear();
-		});
+  describe('Services Deleted Command', () => {
+    it('should called model data and toHuman', () => {
+      const SERVICES_PARAM = createMockService();
 
-		it("Service Deleted Command", async () => {
-			const service = createMockService();
-			
-			const serviceDeletedHandlerSpy = jest.spyOn(serviceDeletedHandler, 'execute').mockImplementation();
+      const _servicesDeletedCommand: ServiceDeletedCommand =
+        new ServiceDeletedCommand([SERVICES_PARAM], mockBlockNumber());
+      expect(Service).toHaveBeenCalled();
+      expect(Service).toHaveBeenCalledWith(SERVICES_PARAM.toHuman());
+      expect(SERVICES_PARAM.toHuman).toHaveBeenCalled();
+    });
 
-			const serviceDeletedCommand: ServiceDeletedCommand = new ServiceDeletedCommand([service], mockBlockNumber());
-			await commandBus.execute(serviceDeletedCommand);
-			expect(serviceDeletedHandlerSpy).toBeCalled();
-			expect(serviceDeletedHandlerSpy).toBeCalledWith(serviceDeletedCommand);
-
-			serviceDeletedHandlerSpy.mockClear();
-		});
-
-		it("Service Updated Command", async () => {
-			const service = createMockService();
-			
-			const serviceUpdatedHandlerSpy = jest.spyOn(serviceUpdatedHandler, 'execute').mockImplementation();
-
-			const serviceUpdatedCommand: ServiceUpdatedCommand = new ServiceUpdatedCommand([service], mockBlockNumber());
-			await commandBus.execute(serviceUpdatedCommand);
-			expect(serviceUpdatedHandlerSpy).toBeCalled();
-			expect(serviceUpdatedHandlerSpy).toBeCalledWith(serviceUpdatedCommand);
-
-			serviceUpdatedHandlerSpy.mockClear();
-		});
-	});
+    it('should throw error if toHuman not defined', () => {
+      expect(() => {
+        const _servicesDeletedCommand: ServiceDeletedCommand =
+          new ServiceDeletedCommand([{}], mockBlockNumber());
+      }).toThrowError();
+    });
+  });
 });

@@ -1,12 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { ElasticsearchService } from "@nestjs/elasticsearch";
-import { RequestStatus } from "../../models/requestStatus";
-import { ClaimedServiceRequestCommand } from "./claimed-service-request.command";
+import { Injectable } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { RequestStatus } from '../../models/requestStatus';
+import { ClaimedServiceRequestCommand } from './claimed-service-request.command';
 
 @Injectable()
 @CommandHandler(ClaimedServiceRequestCommand)
-export class ClaimedServiceRequestHandler implements ICommandHandler<ClaimedServiceRequestCommand> {
+export class ClaimedServiceRequestHandler
+  implements ICommandHandler<ClaimedServiceRequestCommand>
+{
   constructor(private readonly elasticSearchService: ElasticsearchService) {}
 
   async execute(command: ClaimedServiceRequestCommand) {
@@ -25,10 +27,10 @@ export class ClaimedServiceRequestHandler implements ICommandHandler<ClaimedServ
           params: {
             lab_address: command.claimRequest.labAddress,
             status: RequestStatus.Claimed,
-            blockMetaData: command.blockMetadata
+            blockMetaData: command.blockMetadata,
           },
-        }
-      }
-    })
+        },
+      },
+    });
   }
 }

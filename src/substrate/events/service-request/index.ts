@@ -13,10 +13,10 @@ import { UnstakedServiceRequestHandler } from './commands/unstaked-service-reque
 import { UnstakedWaitingServiceRequestHandler } from './commands/unstakedwaiting-service-request/unstakedwaiting-service-request.handler';
 
 export const RequestServiceCommandHandlers = [
-  CreateServiceRequestHandler, 
+  CreateServiceRequestHandler,
   ClaimedServiceRequestHandler,
   ProcessedServiceRequestHandler,
   FinalizedServiceRequestHandler,
   UnstakedServiceRequestHandler,
-  UnstakedWaitingServiceRequestHandler
+  UnstakedWaitingServiceRequestHandler,
 ];

@@ -5,14 +5,12 @@ import { OrderPaidCommand } from './order-paid.command';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
-export class OrderPaidHandler
-  implements ICommandHandler<OrderPaidCommand>
-{
+export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: OrderPaidCommand) {
     const { orders: order } = command;
-    
+
     return await this.elasticsearchService.update({
       index: 'orders',
       refresh: 'wait_for',

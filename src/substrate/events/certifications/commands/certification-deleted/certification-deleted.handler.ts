@@ -9,7 +9,7 @@ export class CertificationDeletedHandler
   implements ICommandHandler<CertificationDeletedCommand>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
-  
+
   async execute(command: CertificationDeletedCommand) {
     const { certification } = command;
 
@@ -49,10 +49,10 @@ export class CertificationDeletedHandler
           `,
           params: {
             id: certification.id,
-            index: certificationIndexToDelete
+            index: certificationIndexToDelete,
           },
-        }
-      }
+        },
+      },
     });
   }
 }

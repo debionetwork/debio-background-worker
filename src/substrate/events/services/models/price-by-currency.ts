@@ -1,11 +1,9 @@
 import { Price } from './price';
 
 export class PriceByCurrency {
-  constructor(
-    priceByCurrency: any
-  ) {
-    this.currency     = priceByCurrency.currency;
-    this.total_price  = priceByCurrency.totalPrice;
+  constructor(priceByCurrency: any) {
+    this.currency = priceByCurrency.currency;
+    this.total_price = priceByCurrency.totalPrice;
 
     this.price_components = [];
 
@@ -16,7 +14,7 @@ export class PriceByCurrency {
     }
 
     this.additional_prices = [];
-    
+
     const additionalPrices: any = priceByCurrency.additionalPrices;
     for (let i = 0; i < additionalPrices.length; i++) {
       const price: Price = new Price(additionalPrices[i]);

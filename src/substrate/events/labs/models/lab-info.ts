@@ -1,22 +1,20 @@
 export class LabInfo {
-  constructor(
-    info: any
-  ) {
+  constructor(info: any) {
     this.box_public_key = info.boxPublicKey;
-    this.name           = info.name;
-    this.email          = info.email;
-    this.phone_number   = info.phoneNumber;
-    this.website        = info.website;
-    this.country        = info.country;
-    this.region         = info.region;
-    this.city           = info.city;
-    this.address        = info.address;
-    this.latitude       = info.latitude;
-    this.longitude      = info.longitude;
-    this.profile_image  = info.profileImage;
+    this.name = info.name;
+    this.email = info.email;
+    this.phone_number = info.phoneNumber;
+    this.website = info.website;
+    this.country = info.country;
+    this.region = info.region;
+    this.city = info.city;
+    this.address = info.address;
+    this.latitude = info.latitude;
+    this.longitude = info.longitude;
+    this.profile_image = info.profileImage;
   }
 
-  box_public_key: String;
+  box_public_key: string;
   name: string;
   email: string;
   phone_number: string;

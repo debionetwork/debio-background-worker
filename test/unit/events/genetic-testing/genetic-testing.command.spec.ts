@@ -1,95 +1,42 @@
+import { CommandBus } from '@nestjs/cqrs';
+import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+import { DataStakedHandler } from '../../../../src/substrate/events/genetic-testing/commands/data-staked/data-staked.handler';
 import {
-	CommandBus,
-	CqrsModule
-} from "@nestjs/cqrs";
-import {
-	Test,
-	TestingModule
-} from "@nestjs/testing";
-import { BlockMetaData } from "../../../../src/substrate/models/blockMetaData";
-import {
-	SubstrateController
-} from "../../../../src/substrate/substrate.handler";
-import { 
-	CommonModule 
-} from "../../../../src/common/common.module";
-import { 
-	DataStakedHandler 
-} from "../../../../src/substrate/events/genetic-testing/commands/data-staked/data-staked.handler";
-import {
-	DataStakedCommand,
-	GeneticTestingCommandHandlers
-} from "../../../../src/substrate/events/genetic-testing";
-import { 
-	CommandBusProvider, 
-	ElasticSearchServiceProvider, 
-	substrateServiceProvider 
-} from "../../mock";
+  DataStakedCommand,
+  GeneticTestingCommandHandlers,
+} from '../../../../src/substrate/events/genetic-testing';
+import { DataStaked } from '../../../../src/substrate/events/genetic-testing/models/data-staked';
 
-let dataStakedHandler: DataStakedHandler;
+jest.mock(
+  '../../../../src/substrate/events/genetic-testing/models/data-staked',
+);
 
-let commandBus: CommandBus;
+describe('Genetic Testing Substrate Event Handler', () => {
+  const createMockDataStaked = () => {
+    return ['string', 'string', 'string'];
+  };
 
-describe("Genetic Testing Substrate Event Handler", () => {
-  
-	const createMockDataStaked = () => {
-    return [
-      "string",
-      "string",
-      "string"
-    ]
+  function mockBlockNumber(): BlockMetaData {
+    return {
+      blockHash: '',
+      blockNumber: 1,
+    };
   }
 
-	function mockBlockNumber(): BlockMetaData {
-		return {
-			blockHash: "",
-			blockNumber: 1,
-		}
-	}
+  describe('Data Staked Command', () => {
+    it('should called model data', () => {
+      const DATA_STAKED_PARAM = createMockDataStaked();
 
-  beforeAll(async () => {
-    const modules: TestingModule = await Test.createTestingModule({
-			imports: [
-				CommonModule,
-				CqrsModule,
-			],
-			controllers: [
-        SubstrateController
-      ],
-      providers: [
-				ElasticSearchServiceProvider,
-				substrateServiceProvider, 
-				CommandBus, 
-				CommandBusProvider,
-        ...GeneticTestingCommandHandlers
-      ]
-    }).compile();
-    
-		dataStakedHandler  		= modules.get<DataStakedHandler>(DataStakedHandler);
-
-		commandBus						= modules.get<CommandBus>(CommandBus);
-		
-		await modules.init();
+      const _dataStakedCommand: DataStakedCommand = new DataStakedCommand(
+        DATA_STAKED_PARAM,
+        mockBlockNumber(),
+      );
+      expect(DataStaked).toHaveBeenCalled();
+      expect(DataStaked).toHaveBeenCalledWith(
+        DATA_STAKED_PARAM[0],
+        DATA_STAKED_PARAM[1],
+        DATA_STAKED_PARAM[2],
+      );
+    });
   });
-
-  describe("Data Staked Handler defined", () => {
-		it("Data Staked handler", () => {
-			expect(dataStakedHandler).toBeDefined();
-		});
-	});
-  
-	describe("Data Staked Event Command", () => {
-		it("Data Staked Command", async () => {
-			const staked = createMockDataStaked();
-			
-			const dataStakedHandlerSpy = jest.spyOn(dataStakedHandler, 'execute').mockImplementation();
-
-			const dataStakedCommand: DataStakedCommand = new DataStakedCommand(staked, mockBlockNumber());
-			await commandBus.execute(dataStakedCommand);
-			expect(dataStakedHandlerSpy).toBeCalled();
-			expect(dataStakedHandlerSpy).toBeCalledWith(dataStakedCommand);
-
-			dataStakedHandlerSpy.mockClear();
-		});
-	});
 });

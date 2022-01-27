@@ -19,4 +19,4 @@ export const OrderCommandHandlers = [
   OrderRefundedHandler,
   OrderCancelledHandler,
   OrderFailedHandler,
-]
+];

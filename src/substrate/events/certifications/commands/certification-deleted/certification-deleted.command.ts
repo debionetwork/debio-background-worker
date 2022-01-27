@@ -1,5 +1,5 @@
-import { BlockMetaData } from "../../../../models/blockMetaData";
-import { Certification } from "../../models/certification";
+import { BlockMetaData } from '../../../../models/blockMetaData';
+import { Certification } from '../../models/certification';
 
 export class CertificationDeletedCommand {
   certification: Certification;

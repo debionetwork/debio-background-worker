@@ -12,7 +12,7 @@ export class OrderCancelledHandler
 
   async execute(command: OrderCancelledCommand) {
     const { orders: order } = command;
-    
+
     await this.elasticsearchService.update({
       index: 'orders',
       refresh: 'wait_for',
