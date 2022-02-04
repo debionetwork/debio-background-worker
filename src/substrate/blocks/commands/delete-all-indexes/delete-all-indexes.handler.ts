@@ -12,14 +12,24 @@ export class DeleteAllIndexesHandler
 
   async execute() {
     return this.elasticsearchService.indices.delete({
-        index: [
-					'labs', 'services', 'orders', 
-					'cancel-order', 'create-order', 'create-service',
-					'delete-service', 'deregister-lab', 'failed-order',
-					'fulfill-order', 'paid-order', 'refunded-order',
-					'register-lab', 'update-lab', 'update-service'
-				],
-        ignore_unavailable: true
+      index: [
+        'labs',
+        'services',
+        'orders',
+        'cancel-order',
+        'create-order',
+        'create-service',
+        'delete-service',
+        'deregister-lab',
+        'failed-order',
+        'fulfill-order',
+        'paid-order',
+        'refunded-order',
+        'register-lab',
+        'update-lab',
+        'update-service',
+      ],
+      ignore_unavailable: true,
     });
   }
 }

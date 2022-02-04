@@ -4130,6 +4130,11 @@
     "jest-util" "^27.0.6"
     "string-length" "^4.0.1"
 
+"jest-when@^3.5.0":
+  "integrity" "sha512-/IkPkG5lo2tyXH3a+VraYe7t/ma6UK9VPQko7hr6YgEtjoHyfAPpLXzyhnSNxxKRzNQDrw8YoGPCOkdTLR4mHA=="
+  "resolved" "https://registry.npmjs.org/jest-when/-/jest-when-3.5.0.tgz"
+  "version" "3.5.0"
+
 "jest-worker@^27.0.2", "jest-worker@^27.0.6":
   "integrity" "sha512-qupxcj/dRuA3xHPMUd40gr2EaAurFbkwzOh7wfPaeE9id7hyjURRQoqNfHifHK3XjJU6YJJUQKILGUnwGPEOCA=="
   "resolved" "https://registry.npmjs.org/jest-worker/-/jest-worker-27.0.6.tgz"
@@ -4139,7 +4144,7 @@
     "merge-stream" "^2.0.0"
     "supports-color" "^8.0.0"
 
-"jest@^27.0.0", "jest@27.0.6":
+"jest@^27.0.0", "jest@>= 25", "jest@27.0.6":
   "integrity" "sha512-EjV8aETrsD0wHl7CKMibKwQNQc3gIRBXlTikBmmHUeVMKaPFxdcUIBfoDqTSXDoGJIivAYGqCWVlzCSaVjPQsA=="
   "resolved" "https://registry.npmjs.org/jest/-/jest-27.0.6.tgz"
   "version" "27.0.6"
