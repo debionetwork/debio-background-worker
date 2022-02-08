@@ -43,8 +43,85 @@ import {
 } from './events/certifications';
 import { DataStakedCommand } from './events/genetic-testing';
 import { ProcessEnvProxy } from '../common/process-env/process-env.proxy';
+import {
+  AddGeneticDataCommand,
+  RemoveGeneticDataCommand,
+  UpdateGeneticDataCommand,
+} from './events/genetic-data';
+import {
+  GeneticAnalysisInProgressCommand,
+  GeneticAnalysisRejectedCommand,
+  GeneticAnalysisResultReadyCommand,
+  GeneticAnalysisSubmittedCommand,
+} from './events/genetic-analysis';
+import {
+  GeneticAnalystsRegisteredCommand,
+  GeneticAnalystsUpdatedCommand,
+} from './events/genetic-analysts';
+import { GeneticAnalystsDeletedHandler } from './events/genetic-analysts/commands/genetic-analysts-deleted/genetic-analysts-deleted.handler';
+import {
+  GeneticAnalysisOrderCancelledCommand,
+  GeneticAnalysisOrderCreatedCommand,
+  GeneticAnalysisOrderFulfilledCommand,
+  GeneticAnalysisOrderPaidCommand,
+  GeneticAnalysisOrderRefundedCommand,
+} from './events/genetic-analysis-order';
+import { GeneticAnalysisOrderFailedCommand } from './events/genetic-analysis-order/commands/genetic-analysis-order-failed/genetic-analysis-order-failed.command';
+import { GeneticAnalystsQualificationCreatedCommand } from './events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-created/genetic-analysts-qualification-created.command';
+import { GeneticAnalystsQualificationUpdatedCommand } from './events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-updated/genetic-analysts-qualification-updated.command';
+import { GeneticAnalystsQualificationDeletedCommand } from './events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-deleted/genetic-analysts-qualification-deleted.command';
+import {
+  GeneticAnalystServicesCreatedCommand,
+  GeneticAnalystServicesDeletedCommand,
+  GeneticAnalystServicesUpdatedCommand,
+} from './events/genetic-analyst-services';
 
 const eventRoutes = {
+  certifications: {
+    CertificationCreated: CertificationCreatedCommand,
+    CertificationUpdated: CertificationUpdatedCommand,
+    CertificationDeleted: CertificationDeletedCommand,
+  },
+  geneticAnalysis: {
+    GeneticAnalysisSubmitted: GeneticAnalysisSubmittedCommand,
+    GeneticAnalysisInProgress: GeneticAnalysisInProgressCommand,
+    GeneticAnalysisRejected: GeneticAnalysisRejectedCommand,
+    GeneticAnalysisResultReady: GeneticAnalysisResultReadyCommand,
+  },
+  geneticAnalysisOrder: {
+    GeneticAnalysisOrderCreated: GeneticAnalysisOrderCreatedCommand,
+    GeneticAnalysisOrderPaid: GeneticAnalysisOrderPaidCommand,
+    GeneticAnalysisOrderFulfilled: GeneticAnalysisOrderFulfilledCommand,
+    GeneticAnalysisOrderRefunded: GeneticAnalysisOrderRefundedCommand,
+    GeneticAnalysisOrderCancelled: GeneticAnalysisOrderCancelledCommand,
+    GeneticAnalysisOrderFailed: GeneticAnalysisOrderFailedCommand,
+  },
+  geneticAnalysts: {
+    GeneticAnalystRegistered: GeneticAnalystsRegisteredCommand,
+    GeneticAnalystUpdated: GeneticAnalystsUpdatedCommand,
+    GeneticAnalystDeleted: GeneticAnalystsDeletedHandler,
+  },
+  geneticAnalystQualifications: {
+    GeneticAnalystQualificationCreated:
+      GeneticAnalystsQualificationCreatedCommand,
+    GeneticAnalystQualificationUpdated:
+      GeneticAnalystsQualificationUpdatedCommand,
+    GeneticAnalystQualificationDeleted:
+      GeneticAnalystsQualificationDeletedCommand,
+  },
+  geneticAnalystServices: {
+    GeneticAnalystServiceCreated: GeneticAnalystServicesCreatedCommand,
+    GeneticAnalystServiceUpdated: GeneticAnalystServicesUpdatedCommand,
+    GeneticAnalystServiceDeleted: GeneticAnalystServicesDeletedCommand,
+  },
+  geneticData: {
+    GeneticDataAdded: AddGeneticDataCommand,
+    GeneticDataUpdated: UpdateGeneticDataCommand,
+    GeneticDataRemoved: RemoveGeneticDataCommand,
+  },
+  geneticTesting: {
+    DataStaked: DataStakedCommand,
+  },
   labs: {
     LabRegistered: LabRegisteredCommand,
     LabUpdated: LabUpdatedCommand,
@@ -64,9 +141,6 @@ const eventRoutes = {
     ServiceUpdated: ServiceUpdatedCommand,
     ServiceDeleted: ServiceDeletedCommand,
   },
-  geneticTesting: {
-    DataStaked: DataStakedCommand,
-  },
   serviceRequest: {
     ServiceRequestCreated: CreateServiceRequestCommand,
     ServiceRequestClaimed: ClaimedServiceRequestCommand,
@@ -74,11 +148,6 @@ const eventRoutes = {
     ServiceRequestFinalized: FinalizedServiceRequestCommand,
     ServiceRequestUnstaked: UnstakedServiceRequestCommand,
     ServiceRequestWaitingForUnstaked: UnstakedWaitingServiceRequestCommand,
-  },
-  certifications: {
-    CertificationCreated: CertificationCreatedCommand,
-    CertificationUpdated: CertificationUpdatedCommand,
-    CertificationDeleted: CertificationDeletedCommand,
   },
 };
 
