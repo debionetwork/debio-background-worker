@@ -1,0 +1,31 @@
+import { Injectable } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { GeneticAnalystsRegisteredCommand } from './genetic-analysts-registered.command';
+
+@Injectable()
+@CommandHandler(GeneticAnalystsRegisteredCommand)
+export class GeneticAnalystsRegisteredHandler
+  implements ICommandHandler<GeneticAnalystsRegisteredCommand>
+{
+  constructor(private readonly elasticsearchService: ElasticsearchService) {}
+
+  async execute(command: GeneticAnalystsRegisteredCommand) {
+    const { geneticAnalystsModel, blockMetaData } = command;
+
+    await this.elasticsearchService.index({
+      index: 'genetic-analysts',
+      id: geneticAnalystsModel.account_id,
+      refresh: 'wait_for',
+      body: {
+        account_id: geneticAnalystsModel.account_id,
+        services: geneticAnalystsModel.services,
+        qualifications: geneticAnalystsModel.qualifications,
+        services_ids: [],
+        qualifications_ids: [],
+        info: geneticAnalystsModel.info,
+        blockMetaData: blockMetaData,
+      },
+    });
+  }
+}
