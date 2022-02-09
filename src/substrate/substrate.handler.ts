@@ -43,8 +43,24 @@ import {
 } from './events/certifications';
 import { DataStakedCommand } from './events/genetic-testing';
 import { ProcessEnvProxy } from '../common/process-env/process-env.proxy';
+import { GeneticAnalystsDeletedCommand, GeneticAnalystsRegisteredCommand, GeneticAnalystsStakeSuccessfulCommand, GeneticAnalystsUpdatedCommand, GeneticAnalystsUpdateVerificationStatusCommand } from './events/genetic-analysts';
 
 const eventRoutes = {
+  certifications: {
+    CertificationCreated: CertificationCreatedCommand,
+    CertificationUpdated: CertificationUpdatedCommand,
+    CertificationDeleted: CertificationDeletedCommand,
+  },
+  geneticAnalysts: {
+    GeneticAnalystRegistered: GeneticAnalystsRegisteredCommand,
+    GeneticAnalystUpdated: GeneticAnalystsUpdatedCommand,
+    GeneticAnalystDeleted: GeneticAnalystsDeletedCommand,
+    GeneticAnalystUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand,
+    GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand
+  },
+  geneticTesting: {
+    DataStaked: DataStakedCommand,
+  },
   labs: {
     LabRegistered: LabRegisteredCommand,
     LabUpdated: LabUpdatedCommand,
@@ -64,9 +80,6 @@ const eventRoutes = {
     ServiceUpdated: ServiceUpdatedCommand,
     ServiceDeleted: ServiceDeletedCommand,
   },
-  geneticTesting: {
-    DataStaked: DataStakedCommand,
-  },
   serviceRequest: {
     ServiceRequestCreated: CreateServiceRequestCommand,
     ServiceRequestClaimed: ClaimedServiceRequestCommand,
@@ -74,11 +87,6 @@ const eventRoutes = {
     ServiceRequestFinalized: FinalizedServiceRequestCommand,
     ServiceRequestUnstaked: UnstakedServiceRequestCommand,
     ServiceRequestWaitingForUnstaked: UnstakedWaitingServiceRequestCommand,
-  },
-  certifications: {
-    CertificationCreated: CertificationCreatedCommand,
-    CertificationUpdated: CertificationUpdatedCommand,
-    CertificationDeleted: CertificationDeletedCommand,
   },
 };
 

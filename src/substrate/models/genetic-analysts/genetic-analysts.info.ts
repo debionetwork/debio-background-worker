@@ -9,8 +9,6 @@ export class GeneticAnalystsInfo {
     this.email = info.email;
     this.phone_number = info.phoneNumber;
     this.specialization = info.specialization;
-    this.stake_amount = info.stakeAmount;
-    this.stake_status = info.stakeStatus;
   }
 
   public first_name: string;
@@ -20,6 +18,4 @@ export class GeneticAnalystsInfo {
   public email: string;
   public phone_number: string;
   public specialization: string;
-  public stake_amount: number;
-  public stake_status: StakeStatus;
 }

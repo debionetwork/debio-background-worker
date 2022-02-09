@@ -24,6 +24,9 @@ export class GeneticAnalystsRegisteredHandler
         services_ids: [],
         qualifications_ids: [],
         info: geneticAnalystsModel.info,
+        stake_amount: geneticAnalystsModel.stake_amount,
+        stake_status: geneticAnalystsModel.stake_status,
+        verification_status: geneticAnalystsModel.verification_status,
         blockMetaData: blockMetaData,
       },
     });
