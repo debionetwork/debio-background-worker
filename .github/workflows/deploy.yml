@@ -96,7 +96,8 @@ jobs:
               --set-string resources.requests.cpu=100m \
               --set-string resources.requests.memory=128Mi \
               --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=256Mi
+              --set-string resources.limits.memory=256Mi \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-indexer
 
   deploy-alpha-release:
@@ -160,7 +161,8 @@ jobs:
               --set-string resources.requests.cpu=100m \
               --set-string resources.requests.memory=128Mi \
               --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=256Mi
+              --set-string resources.limits.memory=256Mi \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-indexer
 
   deploy-beta-release:
@@ -224,7 +226,8 @@ jobs:
               --set-string resources.requests.cpu=100m \
               --set-string resources.requests.memory=128Mi \
               --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=256Mi
+              --set-string resources.limits.memory=256Mi \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-indexer
 
   deploy-pre-release:
@@ -288,7 +291,8 @@ jobs:
               --set-string resources.requests.cpu=100m \
               --set-string resources.requests.memory=128Mi \
               --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=256Mi
+              --set-string resources.limits.memory=256Mi \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-indexer
 
   deploy-release:
@@ -352,5 +356,6 @@ jobs:
               --set-string resources.requests.cpu=100m \
               --set-string resources.requests.memory=128Mi \
               --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=256Mi
+              --set-string resources.limits.memory=256Mi \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-indexer
