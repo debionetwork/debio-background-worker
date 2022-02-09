@@ -9,6 +9,7 @@ import { GeneticTestingCommandHandlers } from './events/genetic-testing';
 import { RequestServiceCommandHandlers } from './events/service-request';
 import { CertificationsCommandHandlers } from './events/certifications';
 import { ProcessEnvModule } from '../common/process-env/process-env.module';
+import { GeneticAnalystServicesCommandHandlers } from './events/genetic-analyst-services';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -26,6 +27,7 @@ require('dotenv').config();
     ...GeneticTestingCommandHandlers,
     ...RequestServiceCommandHandlers,
     ...CertificationsCommandHandlers,
+    ...GeneticAnalystServicesCommandHandlers
   ],
 })
 export class SubstrateModule {}
