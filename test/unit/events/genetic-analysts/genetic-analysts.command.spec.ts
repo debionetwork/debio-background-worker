@@ -1,6 +1,8 @@
 import {
   GeneticAnalystsDeletedCommand,
   GeneticAnalystsRegisteredCommand,
+  GeneticAnalystsStakeSuccessfulCommand,
+  GeneticAnalystsUpdateVerificationStatusCommand,
   GeneticAnalystsUpdatedCommand,
 } from '../../../../src/substrate/events/genetic-analysts';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
@@ -49,6 +51,55 @@ describe('Genetic Analysts Substrate Event Handler', () => {
       expect(() => {
         const _geneticAnalystsRegistered: GeneticAnalystsRegisteredCommand =
           new GeneticAnalystsRegisteredCommand([{}], mockBlockNumber());
+      }).toThrowError();
+    });
+  });
+
+  describe('Genetic Analysts Stake Successful', () => {
+    it('should called model data and toHuman', () => {
+      const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
+
+      const _geneticAnalystsStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand =
+        new GeneticAnalystsStakeSuccessfulCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      expect(GeneticAnalystsModel).toHaveBeenCalled();
+      expect(GeneticAnalystsModel).toHaveBeenCalledWith(
+        GENETIC_ANALYSTS_PARAM.toHuman(),
+      );
+      expect(GENETIC_ANALYSTS_PARAM.toHuman).toHaveBeenCalled();
+    });
+
+    it('should throw error if toHuman not defined', () => {
+      expect(() => {
+        const _geneticAnalystsStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand =
+          new GeneticAnalystsStakeSuccessfulCommand([{}], mockBlockNumber());
+      }).toThrowError();
+    });
+  });
+
+  describe('Genetic Analysts update verification status', () => {
+    it('should called model data and toHuman', () => {
+      const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
+
+      const _geneticAnalystsUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand =
+        new GeneticAnalystsUpdateVerificationStatusCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+        
+      expect(GeneticAnalystsModel).toHaveBeenCalled();
+      expect(GeneticAnalystsModel).toHaveBeenCalledWith(
+        GENETIC_ANALYSTS_PARAM.toHuman(),
+      );
+      expect(GENETIC_ANALYSTS_PARAM.toHuman).toHaveBeenCalled();
+    });
+
+    it('should throw error if toHuman not defined', () => {
+      expect(() => {
+        const _geneticAnalystsUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand =
+          new GeneticAnalystsUpdateVerificationStatusCommand([{}], mockBlockNumber());
       }).toThrowError();
     });
   });
