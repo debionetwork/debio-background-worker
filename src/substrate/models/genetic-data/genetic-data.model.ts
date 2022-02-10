@@ -1,15 +1,15 @@
 export class GeneticDataModel {
   constructor(geneticData: any) {
     this.id = geneticData.id;
-    this.ownerId = geneticData.ownerId;
+    this.owner_id = geneticData.ownerId;
     this.title = geneticData.title;
     this.description = geneticData.description;
-    this.reportLink = geneticData.reportLink;
+    this.report_link = geneticData.reportLink;
   }
 
   public id: string;
-  public ownerId: string;
+  public owner_id: string;
   public title: string;
   public description: string;
-  public reportLink: string;
+  public report_link: string;
 }

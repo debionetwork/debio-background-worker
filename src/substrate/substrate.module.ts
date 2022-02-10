@@ -10,11 +10,6 @@ import { RequestServiceCommandHandlers } from './events/service-request';
 import { CertificationsCommandHandlers } from './events/certifications';
 import { ProcessEnvModule } from '../common/process-env/process-env.module';
 import { GeneticDataCommandHandlers } from './events/genetic-data';
-import { GeneticAnalystServicesCommandHandlers } from './events/genetic-analyst-services';
-import { GeneticAnalystQualificationsCommandHandlers } from './events/genetic-analyst-qualifications';
-import { GeneticAnalysisOrderCommandHandlers } from './events/genetic-analysis-order';
-import { GeneticAnalysisCommandHandlers } from './events/genetic-analysis';
-import { GeneticAnalystsCommandHandlers } from './events/genetic-analysts';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -33,11 +28,6 @@ require('dotenv').config();
     ...RequestServiceCommandHandlers,
     ...CertificationsCommandHandlers,
     ...GeneticDataCommandHandlers,
-    ...GeneticAnalystServicesCommandHandlers,
-    ...GeneticAnalystQualificationsCommandHandlers,
-    ...GeneticAnalysisOrderCommandHandlers,
-    ...GeneticAnalysisCommandHandlers,
-    ...GeneticAnalystsCommandHandlers,
   ],
 })
 export class SubstrateModule {}

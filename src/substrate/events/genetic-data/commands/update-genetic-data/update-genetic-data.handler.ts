@@ -18,10 +18,10 @@ export class UpdateGeneticDataHandler
       id: geneticData.id,
       body: {
         doc: {
-          owner_id: geneticData.ownerId,
+          owner_id: geneticData.owner_id,
           title: geneticData.title,
           description: geneticData.description,
-          report_link: geneticData.reportLink,
+          report_link: geneticData.report_link,
           blockMetaData: blockMetaData,
         },
       },

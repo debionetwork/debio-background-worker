@@ -19,10 +19,10 @@ export class AddGeneticDataHandler
       refresh: 'wait_for',
       body: {
         id: geneticData.id,
-        owner_id: geneticData.ownerId,
+        owner_id: geneticData.owner_id,
         title: geneticData.title,
         description: geneticData.description,
-        report_link: geneticData.reportLink,
+        report_link: geneticData.report_link,
         blockMetaData: blockMetaData,
       },
     });
