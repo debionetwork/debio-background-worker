@@ -48,12 +48,35 @@ import {
   RemoveGeneticDataCommand,
   UpdateGeneticDataCommand,
 } from './events/genetic-data';
+import { GeneticAnalystsQualificationCreatedCommand, GeneticAnalystsQualificationDeletedCommand, GeneticAnalystsQualificationUpdatedCommand } from './events/genetic-analyst-qualifications';
+import { GeneticAnalystServicesCreatedCommand, GeneticAnalystServicesDeletedCommand, GeneticAnalystServicesUpdatedCommand } from './events/genetic-analyst-services';
+import { GeneticAnalystsDeletedCommand, GeneticAnalystsRegisteredCommand, GeneticAnalystsStakeSuccessfulCommand, GeneticAnalystsUpdatedCommand, GeneticAnalystsUpdateVerificationStatusCommand } from './events/genetic-analysts';
 
 const eventRoutes = {
   certifications: {
     CertificationCreated: CertificationCreatedCommand,
     CertificationUpdated: CertificationUpdatedCommand,
     CertificationDeleted: CertificationDeletedCommand,
+  },
+  geneticAnalysts: {
+    GeneticAnalystRegistered: GeneticAnalystsRegisteredCommand,
+    GeneticAnalystUpdated: GeneticAnalystsUpdatedCommand,
+    GeneticAnalystDeleted: GeneticAnalystsDeletedCommand,
+    GeneticAnalystUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand,
+    GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand
+  },
+  geneticAnalystQualifications: {
+    GeneticAnalystQualificationCreated:
+      GeneticAnalystsQualificationCreatedCommand,
+    GeneticAnalystQualificationUpdated:
+      GeneticAnalystsQualificationUpdatedCommand,
+    GeneticAnalystQualificationDeleted:
+      GeneticAnalystsQualificationDeletedCommand,
+  },
+  geneticAnalystServices: {
+    GeneticAnalystServiceCreated: GeneticAnalystServicesCreatedCommand,
+    GeneticAnalystServiceUpdated: GeneticAnalystServicesUpdatedCommand,
+    GeneticAnalystServiceDeleted: GeneticAnalystServicesDeletedCommand,
   },
   geneticData: {
     GeneticDataAdded: AddGeneticDataCommand,
