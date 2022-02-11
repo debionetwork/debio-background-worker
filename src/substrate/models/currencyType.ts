@@ -1,5 +1,5 @@
 export enum CurrencyType {
-	DAI = 'DAI',
+	DAI = "DAI",
 	ETH = 'ETH',
 	DBIO = 'DBIO',
 	USDO = 'USDO',
