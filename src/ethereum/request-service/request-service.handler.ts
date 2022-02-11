@@ -6,7 +6,10 @@ import {
   SetLastRequestServiceBlockCommand,
   GetLastRequestServiceBlockQuery,
 } from './blocks';
-import { CreateServiceRequestCommand, RequestClaimedCommand } from './request-service';
+import {
+  CreateServiceRequestCommand,
+  RequestClaimedCommand,
+} from './request-service';
 import ABI from './request-service-abi.json';
 import { BlockMetadata } from './request-service/models/blockMetadata';
 
