@@ -43,6 +43,11 @@ import {
 } from './events/certifications';
 import { DataStakedCommand } from './events/genetic-testing';
 import { ProcessEnvProxy } from '../common/process-env/process-env.proxy';
+import {
+  AddGeneticDataCommand,
+  RemoveGeneticDataCommand,
+  UpdateGeneticDataCommand,
+} from './events/genetic-data';
 import { GeneticAnalystsQualificationCreatedCommand, GeneticAnalystsQualificationDeletedCommand, GeneticAnalystsQualificationUpdatedCommand } from './events/genetic-analyst-qualifications';
 import { GeneticAnalystServicesCreatedCommand, GeneticAnalystServicesDeletedCommand, GeneticAnalystServicesUpdatedCommand } from './events/genetic-analyst-services';
 import { GeneticAnalystsDeletedCommand, GeneticAnalystsRegisteredCommand, GeneticAnalystsStakeSuccessfulCommand, GeneticAnalystsUpdatedCommand, GeneticAnalystsUpdateVerificationStatusCommand } from './events/genetic-analysts';
@@ -52,6 +57,13 @@ const eventRoutes = {
     CertificationCreated: CertificationCreatedCommand,
     CertificationUpdated: CertificationUpdatedCommand,
     CertificationDeleted: CertificationDeletedCommand,
+  },
+  geneticAnalysts: {
+    GeneticAnalystRegistered: GeneticAnalystsRegisteredCommand,
+    GeneticAnalystUpdated: GeneticAnalystsUpdatedCommand,
+    GeneticAnalystDeleted: GeneticAnalystsDeletedCommand,
+    GeneticAnalystUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand,
+    GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand
   },
   geneticAnalystQualifications: {
     GeneticAnalystQualificationCreated:
@@ -66,12 +78,10 @@ const eventRoutes = {
     GeneticAnalystServiceUpdated: GeneticAnalystServicesUpdatedCommand,
     GeneticAnalystServiceDeleted: GeneticAnalystServicesDeletedCommand,
   },
-  geneticAnalysts: {
-    GeneticAnalystRegistered: GeneticAnalystsRegisteredCommand,
-    GeneticAnalystUpdated: GeneticAnalystsUpdatedCommand,
-    GeneticAnalystDeleted: GeneticAnalystsDeletedCommand,
-    GeneticAnalystUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand,
-    GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand
+  geneticData: {
+    GeneticDataAdded: AddGeneticDataCommand,
+    GeneticDataUpdated: UpdateGeneticDataCommand,
+    GeneticDataRemoved: RemoveGeneticDataCommand,
   },
   geneticTesting: {
     DataStaked: DataStakedCommand,

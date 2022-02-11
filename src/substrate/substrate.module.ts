@@ -9,6 +9,7 @@ import { GeneticTestingCommandHandlers } from './events/genetic-testing';
 import { RequestServiceCommandHandlers } from './events/service-request';
 import { CertificationsCommandHandlers } from './events/certifications';
 import { ProcessEnvModule } from '../common/process-env/process-env.module';
+import { GeneticDataCommandHandlers } from './events/genetic-data';
 import { GeneticAnalystQualificationsCommandHandlers } from './events/genetic-analyst-qualifications';
 import { GeneticAnalystServicesCommandHandlers } from './events/genetic-analyst-services';
 import { GeneticAnalystsCommandHandlers } from './events/genetic-analysts';
@@ -29,6 +30,7 @@ require('dotenv').config();
     ...GeneticTestingCommandHandlers,
     ...RequestServiceCommandHandlers,
     ...CertificationsCommandHandlers,
+    ...GeneticDataCommandHandlers,
     ...GeneticAnalystQualificationsCommandHandlers,
     ...GeneticAnalystServicesCommandHandlers,
     ...GeneticAnalystsCommandHandlers
