@@ -44,6 +44,7 @@ import {
 import { DataStakedCommand } from './events/genetic-testing';
 import { ProcessEnvProxy } from '../common/process-env/process-env.proxy';
 import { GeneticAnalystServicesCreatedCommand, GeneticAnalystServicesDeletedCommand, GeneticAnalystServicesUpdatedCommand } from './events/genetic-analyst-services';
+import { GeneticAnalystsDeletedCommand, GeneticAnalystsRegisteredCommand, GeneticAnalystsStakeSuccessfulCommand, GeneticAnalystsUpdatedCommand, GeneticAnalystsUpdateVerificationStatusCommand } from './events/genetic-analysts';
 
 const eventRoutes = {
   certifications: {
@@ -55,6 +56,13 @@ const eventRoutes = {
     GeneticAnalystServiceCreated: GeneticAnalystServicesCreatedCommand,
     GeneticAnalystServiceUpdated: GeneticAnalystServicesUpdatedCommand,
     GeneticAnalystServiceDeleted: GeneticAnalystServicesDeletedCommand,
+  },
+  geneticAnalysts: {
+    GeneticAnalystRegistered: GeneticAnalystsRegisteredCommand,
+    GeneticAnalystUpdated: GeneticAnalystsUpdatedCommand,
+    GeneticAnalystDeleted: GeneticAnalystsDeletedCommand,
+    GeneticAnalystUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand,
+    GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand
   },
   geneticTesting: {
     DataStaked: DataStakedCommand,
