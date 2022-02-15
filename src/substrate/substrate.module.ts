@@ -13,6 +13,8 @@ import { GeneticDataCommandHandlers } from './events/genetic-data';
 import { GeneticAnalystQualificationsCommandHandlers } from './events/genetic-analyst-qualifications';
 import { GeneticAnalystServicesCommandHandlers } from './events/genetic-analyst-services';
 import { GeneticAnalystsCommandHandlers } from './events/genetic-analysts';
+import { GeneticAnalysisCommandHandlers } from './events/genetic-analysis';
+import { GeneticAnalysisOrderCommandHandlers } from './events/genetic-analysis-order';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -33,7 +35,9 @@ require('dotenv').config();
     ...GeneticDataCommandHandlers,
     ...GeneticAnalystQualificationsCommandHandlers,
     ...GeneticAnalystServicesCommandHandlers,
-    ...GeneticAnalystsCommandHandlers
+    ...GeneticAnalystsCommandHandlers,
+    ...GeneticAnalysisCommandHandlers,
+    ...GeneticAnalysisOrderCommandHandlers
   ],
 })
 export class SubstrateModule {}

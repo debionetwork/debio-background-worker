@@ -18,11 +18,8 @@ export class GeneticAnalysisResultReadyHandler
       id: geneticAnalysisModel.genetic_analyst_id,
       body: {
         doc: {
-          genetic_analyst_tracking_id:
-            geneticAnalysisModel.genetic_analyst_tracking_id,
+          genetic_analyst_tracking_id: geneticAnalysisModel.genetic_analyst_tracking_id,
           genetic_analyst_order_id: geneticAnalysisModel.genetic_analyst_order_id,
-          comment: geneticAnalysisModel.comment,
-          report_link: geneticAnalysisModel.report_link,
           updated_at: geneticAnalysisModel.updated_at,
           status: geneticAnalysisModel.status,
           blockMetaData: blockMetaData,
