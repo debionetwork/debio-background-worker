@@ -21,7 +21,10 @@ describe('Genetic Anlaysts Qualificatioins Substrate Event Handler', () => {
       toHuman: jest.fn(() => ({
         id: 'string',
         ownerId: 'string',
-        info: {},
+        info: {
+          experience: [],
+          certification: [],
+        },
       })),
     };
   };
