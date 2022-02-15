@@ -37,7 +37,7 @@ require('dotenv').config();
     ...GeneticAnalystServicesCommandHandlers,
     ...GeneticAnalystsCommandHandlers,
     ...GeneticAnalysisCommandHandlers,
-    ...GeneticAnalysisOrderCommandHandlers
+    ...GeneticAnalysisOrderCommandHandlers,
   ],
 })
 export class SubstrateModule {}

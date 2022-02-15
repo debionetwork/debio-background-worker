@@ -20,9 +20,9 @@ export class GeneticAnalystsUpdateVerificationStatusHandler
       body: {
         doc: {
           verification_status: geneticAnalystsModel.verification_status,
-          blockMetaData: blockMetaData
-        }
-      }
+          blockMetaData: blockMetaData,
+        },
+      },
     });
   }
 }

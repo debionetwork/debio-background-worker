@@ -19,5 +19,5 @@ export class GeneticAnalystsModel {
   public info: GeneticAnalystsInfo;
   public stake_amount: number;
   public stake_status: StakeStatus;
-  public verification_status: VerificationStatus
+  public verification_status: VerificationStatus;
 }

@@ -48,10 +48,10 @@ export class GeneticAnalystsQualificationDeletedHandler
           `,
           params: {
             id: geneticAnalystsQualificationModel.id,
-            index: qualificationIndexToDelete
-          }
-        }
-      }
+            index: qualificationIndexToDelete,
+          },
+        },
+      },
     });
   }
 }

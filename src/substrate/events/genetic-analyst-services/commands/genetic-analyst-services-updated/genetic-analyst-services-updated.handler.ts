@@ -55,10 +55,10 @@ export class GeneticAnalystServicesUpdatedHandler
           params: {
             id: geneticAnalystsServicesModel.id,
             index: serviceIndexToDelete,
-            qualification: geneticAnalystsServicesModel
-          }
-        }
-      }
+            qualification: geneticAnalystsServicesModel,
+          },
+        },
+      },
     });
   }
 }

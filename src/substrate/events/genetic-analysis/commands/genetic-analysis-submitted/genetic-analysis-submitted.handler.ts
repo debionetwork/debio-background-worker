@@ -19,7 +19,7 @@ export class GeneticAnalysisSubmittedHandler
       refresh: 'wait_for',
       body: {
         genetic_analyst_tracking_id:
-        geneticAnalysisModel.genetic_analyst_tracking_id,
+          geneticAnalysisModel.genetic_analyst_tracking_id,
         genetic_analyst_id: geneticAnalysisModel.genetic_analyst_id,
         owner_id: geneticAnalysisModel.owner_id,
         report_link: geneticAnalysisModel.report_link,

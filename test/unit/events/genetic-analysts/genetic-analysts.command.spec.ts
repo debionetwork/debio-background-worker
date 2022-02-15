@@ -88,7 +88,7 @@ describe('Genetic Analysts Substrate Event Handler', () => {
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );
-        
+
       expect(GeneticAnalystsModel).toHaveBeenCalled();
       expect(GeneticAnalystsModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_PARAM.toHuman(),
@@ -99,7 +99,10 @@ describe('Genetic Analysts Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         const _geneticAnalystsUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand =
-          new GeneticAnalystsUpdateVerificationStatusCommand([{}], mockBlockNumber());
+          new GeneticAnalystsUpdateVerificationStatusCommand(
+            [{}],
+            mockBlockNumber(),
+          );
       }).toThrowError();
     });
   });
