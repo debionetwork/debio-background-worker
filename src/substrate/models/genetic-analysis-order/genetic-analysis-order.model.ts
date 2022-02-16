@@ -9,6 +9,7 @@ export class GeneticAnalysisOrderModel {
     this.customer_id = geneticAnalysisOrder.customerId;
     this.customer_box_public_key = geneticAnalysisOrder.customerBoxPublicKey;
     this.seller_id = geneticAnalysisOrder.sellerId;
+    this.genetic_data_id = geneticAnalysisOrder.geneticDataId;
     this.genetic_analysis_tracking_id =
       geneticAnalysisOrder.geneticAnalysisTrackingId;
     this.currency = geneticAnalysisOrder.currency;
@@ -39,6 +40,7 @@ export class GeneticAnalysisOrderModel {
   public customer_id: string;
   public customer_box_public_key: string;
   public seller_id: string;
+  public genetic_data_id: string;
   public genetic_analysis_tracking_id: string;
   public currency: CurrencyType;
   public prices: Price[];

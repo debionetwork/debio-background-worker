@@ -22,6 +22,7 @@ export class GeneticAnalysisOrderPaidHandler
           customer_box_public_key:
             geneticAnalysisOrderModel.customer_box_public_key,
           seller_id: geneticAnalysisOrderModel.seller_id,
+          genetic_data_id: geneticAnalysisOrderModel.genetic_data_id,
           genetic_analysis_tracking_id:
             geneticAnalysisOrderModel.genetic_analysis_tracking_id,
           currency: geneticAnalysisOrderModel.currency,
