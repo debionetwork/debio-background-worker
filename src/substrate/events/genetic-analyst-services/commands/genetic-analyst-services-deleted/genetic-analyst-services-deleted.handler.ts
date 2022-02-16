@@ -48,10 +48,10 @@ export class GeneticAnalystServicesDeletedHandler
           `,
           params: {
             id: geneticAnalystsServicesModel.id,
-            index: serviceIndexToDelete
-          }
-        }
-      }
+            index: serviceIndexToDelete,
+          },
+        },
+      },
     });
   }
 }

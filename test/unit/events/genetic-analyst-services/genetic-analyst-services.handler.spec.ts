@@ -1,11 +1,18 @@
-import { ElasticsearchService } from "@nestjs/elasticsearch";
-import { Test, TestingModule } from "@nestjs/testing";
-import { createObjectSearchGeneticAnalysts, ElasticSearchServiceProvider } from "../../mock";
-import { GeneticAnalystServicesCommandHandlers,
-GeneticAnalystServicesCreatedCommand, GeneticAnalystServicesDeletedCommand, GeneticAnalystServicesUpdatedCommand } from "../../../../src/substrate/events/genetic-analyst-services";
-import { GeneticAnalystServicesCreatedHandler } from "../../../../src/substrate/events/genetic-analyst-services/commands/genetic-analyst-services-created/genetic-analyst-services-created.handler";
-import { GeneticAnalystServicesDeletedHandler } from "../../../../src/substrate/events/genetic-analyst-services/commands/genetic-analyst-services-deleted/genetic-analyst-services-deleted.handler";
-import { GeneticAnalystServicesUpdatedHandler } from "../../../../src/substrate/events/genetic-analyst-services/commands/genetic-analyst-services-updated/genetic-analyst-services-updated.handler";
+import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { Test, TestingModule } from '@nestjs/testing';
+import {
+  createObjectSearchGeneticAnalysts,
+  ElasticSearchServiceProvider,
+} from '../../mock';
+import {
+  GeneticAnalystServicesCommandHandlers,
+  GeneticAnalystServicesCreatedCommand,
+  GeneticAnalystServicesDeletedCommand,
+  GeneticAnalystServicesUpdatedCommand,
+} from '../../../../src/substrate/events/genetic-analyst-services';
+import { GeneticAnalystServicesCreatedHandler } from '../../../../src/substrate/events/genetic-analyst-services/commands/genetic-analyst-services-created/genetic-analyst-services-created.handler';
+import { GeneticAnalystServicesDeletedHandler } from '../../../../src/substrate/events/genetic-analyst-services/commands/genetic-analyst-services-deleted/genetic-analyst-services-deleted.handler';
+import { GeneticAnalystServicesUpdatedHandler } from '../../../../src/substrate/events/genetic-analyst-services/commands/genetic-analyst-services-updated/genetic-analyst-services-updated.handler';
 import { when } from 'jest-when';
 
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
@@ -16,7 +23,7 @@ describe('Genetic Anlaysts Services Substrate Event Handler', () => {
   let geneticAnalystsServicesCreatedHandler: GeneticAnalystServicesCreatedHandler;
   let geneticAnalystsServicesDeletedHandler: GeneticAnalystServicesDeletedHandler;
   let geneticAnalystsServicesUpdatedHandler: GeneticAnalystServicesUpdatedHandler;
-  
+
   const createMockGeneticAnalystsServices = () => {
     return {
       toHuman: jest.fn(() => ({
@@ -47,39 +54,50 @@ describe('Genetic Anlaysts Services Substrate Event Handler', () => {
     const modules: TestingModule = await Test.createTestingModule({
       providers: [
         ElasticSearchServiceProvider,
-        ...GeneticAnalystServicesCommandHandlers
-      ]
+        ...GeneticAnalystServicesCommandHandlers,
+      ],
     }).compile();
 
     elasticsearchService = modules.get(ElasticsearchService);
-    
-    geneticAnalystsServicesCreatedHandler = modules.get(GeneticAnalystServicesCreatedHandler);
-    geneticAnalystsServicesDeletedHandler = modules.get(GeneticAnalystServicesDeletedHandler);
-    geneticAnalystsServicesUpdatedHandler = modules.get(GeneticAnalystServicesUpdatedHandler);
+
+    geneticAnalystsServicesCreatedHandler = modules.get(
+      GeneticAnalystServicesCreatedHandler,
+    );
+    geneticAnalystsServicesDeletedHandler = modules.get(
+      GeneticAnalystServicesDeletedHandler,
+    );
+    geneticAnalystsServicesUpdatedHandler = modules.get(
+      GeneticAnalystServicesUpdatedHandler,
+    );
   });
 
   describe('Genetic Analysts Services Created', () => {
-
     it('should Genetic create index Analysts Servicess', async () => {
-      const GENETIC_ANALYSTS_SERVICES_PARAM = createMockGeneticAnalystsServices();
+      const GENETIC_ANALYSTS_SERVICES_PARAM =
+        createMockGeneticAnalystsServices();
 
-      const geneticAnalystsServicesCreatedCommand: GeneticAnalystServicesCreatedCommand = 
-        new GeneticAnalystServicesCreatedCommand([GENETIC_ANALYSTS_SERVICES_PARAM], mockBlockNumber());
+      const geneticAnalystsServicesCreatedCommand: GeneticAnalystServicesCreatedCommand =
+        new GeneticAnalystServicesCreatedCommand(
+          [GENETIC_ANALYSTS_SERVICES_PARAM],
+          mockBlockNumber(),
+        );
 
-      await geneticAnalystsServicesCreatedHandler.execute(geneticAnalystsServicesCreatedCommand);
+      await geneticAnalystsServicesCreatedHandler.execute(
+        geneticAnalystsServicesCreatedCommand,
+      );
 
       expect(elasticsearchService.index).toHaveBeenCalled();
     });
-
   });
 
   describe('Genetic Analysts Services Deleted', () => {
-
     it('should delete index Genetic Analysts Servicess', async () => {
-      const GENETIC_ANALYSTS_SERVICES_PARAM = createMockGeneticAnalystsServices();
+      const GENETIC_ANALYSTS_SERVICES_PARAM =
+        createMockGeneticAnalystsServices();
 
       const GENETIC_ANALYSTS_ID = 'string';
-      const CALLED_WITH = createObjectSearchGeneticAnalysts(GENETIC_ANALYSTS_ID);
+      const CALLED_WITH =
+        createObjectSearchGeneticAnalysts(GENETIC_ANALYSTS_ID);
 
       const ES_RESULT = {
         body: {
@@ -98,26 +116,31 @@ describe('Genetic Anlaysts Services Substrate Event Handler', () => {
       when(elasticsearchService.search)
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
-        
-      const geneticAnalystsServicesDeletedCommand: GeneticAnalystServicesDeletedCommand = 
-        new GeneticAnalystServicesDeletedCommand([GENETIC_ANALYSTS_SERVICES_PARAM], mockBlockNumber());
 
-      await geneticAnalystsServicesDeletedHandler.execute(geneticAnalystsServicesDeletedCommand);
+      const geneticAnalystsServicesDeletedCommand: GeneticAnalystServicesDeletedCommand =
+        new GeneticAnalystServicesDeletedCommand(
+          [GENETIC_ANALYSTS_SERVICES_PARAM],
+          mockBlockNumber(),
+        );
+
+      await geneticAnalystsServicesDeletedHandler.execute(
+        geneticAnalystsServicesDeletedCommand,
+      );
 
       expect(elasticsearchService.delete).toHaveBeenCalled();
       expect(elasticsearchService.search).toHaveBeenCalled();
       expect(elasticsearchService.update).toHaveBeenCalled();
     });
-
   });
 
   describe('Genetic Analysts Services Updated', () => {
-
     it('should update index Genetic Analysts Servicess', async () => {
-      const GENETIC_ANALYSTS_SERVICES_PARAM = createMockGeneticAnalystsServices();
+      const GENETIC_ANALYSTS_SERVICES_PARAM =
+        createMockGeneticAnalystsServices();
 
       const GENETIC_ANALYSTS_ID = 'string';
-      const CALLED_WITH = createObjectSearchGeneticAnalysts(GENETIC_ANALYSTS_ID);
+      const CALLED_WITH =
+        createObjectSearchGeneticAnalysts(GENETIC_ANALYSTS_ID);
 
       const ES_RESULT = {
         body: {
@@ -136,14 +159,18 @@ describe('Genetic Anlaysts Services Substrate Event Handler', () => {
       when(elasticsearchService.search)
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
-        
-      const geneticAnalystsServicesUpdatedCommand: GeneticAnalystServicesUpdatedCommand = 
-        new GeneticAnalystServicesUpdatedCommand([GENETIC_ANALYSTS_SERVICES_PARAM], mockBlockNumber());
 
-      await geneticAnalystsServicesUpdatedHandler.execute(geneticAnalystsServicesUpdatedCommand);
+      const geneticAnalystsServicesUpdatedCommand: GeneticAnalystServicesUpdatedCommand =
+        new GeneticAnalystServicesUpdatedCommand(
+          [GENETIC_ANALYSTS_SERVICES_PARAM],
+          mockBlockNumber(),
+        );
+
+      await geneticAnalystsServicesUpdatedHandler.execute(
+        geneticAnalystsServicesUpdatedCommand,
+      );
 
       expect(elasticsearchService.update).toHaveBeenCalled();
     });
-
   });
 });

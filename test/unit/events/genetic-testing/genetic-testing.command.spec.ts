@@ -1,10 +1,5 @@
-import { CommandBus } from '@nestjs/cqrs';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
-import { DataStakedHandler } from '../../../../src/substrate/events/genetic-testing/commands/data-staked/data-staked.handler';
-import {
-  DataStakedCommand,
-  GeneticTestingCommandHandlers,
-} from '../../../../src/substrate/events/genetic-testing';
+import { DataStakedCommand } from '../../../../src/substrate/events/genetic-testing';
 import { DataStaked } from '../../../../src/substrate/events/genetic-testing/models/data-staked';
 
 jest.mock(

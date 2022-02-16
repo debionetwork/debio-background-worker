@@ -40,10 +40,10 @@ export class GeneticAnalystsQualificationCreatedHandler
           `,
           params: {
             id: geneticAnalystsQualificationModel.id,
-            qualification: geneticAnalystsQualificationModel
-          }
-        }
-      }
+            qualification: geneticAnalystsQualificationModel,
+          },
+        },
+      },
     });
   }
 }

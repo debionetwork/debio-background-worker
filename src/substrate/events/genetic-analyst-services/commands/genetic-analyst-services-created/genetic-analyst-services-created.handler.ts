@@ -40,10 +40,10 @@ export class GeneticAnalystServicesCreatedHandler
           `,
           params: {
             id: geneticAnalystsServicesModel.id,
-            service: geneticAnalystsServicesModel
-          }
-        }
-      }
+            service: geneticAnalystsServicesModel,
+          },
+        },
+      },
     });
   }
 }

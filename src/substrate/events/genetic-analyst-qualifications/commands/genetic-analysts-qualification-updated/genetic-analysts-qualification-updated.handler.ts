@@ -55,10 +55,10 @@ export class GeneticAnalystsQualificationUpdatedHandler
           params: {
             id: geneticAnalystsQualificationModel.id,
             index: qualificationIndexToDelete,
-            qualification: geneticAnalystsQualificationModel
-          }
-        }
-      }
+            qualification: geneticAnalystsQualificationModel,
+          },
+        },
+      },
     });
   }
 }

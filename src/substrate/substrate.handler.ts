@@ -48,9 +48,37 @@ import {
   RemoveGeneticDataCommand,
   UpdateGeneticDataCommand,
 } from './events/genetic-data';
-import { GeneticAnalystsQualificationCreatedCommand, GeneticAnalystsQualificationDeletedCommand, GeneticAnalystsQualificationUpdatedCommand } from './events/genetic-analyst-qualifications';
-import { GeneticAnalystServicesCreatedCommand, GeneticAnalystServicesDeletedCommand, GeneticAnalystServicesUpdatedCommand } from './events/genetic-analyst-services';
-import { GeneticAnalystsDeletedCommand, GeneticAnalystsRegisteredCommand, GeneticAnalystsStakeSuccessfulCommand, GeneticAnalystsUpdatedCommand, GeneticAnalystsUpdateVerificationStatusCommand } from './events/genetic-analysts';
+import {
+  GeneticAnalystsQualificationCreatedCommand,
+  GeneticAnalystsQualificationDeletedCommand,
+  GeneticAnalystsQualificationUpdatedCommand,
+} from './events/genetic-analyst-qualifications';
+import {
+  GeneticAnalystServicesCreatedCommand,
+  GeneticAnalystServicesDeletedCommand,
+  GeneticAnalystServicesUpdatedCommand,
+} from './events/genetic-analyst-services';
+import {
+  GeneticAnalystsDeletedCommand,
+  GeneticAnalystsRegisteredCommand,
+  GeneticAnalystsStakeSuccessfulCommand,
+  GeneticAnalystsUpdatedCommand,
+  GeneticAnalystsUpdateVerificationStatusCommand,
+} from './events/genetic-analysts';
+import {
+  GeneticAnalysisOrderCancelledCommand,
+  GeneticAnalysisOrderCreatedCommand,
+  GeneticAnalysisOrderFailedCommand,
+  GeneticAnalysisOrderFulfilledCommand,
+  GeneticAnalysisOrderPaidCommand,
+  GeneticAnalysisOrderRefundedCommand,
+} from './events/genetic-analysis-order';
+import {
+  GeneticAnalysisInProgressCommand,
+  GeneticAnalysisRejectedCommand,
+  GeneticAnalysisResultReadyCommand,
+  GeneticAnalysisSubmittedCommand,
+} from './events/genetic-analysis';
 
 const eventRoutes = {
   certifications: {
@@ -58,12 +86,27 @@ const eventRoutes = {
     CertificationUpdated: CertificationUpdatedCommand,
     CertificationDeleted: CertificationDeletedCommand,
   },
+  geneticAnalysis: {
+    GeneticAnalysisSubmitted: GeneticAnalysisSubmittedCommand,
+    GeneticAnalysisInProgress: GeneticAnalysisInProgressCommand,
+    GeneticAnalysisRejected: GeneticAnalysisRejectedCommand,
+    GeneticAnalysisResultReady: GeneticAnalysisResultReadyCommand,
+  },
+  geneticAnalysisOrders: {
+    GeneticAnalysisOrderCreated: GeneticAnalysisOrderCreatedCommand,
+    GeneticAnalysisOrderPaid: GeneticAnalysisOrderPaidCommand,
+    GeneticAnalysisOrderFulfilled: GeneticAnalysisOrderFulfilledCommand,
+    GeneticAnalysisOrderRefunded: GeneticAnalysisOrderRefundedCommand,
+    GeneticAnalysisOrderCancelled: GeneticAnalysisOrderCancelledCommand,
+    GeneticAnalysisOrderFailed: GeneticAnalysisOrderFailedCommand,
+  },
   geneticAnalysts: {
     GeneticAnalystRegistered: GeneticAnalystsRegisteredCommand,
     GeneticAnalystUpdated: GeneticAnalystsUpdatedCommand,
     GeneticAnalystDeleted: GeneticAnalystsDeletedCommand,
-    GeneticAnalystUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand,
-    GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand
+    GeneticAnalystUpdateVerificationStatus:
+      GeneticAnalystsUpdateVerificationStatusCommand,
+    GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand,
   },
   geneticAnalystQualifications: {
     GeneticAnalystQualificationCreated:

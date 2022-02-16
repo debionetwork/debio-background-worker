@@ -56,7 +56,9 @@ export const createObjectSearchLab = (lab_id: string) => {
   };
 };
 
-export const createObjectSearchGeneticAnalysts = (genetic_analyst_id: string) => {
+export const createObjectSearchGeneticAnalysts = (
+  genetic_analyst_id: string,
+) => {
   return {
     index: 'genetic-analysts',
     body: {
