@@ -17,7 +17,7 @@ export class GeneticAnalystsModel {
   public services: string[];
   public qualifications: string[];
   public info: GeneticAnalystsInfo;
-  public stake_amount: number;
+  public stake_amount: BigInt;
   public stake_status: StakeStatus;
   public verification_status: VerificationStatus;
 }
