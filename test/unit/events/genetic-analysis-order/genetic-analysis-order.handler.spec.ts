@@ -45,6 +45,7 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
         customerId: 'string',
         customerBoxPublicKey: 'string',
         sellerId: 'string',
+        geneticDataId: 'string',
         geneticAnalysisTrackingId: 'string',
         currency: 'string',
         prices: [first_price],
