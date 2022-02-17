@@ -15,7 +15,7 @@ export class Orders {
 
     this.prices = [];
 
-    const prices = order.prices;
+    const prices = order.prices || [];
     for (let i = 0; i < prices.length; i++) {
       const price: Price = new Price(prices[i]);
       this.prices.push(price);
@@ -23,7 +23,7 @@ export class Orders {
 
     this.additionalPrices = [];
 
-    const additionalPrices = order.additionalPrices;
+    const additionalPrices = order.additionalPrices || [];
     for (let i = 0; i < additionalPrices.length; i++) {
       const price: Price = new Price(additionalPrices[i]);
       this.additionalPrices.push(price);

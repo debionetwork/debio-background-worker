@@ -16,7 +16,7 @@ export class GeneticAnalysisOrderModel {
 
     this.prices = Array<Price>();
 
-    const prices = geneticAnalysisOrder.prices;
+    const prices = geneticAnalysisOrder.prices || [];
     for (let i = 0; i < prices.length; i++) {
       const price: Price = new Price(prices[i]);
       this.prices.push(price);
@@ -24,7 +24,7 @@ export class GeneticAnalysisOrderModel {
 
     this.additional_prices = Array<Price>();
 
-    const additionalPrices = geneticAnalysisOrder.additionalPrices;
+    const additionalPrices = geneticAnalysisOrder.additionalPrices || [];
     for (let i = 0; i < additionalPrices.length; i++) {
       const additionalPrice = new Price(additionalPrices[i]);
       this.additional_prices.push(additionalPrice);

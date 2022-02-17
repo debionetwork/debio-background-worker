@@ -4,17 +4,17 @@ import { GeneticAnalystsQualificationExperience } from './genetic-analysts-quali
 export class GeneticAnalystsQualificationInfo {
   constructor(info: any) {
     this.experience = Array<GeneticAnalystsQualificationExperience>();
-
-    const experiences = info.experience;
+    
+    const experiences = info.experience || [];
     for (let i = 0; i < experiences.length; i++) {
       const experience: GeneticAnalystsQualificationExperience =
         new GeneticAnalystsQualificationExperience(experiences[i]);
       this.experience.push(experience);
     }
 
-    this.certification = info.certification;
+    this.certification = Array<GeneticAnalystsQualificationsCertification>();
 
-    const certifications = info.certification;
+    const certifications = info.certification || [];
     for (let i = 0; i < certifications.length; i++) {
       const certification: GeneticAnalystsQualificationsCertification =
         new GeneticAnalystsQualificationsCertification(certifications[i]);

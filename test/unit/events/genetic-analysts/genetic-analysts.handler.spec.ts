@@ -42,6 +42,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
           specialization: 'string',
           stakeAmount: 0,
           stakeStatus: 'string',
+          profileLink: 'string',
+          profileImage: 'string',
         },
       })),
     };
