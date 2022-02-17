@@ -13,6 +13,29 @@ export class GeneticAnalysisOrderCreatedHandler
   async execute(command: GeneticAnalysisOrderCreatedCommand) {
     const { geneticAnalysisOrderModel, blockMetaData } = command;
 
+    const geneticAnalystService = await this.elasticsearchService.search({
+      index: 'genetic-analysts-services',
+      body: {
+        query: {
+          match: { _id: geneticAnalysisOrderModel.service_id },
+        }
+      }
+    });
+
+    const serviceInfo = geneticAnalystService.body.hits.hits[0]._source.info || {};
+
+    const geneticAnalyst = await this.elasticsearchService.search({
+      index: 'genetic-analysts',
+      body: {
+        query: {
+          match: { _id: geneticAnalysisOrderModel.customer_id }
+        }
+      }
+    });
+
+    const geneticAnalystInfo = geneticAnalyst.body.hits.hits[0]._source.info || {};
+
+
     await this.elasticsearchService.index({
       index: 'genetic-analysis-order',
       id: geneticAnalysisOrderModel.id,
@@ -33,6 +56,8 @@ export class GeneticAnalysisOrderCreatedHandler
         status: geneticAnalysisOrderModel.status,
         created_at: geneticAnalysisOrderModel.created_at,
         updated_at: geneticAnalysisOrderModel.updated_at,
+        service_info: serviceInfo,
+        genetic_analyst_info: geneticAnalystInfo,
         blockMetaData: blockMetaData,
       },
     });
