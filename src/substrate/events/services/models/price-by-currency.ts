@@ -7,7 +7,7 @@ export class PriceByCurrency {
 
     this.price_components = [];
 
-    const priceComponents: any = priceByCurrency.priceComponents;
+    const priceComponents: any = priceByCurrency.priceComponents || [];
     for (let i = 0; i < priceComponents.length; i++) {
       const price: Price = new Price(priceComponents[i]);
       this.price_components.push(price);
@@ -15,7 +15,7 @@ export class PriceByCurrency {
 
     this.additional_prices = [];
 
-    const additionalPrices: any = priceByCurrency.additionalPrices;
+    const additionalPrices: any = priceByCurrency.additionalPrices || [];
     for (let i = 0; i < additionalPrices.length; i++) {
       const price: Price = new Price(additionalPrices[i]);
       this.additional_prices.push(price);

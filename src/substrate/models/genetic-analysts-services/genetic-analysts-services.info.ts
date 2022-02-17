@@ -7,7 +7,7 @@ export class GeneticAnalystsServicesInfo {
 
     this.prices_by_currency = Array<PricesByCurrency>();
 
-    const pricesByCurrency = info.pricesByCurrency;
+    const pricesByCurrency = info.pricesByCurrency || [];
     for (let i = 0; i < pricesByCurrency.length; i++) {
       const priceByCurrency: PricesByCurrency = new PricesByCurrency(
         pricesByCurrency[i],

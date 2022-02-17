@@ -6,7 +6,7 @@ export class ServiceInfo {
 
     this.prices_by_currency = [];
 
-    const priceByCurrency: any = info.pricesByCurrency;
+    const priceByCurrency: any = info.pricesByCurrency || [];
     for (let i = 0; i < priceByCurrency.length; i++) {
       const pbc: PriceByCurrency = new PriceByCurrency(priceByCurrency[i]);
       this.prices_by_currency.push(pbc);
