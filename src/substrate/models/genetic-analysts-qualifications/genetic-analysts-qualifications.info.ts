@@ -12,7 +12,7 @@ export class GeneticAnalystsQualificationInfo {
       this.experience.push(experience);
     }
 
-    this.certification = info.certification;
+    this.certification = Array<GeneticAnalystsQualificationsCertification>();
 
     const certifications = info.certification || [];
     for (let i = 0; i < certifications.length; i++) {
