@@ -130,32 +130,32 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
 
       const GENETIC_ANALYST_SERVICE_CALLED_WITH = createObjectSearchGeneticAnalystsService(SERVICE_ID);
       const GENETIC_ANALYST_SERVICE_ES_RESULT = {
-        // body: {
-        //   hits: {
-        //     hits: [
-        //       {
-        //         _source: {
-        //           info: {},
-        //         },
-        //       },
-        //     ],
-        //   },
-        // },
+        body: {
+          hits: {
+            hits: [
+              {
+                _source: {
+                  info: {},
+                },
+              },
+            ],
+          },
+        },
       };
 
       const GENETIC_ANALYST_CALLED_WITH = createObjectSearchGeneticAnalysts(GA_ID);
       const GENETIC_ANALYST_ES_RESULT = {
-        // body: {
-        //   hits: {
-        //     hits: [
-        //       {
-        //         _source: {
-        //           info: {},
-        //         },
-        //       },
-        //     ],
-        //   },
-        // },
+        body: {
+          hits: {
+            hits: [
+              {
+                _source: {
+                  info: {},
+                },
+              },
+            ],
+          },
+        },
       };
 
       when(elasticsearchService.search)
