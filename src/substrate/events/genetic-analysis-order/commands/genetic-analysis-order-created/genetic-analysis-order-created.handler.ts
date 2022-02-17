@@ -22,7 +22,7 @@ export class GeneticAnalysisOrderCreatedHandler
       }
     });
 
-    const serviceInfo = geneticAnalystService.body.hits.hits[0]._source.info || {};
+    const serviceInfo = geneticAnalystService.body?.hits?.hits[0]._source.info || {};
 
     const geneticAnalyst = await this.elasticsearchService.search({
       index: 'genetic-analysts',
@@ -33,8 +33,7 @@ export class GeneticAnalysisOrderCreatedHandler
       }
     });
 
-    const geneticAnalystInfo = geneticAnalyst.body.hits.hits[0]._source.info || {};
-
+    const geneticAnalystInfo = geneticAnalyst.body?.hits?.hits[0]._source.info || {};
 
     await this.elasticsearchService.index({
       index: 'genetic-analysis-order',

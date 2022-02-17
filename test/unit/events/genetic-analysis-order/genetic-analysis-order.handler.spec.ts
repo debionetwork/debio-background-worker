@@ -9,7 +9,7 @@ import {
   GeneticAnalysisOrderPaidCommand,
   GeneticAnalysisOrderRefundedCommand,
 } from '../../../../src/substrate/events/genetic-analysis-order';
-import { ElasticSearchServiceProvider } from '../../mock';
+import { createObjectSearchGeneticAnalysts, createObjectSearchGeneticAnalystsService, ElasticSearchServiceProvider } from '../../mock';
 import { GeneticAnalysisOrderCancelledHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.handler';
 import { GeneticAnalysisOrderCreatedHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-created/genetic-analysis-order-created.handler';
 import { GeneticAnalysisOrderFailedHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-failed/genetic-analysis-order-failed.handler';
@@ -17,6 +17,7 @@ import { GeneticAnalysisOrderFulfilledHandler } from '../../../../src/substrate/
 import { GeneticAnalysisOrderPaidHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
 import { GeneticAnalysisOrderRefundedHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-refunded/genetic-analysis-order-refunded.handler';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+import { when } from 'jest-when';
 
 describe('Genetic Analysis Order Substrate Event Handler', () => {
   let elasticsearchService: ElasticsearchService;
@@ -123,11 +124,53 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
+        
+      const SERVICE_ID = 'string';
+      const GA_ID = 'string';
+
+      const GENETIC_ANALYST_SERVICE_CALLED_WITH = createObjectSearchGeneticAnalystsService(SERVICE_ID);
+      const GENETIC_ANALYST_SERVICE_ES_RESULT = {
+        // body: {
+        //   hits: {
+        //     hits: [
+        //       {
+        //         _source: {
+        //           info: {},
+        //         },
+        //       },
+        //     ],
+        //   },
+        // },
+      };
+
+      const GENETIC_ANALYST_CALLED_WITH = createObjectSearchGeneticAnalysts(GA_ID);
+      const GENETIC_ANALYST_ES_RESULT = {
+        // body: {
+        //   hits: {
+        //     hits: [
+        //       {
+        //         _source: {
+        //           info: {},
+        //         },
+        //       },
+        //     ],
+        //   },
+        // },
+      };
+
+      when(elasticsearchService.search)
+        .calledWith(GENETIC_ANALYST_SERVICE_CALLED_WITH)
+        .mockReturnValue(GENETIC_ANALYST_SERVICE_ES_RESULT);
+
+      when(elasticsearchService.search)
+        .calledWith(GENETIC_ANALYST_CALLED_WITH)
+        .mockReturnValue(GENETIC_ANALYST_ES_RESULT);
 
       await geneticAnalysisOrderCreatedHandler.execute(
         geneticAnalysisOrderCreatedCommand,
       );
 
+      expect(elasticsearchService.search).toHaveBeenCalledTimes(2);
       expect(elasticsearchService.index).toHaveBeenCalled();
     });
   });

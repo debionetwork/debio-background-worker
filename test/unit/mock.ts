@@ -79,3 +79,16 @@ export const createObjectSearchService = (lab_id: string) => {
     },
   };
 };
+
+export const createObjectSearchGeneticAnalystsService = (
+  genetic_analyst_id: string,
+) => {
+  return {
+    index: 'genetic-analysts-services',
+    body: {
+      query: {
+        match: { _id: genetic_analyst_id },
+      },
+    },
+  };
+};
