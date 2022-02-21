@@ -20,6 +20,7 @@ export class GeneticAnalystsUpdateVerificationStatusHandler
       body: {
         doc: {
           verification_status: geneticAnalystsModel.verification_status,
+          stake_amount: geneticAnalystsModel.stake_amount,
           blockMetaData: blockMetaData,
         },
       },
