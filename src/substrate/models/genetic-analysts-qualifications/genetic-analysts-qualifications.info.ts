@@ -4,7 +4,7 @@ import { GeneticAnalystsQualificationExperience } from './genetic-analysts-quali
 export class GeneticAnalystsQualificationInfo {
   constructor(info: any) {
     this.experience = Array<GeneticAnalystsQualificationExperience>();
-    
+
     const experiences = info.experience || [];
     for (let i = 0; i < experiences.length; i++) {
       const experience: GeneticAnalystsQualificationExperience =

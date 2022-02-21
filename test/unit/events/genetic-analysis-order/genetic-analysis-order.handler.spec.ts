@@ -9,7 +9,11 @@ import {
   GeneticAnalysisOrderPaidCommand,
   GeneticAnalysisOrderRefundedCommand,
 } from '../../../../src/substrate/events/genetic-analysis-order';
-import { createObjectSearchGeneticAnalysts, createObjectSearchGeneticAnalystsService, ElasticSearchServiceProvider } from '../../mock';
+import {
+  createObjectSearchGeneticAnalysts,
+  createObjectSearchGeneticAnalystsService,
+  ElasticSearchServiceProvider,
+} from '../../mock';
 import { GeneticAnalysisOrderCancelledHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.handler';
 import { GeneticAnalysisOrderCreatedHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-created/genetic-analysis-order-created.handler';
 import { GeneticAnalysisOrderFailedHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-failed/genetic-analysis-order-failed.handler';
@@ -124,11 +128,12 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
-        
+
       const SERVICE_ID = 'string';
       const GA_ID = 'string';
 
-      const GENETIC_ANALYST_SERVICE_CALLED_WITH = createObjectSearchGeneticAnalystsService(SERVICE_ID);
+      const GENETIC_ANALYST_SERVICE_CALLED_WITH =
+        createObjectSearchGeneticAnalystsService(SERVICE_ID);
       const GENETIC_ANALYST_SERVICE_ES_RESULT = {
         body: {
           hits: {
@@ -143,7 +148,8 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
         },
       };
 
-      const GENETIC_ANALYST_CALLED_WITH = createObjectSearchGeneticAnalysts(GA_ID);
+      const GENETIC_ANALYST_CALLED_WITH =
+        createObjectSearchGeneticAnalysts(GA_ID);
       const GENETIC_ANALYST_ES_RESULT = {
         body: {
           hits: {
