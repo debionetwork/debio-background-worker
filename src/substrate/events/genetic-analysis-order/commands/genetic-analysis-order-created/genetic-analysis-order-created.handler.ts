@@ -22,18 +22,25 @@ export class GeneticAnalysisOrderCreatedHandler
       }
     });
 
-    const serviceInfo = geneticAnalystService.body?.hits?.hits[0]._source.info || {};
-
     const geneticAnalyst = await this.elasticsearchService.search({
       index: 'genetic-analysts',
       body: {
         query: {
-          match: { _id: geneticAnalysisOrderModel.customer_id }
+          match: { _id: geneticAnalysisOrderModel.seller_id }
         }
       }
     });
 
-    const geneticAnalystInfo = geneticAnalyst.body?.hits?.hits[0]._source.info || {};
+    let serviceInfo = {};
+    let geneticAnalystInfo = {};
+
+    if (geneticAnalystService.body?.hits?.hits.length > 0) {
+      serviceInfo = geneticAnalystService.body?.hits?.hits[0]._source.info || {};
+    } 
+
+    if (geneticAnalyst.body?.hits?.hits.length > 0) {
+      geneticAnalystInfo = geneticAnalyst.body?.hits?.hits[0]._source.info || {};
+    }
 
     await this.elasticsearchService.index({
       index: 'genetic-analysis-order',
