@@ -1,3 +1,4 @@
+import { hexToUtf8, isHex } from '../../../models/util';
 import { RequestStatus } from './requestStatus';
 
 export class RequestModel {
@@ -7,7 +8,10 @@ export class RequestModel {
     this.lab_address = request.labAddress;
     this.country = request.country;
     this.region = request.region;
-    this.city = request.city;
+
+    const city = request.city;
+    this.city = isHex(city) ? hexToUtf8(city) : city;
+
     this.service_category = request.serviceCategory;
     this.staking_amount = request.stakingAmount;
     this.status = request.status;
