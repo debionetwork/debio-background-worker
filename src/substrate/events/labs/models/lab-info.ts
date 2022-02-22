@@ -8,9 +8,6 @@ export class LabInfo {
     this.phone_number = info.phoneNumber;
     this.website = info.website;
     this.country = info.country;
-    
-    const region = info.region;
-    this.region = isHex(region) ? hexToUtf8(region) : region;
 
     const city = info.city;
     this.city = isHex(city) ? hexToUtf8(city) : city;

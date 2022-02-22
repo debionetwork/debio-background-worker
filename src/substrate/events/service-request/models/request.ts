@@ -7,9 +7,6 @@ export class RequestModel {
     this.requester_address = request.requesterAddress;
     this.lab_address = request.labAddress;
     this.country = request.country;
-    
-    const region = request.region;
-    this.region = isHex(region) ? hexToUtf8(region) : region;
 
     const city = request.city;
     this.city = isHex(city) ? hexToUtf8(city) : city;
