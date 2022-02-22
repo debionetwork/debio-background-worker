@@ -1,3 +1,5 @@
+import { hexToUtf8, isHex } from '../../../models/util';
+
 export class LabInfo {
   constructor(info: any) {
     this.box_public_key = info.boxPublicKey;
@@ -6,8 +8,10 @@ export class LabInfo {
     this.phone_number = info.phoneNumber;
     this.website = info.website;
     this.country = info.country;
-    this.region = info.region;
-    this.city = info.city;
+
+    const city = info.city;
+    this.city = isHex(city) ? hexToUtf8(city) : city;
+
     this.address = info.address;
     this.latitude = info.latitude;
     this.longitude = info.longitude;
