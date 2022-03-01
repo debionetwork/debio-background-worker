@@ -27,6 +27,7 @@ export class GeneticAnalystsRegisteredHandler
         stake_amount: geneticAnalystsModel.stake_amount,
         stake_status: geneticAnalystsModel.stake_status,
         verification_status: geneticAnalystsModel.verification_status,
+        availability_status: geneticAnalystsModel.availability_status,
         blockMetaData: blockMetaData,
       },
     });
