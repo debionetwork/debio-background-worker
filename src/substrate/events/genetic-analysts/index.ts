@@ -3,12 +3,14 @@ import { GeneticAnalystsRegisteredHandler } from './commands/genetic-analysts-re
 import { GeneticAnalystsStakeSuccessfulHandler } from './commands/genetic-analysts-stake-successful/genetic-analysts-stake-successful.handler';
 import { GeneticAnalystsUpdateVerificationStatusHandler } from './commands/genetic-analysts-update-verification-status/genetic-analysts-update-verification-status.handler';
 import { GeneticAnalystsUpdatedHandler } from './commands/genetic-analysts-updated/genetic-analysts-updated.handler';
+import { GeneticAnalystsUpdateAvailabilityStatusHandler } from './commands/genetic-analysts-update-availability-status/genetic-analysts-update-availability-status.handler';
 
 export * from './commands/genetic-analysts-registered/genetic-analysts-registered.command';
 export * from './commands/genetic-analysts-updated/genetic-analysts-updated.command';
 export * from './commands/genetic-analysts-stake-successful/genetic-analysts-stake-successful.command';
 export * from './commands/genetic-analysts-update-verification-status/genetic-analysts-update-verification-status.command';
 export * from './commands/genetic-analysts-deleted/genetic-analysts-deleted.command';
+export * from './commands/genetic-analysts-update-availability-status/genetic-analysts-update-availability-status.command';
 
 export const GeneticAnalystsCommandHandlers = [
   GeneticAnalystsRegisteredHandler,
@@ -16,4 +18,5 @@ export const GeneticAnalystsCommandHandlers = [
   GeneticAnalystsStakeSuccessfulHandler,
   GeneticAnalystsUpdateVerificationStatusHandler,
   GeneticAnalystsDeletedHandler,
+  GeneticAnalystsUpdateAvailabilityStatusHandler,
 ];
