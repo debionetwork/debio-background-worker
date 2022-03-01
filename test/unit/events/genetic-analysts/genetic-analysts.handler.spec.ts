@@ -186,4 +186,22 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
       expect(elasticsearchService.update).toHaveBeenCalled();
     });
   });
+
+  describe('Genetic Analysts Update availability status', () => {
+    it('should update index Genetic Analysts', async () => {
+      const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([], []);
+
+      const geneticAnalystsUpdateAvailabilityStatusCommand: GeneticAnalystsUpdateVerificationStatusCommand =
+        new GeneticAnalystsUpdateVerificationStatusCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+
+      await geneticAnalystsUpdateVerificationStatusHandler.execute(
+        geneticAnalystsUpdateAvailabilityStatusCommand,
+      );
+
+      expect(elasticsearchService.update).toHaveBeenCalled();
+    });
+  });
 });
