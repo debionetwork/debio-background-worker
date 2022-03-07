@@ -11,6 +11,7 @@ export class LabInfo {
 
     const city = info.city;
     this.city = isHex(city) ? hexToUtf8(city) : city;
+    this.region = info.region;
 
     this.address = info.address;
     this.latitude = info.latitude;
