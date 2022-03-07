@@ -1,3 +1,4 @@
+import { AvailabilityStatus } from '../availabilityStatus';
 import { StakeStatus } from '../stake-status';
 import { VerificationStatus } from '../verificationStatus';
 import { GeneticAnalystsInfo } from './genetic-analysts.info';
@@ -11,6 +12,7 @@ export class GeneticAnalystsModel {
     this.stake_amount = geneticAnalysts.stakeAmount;
     this.stake_status = geneticAnalysts.stakeStatus;
     this.verification_status = geneticAnalysts.verificationStatus;
+    this.availability_status = geneticAnalysts.availabilityStatus;
   }
 
   public account_id: string;
@@ -20,4 +22,5 @@ export class GeneticAnalystsModel {
   public stake_amount: BigInt;
   public stake_status: StakeStatus;
   public verification_status: VerificationStatus;
+  public availability_status: AvailabilityStatus;
 }

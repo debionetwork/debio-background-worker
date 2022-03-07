@@ -4,6 +4,7 @@ import {
   GeneticAnalystsStakeSuccessfulCommand,
   GeneticAnalystsUpdateVerificationStatusCommand,
   GeneticAnalystsUpdatedCommand,
+  GeneticAnalystsUpdateAvailabilityStatusCommand,
 } from '../../../../src/substrate/events/genetic-analysts';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
 import { GeneticAnalystsModel } from '../../../../src/substrate/models/genetic-analysts/genetic-analysts.model';
@@ -151,6 +152,30 @@ describe('Genetic Analysts Substrate Event Handler', () => {
       expect(() => {
         const _geneticAnalystsDeleted: GeneticAnalystsDeletedCommand =
           new GeneticAnalystsDeletedCommand([{}], mockBlockNumber());
+      }).toThrowError();
+    });
+  });
+
+  describe('Genetic Analysts update availability status Command', () => {
+    it('should called model data and toHuman', () => {
+      const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
+
+      const _geneticAnalystsUpdateAvailabilityStatus: GeneticAnalystsUpdateAvailabilityStatusCommand =
+        new GeneticAnalystsUpdateAvailabilityStatusCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      expect(GeneticAnalystsModel).toHaveBeenCalled();
+      expect(GeneticAnalystsModel).toHaveBeenCalledWith(
+        GENETIC_ANALYSTS_PARAM.toHuman(),
+      );
+      expect(GENETIC_ANALYSTS_PARAM.toHuman).toHaveBeenCalled();
+    });
+
+    it('should throw error if toHuman not defined', () => {
+      expect(() => {
+        const _geneticAnalystsUpdateAvailabilityStatus: GeneticAnalystsUpdateAvailabilityStatusCommand =
+          new GeneticAnalystsUpdateAvailabilityStatusCommand([{}], mockBlockNumber());
       }).toThrowError();
     });
   });
