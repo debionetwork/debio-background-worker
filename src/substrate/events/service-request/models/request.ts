@@ -10,6 +10,7 @@ export class RequestModel {
 
     const city = request.city;
     this.city = isHex(city) ? hexToUtf8(city) : city;
+    this.region = request.region;
 
     this.service_category = request.serviceCategory;
     this.staking_amount = request.stakingAmount;
