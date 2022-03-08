@@ -9,10 +9,10 @@ import { FinalizedServiceRequestCommand } from './finalized-service-request.comm
 export class FinalizedServiceRequestHandler
   implements ICommandHandler<FinalizedServiceRequestCommand>
 {
-  constructor(private readonly elasticSearchService: ElasticsearchService) {}
+  constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: FinalizedServiceRequestCommand) {
-    await this.elasticSearchService.update({
+    await this.elasticsearchService.update({
       index: 'create-service-request',
       id: command.serviceInvoice.requestHash,
       refresh: 'wait_for',
@@ -32,5 +32,44 @@ export class FinalizedServiceRequestHandler
         },
       },
     });
+
+    const { body } = await this.elasticsearchService.search({
+      index: 'create-service-request',
+      body: {
+        query: {
+          match: { _id: command.serviceInvoice.requestHash },
+        },
+      },
+    });
+
+    const service_request = body.hits?.hits[0]?._source || null;
+
+    if (service_request != null) {
+      await this.elasticsearchService.update({
+        index: 'country-service-request',
+        id: service_request.country,
+        refresh: 'wait_for',
+        body: {
+          script: {
+            lang: 'painless',
+            source: `
+              def services = ctx._source.service_request
+              for (int i = 0; i < services.length; i++) {
+                if (services[i].id == params.id) {
+                  ctx._source.service_request.remove(i);
+                  break;
+                }
+              }
+            `,
+            params: {
+              id: command.serviceInvoice.requestHash,
+            },
+          },
+          upsert: {
+            counter: 1
+          },
+        },
+      });
+    }
   }
 }

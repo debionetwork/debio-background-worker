@@ -28,8 +28,8 @@ export class GeneticAnalystsQualificationDeletedHandler
         },
       },
     });
-    const { _source } = resp.body.hits.hits[0];
-    qualificationIndexToDelete = _source.qualifications.findIndex(
+    const qualifications = resp.body?.hits?.hits[0]?._source?.qualifications || [];
+    qualificationIndexToDelete = qualifications.findIndex(
       (c) => c.id == geneticAnalystsQualificationModel.id,
     );
 

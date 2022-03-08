@@ -79,6 +79,7 @@ import {
   GeneticAnalysisResultReadyCommand,
   GeneticAnalysisSubmittedCommand,
 } from './events/genetic-analysis';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 const eventRoutes = {
   certifications: {
@@ -170,6 +171,7 @@ export class SubstrateService implements OnModuleInit {
     private commandBus: CommandBus,
     private queryBus: QueryBus,
     private process: ProcessEnvProxy,
+    private readonly elasticsearchService: ElasticsearchService,
   ) {}
 
   onModuleInit() {
@@ -338,6 +340,27 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async startListen() {
+    const indices = [
+      "country-service-request",
+      "last-block-number-request-service",
+      "create-service-request",
+      "certifications",
+      "labs",
+      "genetic-analysis",
+      "genetic-analysis-order",
+      "genetic-analysts-services",
+      "genetic-analysts",
+      "genetic-analysts-qualification",
+      "genetic-data",
+      "data-bounty",
+      "services",
+      "orders",
+    ];
+
+    for (const i of indices) {
+      await this.initializeIndices(i);
+    }
+
     if (this.listenStatus) return;
 
     this.listenStatus = true;
@@ -381,6 +404,18 @@ export class SubstrateService implements OnModuleInit {
 
     if (this.head) {
       this.head();
+    }
+  }
+
+  async initializeIndices(index) {
+    const { body: exist } = await this.elasticsearchService.indices.exists({
+      index: index
+    });
+    
+    if (!exist) {
+      await this.elasticsearchService.indices.create({
+        index: index
+      });
     }
   }
 }
