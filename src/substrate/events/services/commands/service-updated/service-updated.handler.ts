@@ -82,25 +82,5 @@ export class ServiceUpdatedHandler
         },
       },
     });
-
-    await this.elasticsearchService.updateByQuery({
-      index: 'orders',
-      ignore_unavailable: true,
-      allow_no_indices: true,
-      body: {
-        script: {
-          source: `ctx._source.service_info = params.new_service_info`,
-          lang: 'painless',
-          params: {
-            new_service_info: service.info,
-          },
-        },
-        query: {
-          match: {
-            service_id: service.id,
-          },
-        },
-      },
-    });
   }
 }

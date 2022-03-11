@@ -10,6 +10,7 @@ export const substrateServiceProvider = {
     listenToNewBlock: jest.fn(),
     syncBlock: jest.fn(),
     startListen: jest.fn(),
+    initializeIndices: jest.fn(),
   }),
 };
 
@@ -51,6 +52,28 @@ export const createObjectSearchLab = (lab_id: string) => {
     body: {
       query: {
         match: { _id: lab_id },
+      },
+    },
+  };
+};
+
+export const createObjectSearchCountryServiceRequest = (country_id: string) => {
+  return {
+    index: 'country-service-request',
+    body: {
+      query: {
+        match: { _id: country_id },
+      },
+    },
+  };
+};
+
+export const createObjectSearchServiceRequest = (service_request_id: string) => {
+  return {
+    index: 'create-service-request',
+    body: {
+      query: {
+        match: { _id: service_request_id },
       },
     },
   };

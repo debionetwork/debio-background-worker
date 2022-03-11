@@ -28,8 +28,8 @@ export class GeneticAnalystServicesDeletedHandler
         },
       },
     });
-    const { _source } = resp.body.hits.hits[0];
-    serviceIndexToDelete = _source.services.findIndex(
+    const services = resp.body?.hits?.hits[0]?._source?.services || [];
+    serviceIndexToDelete = services.findIndex(
       (c) => c.id == geneticAnalystsServicesModel.id,
     );
 

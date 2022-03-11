@@ -114,7 +114,6 @@ describe('Labs Substrate Event Handler', () => {
       );
       await labUpdatedHandler.execute(labUpdatedCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
-      expect(elasticsearchService.updateByQuery).toHaveBeenCalled();
     });
 
     it('Lab Updated Verification Status Handler', async () => {

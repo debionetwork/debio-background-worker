@@ -12,6 +12,8 @@ export class RequestModel {
     this.city = isHex(city) ? hexToUtf8(city) : city;
     this.region = request.region;
 
+    this.region = request.region;
+
     this.service_category = request.serviceCategory;
     this.staking_amount = request.stakingAmount;
     this.status = request.status;
