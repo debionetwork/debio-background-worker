@@ -68,7 +68,9 @@ export const createObjectSearchCountryServiceRequest = (country_id: string) => {
   };
 };
 
-export const createObjectSearchServiceRequest = (service_request_id: string) => {
+export const createObjectSearchServiceRequest = (
+  service_request_id: string,
+) => {
   return {
     index: 'create-service-request',
     body: {

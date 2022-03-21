@@ -66,7 +66,7 @@ export class ProcessedServiceRequestHandler
             },
           },
           upsert: {
-            counter: 1
+            counter: 1,
           },
         },
       });

@@ -11,6 +11,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "install:hooks": ".maintain/install-hooks.sh",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

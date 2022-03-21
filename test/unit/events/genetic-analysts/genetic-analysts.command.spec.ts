@@ -175,7 +175,10 @@ describe('Genetic Analysts Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         const _geneticAnalystsUpdateAvailabilityStatus: GeneticAnalystsUpdateAvailabilityStatusCommand =
-          new GeneticAnalystsUpdateAvailabilityStatusCommand([{}], mockBlockNumber());
+          new GeneticAnalystsUpdateAvailabilityStatusCommand(
+            [{}],
+            mockBlockNumber(),
+          );
       }).toThrowError();
     });
   });
