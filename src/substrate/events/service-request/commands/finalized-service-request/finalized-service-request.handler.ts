@@ -66,7 +66,7 @@ export class FinalizedServiceRequestHandler
             },
           },
           upsert: {
-            counter: 1
+            counter: 1,
           },
         },
       });

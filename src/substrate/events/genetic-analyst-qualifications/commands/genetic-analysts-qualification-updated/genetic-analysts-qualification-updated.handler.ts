@@ -35,7 +35,8 @@ export class GeneticAnalystsQualificationUpdatedHandler
         },
       },
     });
-    const qualifications = resp.body?.hits?.hits[0]?._source?.qualifications || [];
+    const qualifications =
+      resp.body?.hits?.hits[0]?._source?.qualifications || [];
     qualificationIndexToDelete = qualifications.findIndex(
       (c) => c.id == geneticAnalystsQualificationModel.id,
     );

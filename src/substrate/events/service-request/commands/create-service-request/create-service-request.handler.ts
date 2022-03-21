@@ -27,9 +27,9 @@ export class CreateServiceRequestHandler
       body: {
         query: {
           match: {
-            _id: command.request.country
-          }
-        }
+            _id: command.request.country,
+          },
+        },
       },
     });
 
@@ -59,7 +59,7 @@ export class CreateServiceRequestHandler
               },
             },
           },
-          doc_as_upsert: false
+          doc_as_upsert: false,
         },
       });
     } else {
@@ -76,10 +76,10 @@ export class CreateServiceRequestHandler
               requester: command.request.requester_address,
               category: command.request.service_category,
               amount: command.request.staking_amount,
-            }
-          ]
-        }
-      })
+            },
+          ],
+        },
+      });
     }
   }
 }
