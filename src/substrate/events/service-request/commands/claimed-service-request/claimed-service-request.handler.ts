@@ -66,7 +66,7 @@ export class ClaimedServiceRequestHandler
             },
           },
           upsert: {
-            counter: 1
+            counter: 1,
           },
         },
       });

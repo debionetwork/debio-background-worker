@@ -49,7 +49,7 @@ export class UnstakedServiceRequestHandler
           },
         },
         upsert: {
-          counter: 1
+          counter: 1,
         },
       },
     });

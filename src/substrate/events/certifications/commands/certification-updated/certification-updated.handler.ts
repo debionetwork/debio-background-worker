@@ -37,7 +37,8 @@ export class CertificationUpdatedHandler
         },
       },
     });
-    const certifications = resp.body?.hits?.hits[0]?._source?.certifications || [];
+    const certifications =
+      resp.body?.hits?.hits[0]?._source?.certifications || [];
     certificationIndexToDelete = certifications.findIndex(
       (c) => c.id == certification.id,
     );

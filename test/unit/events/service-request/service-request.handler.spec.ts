@@ -17,7 +17,11 @@ import {
 } from '../../../../src/substrate/events/service-request/';
 import { RequestStatus } from '../../../../src/substrate/events/service-request//models/requestStatus';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
-import { createObjectSearchCountryServiceRequest, createObjectSearchServiceRequest, ElasticSearchServiceProvider } from '../../mock';
+import {
+  createObjectSearchCountryServiceRequest,
+  createObjectSearchServiceRequest,
+  ElasticSearchServiceProvider,
+} from '../../mock';
 import { when } from 'jest-when';
 
 let claimedServiceRequestHandler: ClaimedServiceRequestHandler;
@@ -162,14 +166,16 @@ describe('Service Request Substrate Event Handler', () => {
       const claimedServiceRequestCommand: ClaimedServiceRequestCommand =
         new ClaimedServiceRequestCommand(claimRequest, mockBlockNumber());
 
-      const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(claimedServiceRequestCommand.claimRequest.requestHash);
+      const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(
+        claimedServiceRequestCommand.claimRequest.requestHash,
+      );
       const ES_RESULT_SERVICE_REQUEST = {
         body: {
           hits: {
             hits: [
               {
-                _source: 1
-              }
+                _source: 1,
+              },
             ],
           },
         },
@@ -189,7 +195,9 @@ describe('Service Request Substrate Event Handler', () => {
       const createServiceRequestCommand: CreateServiceRequestCommand =
         new CreateServiceRequestCommand(requestData, mockBlockNumber());
 
-      const COUNTRY_CALLED_WITH = createObjectSearchCountryServiceRequest(createServiceRequestCommand.request.country);
+      const COUNTRY_CALLED_WITH = createObjectSearchCountryServiceRequest(
+        createServiceRequestCommand.request.country,
+      );
       const ES_RESULT_COUNTRY_SERVICE_REQUEST = {
         body: {
           hits: {
@@ -212,7 +220,8 @@ describe('Service Request Substrate Event Handler', () => {
       const requestData = createMockRequest(RequestStatus.Open);
 
       const COUNTRY_ID = 'string';
-      const COUNTRY_CALLED_WITH = createObjectSearchCountryServiceRequest(COUNTRY_ID);
+      const COUNTRY_CALLED_WITH =
+        createObjectSearchCountryServiceRequest(COUNTRY_ID);
       const ES_RESULT_COUNTRY_SERVICE_REQUEST = {
         body: {
           hits: {
@@ -239,14 +248,16 @@ describe('Service Request Substrate Event Handler', () => {
       const finalizedServiceRequestCommand: FinalizedServiceRequestCommand =
         new FinalizedServiceRequestCommand(serviceInvoice, mockBlockNumber());
 
-      const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(finalizedServiceRequestCommand.serviceInvoice.requestHash);
+      const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(
+        finalizedServiceRequestCommand.serviceInvoice.requestHash,
+      );
       const ES_RESULT_SERVICE_REQUEST = {
         body: {
           hits: {
             hits: [
               {
-                _source: 1
-              }
+                _source: 1,
+              },
             ],
           },
         },
@@ -255,7 +266,7 @@ describe('Service Request Substrate Event Handler', () => {
       when(elasticsearchService.search)
         .calledWith(SERVICE_REQUEST_CALLED_WITH)
         .mockReturnValue(ES_RESULT_SERVICE_REQUEST);
-  
+
       await finalizedServiceRequestHandler.execute(
         finalizedServiceRequestCommand,
       );
@@ -268,14 +279,16 @@ describe('Service Request Substrate Event Handler', () => {
       const processedServiceRequestCommand: ProcessedServiceRequestCommand =
         new ProcessedServiceRequestCommand(serviceInvoice, mockBlockNumber());
 
-      const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(processedServiceRequestCommand.serviceInvoice.requestHash);
+      const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(
+        processedServiceRequestCommand.serviceInvoice.requestHash,
+      );
       const ES_RESULT_SERVICE_REQUEST = {
         body: {
           hits: {
             hits: [
               {
-                _source: 1
-              }
+                _source: 1,
+              },
             ],
           },
         },

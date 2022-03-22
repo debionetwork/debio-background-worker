@@ -109,7 +109,8 @@ const eventRoutes = {
     GeneticAnalystUpdateVerificationStatus:
       GeneticAnalystsUpdateVerificationStatusCommand,
     GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand,
-    GeneticAnalystUpdateAvailabilityStatus: GeneticAnalystsUpdateAvailabilityStatusCommand,
+    GeneticAnalystUpdateAvailabilityStatus:
+      GeneticAnalystsUpdateAvailabilityStatusCommand,
   },
   geneticAnalystQualifications: {
     GeneticAnalystQualificationCreated:
@@ -308,7 +309,7 @@ export class SubstrateService implements OnModuleInit {
 
           for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
             const {
-              method: { method, section },
+              method: { method, section },  // eslint-disable-line
             } = signedBlock.block.extrinsics[j];
 
             const events = allEventRecords.filter(
@@ -343,20 +344,20 @@ export class SubstrateService implements OnModuleInit {
 
   async startListen() {
     const indices = [
-      "country-service-request",
-      "last-block-number-request-service",
-      "create-service-request",
-      "certifications",
-      "labs",
-      "genetic-analysis",
-      "genetic-analysis-order",
-      "genetic-analysts-services",
-      "genetic-analysts",
-      "genetic-analysts-qualification",
-      "genetic-data",
-      "data-bounty",
-      "services",
-      "orders",
+      'country-service-request',
+      'last-block-number-request-service',
+      'create-service-request',
+      'certifications',
+      'labs',
+      'genetic-analysis',
+      'genetic-analysis-order',
+      'genetic-analysts-services',
+      'genetic-analysts',
+      'genetic-analysts-qualification',
+      'genetic-data',
+      'data-bounty',
+      'services',
+      'orders',
     ];
 
     for (const i of indices) {
@@ -411,12 +412,12 @@ export class SubstrateService implements OnModuleInit {
 
   async initializeIndices(index) {
     const { body: exist } = await this.elasticsearchService.indices.exists({
-      index: index
+      index: index,
     });
-    
+
     if (!exist) {
       await this.elasticsearchService.indices.create({
-        index: index
+        index: index,
       });
     }
   }

@@ -1,5 +1,3 @@
-import { StakeStatus } from '../stake-status';
-
 export class GeneticAnalystsInfo {
   constructor(info: any) {
     this.first_name = info.firstName;
