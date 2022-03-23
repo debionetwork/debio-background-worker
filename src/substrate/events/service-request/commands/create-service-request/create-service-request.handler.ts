@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { triggerAsyncId } from 'async_hooks';
 import { CreateServiceRequestCommand } from './create-service-request.command';
 
 @Injectable()

@@ -2,8 +2,6 @@ import { PriceByCurrency } from './price-by-currency';
 
 export class ServiceInfo {
   constructor(info: any) {
-    const decoder = new TextDecoder();
-
     this.prices_by_currency = [];
 
     const priceByCurrency: any = info.pricesByCurrency || [];

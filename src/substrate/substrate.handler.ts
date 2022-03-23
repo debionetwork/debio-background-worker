@@ -309,7 +309,7 @@ export class SubstrateService implements OnModuleInit {
 
           for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
             const {
-              method: { method, section },
+              method: { method, section },  // eslint-disable-line
             } = signedBlock.block.extrinsics[j];
 
             const events = allEventRecords.filter(

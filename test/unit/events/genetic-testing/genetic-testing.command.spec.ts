@@ -22,10 +22,7 @@ describe('Genetic Testing Substrate Event Handler', () => {
     it('should called model data', () => {
       const DATA_STAKED_PARAM = createMockDataStaked();
 
-      const _dataStakedCommand: DataStakedCommand = new DataStakedCommand(
-        DATA_STAKED_PARAM,
-        mockBlockNumber(),
-      );
+      const _dataStakedCommand: DataStakedCommand = new DataStakedCommand(DATA_STAKED_PARAM, mockBlockNumber()); // eslint-disable-line
       expect(DataStaked).toHaveBeenCalled();
       expect(DataStaked).toHaveBeenCalledWith(
         DATA_STAKED_PARAM[0],
