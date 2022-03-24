@@ -44,7 +44,7 @@ describe('Certifications Substrate Event Handler', () => {
       const _certificationCreatedCommand: CertificationCreatedCommand =
         new CertificationCreatedCommand(
           [CERTIFICATION_PARAM],
-          mockBlockNumber(), 
+          mockBlockNumber(),
         );
       /* eslint-enable */
       expect(Certification).toHaveBeenCalled();
@@ -55,8 +55,8 @@ describe('Certifications Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _certificationCreatedCommand: CertificationCreatedCommand = 
-          new CertificationCreatedCommand([{}], mockBlockNumber()); 
+        const _certificationCreatedCommand: CertificationCreatedCommand =
+          new CertificationCreatedCommand([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -71,7 +71,7 @@ describe('Certifications Substrate Event Handler', () => {
         new CertificationUpdatedCommand(
           [CERTIFICATION_PARAM],
           mockBlockNumber(),
-        ); 
+        );
       /* eslint-enable */
       expect(Certification).toHaveBeenCalled();
       expect(Certification).toHaveBeenCalledWith(CERTIFICATION_PARAM.toHuman());
@@ -82,7 +82,7 @@ describe('Certifications Substrate Event Handler', () => {
       expect(() => {
         /* eslint-disable */
         const _certificationUpdatedCommand: CertificationUpdatedCommand =
-          new CertificationUpdatedCommand([{}], mockBlockNumber()); 
+          new CertificationUpdatedCommand([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -97,7 +97,7 @@ describe('Certifications Substrate Event Handler', () => {
         new CertificationDeletedCommand(
           [CERTIFICATION_PARAM],
           mockBlockNumber(),
-        ); 
+        );
       /* eslint-enable */
       expect(Certification).toHaveBeenCalled();
       expect(Certification).toHaveBeenCalledWith(CERTIFICATION_PARAM.toHuman());
@@ -108,7 +108,7 @@ describe('Certifications Substrate Event Handler', () => {
       expect(() => {
         /* eslint-disable */
         const _certificationDeletedCommand: CertificationDeletedCommand =
-          new CertificationDeletedCommand([{}], mockBlockNumber()); 
+          new CertificationDeletedCommand([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
