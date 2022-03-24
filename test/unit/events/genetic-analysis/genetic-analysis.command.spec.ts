@@ -41,7 +41,11 @@ describe('Genetic Analysis Substrate Event Command', () => {
     it('should called model data and toHuman', () => {
       const GENETIC_ANALYSIS_PARAM = createMockGeneticAnalysis();
 
-      const _geneticAnalysisInProgress: GeneticAnalysisInProgressCommand = new GeneticAnalysisInProgressCommand([GENETIC_ANALYSIS_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _geneticAnalysisInProgress: GeneticAnalysisInProgressCommand =
+        new GeneticAnalysisInProgressCommand(
+          [GENETIC_ANALYSIS_PARAM],
+          mockBlockNumber(),
+        ); // eslint-disable-line
       expect(GeneticAnalysisModel).toHaveBeenCalled();
       expect(GeneticAnalysisModel).toHaveBeenCalledWith(
         GENETIC_ANALYSIS_PARAM.toHuman(),
@@ -51,7 +55,8 @@ describe('Genetic Analysis Substrate Event Command', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalysisInProgress: GeneticAnalysisInProgressCommand = new GeneticAnalysisInProgressCommand([{}], mockBlockNumber()); // eslint-disable-line
+        const _geneticAnalysisInProgress: GeneticAnalysisInProgressCommand =
+          new GeneticAnalysisInProgressCommand([{}], mockBlockNumber()); // eslint-disable-line
       }).toThrowError();
     });
   });
@@ -60,7 +65,11 @@ describe('Genetic Analysis Substrate Event Command', () => {
     it('should called model data and toHuman', () => {
       const GENETIC_ANALYSIS_PARAM = createMockGeneticAnalysis();
 
-      const _geneticAnalysisRejected: GeneticAnalysisRejectedCommand = new GeneticAnalysisRejectedCommand([GENETIC_ANALYSIS_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _geneticAnalysisRejected: GeneticAnalysisRejectedCommand =
+        new GeneticAnalysisRejectedCommand(
+          [GENETIC_ANALYSIS_PARAM],
+          mockBlockNumber(),
+        ); // eslint-disable-line
       expect(GeneticAnalysisModel).toHaveBeenCalled();
       expect(GeneticAnalysisModel).toHaveBeenCalledWith(
         GENETIC_ANALYSIS_PARAM.toHuman(),
@@ -70,7 +79,8 @@ describe('Genetic Analysis Substrate Event Command', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalysisRejected: GeneticAnalysisRejectedCommand = new GeneticAnalysisRejectedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        const _geneticAnalysisRejected: GeneticAnalysisRejectedCommand =
+          new GeneticAnalysisRejectedCommand([{}], mockBlockNumber()); // eslint-disable-line
       }).toThrowError();
     });
   });
@@ -79,7 +89,11 @@ describe('Genetic Analysis Substrate Event Command', () => {
     it('should called model data and toHuman', () => {
       const GENETIC_ANALYSIS_PARAM = createMockGeneticAnalysis();
 
-      const _geneticAnalysisResultReady: GeneticAnalysisResultReadyCommand = new GeneticAnalysisResultReadyCommand([GENETIC_ANALYSIS_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _geneticAnalysisResultReady: GeneticAnalysisResultReadyCommand =
+        new GeneticAnalysisResultReadyCommand(
+          [GENETIC_ANALYSIS_PARAM],
+          mockBlockNumber(),
+        ); // eslint-disable-line
       expect(GeneticAnalysisModel).toHaveBeenCalled();
       expect(GeneticAnalysisModel).toHaveBeenCalledWith(
         GENETIC_ANALYSIS_PARAM.toHuman(),
@@ -89,7 +103,8 @@ describe('Genetic Analysis Substrate Event Command', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalysisResultReady: GeneticAnalysisResultReadyCommand = new GeneticAnalysisResultReadyCommand([{}], mockBlockNumber()); // eslint-disable-line
+        const _geneticAnalysisResultReady: GeneticAnalysisResultReadyCommand =
+          new GeneticAnalysisResultReadyCommand([{}], mockBlockNumber()); // eslint-disable-line
       }).toThrowError();
     });
   });
@@ -98,7 +113,11 @@ describe('Genetic Analysis Substrate Event Command', () => {
     it('should called model data and toHuman', () => {
       const GENETIC_ANALYSIS_PARAM = createMockGeneticAnalysis();
 
-      const _geneticAnalysisSubmitted: GeneticAnalysisSubmittedCommand = new GeneticAnalysisSubmittedCommand([GENETIC_ANALYSIS_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _geneticAnalysisSubmitted: GeneticAnalysisSubmittedCommand =
+        new GeneticAnalysisSubmittedCommand(
+          [GENETIC_ANALYSIS_PARAM],
+          mockBlockNumber(),
+        ); // eslint-disable-line
       expect(GeneticAnalysisModel).toHaveBeenCalled();
       expect(GeneticAnalysisModel).toHaveBeenCalledWith(
         GENETIC_ANALYSIS_PARAM.toHuman(),
@@ -108,7 +127,8 @@ describe('Genetic Analysis Substrate Event Command', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalysisSubmitted: GeneticAnalysisSubmittedCommand = new GeneticAnalysisSubmittedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        const _geneticAnalysisSubmitted: GeneticAnalysisSubmittedCommand =
+          new GeneticAnalysisSubmittedCommand([{}], mockBlockNumber()); // eslint-disable-line
       }).toThrowError();
     });
   });

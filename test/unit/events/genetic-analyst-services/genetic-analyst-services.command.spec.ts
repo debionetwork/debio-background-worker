@@ -33,7 +33,11 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_SERVICES_PARAM =
         createMockGeneticAnalystsServices();
 
-      const _geneticAnalystsServicesCreated: GeneticAnalystServicesCreatedCommand = new GeneticAnalystServicesCreatedCommand([GENETIC_ANALYSTS_SERVICES_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _geneticAnalystsServicesCreated: GeneticAnalystServicesCreatedCommand =
+        new GeneticAnalystServicesCreatedCommand(
+          [GENETIC_ANALYSTS_SERVICES_PARAM],
+          mockBlockNumber(),
+        ); // eslint-disable-line
       expect(GeneticAnalystsServicesModel).toHaveBeenCalled();
       expect(GeneticAnalystsServicesModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_SERVICES_PARAM.toHuman(),
@@ -43,7 +47,8 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsServicesCreated: GeneticAnalystServicesCreatedCommand = new GeneticAnalystServicesCreatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        const _geneticAnalystsServicesCreated: GeneticAnalystServicesCreatedCommand =
+          new GeneticAnalystServicesCreatedCommand([{}], mockBlockNumber()); // eslint-disable-line
       }).toThrowError();
     });
   });
@@ -53,7 +58,11 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_SERVICES_PARAM =
         createMockGeneticAnalystsServices();
 
-      const _geneticAnalystsServicesUpdated: GeneticAnalystServicesUpdatedCommand = new GeneticAnalystServicesUpdatedCommand([GENETIC_ANALYSTS_SERVICES_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _geneticAnalystsServicesUpdated: GeneticAnalystServicesUpdatedCommand =
+        new GeneticAnalystServicesUpdatedCommand(
+          [GENETIC_ANALYSTS_SERVICES_PARAM],
+          mockBlockNumber(),
+        ); // eslint-disable-line
       expect(GeneticAnalystsServicesModel).toHaveBeenCalled();
       expect(GeneticAnalystsServicesModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_SERVICES_PARAM.toHuman(),
@@ -63,7 +72,8 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsServicesUpdated: GeneticAnalystServicesUpdatedCommand = new GeneticAnalystServicesUpdatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        const _geneticAnalystsServicesUpdated: GeneticAnalystServicesUpdatedCommand =
+          new GeneticAnalystServicesUpdatedCommand([{}], mockBlockNumber()); // eslint-disable-line
       }).toThrowError();
     });
   });
@@ -73,7 +83,11 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_SERVICES_PARAM =
         createMockGeneticAnalystsServices();
 
-      const _geneticAnalystsServicesDeleted: GeneticAnalystServicesDeletedCommand = new GeneticAnalystServicesDeletedCommand([GENETIC_ANALYSTS_SERVICES_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _geneticAnalystsServicesDeleted: GeneticAnalystServicesDeletedCommand =
+        new GeneticAnalystServicesDeletedCommand(
+          [GENETIC_ANALYSTS_SERVICES_PARAM],
+          mockBlockNumber(),
+        ); // eslint-disable-line
       expect(GeneticAnalystsServicesModel).toHaveBeenCalled();
       expect(GeneticAnalystsServicesModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_SERVICES_PARAM.toHuman(),
@@ -83,7 +97,8 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsServicesDeleted: GeneticAnalystServicesDeletedCommand = new GeneticAnalystServicesDeletedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        const _geneticAnalystsServicesDeleted: GeneticAnalystServicesDeletedCommand =
+          new GeneticAnalystServicesDeletedCommand([{}], mockBlockNumber()); // eslint-disable-line
       }).toThrowError();
     });
   });

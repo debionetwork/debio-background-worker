@@ -48,7 +48,8 @@ describe('Labs Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const LAB_PARAM = createMockLab();
 
-      const _labRegisteredCommand: LabRegisteredCommand = new LabRegisteredCommand([LAB_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _labRegisteredCommand: LabRegisteredCommand =
+        new LabRegisteredCommand([LAB_PARAM], mockBlockNumber()); // eslint-disable-line
       expect(Lab).toHaveBeenCalled();
       expect(Lab).toHaveBeenCalledWith(LAB_PARAM.toHuman());
       expect(LAB_PARAM.toHuman).toHaveBeenCalled();
@@ -56,7 +57,8 @@ describe('Labs Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _labRegisteredCommand: LabRegisteredCommand = new LabRegisteredCommand([{}], mockBlockNumber()); // eslint-disable-line
+        const _labRegisteredCommand: LabRegisteredCommand =
+          new LabRegisteredCommand([{}], mockBlockNumber()); // eslint-disable-line
       }).toThrowError();
     });
   });
@@ -65,7 +67,10 @@ describe('Labs Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const LAB_PARAM = createMockLab();
 
-      const _labUpdatedCommand: LabUpdatedCommand = new LabUpdatedCommand([LAB_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _labUpdatedCommand: LabUpdatedCommand = new LabUpdatedCommand(
+        [LAB_PARAM],
+        mockBlockNumber(),
+      ); // eslint-disable-line
       expect(Lab).toHaveBeenCalled();
       expect(Lab).toHaveBeenCalledWith(LAB_PARAM.toHuman());
       expect(LAB_PARAM.toHuman).toHaveBeenCalled();
@@ -73,7 +78,10 @@ describe('Labs Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _labUpdatedCommand: LabUpdatedCommand = new LabUpdatedCommand([{}], mockBlockNumber()); // eslint-disable-line  
+        const _labUpdatedCommand: LabUpdatedCommand = new LabUpdatedCommand(
+          [{}],
+          mockBlockNumber(),
+        ); // eslint-disable-line
       }).toThrowError();
     });
   });
@@ -82,7 +90,8 @@ describe('Labs Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const LAB_PARAM = createMockLab();
 
-      const _labDeregisteredCommand: LabDeregisteredCommand = new LabDeregisteredCommand([LAB_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _labDeregisteredCommand: LabDeregisteredCommand =
+        new LabDeregisteredCommand([LAB_PARAM], mockBlockNumber()); // eslint-disable-line
       expect(Lab).toHaveBeenCalled();
       expect(Lab).toHaveBeenCalledWith(LAB_PARAM.toHuman());
       expect(LAB_PARAM.toHuman).toHaveBeenCalled();
@@ -90,7 +99,8 @@ describe('Labs Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _labDeregisteredCommand: LabDeregisteredCommand = new LabDeregisteredCommand([{}], mockBlockNumber()); // eslint-disable-line
+        const _labDeregisteredCommand: LabDeregisteredCommand =
+          new LabDeregisteredCommand([{}], mockBlockNumber()); // eslint-disable-line
       }).toThrowError();
     });
   });
@@ -99,7 +109,8 @@ describe('Labs Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const LAB_PARAM = createMockLab();
 
-      const _labUpdateVerificationStatusCommand: LabUpdateVerificationStatusCommand = new LabUpdateVerificationStatusCommand([LAB_PARAM], mockBlockNumber()); // eslint-disable-line
+      const _labUpdateVerificationStatusCommand: LabUpdateVerificationStatusCommand =
+        new LabUpdateVerificationStatusCommand([LAB_PARAM], mockBlockNumber()); // eslint-disable-line
       expect(Lab).toHaveBeenCalled();
       expect(Lab).toHaveBeenCalledWith(LAB_PARAM.toHuman());
       expect(LAB_PARAM.toHuman).toHaveBeenCalled();
@@ -107,7 +118,8 @@ describe('Labs Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _labUpdateVerificationStatusCommand: LabUpdateVerificationStatusCommand = new LabUpdateVerificationStatusCommand([{}], mockBlockNumber()); // eslint-disable-line
+        const _labUpdateVerificationStatusCommand: LabUpdateVerificationStatusCommand =
+          new LabUpdateVerificationStatusCommand([{}], mockBlockNumber()); // eslint-disable-line
       }).toThrowError();
     });
   });
