@@ -13,6 +13,8 @@ export class GeneticAnalystsModel {
     this.stake_status = geneticAnalysts.stakeStatus;
     this.verification_status = geneticAnalysts.verificationStatus;
     this.availability_status = geneticAnalysts.availabilityStatus;
+    this.availability_status = geneticAnalysts.availabilityStatus;
+    this.unstake_at = geneticAnalysts.unstakeAt;
   }
 
   public account_id: string;
@@ -23,4 +25,5 @@ export class GeneticAnalystsModel {
   public stake_status: StakeStatus;
   public verification_status: VerificationStatus;
   public availability_status: AvailabilityStatus;
+  public unstake_at: string;
 }

@@ -61,10 +61,13 @@ import {
 import {
   GeneticAnalystsDeletedCommand,
   GeneticAnalystsRegisteredCommand,
+  GeneticAnalystsRetrieveUnstakeAmountCommand,
   GeneticAnalystsStakeSuccessfulCommand,
   GeneticAnalystsUpdateAvailabilityStatusCommand,
   GeneticAnalystsUpdatedCommand,
   GeneticAnalystsUpdateVerificationStatusCommand,
+  GeneticAnalystUnstakeSuccessfulCommand,
+  GeneticAnalystVerificationFailedCommand,
 } from './events/genetic-analysts';
 import {
   GeneticAnalysisOrderCancelledCommand,
@@ -111,6 +114,10 @@ const eventRoutes = {
     GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand,
     GeneticAnalystUpdateAvailabilityStatus:
       GeneticAnalystsUpdateAvailabilityStatusCommand,
+    GeneticAnalystUnstakeSuccessful: GeneticAnalystUnstakeSuccessfulCommand,
+    GeneticAnalystRetrieveUnstakeAmount:
+      GeneticAnalystsRetrieveUnstakeAmountCommand,
+    GeneticAnalystverificationFailed: GeneticAnalystVerificationFailedCommand,
   },
   geneticAnalystQualifications: {
     GeneticAnalystQualificationCreated:
