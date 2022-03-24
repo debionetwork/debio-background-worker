@@ -60,8 +60,10 @@ describe('Services Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const SERVICES_PARAM = createMockService();
 
+      /* eslint-disable */
       const _servicesCreatedCommand: ServiceCreatedCommand =
-        new ServiceCreatedCommand([SERVICES_PARAM], mockBlockNumber()); // eslint-disable-line
+        new ServiceCreatedCommand([SERVICES_PARAM], mockBlockNumber());
+      /* eslint-enable */
       expect(Service).toHaveBeenCalled();
       expect(Service).toHaveBeenCalledWith(SERVICES_PARAM.toHuman());
       expect(SERVICES_PARAM.toHuman).toHaveBeenCalled();
@@ -69,8 +71,10 @@ describe('Services Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
+        /* eslint-disable */
         const _servicesCreatedCommand: ServiceCreatedCommand =
-          new ServiceCreatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+          new ServiceCreatedCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -79,8 +83,10 @@ describe('Services Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const SERVICES_PARAM = createMockService();
 
+      /* eslint-disable */
       const _servicesUpdatedCommand: ServiceUpdatedCommand =
-        new ServiceUpdatedCommand([SERVICES_PARAM], mockBlockNumber()); // eslint-disable-line
+        new ServiceUpdatedCommand([SERVICES_PARAM], mockBlockNumber());
+      /* eslint-enable */
       expect(Service).toHaveBeenCalled();
       expect(Service).toHaveBeenCalledWith(SERVICES_PARAM.toHuman());
       expect(SERVICES_PARAM.toHuman).toHaveBeenCalled();
@@ -88,8 +94,10 @@ describe('Services Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
+        /* eslint-disable */
         const _servicesUpdatedCommand: ServiceUpdatedCommand =
-          new ServiceUpdatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+          new ServiceUpdatedCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -98,8 +106,10 @@ describe('Services Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const SERVICES_PARAM = createMockService();
 
+      /* eslint-disable */
       const _servicesDeletedCommand: ServiceDeletedCommand =
-        new ServiceDeletedCommand([SERVICES_PARAM], mockBlockNumber()); // eslint-disable-line
+        new ServiceDeletedCommand([SERVICES_PARAM], mockBlockNumber());
+      /* eslint-enable */
       expect(Service).toHaveBeenCalled();
       expect(Service).toHaveBeenCalledWith(SERVICES_PARAM.toHuman());
       expect(SERVICES_PARAM.toHuman).toHaveBeenCalled();
@@ -107,8 +117,10 @@ describe('Services Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
+        /* eslint-disable */
         const _servicesDeletedCommand: ServiceDeletedCommand =
-          new ServiceDeletedCommand([{}], mockBlockNumber()); // eslint-disable-line
+          new ServiceDeletedCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });

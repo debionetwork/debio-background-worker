@@ -40,11 +40,13 @@ describe('Certifications Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const CERTIFICATION_PARAM = createMockCertifications();
 
+      /* eslint-disable */
       const _certificationCreatedCommand: CertificationCreatedCommand =
         new CertificationCreatedCommand(
           [CERTIFICATION_PARAM],
-          mockBlockNumber(),
-        ); // eslint-disable-line
+          mockBlockNumber(), 
+        );
+      /* eslint-enable */
       expect(Certification).toHaveBeenCalled();
       expect(Certification).toHaveBeenCalledWith(CERTIFICATION_PARAM.toHuman());
       expect(CERTIFICATION_PARAM.toHuman).toHaveBeenCalled();
@@ -52,8 +54,10 @@ describe('Certifications Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _certificationCreatedCommand: CertificationCreatedCommand =
-          new CertificationCreatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        /* eslint-disable */
+        const _certificationCreatedCommand: CertificationCreatedCommand = 
+          new CertificationCreatedCommand([{}], mockBlockNumber()); 
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -62,11 +66,13 @@ describe('Certifications Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const CERTIFICATION_PARAM = createMockCertifications();
 
+      /* eslint-disable */
       const _certificationUpdatedCommand: CertificationUpdatedCommand =
         new CertificationUpdatedCommand(
           [CERTIFICATION_PARAM],
           mockBlockNumber(),
-        ); // eslint-disable-line
+        ); 
+      /* eslint-enable */
       expect(Certification).toHaveBeenCalled();
       expect(Certification).toHaveBeenCalledWith(CERTIFICATION_PARAM.toHuman());
       expect(CERTIFICATION_PARAM.toHuman).toHaveBeenCalled();
@@ -74,8 +80,10 @@ describe('Certifications Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
+        /* eslint-disable */
         const _certificationUpdatedCommand: CertificationUpdatedCommand =
-          new CertificationUpdatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+          new CertificationUpdatedCommand([{}], mockBlockNumber()); 
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -84,11 +92,13 @@ describe('Certifications Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const CERTIFICATION_PARAM = createMockCertifications();
 
+      /* eslint-disable */
       const _certificationDeletedCommand: CertificationDeletedCommand =
         new CertificationDeletedCommand(
           [CERTIFICATION_PARAM],
           mockBlockNumber(),
-        ); // eslint-disable-line
+        ); 
+      /* eslint-enable */
       expect(Certification).toHaveBeenCalled();
       expect(Certification).toHaveBeenCalledWith(CERTIFICATION_PARAM.toHuman());
       expect(CERTIFICATION_PARAM.toHuman).toHaveBeenCalled();
@@ -96,8 +106,10 @@ describe('Certifications Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
+        /* eslint-disable */
         const _certificationDeletedCommand: CertificationDeletedCommand =
-          new CertificationDeletedCommand([{}], mockBlockNumber()); // eslint-disable-line
+          new CertificationDeletedCommand([{}], mockBlockNumber()); 
+        /* eslint-enable */
       }).toThrowError();
     });
   });

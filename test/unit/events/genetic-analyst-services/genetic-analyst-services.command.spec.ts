@@ -33,11 +33,13 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_SERVICES_PARAM =
         createMockGeneticAnalystsServices();
 
+      /* eslint-disable */
       const _geneticAnalystsServicesCreated: GeneticAnalystServicesCreatedCommand =
         new GeneticAnalystServicesCreatedCommand(
           [GENETIC_ANALYSTS_SERVICES_PARAM],
           mockBlockNumber(),
-        ); // eslint-disable-line
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsServicesModel).toHaveBeenCalled();
       expect(GeneticAnalystsServicesModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_SERVICES_PARAM.toHuman(),
@@ -47,8 +49,10 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
+        /* eslint-disable */
         const _geneticAnalystsServicesCreated: GeneticAnalystServicesCreatedCommand =
-          new GeneticAnalystServicesCreatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+          new GeneticAnalystServicesCreatedCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -58,11 +62,13 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_SERVICES_PARAM =
         createMockGeneticAnalystsServices();
 
+      /* eslint-disable */
       const _geneticAnalystsServicesUpdated: GeneticAnalystServicesUpdatedCommand =
         new GeneticAnalystServicesUpdatedCommand(
           [GENETIC_ANALYSTS_SERVICES_PARAM],
           mockBlockNumber(),
-        ); // eslint-disable-line
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsServicesModel).toHaveBeenCalled();
       expect(GeneticAnalystsServicesModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_SERVICES_PARAM.toHuman(),
@@ -72,8 +78,10 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
+        /* eslint-disable */
         const _geneticAnalystsServicesUpdated: GeneticAnalystServicesUpdatedCommand =
-          new GeneticAnalystServicesUpdatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+          new GeneticAnalystServicesUpdatedCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -83,11 +91,13 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_SERVICES_PARAM =
         createMockGeneticAnalystsServices();
 
+      /* eslint-disable */
       const _geneticAnalystsServicesDeleted: GeneticAnalystServicesDeletedCommand =
         new GeneticAnalystServicesDeletedCommand(
           [GENETIC_ANALYSTS_SERVICES_PARAM],
           mockBlockNumber(),
-        ); // eslint-disable-line
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsServicesModel).toHaveBeenCalled();
       expect(GeneticAnalystsServicesModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_SERVICES_PARAM.toHuman(),
@@ -97,8 +107,10 @@ describe('Genetic Analysts Services Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
+        /* eslint-disable */
         const _geneticAnalystsServicesDeleted: GeneticAnalystServicesDeletedCommand =
-          new GeneticAnalystServicesDeletedCommand([{}], mockBlockNumber()); // eslint-disable-line
+          new GeneticAnalystServicesDeletedCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });
