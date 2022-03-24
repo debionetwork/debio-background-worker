@@ -27,5 +27,31 @@ export class UnstakedServiceRequestHandler
         },
       },
     });
+
+    await this.elasticsearchService.update({
+      index: 'country-service-request',
+      id: command.request.country,
+      refresh: 'wait_for',
+      body: {
+        script: {
+          lang: 'painless',
+          source: `
+            def services = ctx._source.service_request
+            for (int i = 0; i < services.length; i++) {
+              if (services[i].id == params.id) {
+                ctx._source.service_request.remove(i);
+                break;
+              }
+            }
+          `,
+          params: {
+            id: command.request.hash,
+          },
+        },
+        upsert: {
+          counter: 1,
+        },
+      },
+    });
   }
 }

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderFailedCommand } from './order-failed.command';
-import { OrderStatus } from '../../models/order-status';
 
 @Injectable()
 @CommandHandler(OrderFailedCommand)

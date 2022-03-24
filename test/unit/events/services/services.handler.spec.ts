@@ -187,7 +187,6 @@ describe('Services Substrate Event Handler', () => {
         new ServiceUpdatedCommand([service], mockBlockNumber());
       await serviceUpdatedHandler.execute(serviceUpdatedCommand);
       expect(elasticsearchService.search).toHaveBeenCalled();
-      expect(elasticsearchService.updateByQuery).toHaveBeenCalled();
       expect(elasticsearchService.update).toHaveBeenCalled();
     });
   });

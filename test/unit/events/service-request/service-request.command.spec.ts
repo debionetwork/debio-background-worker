@@ -88,8 +88,7 @@ describe('Service Request Substrate Event Handler', () => {
     it('should called Model and toHuman()', () => {
       const MOCK_DATA = createMockRequest(RequestStatus.Open);
 
-      const _serviceRequestCreatedCommand: CreateServiceRequestCommand =
-        new CreateServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestCreatedCommand: CreateServiceRequestCommand = new CreateServiceRequestCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(RequestModel).toHaveBeenCalled();
@@ -98,8 +97,7 @@ describe('Service Request Substrate Event Handler', () => {
 
     it('should throw error', () => {
       expect(() => {
-        const _serviceRequestCreatedCommand: CreateServiceRequestCommand =
-          new CreateServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestCreatedCommand: CreateServiceRequestCommand = new CreateServiceRequestCommand([{}, {}], mockBlockNumber()); // eslint-disable-line
       }).toThrow();
     });
   });
@@ -108,8 +106,7 @@ describe('Service Request Substrate Event Handler', () => {
     it('should called Model and toHuman()', () => {
       const MOCK_DATA = createMockClaimRequest();
 
-      const _serviceRequestClaimedCommand: ClaimedServiceRequestCommand =
-        new ClaimedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestClaimedCommand: ClaimedServiceRequestCommand = new ClaimedServiceRequestCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(ClaimRequestModel).toHaveBeenCalled();
@@ -118,8 +115,7 @@ describe('Service Request Substrate Event Handler', () => {
 
     it('should throw error', () => {
       expect(() => {
-        const _serviceRequestClaimedCommand: ClaimedServiceRequestCommand =
-          new ClaimedServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestClaimedCommand: ClaimedServiceRequestCommand = new ClaimedServiceRequestCommand([{}, {}], mockBlockNumber()); // eslint-disable-line
       }).toThrow();
     });
   });
@@ -128,8 +124,7 @@ describe('Service Request Substrate Event Handler', () => {
     it('should called Model and toHuman()', () => {
       const MOCK_DATA = createMockServiceInvoice();
 
-      const _serviceRequestFinalizedCommand: FinalizedServiceRequestCommand =
-        new FinalizedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestFinalizedCommand: FinalizedServiceRequestCommand = new FinalizedServiceRequestCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(ServiceInvoice).toHaveBeenCalled();
@@ -138,8 +133,7 @@ describe('Service Request Substrate Event Handler', () => {
 
     it('should throw error', () => {
       expect(() => {
-        const _serviceRequestFinalizedCommand: FinalizedServiceRequestCommand =
-          new FinalizedServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestFinalizedCommand: FinalizedServiceRequestCommand = new FinalizedServiceRequestCommand([{}, {}], mockBlockNumber()); // eslint-disable-line
       }).toThrow();
     });
   });
@@ -148,8 +142,7 @@ describe('Service Request Substrate Event Handler', () => {
     it('should called Model and toHuman()', () => {
       const MOCK_DATA = createMockServiceInvoice();
 
-      const _serviceRequestProcessedCommand: ProcessedServiceRequestCommand =
-        new ProcessedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestProcessedCommand: ProcessedServiceRequestCommand = new ProcessedServiceRequestCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(ServiceInvoice).toHaveBeenCalled();
@@ -158,8 +151,7 @@ describe('Service Request Substrate Event Handler', () => {
 
     it('should throw error', () => {
       expect(() => {
-        const _serviceRequestProcessedCommand: ProcessedServiceRequestCommand =
-          new ProcessedServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestProcessedCommand: ProcessedServiceRequestCommand = new ProcessedServiceRequestCommand([{}, {}], mockBlockNumber()); // eslint-disable-line
       }).toThrow();
     });
   });
@@ -168,8 +160,7 @@ describe('Service Request Substrate Event Handler', () => {
     it('should called Model and toHuman()', () => {
       const MOCK_DATA = createMockRequest(RequestStatus.Unstaked);
 
-      const _serviceRequestUnstakedCommand: UnstakedServiceRequestCommand =
-        new UnstakedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestUnstakedCommand: UnstakedServiceRequestCommand = new UnstakedServiceRequestCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(RequestModel).toHaveBeenCalled();
@@ -178,8 +169,7 @@ describe('Service Request Substrate Event Handler', () => {
 
     it('should throw error', () => {
       expect(() => {
-        const _serviceRequestUnstakedCommand: UnstakedServiceRequestCommand =
-          new UnstakedServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestUnstakedCommand: UnstakedServiceRequestCommand = new UnstakedServiceRequestCommand([{}, {}], mockBlockNumber()); // eslint-disable-line
       }).toThrow();
     });
   });
@@ -188,8 +178,7 @@ describe('Service Request Substrate Event Handler', () => {
     it('should called Model and toHuman()', () => {
       const MOCK_DATA = createMockRequest(RequestStatus.Unstaked);
 
-      const _serviceRequestWaitingForUnstakedCommand: UnstakedWaitingServiceRequestCommand =
-        new UnstakedWaitingServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestWaitingForUnstakedCommand: UnstakedWaitingServiceRequestCommand = new UnstakedWaitingServiceRequestCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(RequestModel).toHaveBeenCalled();
@@ -198,8 +187,7 @@ describe('Service Request Substrate Event Handler', () => {
 
     it('should throw error', () => {
       expect(() => {
-        const _serviceRequestWaitingForUnstakedCommand: UnstakedWaitingServiceRequestCommand =
-          new UnstakedWaitingServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestWaitingForUnstakedCommand: UnstakedWaitingServiceRequestCommand = new UnstakedWaitingServiceRequestCommand([{}, {}], mockBlockNumber()); // eslint-disable-line
       }).toThrow();
     });
   });

@@ -35,10 +35,8 @@ export class ServiceDeletedHandler
         },
       },
     });
-    const { _source } = resp.body.hits.hits[0];
-    serviceIndexToDelete = _source.services.findIndex(
-      (s) => s.id == service.id,
-    );
+    const services = resp.body?.hits?.hits[0]?._source?.services || [];
+    serviceIndexToDelete = services.findIndex((s) => s.id == service.id);
 
     await this.elasticsearchService.update({
       index: 'labs',

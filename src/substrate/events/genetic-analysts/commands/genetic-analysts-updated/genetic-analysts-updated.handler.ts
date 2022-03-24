@@ -20,6 +20,7 @@ export class GeneticAnalystsUpdatedHandler
       body: {
         doc: {
           info: geneticAnalystsModel.info,
+          stake_amount: geneticAnalystsModel.stake_amount,
           blockMetaData: blockMetaData,
         },
       },

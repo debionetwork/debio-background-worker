@@ -10,6 +10,7 @@ export const substrateServiceProvider = {
     listenToNewBlock: jest.fn(),
     syncBlock: jest.fn(),
     startListen: jest.fn(),
+    initializeIndices: jest.fn(),
   }),
 };
 
@@ -56,12 +57,62 @@ export const createObjectSearchLab = (lab_id: string) => {
   };
 };
 
+export const createObjectSearchCountryServiceRequest = (country_id: string) => {
+  return {
+    index: 'country-service-request',
+    body: {
+      query: {
+        match: { _id: country_id },
+      },
+    },
+  };
+};
+
+export const createObjectSearchServiceRequest = (
+  service_request_id: string,
+) => {
+  return {
+    index: 'create-service-request',
+    body: {
+      query: {
+        match: { _id: service_request_id },
+      },
+    },
+  };
+};
+
+export const createObjectSearchGeneticAnalysts = (
+  genetic_analyst_id: string,
+) => {
+  return {
+    index: 'genetic-analysts',
+    body: {
+      query: {
+        match: { _id: genetic_analyst_id },
+      },
+    },
+  };
+};
+
 export const createObjectSearchService = (lab_id: string) => {
   return {
     index: 'services',
     body: {
       query: {
         match: { _id: lab_id },
+      },
+    },
+  };
+};
+
+export const createObjectSearchGeneticAnalystsService = (
+  genetic_analyst_id: string,
+) => {
+  return {
+    index: 'genetic-analysts-services',
+    body: {
+      query: {
+        match: { _id: genetic_analyst_id },
       },
     },
   };

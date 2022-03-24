@@ -1,6 +1,5 @@
-import { CommandBus, CqrsModule } from '@nestjs/cqrs';
+import { CommandBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CommonModule } from '../../src/common/common.module';
 import {
   SubstrateController,
   SubstrateService,
@@ -22,7 +21,6 @@ describe('Substrate Indexer', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [CommonModule, CqrsModule],
       controllers: [SubstrateController],
       providers: [
         ElasticsearchService,

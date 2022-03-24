@@ -17,7 +17,12 @@ import {
 } from '../../../../src/substrate/events/service-request/';
 import { RequestStatus } from '../../../../src/substrate/events/service-request//models/requestStatus';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
-import { ElasticSearchServiceProvider } from '../../mock';
+import {
+  createObjectSearchCountryServiceRequest,
+  createObjectSearchServiceRequest,
+  ElasticSearchServiceProvider,
+} from '../../mock';
+import { when } from 'jest-when';
 
 let claimedServiceRequestHandler: ClaimedServiceRequestHandler;
 let createServiceRequestHandler: CreateServiceRequestHandler;
@@ -160,17 +165,81 @@ describe('Service Request Substrate Event Handler', () => {
 
       const claimedServiceRequestCommand: ClaimedServiceRequestCommand =
         new ClaimedServiceRequestCommand(claimRequest, mockBlockNumber());
+
+      const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(
+        claimedServiceRequestCommand.claimRequest.requestHash,
+      );
+      const ES_RESULT_SERVICE_REQUEST = {
+        body: {
+          hits: {
+            hits: [
+              {
+                _source: 1,
+              },
+            ],
+          },
+        },
+      };
+
+      when(elasticsearchService.search)
+        .calledWith(SERVICE_REQUEST_CALLED_WITH)
+        .mockReturnValue(ES_RESULT_SERVICE_REQUEST);
+
       await claimedServiceRequestHandler.execute(claimedServiceRequestCommand);
-      expect(elasticsearchService.update).toHaveBeenCalled();
+      expect(elasticsearchService.update).toHaveBeenCalledTimes(2);
     });
 
-    it('Create Service Request Handler', async () => {
+    it('Create Service Request Handler WHEN COUTRY SERVICE REQUEST HITS 0', async () => {
       const requestData = createMockRequest(RequestStatus.Open);
+
+      const createServiceRequestCommand: CreateServiceRequestCommand =
+        new CreateServiceRequestCommand(requestData, mockBlockNumber());
+
+      const COUNTRY_CALLED_WITH = createObjectSearchCountryServiceRequest(
+        createServiceRequestCommand.request.country,
+      );
+      const ES_RESULT_COUNTRY_SERVICE_REQUEST = {
+        body: {
+          hits: {
+            hits: [],
+          },
+        },
+      };
+
+      when(elasticsearchService.search)
+        .calledWith(COUNTRY_CALLED_WITH)
+        .mockReturnValue(ES_RESULT_COUNTRY_SERVICE_REQUEST);
+
+      await createServiceRequestHandler.execute(createServiceRequestCommand);
+      expect(elasticsearchService.index).toHaveBeenCalled();
+      expect(elasticsearchService.search).toHaveBeenCalled();
+      expect(elasticsearchService.index).toHaveBeenCalled();
+    });
+
+    it('Create Service Request Handler WHEN COUTRY SERVICE REQUEST HITS MORE THAN 0', async () => {
+      const requestData = createMockRequest(RequestStatus.Open);
+
+      const COUNTRY_ID = 'string';
+      const COUNTRY_CALLED_WITH =
+        createObjectSearchCountryServiceRequest(COUNTRY_ID);
+      const ES_RESULT_COUNTRY_SERVICE_REQUEST = {
+        body: {
+          hits: {
+            hits: [],
+          },
+        },
+      };
+
+      when(elasticsearchService.search)
+        .calledWith(COUNTRY_CALLED_WITH)
+        .mockReturnValue(ES_RESULT_COUNTRY_SERVICE_REQUEST);
 
       const createServiceRequestCommand: CreateServiceRequestCommand =
         new CreateServiceRequestCommand(requestData, mockBlockNumber());
       await createServiceRequestHandler.execute(createServiceRequestCommand);
       expect(elasticsearchService.index).toHaveBeenCalled();
+      expect(elasticsearchService.search).toHaveBeenCalled();
+      expect(elasticsearchService.update).toHaveBeenCalled();
     });
 
     it('Finalized Service Request Handler', async () => {
@@ -178,6 +247,26 @@ describe('Service Request Substrate Event Handler', () => {
 
       const finalizedServiceRequestCommand: FinalizedServiceRequestCommand =
         new FinalizedServiceRequestCommand(serviceInvoice, mockBlockNumber());
+
+      const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(
+        finalizedServiceRequestCommand.serviceInvoice.requestHash,
+      );
+      const ES_RESULT_SERVICE_REQUEST = {
+        body: {
+          hits: {
+            hits: [
+              {
+                _source: 1,
+              },
+            ],
+          },
+        },
+      };
+
+      when(elasticsearchService.search)
+        .calledWith(SERVICE_REQUEST_CALLED_WITH)
+        .mockReturnValue(ES_RESULT_SERVICE_REQUEST);
+
       await finalizedServiceRequestHandler.execute(
         finalizedServiceRequestCommand,
       );
@@ -189,6 +278,26 @@ describe('Service Request Substrate Event Handler', () => {
 
       const processedServiceRequestCommand: ProcessedServiceRequestCommand =
         new ProcessedServiceRequestCommand(serviceInvoice, mockBlockNumber());
+
+      const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(
+        processedServiceRequestCommand.serviceInvoice.requestHash,
+      );
+      const ES_RESULT_SERVICE_REQUEST = {
+        body: {
+          hits: {
+            hits: [
+              {
+                _source: 1,
+              },
+            ],
+          },
+        },
+      };
+
+      when(elasticsearchService.search)
+        .calledWith(SERVICE_REQUEST_CALLED_WITH)
+        .mockReturnValue(ES_RESULT_SERVICE_REQUEST);
+
       await processedServiceRequestHandler.execute(
         processedServiceRequestCommand,
       );

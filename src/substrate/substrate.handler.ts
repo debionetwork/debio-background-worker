@@ -43,7 +43,44 @@ import {
 } from './events/certifications';
 import { DataStakedCommand } from './events/genetic-testing';
 import { ProcessEnvProxy } from '../common/process-env/process-env.proxy';
-import { GeneticAnalystsDeletedCommand, GeneticAnalystsRegisteredCommand, GeneticAnalystsStakeSuccessfulCommand, GeneticAnalystsUpdatedCommand, GeneticAnalystsUpdateVerificationStatusCommand } from './events/genetic-analysts';
+import {
+  AddGeneticDataCommand,
+  RemoveGeneticDataCommand,
+  UpdateGeneticDataCommand,
+} from './events/genetic-data';
+import {
+  GeneticAnalystsQualificationCreatedCommand,
+  GeneticAnalystsQualificationDeletedCommand,
+  GeneticAnalystsQualificationUpdatedCommand,
+} from './events/genetic-analyst-qualifications';
+import {
+  GeneticAnalystServicesCreatedCommand,
+  GeneticAnalystServicesDeletedCommand,
+  GeneticAnalystServicesUpdatedCommand,
+} from './events/genetic-analyst-services';
+import {
+  GeneticAnalystsDeletedCommand,
+  GeneticAnalystsRegisteredCommand,
+  GeneticAnalystsStakeSuccessfulCommand,
+  GeneticAnalystsUpdateAvailabilityStatusCommand,
+  GeneticAnalystsUpdatedCommand,
+  GeneticAnalystsUpdateVerificationStatusCommand,
+} from './events/genetic-analysts';
+import {
+  GeneticAnalysisOrderCancelledCommand,
+  GeneticAnalysisOrderCreatedCommand,
+  GeneticAnalysisOrderFailedCommand,
+  GeneticAnalysisOrderFulfilledCommand,
+  GeneticAnalysisOrderPaidCommand,
+  GeneticAnalysisOrderRefundedCommand,
+} from './events/genetic-analysis-order';
+import {
+  GeneticAnalysisInProgressCommand,
+  GeneticAnalysisRejectedCommand,
+  GeneticAnalysisResultReadyCommand,
+  GeneticAnalysisSubmittedCommand,
+} from './events/genetic-analysis';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 const eventRoutes = {
   certifications: {
@@ -51,12 +88,47 @@ const eventRoutes = {
     CertificationUpdated: CertificationUpdatedCommand,
     CertificationDeleted: CertificationDeletedCommand,
   },
+  geneticAnalysis: {
+    GeneticAnalysisSubmitted: GeneticAnalysisSubmittedCommand,
+    GeneticAnalysisInProgress: GeneticAnalysisInProgressCommand,
+    GeneticAnalysisRejected: GeneticAnalysisRejectedCommand,
+    GeneticAnalysisResultReady: GeneticAnalysisResultReadyCommand,
+  },
+  geneticAnalysisOrders: {
+    GeneticAnalysisOrderCreated: GeneticAnalysisOrderCreatedCommand,
+    GeneticAnalysisOrderPaid: GeneticAnalysisOrderPaidCommand,
+    GeneticAnalysisOrderFulfilled: GeneticAnalysisOrderFulfilledCommand,
+    GeneticAnalysisOrderRefunded: GeneticAnalysisOrderRefundedCommand,
+    GeneticAnalysisOrderCancelled: GeneticAnalysisOrderCancelledCommand,
+    GeneticAnalysisOrderFailed: GeneticAnalysisOrderFailedCommand,
+  },
   geneticAnalysts: {
     GeneticAnalystRegistered: GeneticAnalystsRegisteredCommand,
     GeneticAnalystUpdated: GeneticAnalystsUpdatedCommand,
     GeneticAnalystDeleted: GeneticAnalystsDeletedCommand,
-    GeneticAnalystUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand,
-    GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand
+    GeneticAnalystUpdateVerificationStatus:
+      GeneticAnalystsUpdateVerificationStatusCommand,
+    GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand,
+    GeneticAnalystUpdateAvailabilityStatus:
+      GeneticAnalystsUpdateAvailabilityStatusCommand,
+  },
+  geneticAnalystQualifications: {
+    GeneticAnalystQualificationCreated:
+      GeneticAnalystsQualificationCreatedCommand,
+    GeneticAnalystQualificationUpdated:
+      GeneticAnalystsQualificationUpdatedCommand,
+    GeneticAnalystQualificationDeleted:
+      GeneticAnalystsQualificationDeletedCommand,
+  },
+  geneticAnalystServices: {
+    GeneticAnalystServiceCreated: GeneticAnalystServicesCreatedCommand,
+    GeneticAnalystServiceUpdated: GeneticAnalystServicesUpdatedCommand,
+    GeneticAnalystServiceDeleted: GeneticAnalystServicesDeletedCommand,
+  },
+  geneticData: {
+    GeneticDataAdded: AddGeneticDataCommand,
+    GeneticDataUpdated: UpdateGeneticDataCommand,
+    GeneticDataRemoved: RemoveGeneticDataCommand,
   },
   geneticTesting: {
     DataStaked: DataStakedCommand,
@@ -102,6 +174,7 @@ export class SubstrateService implements OnModuleInit {
     private commandBus: CommandBus,
     private queryBus: QueryBus,
     private process: ProcessEnvProxy,
+    private readonly elasticsearchService: ElasticsearchService,
   ) {}
 
   onModuleInit() {
@@ -236,7 +309,7 @@ export class SubstrateService implements OnModuleInit {
 
           for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
             const {
-              method: { method, section },
+              method: { method, section },  // eslint-disable-line
             } = signedBlock.block.extrinsics[j];
 
             const events = allEventRecords.filter(
@@ -270,6 +343,27 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async startListen() {
+    const indices = [
+      'country-service-request',
+      'last-block-number-request-service',
+      'create-service-request',
+      'certifications',
+      'labs',
+      'genetic-analysis',
+      'genetic-analysis-order',
+      'genetic-analysts-services',
+      'genetic-analysts',
+      'genetic-analysts-qualification',
+      'genetic-data',
+      'data-bounty',
+      'services',
+      'orders',
+    ];
+
+    for (const i of indices) {
+      await this.initializeIndices(i);
+    }
+
     if (this.listenStatus) return;
 
     this.listenStatus = true;
@@ -313,6 +407,18 @@ export class SubstrateService implements OnModuleInit {
 
     if (this.head) {
       this.head();
+    }
+  }
+
+  async initializeIndices(index) {
+    const { body: exist } = await this.elasticsearchService.indices.exists({
+      index: index,
+    });
+
+    if (!exist) {
+      await this.elasticsearchService.indices.create({
+        index: index,
+      });
     }
   }
 }

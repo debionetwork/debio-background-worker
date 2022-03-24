@@ -1,11 +1,17 @@
 {
   "name": "debio-indexer",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "2.0.0",
+  "description": "AGPL-3.0",
+  "author": "DeBio Dev Team <debio_dev@blocksphere.id>",
+  "homepage": "https://debio.network",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/debionetwork/debio-indexer"
+  },
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "install:hooks": ".maintain/install-hooks.sh",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

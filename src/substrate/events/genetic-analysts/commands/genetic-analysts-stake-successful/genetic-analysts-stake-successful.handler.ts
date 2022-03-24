@@ -20,9 +20,10 @@ export class GeneticAnalystsStakeSuccessfulHandler
       body: {
         doc: {
           stake_status: geneticAnalystsModel.stake_status,
-          blockMetaData: blockMetaData
-        }
-      }
+          stake_amount: geneticAnalystsModel.stake_amount,
+          blockMetaData: blockMetaData,
+        },
+      },
     });
   }
 }
