@@ -22,6 +22,7 @@ export class GeneticAnalystsRetrieveUnstakeAmountHandler
         stake_status: geneticAnalystsModel.stake_status,
         blockMetaData: blockMetaData,
         unstake_at: geneticAnalystsModel.unstake_at,
+        retrieve_unstake_at: geneticAnalystsModel.retrieve_unstake_at,
       },
     });
   }

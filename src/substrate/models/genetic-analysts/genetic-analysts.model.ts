@@ -15,6 +15,7 @@ export class GeneticAnalystsModel {
     this.availability_status = geneticAnalysts.availabilityStatus;
     this.availability_status = geneticAnalysts.availabilityStatus;
     this.unstake_at = geneticAnalysts.unstakeAt;
+    this.retrieve_unstake_at = geneticAnalysts.retrieveUnstakeAt;
   }
 
   public account_id: string;
@@ -26,4 +27,5 @@ export class GeneticAnalystsModel {
   public verification_status: VerificationStatus;
   public availability_status: AvailabilityStatus;
   public unstake_at: string;
+  public retrieve_unstake_at: string;
 }
