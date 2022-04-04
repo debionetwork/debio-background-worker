@@ -13,7 +13,6 @@ export class GeneticAnalystsModel {
     this.stake_status = geneticAnalysts.stakeStatus;
     this.verification_status = geneticAnalysts.verificationStatus;
     this.availability_status = geneticAnalysts.availabilityStatus;
-    this.availability_status = geneticAnalysts.availabilityStatus;
     this.unstake_at = geneticAnalysts.unstakeAt;
     this.retrieve_unstake_at = geneticAnalysts.retrieveUnstakeAt;
   }
