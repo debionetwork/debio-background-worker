@@ -1,5 +1,5 @@
 export enum StakeStatus {
   Staked = 'Staked',
-  WaitingForStaked = 'WaitingForUnStaked',
+  WaitingForUnstaked = 'WaitingForUnstaked',
   Unstaked = 'Unstaked',
 }
