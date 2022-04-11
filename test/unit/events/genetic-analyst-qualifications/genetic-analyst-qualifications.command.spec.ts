@@ -33,7 +33,13 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_QUALIFICATIONS_PARAM =
         createMockGeneticAnalystsQualifications();
 
-      const _geneticAnalystsQualificationsCreated: GeneticAnalystsQualificationCreatedCommand = new GeneticAnalystsQualificationCreatedCommand([GENETIC_ANALYSTS_QUALIFICATIONS_PARAM], mockBlockNumber()); // eslint-disable-line
+      /* eslint-disable */
+      const _geneticAnalystsQualificationsCreated: GeneticAnalystsQualificationCreatedCommand =
+        new GeneticAnalystsQualificationCreatedCommand(
+          [GENETIC_ANALYSTS_QUALIFICATIONS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsQualificationModel).toHaveBeenCalled();
       expect(GeneticAnalystsQualificationModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_QUALIFICATIONS_PARAM.toHuman(),
@@ -43,7 +49,13 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsQualificationsCreated: GeneticAnalystsQualificationCreatedCommand = new GeneticAnalystsQualificationCreatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        /* eslint-disable */
+        const _geneticAnalystsQualificationsCreated: GeneticAnalystsQualificationCreatedCommand =
+          new GeneticAnalystsQualificationCreatedCommand(
+            [{}],
+            mockBlockNumber(),
+          );
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -53,7 +65,13 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_QUALIFICATIONS_PARAM =
         createMockGeneticAnalystsQualifications();
 
-      const _geneticAnalystsQualificationsUpdated: GeneticAnalystsQualificationUpdatedCommand = new GeneticAnalystsQualificationUpdatedCommand([GENETIC_ANALYSTS_QUALIFICATIONS_PARAM], mockBlockNumber()); // eslint-disable-line
+      /* eslint-disable */
+      const _geneticAnalystsQualificationsUpdated: GeneticAnalystsQualificationUpdatedCommand =
+        new GeneticAnalystsQualificationUpdatedCommand(
+          [GENETIC_ANALYSTS_QUALIFICATIONS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsQualificationModel).toHaveBeenCalled();
       expect(GeneticAnalystsQualificationModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_QUALIFICATIONS_PARAM.toHuman(),
@@ -63,7 +81,13 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsQualificationsUpdated: GeneticAnalystsQualificationUpdatedCommand = new GeneticAnalystsQualificationUpdatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        /* eslint-disable */
+        const _geneticAnalystsQualificationsUpdated: GeneticAnalystsQualificationUpdatedCommand =
+          new GeneticAnalystsQualificationUpdatedCommand(
+            [{}],
+            mockBlockNumber(),
+          );
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -73,7 +97,13 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_QUALIFICATIONS_PARAM =
         createMockGeneticAnalystsQualifications();
 
-      const _geneticAnalystsQualificationsDeleted: GeneticAnalystsQualificationDeletedCommand = new GeneticAnalystsQualificationDeletedCommand([GENETIC_ANALYSTS_QUALIFICATIONS_PARAM], mockBlockNumber()); // eslint-disable-line
+      /* eslint-disable */
+      const _geneticAnalystsQualificationsDeleted: GeneticAnalystsQualificationDeletedCommand =
+        new GeneticAnalystsQualificationDeletedCommand(
+          [GENETIC_ANALYSTS_QUALIFICATIONS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsQualificationModel).toHaveBeenCalled();
       expect(GeneticAnalystsQualificationModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_QUALIFICATIONS_PARAM.toHuman(),
@@ -83,7 +113,13 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsQualificationsDeleted: GeneticAnalystsQualificationDeletedCommand = new GeneticAnalystsQualificationDeletedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        /* eslint-disable */
+        const _geneticAnalystsQualificationsDeleted: GeneticAnalystsQualificationDeletedCommand =
+          new GeneticAnalystsQualificationDeletedCommand(
+            [{}],
+            mockBlockNumber(),
+          );
+        /* eslint-enable */
       }).toThrowError();
     });
   });

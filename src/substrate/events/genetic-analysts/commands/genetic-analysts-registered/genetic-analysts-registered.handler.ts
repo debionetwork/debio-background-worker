@@ -29,6 +29,7 @@ export class GeneticAnalystsRegisteredHandler
         verification_status: geneticAnalystsModel.verification_status,
         availability_status: geneticAnalystsModel.availability_status,
         blockMetaData: blockMetaData,
+        unstake_at: geneticAnalystsModel.unstake_at,
       },
     });
   }

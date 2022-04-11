@@ -61,10 +61,13 @@ import {
 import {
   GeneticAnalystsDeletedCommand,
   GeneticAnalystsRegisteredCommand,
+  GeneticAnalystsRetrieveUnstakeAmountCommand,
   GeneticAnalystsStakeSuccessfulCommand,
   GeneticAnalystsUpdateAvailabilityStatusCommand,
   GeneticAnalystsUpdatedCommand,
   GeneticAnalystsUpdateVerificationStatusCommand,
+  GeneticAnalystUnstakeSuccessfulCommand,
+  GeneticAnalystVerificationFailedCommand,
 } from './events/genetic-analysts';
 import {
   GeneticAnalysisOrderCancelledCommand,
@@ -111,6 +114,10 @@ const eventRoutes = {
     GeneticAnalystStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand,
     GeneticAnalystUpdateAvailabilityStatus:
       GeneticAnalystsUpdateAvailabilityStatusCommand,
+    GeneticAnalystUnstakeSuccessful: GeneticAnalystUnstakeSuccessfulCommand,
+    GeneticAnalystRetrieveUnstakeAmount:
+      GeneticAnalystsRetrieveUnstakeAmountCommand,
+    GeneticAnalystverificationFailed: GeneticAnalystVerificationFailedCommand,
   },
   geneticAnalystQualifications: {
     GeneticAnalystQualificationCreated:
@@ -309,7 +316,7 @@ export class SubstrateService implements OnModuleInit {
 
           for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
             const {
-              method: { method, section },  // eslint-disable-line
+              method: { method, section }, // eslint-disable-line
             } = signedBlock.block.extrinsics[j];
 
             const events = allEventRecords.filter(

@@ -5,6 +5,9 @@ import {
   GeneticAnalystsUpdateVerificationStatusCommand,
   GeneticAnalystsUpdatedCommand,
   GeneticAnalystsUpdateAvailabilityStatusCommand,
+  GeneticAnalystsRetrieveUnstakeAmountCommand,
+  GeneticAnalystVerificationFailedCommand,
+  GeneticAnalystUnstakeSuccessfulCommand,
 } from '../../../../src/substrate/events/genetic-analysts';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
 import { GeneticAnalystsModel } from '../../../../src/substrate/models/genetic-analysts/genetic-analysts.model';
@@ -36,7 +39,13 @@ describe('Genetic Analysts Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
 
-      const _geneticAnalystsRegistered: GeneticAnalystsRegisteredCommand = new GeneticAnalystsRegisteredCommand([GENETIC_ANALYSTS_PARAM], mockBlockNumber()); // eslint-disable-line
+      /* eslint-disable */
+      const _geneticAnalystsRegistered: GeneticAnalystsRegisteredCommand =
+        new GeneticAnalystsRegisteredCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsModel).toHaveBeenCalled();
       expect(GeneticAnalystsModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_PARAM.toHuman(),
@@ -46,7 +55,10 @@ describe('Genetic Analysts Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsRegistered: GeneticAnalystsRegisteredCommand = new GeneticAnalystsRegisteredCommand([{}], mockBlockNumber()); // eslint-disable-line
+        /* eslint-disable */
+        const _geneticAnalystsRegistered: GeneticAnalystsRegisteredCommand =
+          new GeneticAnalystsRegisteredCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -55,7 +67,13 @@ describe('Genetic Analysts Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
 
-      const _geneticAnalystsStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand = new GeneticAnalystsStakeSuccessfulCommand([GENETIC_ANALYSTS_PARAM], mockBlockNumber()); // eslint-disable-line
+      /* eslint-disable */
+      const _geneticAnalystsStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand =
+        new GeneticAnalystsStakeSuccessfulCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsModel).toHaveBeenCalled();
       expect(GeneticAnalystsModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_PARAM.toHuman(),
@@ -65,7 +83,10 @@ describe('Genetic Analysts Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand = new GeneticAnalystsStakeSuccessfulCommand([{}], mockBlockNumber()); // eslint-disable-line
+        /* eslint-disable */
+        const _geneticAnalystsStakeSuccessful: GeneticAnalystsStakeSuccessfulCommand =
+          new GeneticAnalystsStakeSuccessfulCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -74,8 +95,13 @@ describe('Genetic Analysts Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
 
-      const _geneticAnalystsUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand = new GeneticAnalystsUpdateVerificationStatusCommand([GENETIC_ANALYSTS_PARAM], mockBlockNumber()); // eslint-disable-line
-
+      /* eslint-disable */
+      const _geneticAnalystsUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand =
+        new GeneticAnalystsUpdateVerificationStatusCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsModel).toHaveBeenCalled();
       expect(GeneticAnalystsModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_PARAM.toHuman(),
@@ -85,7 +111,13 @@ describe('Genetic Analysts Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand = new GeneticAnalystsUpdateVerificationStatusCommand([{}], mockBlockNumber()); // eslint-disable-line
+        /* eslint-disable */
+        const _geneticAnalystsUpdateVerificationStatus: GeneticAnalystsUpdateVerificationStatusCommand =
+          new GeneticAnalystsUpdateVerificationStatusCommand(
+            [{}],
+            mockBlockNumber(),
+          );
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -94,7 +126,13 @@ describe('Genetic Analysts Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
 
-      const _geneticAnalystsUpdated: GeneticAnalystsUpdatedCommand = new GeneticAnalystsUpdatedCommand([GENETIC_ANALYSTS_PARAM], mockBlockNumber()); // eslint-disable-line
+      /* eslint-disable */
+      const _geneticAnalystsUpdated: GeneticAnalystsUpdatedCommand =
+        new GeneticAnalystsUpdatedCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsModel).toHaveBeenCalled();
       expect(GeneticAnalystsModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_PARAM.toHuman(),
@@ -104,7 +142,10 @@ describe('Genetic Analysts Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsUpdated: GeneticAnalystsUpdatedCommand = new GeneticAnalystsUpdatedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        /* eslint-disable */
+        const _geneticAnalystsUpdated: GeneticAnalystsUpdatedCommand =
+          new GeneticAnalystsUpdatedCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -113,7 +154,13 @@ describe('Genetic Analysts Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
 
-      const _geneticAnalystsDeleted: GeneticAnalystsDeletedCommand = new GeneticAnalystsDeletedCommand([GENETIC_ANALYSTS_PARAM], mockBlockNumber()); // eslint-disable-line
+      /* eslint-disable */
+      const _geneticAnalystsDeleted: GeneticAnalystsDeletedCommand =
+        new GeneticAnalystsDeletedCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsModel).toHaveBeenCalled();
       expect(GeneticAnalystsModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_PARAM.toHuman(),
@@ -123,7 +170,10 @@ describe('Genetic Analysts Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsDeleted: GeneticAnalystsDeletedCommand = new GeneticAnalystsDeletedCommand([{}], mockBlockNumber()); // eslint-disable-line
+        /* eslint-disable */
+        const _geneticAnalystsDeleted: GeneticAnalystsDeletedCommand =
+          new GeneticAnalystsDeletedCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });
@@ -132,7 +182,13 @@ describe('Genetic Analysts Substrate Event Handler', () => {
     it('should called model data and toHuman', () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
 
-      const _geneticAnalystsUpdateAvailabilityStatus: GeneticAnalystsUpdateAvailabilityStatusCommand = new GeneticAnalystsUpdateAvailabilityStatusCommand([GENETIC_ANALYSTS_PARAM], mockBlockNumber()); // eslint-disable-line
+      /* eslint-disable */
+      const _geneticAnalystsUpdateAvailabilityStatus: GeneticAnalystsUpdateAvailabilityStatusCommand =
+        new GeneticAnalystsUpdateAvailabilityStatusCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
       expect(GeneticAnalystsModel).toHaveBeenCalled();
       expect(GeneticAnalystsModel).toHaveBeenCalledWith(
         GENETIC_ANALYSTS_PARAM.toHuman(),
@@ -142,7 +198,100 @@ describe('Genetic Analysts Substrate Event Handler', () => {
 
     it('should throw error if toHuman not defined', () => {
       expect(() => {
-        const _geneticAnalystsUpdateAvailabilityStatus: GeneticAnalystsUpdateAvailabilityStatusCommand = new GeneticAnalystsUpdateAvailabilityStatusCommand([{}], mockBlockNumber()); // eslint-disable-line
+        /* eslint-disable */
+        const _geneticAnalystsUpdateAvailabilityStatus: GeneticAnalystsUpdateAvailabilityStatusCommand =
+          new GeneticAnalystsUpdateAvailabilityStatusCommand(
+            [{}],
+            mockBlockNumber(),
+          );
+        /* eslint-enable */
+      }).toThrowError();
+    });
+  });
+
+  describe('Genetic Analysts retrieve unstake amount Command', () => {
+    it('should called model data and toHuman', () => {
+      const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
+
+      /* eslint-disable */
+      const _geneticAnalystsRetrieveUnstakeAmount: GeneticAnalystsRetrieveUnstakeAmountCommand =
+        new GeneticAnalystsRetrieveUnstakeAmountCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
+      expect(GeneticAnalystsModel).toHaveBeenCalled();
+      expect(GeneticAnalystsModel).toHaveBeenCalledWith(
+        GENETIC_ANALYSTS_PARAM.toHuman(),
+      );
+      expect(GENETIC_ANALYSTS_PARAM.toHuman).toHaveBeenCalled();
+    });
+
+    it('should throw error if toHuman not defined', () => {
+      expect(() => {
+        /* eslint-disable */
+        const _geneticAnalystsRetrieveUnstakeAmount: GeneticAnalystsRetrieveUnstakeAmountCommand =
+          new GeneticAnalystsRetrieveUnstakeAmountCommand(
+            [{}],
+            mockBlockNumber(),
+          );
+        /* eslint-enable */
+      }).toThrowError();
+    });
+  });
+
+  describe('Genetic Analysts unstake successful Command', () => {
+    it('should called model data and toHuman', () => {
+      const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
+
+      /* eslint-disable */
+      const _geneticAnalystsUnstakeSuccessful: GeneticAnalystUnstakeSuccessfulCommand =
+        new GeneticAnalystUnstakeSuccessfulCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
+      expect(GeneticAnalystsModel).toHaveBeenCalled();
+      expect(GeneticAnalystsModel).toHaveBeenCalledWith(
+        GENETIC_ANALYSTS_PARAM.toHuman(),
+      );
+      expect(GENETIC_ANALYSTS_PARAM.toHuman).toHaveBeenCalled();
+    });
+
+    it('should throw error if toHuman not defined', () => {
+      expect(() => {
+        /* eslint-disable */
+        const _geneticAnalystsUnstakeSuccessful: GeneticAnalystUnstakeSuccessfulCommand =
+          new GeneticAnalystUnstakeSuccessfulCommand([{}], mockBlockNumber());
+        /* eslint-enable */
+      }).toThrowError();
+    });
+  });
+
+  describe('Genetic Analysts verification failed Command', () => {
+    it('should called model data and toHuman', () => {
+      const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts();
+
+      /* eslint-disable */
+      const _geneticAnalystsVerificationFailed: GeneticAnalystVerificationFailedCommand =
+        new GeneticAnalystVerificationFailedCommand(
+          [GENETIC_ANALYSTS_PARAM],
+          mockBlockNumber(),
+        );
+      /* eslint-enable */
+      expect(GeneticAnalystsModel).toHaveBeenCalled();
+      expect(GeneticAnalystsModel).toHaveBeenCalledWith(
+        GENETIC_ANALYSTS_PARAM.toHuman(),
+      );
+      expect(GENETIC_ANALYSTS_PARAM.toHuman).toHaveBeenCalled();
+    });
+
+    it('should throw error if toHuman not defined', () => {
+      expect(() => {
+        /* eslint-disable */
+        const _geneticAnalystsVerificationFailed: GeneticAnalystVerificationFailedCommand =
+          new GeneticAnalystVerificationFailedCommand([{}], mockBlockNumber());
+        /* eslint-enable */
       }).toThrowError();
     });
   });

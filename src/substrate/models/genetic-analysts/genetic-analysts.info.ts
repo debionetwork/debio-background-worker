@@ -1,5 +1,6 @@
 export class GeneticAnalystsInfo {
   constructor(info: any) {
+    this.box_public_key = info.boxPublicKey;
     this.first_name = info.firstName;
     this.last_name = info.lastName;
     this.gender = info.gender;
@@ -11,6 +12,7 @@ export class GeneticAnalystsInfo {
     this.profile_image = info.profileImage;
   }
 
+  public box_public_key: string;
   public first_name: string;
   public last_name: string;
   public gender: string;

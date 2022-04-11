@@ -53,9 +53,8 @@ export class ProcessedServiceRequestHandler
           script: {
             lang: 'painless',
             source: `
-              def services = ctx._source.service_request
-              for (int i = 0; i < services.length; i++) {
-                if (services[i].id == params.id) {
+              for (int i = 0; i < ctx._source.service_request.length; i++) {
+                if (ctx._source.service_request[i].id == params.id) {
                   ctx._source.service_request.remove(i);
                   break;
                 }
