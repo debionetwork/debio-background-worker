@@ -2,7 +2,8 @@ import { GeneticAnalysisStatus } from './genetic-analysis.status';
 
 export class GeneticAnalysisModel {
   constructor(geneticAnalyst: any) {
-    this.genetic_analysis_tracking_id = geneticAnalyst.geneticAnalysisTrackingId;
+    this.genetic_analysis_tracking_id =
+      geneticAnalyst.geneticAnalysisTrackingId;
     this.genetic_analyst_id = geneticAnalyst.geneticAnalystId;
     this.owner_id = geneticAnalyst.ownerId;
     this.report_link = geneticAnalyst.reportLink;

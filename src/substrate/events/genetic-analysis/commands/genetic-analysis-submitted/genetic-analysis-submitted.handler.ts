@@ -26,7 +26,8 @@ export class GeneticAnalysisSubmittedHandler
         comment: geneticAnalysisModel.comment,
         rejected_title: geneticAnalysisModel.rejected_title,
         rejected_description: geneticAnalysisModel.rejected_description,
-        genetic_analyst_order_id: geneticAnalysisModel.genetic_analysis_order_id,
+        genetic_analyst_order_id:
+          geneticAnalysisModel.genetic_analysis_order_id,
         created_at: geneticAnalysisModel.created_at,
         updated_at: geneticAnalysisModel.updated_at,
         status: geneticAnalysisModel.status,
