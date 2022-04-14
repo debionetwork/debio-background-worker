@@ -26,14 +26,14 @@ describe('Genetic Analysis Substrate Event Handler', () => {
   const createMockGeneticAnalysis = () => {
     return {
       toHuman: jest.fn(() => ({
-        geneticAnalystTrackingId: 'string',
+        geneticAnalysisTrackingId: 'string',
         geneticAnalystId: 'string',
         ownerId: 'string',
         reportLink: 'string',
         comment: 'string',
         rejectedTitle: 'string',
         rejectedDescription: 'string',
-        geneticAnalystOrderId: 'string',
+        geneticAnalysisOrderId: 'string',
         createdAt: '0',
         updatedAt: '0',
         status: 'string',
