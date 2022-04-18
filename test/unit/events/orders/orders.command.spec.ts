@@ -11,7 +11,7 @@ import { Currency } from '../../../../src/substrate/models/order/currency';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
 import { Orders } from '../../../../src/substrate/models/order/orders';
 
-jest.mock('../../../../src/substrate/models/order');
+jest.mock('../../../../src/substrate/models/order/orders');
 
 describe('Orders Substrate Event Handler', () => {
   function createMockOrder(status: OrderStatus) {

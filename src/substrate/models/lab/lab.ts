@@ -1,6 +1,6 @@
-import { StakeStatus } from '../../models/stake-status';
-import { LabInfo } from '../../models/lab/lab-info';
-import { LabVerificationStatus } from '../../models/lab/lab-verification-status';
+import { StakeStatus } from '../stake-status';
+import { LabInfo } from './lab-info';
+import { LabVerificationStatus } from './lab-verification-status';
 
 export class Lab {
   constructor(lab: any) {

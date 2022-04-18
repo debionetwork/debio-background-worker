@@ -6,12 +6,12 @@ import {
 } from '../../../../src/substrate/events/labs';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
 import { Lab } from '../../../../src/substrate/models/lab/lab';
-import { StakeStatus } from 'src/substrate/models/stake-status';
+import { StakeStatus } from '../../../../src/substrate/models/stake-status';
 import { LabRetrieveUnstakeAmountCommand } from '../../../../src/substrate/events/labs/commands/lab-retrieve-unstake-amount/lab-retrieve-unstake-amount.command';
 import { LabStakeSuccessfulCommand } from '../../../../src/substrate/events/labs/commands/lab-stake-successful/lab-stake-successful.command';
 import { LabUnstakeSuccessfulCommand } from '../../../../src/substrate/events/labs/commands/lab-unstake-successful/lab-unstake-successful.command';
 
-jest.mock('../../../../src/substrate/models/lab');
+jest.mock('../../../../src/substrate/models/lab/lab');
 
 describe('Labs Substrate Event Handler', () => {
   const createMockLab = () => {

@@ -12,13 +12,9 @@ import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
 import { ClaimRequestModel } from '../../../../src/substrate/models/service-request/claimRequest';
 import { ServiceInvoice } from '../../../../src/substrate/models/service-request/serviceInvoice';
 
-jest.mock('../../../../src/substrate/events/service-request/models/request');
-jest.mock(
-  '../../../../src/substrate/events/service-request/models/claimRequest',
-);
-jest.mock(
-  '../../../../src/substrate/events/service-request/models/serviceInvoice',
-);
+jest.mock('../../../../src/substrate/models/service-request/request');
+jest.mock('../../../../src/substrate/models/service-request/claimRequest');
+jest.mock('../../../../src/substrate/models/service-request/serviceInvoice');
 
 describe('Service Request Substrate Event Handler', () => {
   const createMockRequest = (requestStatus: RequestStatus) => {

@@ -84,6 +84,16 @@ describe('Labs Substrate Event Handler', () => {
       modules.get<LabUpdateVerificationStatusHandler>(
         LabUpdateVerificationStatusHandler,
       );
+    labRetrieveUnstakeAmountHandler =
+      modules.get<LabRetrieveUnstakeAmountHandler>(
+        LabRetrieveUnstakeAmountHandler,
+      );
+    labStakeSuccessfulHandler = modules.get<LabStakeSuccessfulHandler>(
+      LabStakeSuccessfulHandler,
+    );
+    labUnstakeSuccessfulHandler = modules.get<LabUnstakeSuccessfulHandler>(
+      LabUnstakeSuccessfulHandler,
+    );
 
     elasticsearchService =
       modules.get<ElasticsearchService>(ElasticsearchService);
