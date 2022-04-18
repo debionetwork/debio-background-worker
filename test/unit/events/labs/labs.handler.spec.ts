@@ -158,9 +158,7 @@ describe('Labs Substrate Event Handler', () => {
 
       const labStakeSuccessfulCommand: LabStakeSuccessfulCommand =
         new LabStakeSuccessfulCommand([lab], mockBlockNumber());
-      await labStakeSuccessfulHandler.execute(
-        labStakeSuccessfulCommand,
-      );
+      await labStakeSuccessfulHandler.execute(labStakeSuccessfulCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
     });
 
@@ -169,9 +167,7 @@ describe('Labs Substrate Event Handler', () => {
 
       const labUnstakeSuccessfulCommand: LabUnstakeSuccessfulCommand =
         new LabUnstakeSuccessfulCommand([lab], mockBlockNumber());
-      await labUnstakeSuccessfulHandler.execute(
-        labUnstakeSuccessfulCommand,
-      );
+      await labUnstakeSuccessfulHandler.execute(labUnstakeSuccessfulCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
     });
   });
