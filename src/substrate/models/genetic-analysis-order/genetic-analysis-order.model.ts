@@ -1,4 +1,4 @@
-import { Price } from '../../events/services/models/price';
+import { Price } from '../service/price';
 import { CurrencyType } from '../currencyType';
 import { GeneticAnalysisOrderStatus } from './genetic-analysis-order.status';
 

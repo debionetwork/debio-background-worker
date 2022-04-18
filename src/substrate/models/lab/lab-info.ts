@@ -1,4 +1,4 @@
-import { hexToUtf8, isHex } from '../../../models/util';
+import { hexToUtf8, isHex } from '../util'
 
 export class LabInfo {
   constructor(info: any) {

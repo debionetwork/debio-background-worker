@@ -15,7 +15,7 @@ import {
   UnstakedServiceRequestCommand,
   UnstakedWaitingServiceRequestCommand,
 } from '../../../../src/substrate/events/service-request/';
-import { RequestStatus } from '../../../../src/substrate/events/service-request//models/requestStatus';
+import { RequestStatus } from '../../../../src/substrate//models/service-request/requestStatus';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
 import {
   createObjectSearchCountryServiceRequest,

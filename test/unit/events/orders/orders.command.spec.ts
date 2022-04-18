@@ -6,12 +6,12 @@ import {
   OrderPaidCommand,
   OrderRefundedCommand,
 } from '../../../../src/substrate/events/orders';
-import { OrderStatus } from '../../../../src/substrate/events/orders/models/order-status';
-import { Currency } from '../../../../src/substrate/events/orders/models/currency';
+import { OrderStatus } from '../../../../src/substrate/models/order/order-status';
+import { Currency } from '../../../../src/substrate/models/order/currency';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
-import { Orders } from '../../../../src/substrate/events/orders/models/orders';
+import { Orders } from '../../../../src/substrate/models/order/orders';
 
-jest.mock('../../../../src/substrate/events/orders/models/orders');
+jest.mock('../../../../src/substrate/models/order');
 
 describe('Orders Substrate Event Handler', () => {
   function createMockOrder(status: OrderStatus) {

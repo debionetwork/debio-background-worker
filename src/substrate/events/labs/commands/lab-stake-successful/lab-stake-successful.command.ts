@@ -1,7 +1,7 @@
 import { BlockMetaData } from '../../../../models/blockMetaData';
 import { Lab } from '../../../../models/lab/lab';
 
-export class LabUpdatedCommand {
+export class LabStakeSuccessfulCommand {
   labs: Lab;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
     const labData = data[0];

@@ -1,5 +1,5 @@
-import { BlockMetaData } from 'src/substrate/models/blockMetaData';
-import { Orders } from '../../models/orders';
+import { BlockMetaData } from '../../../../models/blockMetaData';
+import { Orders } from '../../../../models/order/orders';
 
 export class OrderFailedCommand {
   orders: Orders;

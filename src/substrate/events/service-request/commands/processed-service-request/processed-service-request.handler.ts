@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { RequestStatus } from '../../models/requestStatus';
+import { RequestStatus } from '../../../../models/service-request/requestStatus';
 import { ProcessedServiceRequestCommand } from './processed-service-request.command';
 
 @Injectable()
