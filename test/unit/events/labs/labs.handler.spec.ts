@@ -3,6 +3,9 @@ import {
   LabCommandHandlers,
   LabDeregisteredCommand,
   LabRegisteredCommand,
+  LabRetrieveUnstakeAmountCommand,
+  LabStakeSuccessfulCommand,
+  LabUnstakeSuccessfulCommand,
   LabUpdatedCommand,
   LabUpdateVerificationStatusCommand,
 } from '../../../../src/substrate/events/labs';
@@ -13,10 +16,18 @@ import { LabUpdateVerificationStatusHandler } from '../../../../src/substrate/ev
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
 import { ElasticSearchServiceProvider } from '../../mock';
+import { StakeStatus } from '../../../../src/substrate/models/stake-status';
+import { LabRetrieveUnstakeAmountHandler } from '../../../../src/substrate/events/labs/commands/lab-retrieve-unstake-amount/lab-retrieve-unstake-amount.handler';
+import { LabStakeSuccessfulHandler } from '../../../../src/substrate/events/labs/commands/lab-stake-successful/lab-stake-successful.handler';
+import { LabUnstakeSuccessfulHandler } from '../../../../src/substrate/events/labs/commands/lab-unstake-successful/lab-unstake-successful.handler';
+
 let labDeregisteredHandler: LabDeregisteredHandler;
 let labRegisteredHandler: LabRegisteredHandler;
 let labUpdatedHandler: LabUpdatedHandler;
 let labUpdateVerificationStatusHandler: LabUpdateVerificationStatusHandler;
+let labRetrieveUnstakeAmountHandler: LabRetrieveUnstakeAmountHandler;
+let labStakeSuccessfulHandler: LabStakeSuccessfulHandler;
+let labUnstakeSuccessfulHandler: LabUnstakeSuccessfulHandler;
 
 let elasticsearchService: ElasticsearchService;
 describe('Labs Substrate Event Handler', () => {
@@ -43,6 +54,10 @@ describe('Labs Substrate Event Handler', () => {
         certifications: [1],
         verificationStatus: [1],
         info: labInfo,
+        stakeAmount: '1000000',
+        stakeStatus: StakeStatus.Staked,
+        unstakeAt: '100000000',
+        retrieveUnstakeAt: '100000000',
       })),
     };
   };
@@ -123,6 +138,39 @@ describe('Labs Substrate Event Handler', () => {
         new LabUpdateVerificationStatusCommand([lab], mockBlockNumber());
       await labUpdateVerificationStatusHandler.execute(
         labUpdatedVerificationStatusCommand,
+      );
+      expect(elasticsearchService.update).toHaveBeenCalled();
+    });
+
+    it('Lab Retrieve Unstake Amount Handler', async () => {
+      const lab = createMockLab();
+
+      const labRetrieveUnstakeAmountCommand: LabRetrieveUnstakeAmountCommand =
+        new LabRetrieveUnstakeAmountCommand([lab], mockBlockNumber());
+      await labRetrieveUnstakeAmountHandler.execute(
+        labRetrieveUnstakeAmountCommand,
+      );
+      expect(elasticsearchService.update).toHaveBeenCalled();
+    });
+
+    it('Lab Stake Successful Handler', async () => {
+      const lab = createMockLab();
+
+      const labStakeSuccessfulCommand: LabStakeSuccessfulCommand =
+        new LabStakeSuccessfulCommand([lab], mockBlockNumber());
+      await labStakeSuccessfulHandler.execute(
+        labStakeSuccessfulCommand,
+      );
+      expect(elasticsearchService.update).toHaveBeenCalled();
+    });
+
+    it('Lab Unstake Successful Handler', async () => {
+      const lab = createMockLab();
+
+      const labUnstakeSuccessfulCommand: LabUnstakeSuccessfulCommand =
+        new LabUnstakeSuccessfulCommand([lab], mockBlockNumber());
+      await labUnstakeSuccessfulHandler.execute(
+        labUnstakeSuccessfulCommand,
       );
       expect(elasticsearchService.update).toHaveBeenCalled();
     });
