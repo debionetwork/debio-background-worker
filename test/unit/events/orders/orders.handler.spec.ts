@@ -13,8 +13,8 @@ import { OrderFailedHandler } from '../../../../src/substrate/events/orders/comm
 import { OrderFulfilledHandler } from '../../../../src/substrate/events/orders/commands/order-fulfilled/order-fulfilled.handler';
 import { OrderPaidHandler } from '../../../../src/substrate/events/orders/commands/order-paid/order-paid.handler';
 import { OrderRefundedHandler } from '../../../../src/substrate/events/orders/commands/order-refunded/order-refunded.handler';
-import { OrderStatus } from '../../../../src/substrate/events/orders/models/order-status';
-import { Currency } from '../../../../src/substrate/events/orders/models/currency';
+import { OrderStatus } from '../../../../src/substrate/models/order/order-status';
+import { Currency } from '../../../../src/substrate/models/order/currency';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';

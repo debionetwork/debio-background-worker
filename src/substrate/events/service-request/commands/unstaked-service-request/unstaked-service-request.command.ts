@@ -1,5 +1,5 @@
 import { BlockMetaData } from '../../../../models/blockMetaData';
-import { RequestModel } from '../../models/request';
+import { RequestModel } from '../../../../models/service-request/request';
 
 export class UnstakedServiceRequestCommand {
   request: RequestModel;

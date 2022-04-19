@@ -9,6 +9,9 @@ import {
   LabUpdatedCommand,
   LabDeregisteredCommand,
   LabUpdateVerificationStatusCommand,
+  LabStakeSuccessfulCommand,
+  LabUnstakeSuccessfulCommand,
+  LabRetrieveUnstakeAmountCommand,
 } from './events/labs';
 import {
   ServiceCreatedCommand,
@@ -145,6 +148,9 @@ const eventRoutes = {
     LabUpdated: LabUpdatedCommand,
     LabDeregistered: LabDeregisteredCommand,
     LabUpdateVerificationStatus: LabUpdateVerificationStatusCommand,
+    LabStakeSuccessful: LabStakeSuccessfulCommand,
+    LabUnstakeSuccessful: LabUnstakeSuccessfulCommand,
+    LabRetrieveUnstakeAmount: LabRetrieveUnstakeAmountCommand,
   },
   orders: {
     OrderCreated: OrderCreatedCommand,

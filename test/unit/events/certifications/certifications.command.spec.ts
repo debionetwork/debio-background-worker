@@ -4,11 +4,9 @@ import {
   CertificationDeletedCommand,
   CertificationUpdatedCommand,
 } from '../../../../src/substrate/events/certifications';
-import { Certification } from '../../../../src/substrate/events/certifications/models/certification';
+import { Certification } from '../../../../src/substrate/models/certification/certification';
 
-jest.mock(
-  '../../../../src/substrate/events/certifications/models/certification',
-);
+jest.mock('../../../../src/substrate/models/certification/certification');
 
 describe('Certifications Substrate Event Handler', () => {
   const createMockCertifications = () => {

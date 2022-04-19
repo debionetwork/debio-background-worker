@@ -1,3 +1,4 @@
+import { StakeStatus } from '../stake-status';
 import { LabInfo } from './lab-info';
 import { LabVerificationStatus } from './lab-verification-status';
 
@@ -8,10 +9,18 @@ export class Lab {
     this.certifications = lab.certifications;
     this.verificationStatus = lab.verificationStatus;
     this.info = new LabInfo(lab.info);
+    this.stake_amount = lab.stakeAmount;
+    this.stake_status = lab.stakeStatus;
+    this.unstake_at = lab.unstakeAt;
+    this.retrieve_unstake_at = lab.retrieveUnstakeAt;
   }
   accountId: string;
   services: string[];
   certifications: string[];
   verificationStatus: LabVerificationStatus;
   info: LabInfo;
+  stake_amount: string;
+  stake_status: StakeStatus;
+  unstake_at: string;
+  retrieve_unstake_at: string;
 }

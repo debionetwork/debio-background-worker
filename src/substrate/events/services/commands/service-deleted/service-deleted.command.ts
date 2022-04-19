@@ -1,5 +1,5 @@
 import { BlockMetaData } from '../../../../models/blockMetaData';
-import { Service } from '../../models/service';
+import { Service } from '../../../../models/service/service';
 
 export class ServiceDeletedCommand {
   services: Service;

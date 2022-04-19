@@ -1,5 +1,5 @@
 import { BlockMetaData } from '../../../../models/blockMetaData';
-import { Lab } from '../../models/lab';
+import { Lab } from '../../../../models/lab/lab';
 
 export class LabDeregisteredCommand {
   labs: Lab;

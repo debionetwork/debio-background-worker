@@ -5,9 +5,9 @@ import {
 } from '../../../../src/substrate/events/services';
 import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
 import { ServiceFlow } from '../../../../src/substrate/models/service-flow';
-import { Service } from '../../../../src/substrate/events/services/models/service';
+import { Service } from '../../../../src/substrate/models/service/service';
 
-jest.mock('../../../../src/substrate/events/services/models/service');
+jest.mock('../../../../src/substrate/models/service/service');
 
 describe('Services Substrate Event Handler', () => {
   function createMockService() {

@@ -1,5 +1,5 @@
 import { BlockMetaData } from '../../../../models/blockMetaData';
-import { DataStaked } from '../../models/data-staked';
+import { DataStaked } from '../../../../models/genetic-testing/data-staked';
 
 export class DataStakedCommand {
   dataStaked: DataStaked;

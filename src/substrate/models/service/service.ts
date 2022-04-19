@@ -1,4 +1,4 @@
-import { ServiceFlow } from '../../../models/service-flow';
+import { ServiceFlow } from '../service-flow';
 import { ServiceInfo } from './service-info';
 
 export class Service {
