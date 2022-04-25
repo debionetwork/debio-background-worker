@@ -87,6 +87,7 @@ import {
   GeneticAnalysisSubmittedCommand,
 } from './events/genetic-analysis';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { u32 } from '@polkadot/types';
 
 const eventRoutes = {
   certifications: {
@@ -120,7 +121,7 @@ const eventRoutes = {
     GeneticAnalystUnstakeSuccessful: GeneticAnalystUnstakeSuccessfulCommand,
     GeneticAnalystRetrieveUnstakeAmount:
       GeneticAnalystsRetrieveUnstakeAmountCommand,
-    GeneticAnalystverificationFailed: GeneticAnalystVerificationFailedCommand,
+    GeneticAnalystVerificationFailed: GeneticAnalystVerificationFailedCommand,
   },
   geneticAnalystQualifications: {
     GeneticAnalystQualificationCreated:
@@ -181,6 +182,7 @@ export class SubstrateService implements OnModuleInit {
   private listenStatus = false;
   private api: ApiPromise;
   private lastBlockNumber = 0;
+  private currentSpecVersion: u32;
   private wsProvider: WsProvider;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   constructor(
@@ -311,6 +313,8 @@ export class SubstrateService implements OnModuleInit {
           const blockHash = await this.api.rpc.chain.getBlockHash(i);
           const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
 
+          this.updateMetaData(blockHash);
+
           const apiAt = await this.api.at(signedBlock.block.header.hash);
           // Get the event records in the block
           const allEventRecords = await apiAt.query.system.events();
@@ -407,6 +411,8 @@ export class SubstrateService implements OnModuleInit {
 
     await this.api.isReady;
 
+    this.currentSpecVersion = this.api.createType('u32');
+
     await this.syncBlock();
     this.listenToNewBlock();
   }
@@ -423,7 +429,18 @@ export class SubstrateService implements OnModuleInit {
     }
   }
 
-  async initializeIndices(index) {
+  async updateMetaData(blockHash: any) {
+    const runtimeVersion = await this.api.rpc.state.getRuntimeVersion(blockHash);
+    const newSpecVersion = runtimeVersion.specVersion;
+
+    if (newSpecVersion.gt(this.currentSpecVersion)) {
+      const rpcMeta = await this.api.rpc.state.getMetadata(blockHash);
+      this.currentSpecVersion = newSpecVersion;
+      this.api.registry.setMetadata(rpcMeta);
+    }
+  }
+
+  async initializeIndices(index: string) {
     const { body: exist } = await this.elasticsearchService.indices.exists({
       index: index,
     });
