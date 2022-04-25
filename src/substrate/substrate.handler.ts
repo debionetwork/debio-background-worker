@@ -430,7 +430,9 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async updateMetaData(blockHash: any) {
-    const runtimeVersion = await this.api.rpc.state.getRuntimeVersion(blockHash);
+    const runtimeVersion = await this.api.rpc.state.getRuntimeVersion(
+      blockHash,
+    );
     const newSpecVersion = runtimeVersion.specVersion;
 
     if (newSpecVersion.gt(this.currentSpecVersion)) {
