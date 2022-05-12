@@ -23,7 +23,7 @@ export class LabUnstakeSuccessfulHandler
           unstake_at: lab.unstake_at,
           retrieve_unstake_at: lab.retrieve_unstake_at,
           blockMetaData: command.blockMetaData,
-        },
+        }
       },
     });
   }
