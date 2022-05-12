@@ -67,6 +67,7 @@ export class CreateServiceRequestHandler
         id: command.request.country,
         refresh: 'wait_for',
         body: {
+          country: command.request.country,
           service_request: [
             {
               id: command.request.hash,
