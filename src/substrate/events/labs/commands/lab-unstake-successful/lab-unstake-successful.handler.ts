@@ -12,7 +12,7 @@ export class LabUnstakeSuccessfulHandler
 
   async execute(command: LabUnstakeSuccessfulCommand) {
     const { labs: lab } = command;
-    await this.elasticsearchService.index({
+    await this.elasticsearchService.update({
       index: 'labs',
       refresh: 'wait_for',
       id: lab.accountId,
