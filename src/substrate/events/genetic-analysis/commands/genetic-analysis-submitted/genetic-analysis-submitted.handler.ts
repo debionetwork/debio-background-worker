@@ -18,7 +18,7 @@ export class GeneticAnalysisSubmittedHandler
       id: geneticAnalysisModel.genetic_analyst_id,
       refresh: 'wait_for',
       body: {
-        genetic_analyst_tracking_id:
+        genetic_analysis_tracking_id:
           geneticAnalysisModel.genetic_analysis_tracking_id,
         genetic_analyst_id: geneticAnalysisModel.genetic_analyst_id,
         owner_id: geneticAnalysisModel.owner_id,
@@ -26,7 +26,7 @@ export class GeneticAnalysisSubmittedHandler
         comment: geneticAnalysisModel.comment,
         rejected_title: geneticAnalysisModel.rejected_title,
         rejected_description: geneticAnalysisModel.rejected_description,
-        genetic_analyst_order_id:
+        genetic_analysis_order_id:
           geneticAnalysisModel.genetic_analysis_order_id,
         created_at: geneticAnalysisModel.created_at,
         updated_at: geneticAnalysisModel.updated_at,
