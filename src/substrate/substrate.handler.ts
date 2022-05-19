@@ -413,7 +413,7 @@ export class SubstrateService implements OnModuleInit {
 
     this.currentSpecVersion = this.api.createType('u32');
 
-    await this.syncBlock();
+    this.syncBlock();
     this.listenToNewBlock();
   }
 
