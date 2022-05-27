@@ -28,6 +28,7 @@ import {
 } from './events/orders';
 import {
   SetLastSubstrateBlockCommand,
+  SetLastSubstrateBlockOldCommand,
   DeleteAllIndexesCommand,
   GetLastSubstrateBlockQuery,
 } from './blocks';
@@ -306,6 +307,7 @@ export class SubstrateService implements OnModuleInit {
       if (chunkEnd - chunkStart > chunkSize) {
         chunkEnd = chunkStart + chunkSize;
       }
+      // chunkEnd = 1414343;
       while (chunkStart < endBlock) {
         this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
         for (let i = chunkStart; i <= chunkEnd; i++) {
@@ -339,9 +341,10 @@ export class SubstrateService implements OnModuleInit {
             }
           }
         }
+        this.logger.log(`End Syncing block ${chunkStart} - ${chunkEnd}`);
         // Remember the last block number processed
         await this.commandBus.execute(
-          new SetLastSubstrateBlockCommand(chunkEnd),
+          new SetLastSubstrateBlockOldCommand(chunkEnd),
         );
 
         // set chunkStart to 1 block after chunkEnd
@@ -352,6 +355,7 @@ export class SubstrateService implements OnModuleInit {
         chunkEnd =
           chunkEnd + chunkSize > endBlock ? endBlock : chunkEnd + chunkSize;
       }
+      this.logger.log(`Finish Syncing old block`);
     } catch (err) {
       this.logger.log(
         `Handling sync block catch : ${err.name}, ${err.message}, ${err.stack}`,
@@ -413,7 +417,7 @@ export class SubstrateService implements OnModuleInit {
 
     this.currentSpecVersion = this.api.createType('u32');
 
-    await this.syncBlock();
+    this.syncBlock();
     this.listenToNewBlock();
   }
 
@@ -443,14 +447,20 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async initializeIndices(index: string) {
-    const { body: exist } = await this.elasticsearchService.indices.exists({
-      index: index,
-    });
-
-    if (!exist) {
-      await this.elasticsearchService.indices.create({
+    try {
+      const { body: exist } = await this.elasticsearchService.indices.exists({
         index: index,
       });
+
+      if (!exist) {
+        await this.elasticsearchService.indices.create({
+          index: index,
+        });
+      }
+    } catch (err) {
+      this.logger.log(
+        `Handling sync block catch : ${err.name}, ${err.message}, ${err.stack}`,
+      );
     }
   }
 }
