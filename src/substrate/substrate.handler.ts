@@ -250,6 +250,7 @@ export class SubstrateService
 
   async eventFromBlock(blockNumber: number, blockHash: string | Uint8Array) {
     await this.updateMetaData(blockHash);
+    this.logger.log(`Start => Fetch block at: ${this.lastBlockNumber}`);
 
     const apiAt = await this.api.at(blockHash);
 
@@ -268,6 +269,7 @@ export class SubstrateService
       const { event } = events[i];
       await this.handleEvent(blockMetaData, event);
     }
+    this.logger.log(`End => Fetch block at: ${this.lastBlockNumber}`);
   }
 
   async listenNewBlocks() {
