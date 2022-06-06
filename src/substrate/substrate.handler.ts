@@ -252,6 +252,7 @@ export class SubstrateService
     const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
 
     await this.updateMetaData(blockHash);
+    this.logger.log(`Start => Fetch block at: ${this.lastBlockNumber}`);
 
     const apiAt = await this.api.at(blockHash);
 
@@ -278,6 +279,7 @@ export class SubstrateService
         }
       }
     }
+    this.logger.log(`End => Fetch block at: ${this.lastBlockNumber}`);
   }
 
   async listenNewBlocks() {
