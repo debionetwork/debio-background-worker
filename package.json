@@ -33,6 +33,7 @@
     "@nestjs/cqrs": "^8.0.0",
     "@nestjs/elasticsearch": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/schedule": "^2.0.1",
     "@polkadot/api": "^6.12.1",
     "dotenv": "^10.0.0",
     "jest-when": "^3.5.0",

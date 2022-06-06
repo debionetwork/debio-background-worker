@@ -1,7 +1,7 @@
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Controller } from '@nestjs/common';
+import { OnApplicationBootstrap, OnModuleDestroy } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { Header, Event } from '@polkadot/types/interfaces';
+import { Event } from '@polkadot/types/interfaces';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { BlockMetaData } from './models/blockMetaData';
 import {
@@ -89,6 +89,7 @@ import {
 } from './events/genetic-analysis';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { u32 } from '@polkadot/types';
+import { SchedulerRegistry } from '@nestjs/schedule';
 
 const eventRoutes = {
   certifications: {
@@ -178,23 +179,51 @@ const eventRoutes = {
 };
 
 @Injectable()
-export class SubstrateService implements OnModuleInit {
-  private head;
+export class SubstrateService
+  implements OnModuleInit, OnModuleDestroy, OnApplicationBootstrap
+{
   private listenStatus = false;
   private api: ApiPromise;
   private lastBlockNumber = 0;
   private currentSpecVersion: u32;
   private wsProvider: WsProvider;
+  private isFetching = false;
+  private fetchBlockInterval: NodeJS.Timer;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   constructor(
     private commandBus: CommandBus,
     private queryBus: QueryBus,
     private process: ProcessEnvProxy,
     private readonly elasticsearchService: ElasticsearchService,
+    private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
-  onModuleInit() {
+  async onApplicationBootstrap() {
+    await this.startListen();
+  }
+
+  async onModuleInit() {
     this.wsProvider = new WsProvider(this.process.env.SUBSTRATE_URL);
+
+    this.wsProvider.on('connected', () => {
+      this.logger.log(`WS Connected`);
+    });
+
+    this.wsProvider.on('disconnected', async () => {
+      this.logger.log(`WS Disconnected`);
+      await this.stopListen();
+      await this.startListen();
+    });
+
+    this.wsProvider.on('error', async (error) => {
+      this.logger.log(`WS Error: ${error}`);
+      await this.stopListen();
+      await this.startListen();
+    });
+  }
+
+  onModuleDestroy() {
+    this.stopListen();
   }
 
   async handleEvent(blockMetaData: BlockMetaData, event: Event) {
@@ -221,6 +250,10 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async eventFromBlock(blockNumber: number, blockHash: string | Uint8Array) {
+    this.logger.log(`Start => Fetch block at: ${this.lastBlockNumber}`);
+
+    this.updateMetaData(blockHash);
+
     const apiAt = await this.api.at(blockHash);
 
     const allEventsFromBlock = await apiAt.query.system.events();
@@ -238,54 +271,52 @@ export class SubstrateService implements OnModuleInit {
       const { event } = events[i];
       await this.handleEvent(blockMetaData, event);
     }
+    this.logger.log(`End => Fetch block at: ${this.lastBlockNumber}`);
   }
 
-  async listenToNewBlock() {
-    await this.api.rpc.chain
-      .subscribeNewHeads(async (header: Header) => {
-        try {
-          const blockNumber = header.number.toNumber();
-          const blockHash = await this.api.rpc.chain.getBlockHash(blockNumber);
+  async listenNewBlocks() {
+    try {
+      if (this.isFetching) return;
 
-          // check if env is development
-          if (this.process.env.NODE_ENV === 'development') {
-            this.lastBlockNumber = await this.queryBus.execute(
-              new GetLastSubstrateBlockQuery(),
-            );
-            // check if last_block_number is higher than next block number
-            if (this.lastBlockNumber > blockNumber) {
-              // delete all indexes
-              await this.commandBus.execute(new DeleteAllIndexesCommand());
-            }
-          }
+      this.isFetching = true;
 
-          if (this.lastBlockNumber == blockNumber) {
-            return;
-          } else {
-            this.lastBlockNumber = blockNumber;
-          }
+      const currentBlock = await this.api.rpc.chain.getBlock();
+      const currentBlockNumber = currentBlock.block.header.number.toNumber();
 
-          this.logger.log(`Syncing Substrate Block: ${blockNumber}`);
+      if (this.lastBlockNumber === currentBlockNumber) {
+        this.isFetching = false;
+        return;
+      }
 
-          await this.eventFromBlock(blockNumber, blockHash);
-
-          await this.commandBus.execute(
-            new SetLastSubstrateBlockCommand(blockNumber),
-          );
-        } catch (err) {
-          this.logger.log(
-            `Handling listen to new block catch : ${err.name}, ${err.message}, ${err.stack}`,
-          );
-        }
-      })
-      .then((_unsub) => {
-        this.head = _unsub;
-      })
-      .catch((err) => {
-        this.logger.log(
-          `Event listener catch error ${err.name}, ${err.message}, ${err.stack}`,
+      for (
+        ;
+        this.lastBlockNumber <= currentBlockNumber;
+        this.lastBlockNumber++
+      ) {
+        const blockHash = await this.api.rpc.chain.getBlockHash(
+          this.lastBlockNumber,
         );
-      });
+        // check if env is development
+        if (this.process.env.NODE_ENV === 'development') {
+          const blockNumber = await this.queryBus.execute(
+            new GetLastSubstrateBlockQuery(),
+          );
+          // check if last_block_number is higher than next block number
+          if (blockNumber > this.lastBlockNumber) {
+            // delete all indexes
+            await this.commandBus.execute(new DeleteAllIndexesCommand());
+          }
+        }
+        await this.eventFromBlock(this.lastBlockNumber, blockHash);
+      }
+    } catch (err) {
+      this.logger.log(`Catch error: ${err.name}, ${err.message}, ${err.stack}`);
+    } finally {
+      await this.commandBus.execute(
+        new SetLastSubstrateBlockCommand(this.lastBlockNumber),
+      );
+      this.isFetching = false;
+    }
   }
 
   async syncBlock() {
@@ -328,7 +359,7 @@ export class SubstrateService implements OnModuleInit {
 
           for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
             const {
-              method: { method, section }, // eslint-disable-line
+              method, // eslint-disable-line
             } = signedBlock.block.extrinsics[j];
 
             const events = allEventRecords.filter(
@@ -389,10 +420,6 @@ export class SubstrateService implements OnModuleInit {
 
     this.listenStatus = true;
 
-    if (this.head) {
-      this.head();
-    }
-
     this.api = await ApiPromise.create({
       provider: this.wsProvider,
     });
@@ -417,8 +444,18 @@ export class SubstrateService implements OnModuleInit {
 
     this.currentSpecVersion = this.api.createType('u32');
 
+    const currentBlock = await this.api.rpc.chain.getBlock();
+    const currentBlockNumber = currentBlock.block.header.number.toNumber();
+
+    this.lastBlockNumber = currentBlockNumber - 1;
+
     this.syncBlock();
-    this.listenToNewBlock();
+
+    this.fetchBlockInterval = setInterval(async () => {
+      await this.listenNewBlocks();
+    }, 6000);
+
+    this.schedulerRegistry.addInterval('fetch-block', this.fetchBlockInterval);
   }
 
   stopListen() {
@@ -428,9 +465,8 @@ export class SubstrateService implements OnModuleInit {
       delete this.api;
     }
 
-    if (this.head) {
-      this.head();
-    }
+    this.schedulerRegistry.deleteInterval('fetch-block');
+    clearInterval(this.fetchBlockInterval);
   }
 
   async updateMetaData(blockHash: any) {
@@ -462,17 +498,5 @@ export class SubstrateService implements OnModuleInit {
         `Handling sync block catch : ${err.name}, ${err.message}, ${err.stack}`,
       );
     }
-  }
-}
-
-@Controller('substrate')
-export class SubstrateController {
-  substrateService: SubstrateService;
-  constructor(substrateService: SubstrateService) {
-    this.substrateService = substrateService;
-  }
-
-  async onApplicationBootstrap() {
-    await this.substrateService.startListen();
   }
 }
