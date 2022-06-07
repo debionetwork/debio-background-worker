@@ -199,6 +199,7 @@ export class SubstrateService
   ) {}
 
   async onApplicationBootstrap() {
+    await this.initializeIndices();
     await this.startListen();
   }
 
@@ -211,14 +212,12 @@ export class SubstrateService
 
     this.wsProvider.on('disconnected', async () => {
       this.logger.log(`WS Disconnected`);
-      await this.stopListen();
-      await this.startListen();
+      await this.restartConnection();
     });
 
     this.wsProvider.on('error', async (error) => {
       this.logger.log(`WS Error: ${error}`);
-      await this.stopListen();
-      await this.startListen();
+      await this.restartConnection();
     });
   }
 
@@ -250,127 +249,138 @@ export class SubstrateService
   }
 
   async eventFromBlock(blockNumber: number, blockHash: string | Uint8Array) {
-    this.logger.log(`Start => Fetch block at: ${this.lastBlockNumber}`);
+    const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
 
-    this.updateMetaData(blockHash);
+    await this.updateMetaData(blockHash);
 
     const apiAt = await this.api.at(blockHash);
 
     const allEventsFromBlock = await apiAt.query.system.events();
-
-    const events = allEventsFromBlock.filter(
-      ({ phase }) => phase.isApplyExtrinsic,
-    );
 
     const blockMetaData: BlockMetaData = {
       blockNumber: blockNumber,
       blockHash: blockHash.toString(),
     };
 
-    for (let i = 0; i < events.length; i++) {
-      const { event } = events[i];
-      await this.handleEvent(blockMetaData, event);
+    for (
+      let signIndex = 0;
+      signIndex < signedBlock.block.extrinsics.length;
+      signIndex++
+    ) {
+      const events = allEventsFromBlock.filter(
+        ({ phase }) =>
+          phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(signIndex),
+      );
+
+      for (const { event } of events) {
+        if (this.api.events.system.ExtrinsicSuccess.is(event)) {
+          await this.handleEvent(blockMetaData, event);
+        }
+      }
     }
-    this.logger.log(`End => Fetch block at: ${this.lastBlockNumber}`);
   }
 
   async listenNewBlocks() {
     try {
-      if (this.isFetching) return;
-
-      this.isFetching = true;
-
-      const currentBlock = await this.api.rpc.chain.getBlock();
-      const currentBlockNumber = currentBlock.block.header.number.toNumber();
-
-      if (this.lastBlockNumber === currentBlockNumber) {
-        this.isFetching = false;
+      /**
+       * when this function is called
+       * first check connection to node
+       * restart connection when not connected
+       */
+      if (!this.api.isConnected) {
+        await this.restartConnection();
         return;
       }
 
-      for (
-        ;
-        this.lastBlockNumber <= currentBlockNumber;
-        this.lastBlockNumber++
-      ) {
-        const blockHash = await this.api.rpc.chain.getBlockHash(
-          this.lastBlockNumber,
-        );
-        // check if env is development
-        if (this.process.env.NODE_ENV === 'development') {
-          const blockNumber = await this.queryBus.execute(
-            new GetLastSubstrateBlockQuery(),
+      const currentBlock = await this.api.rpc.chain.getBlock();
+      const currentBlockNumber =
+        currentBlock.block.header.number.toNumber() - 1;
+
+      if (!this.isFetching && this.lastBlockNumber !== currentBlockNumber) {
+        this.isFetching = true;
+
+        for (
+          ;
+          this.lastBlockNumber <= currentBlockNumber;
+          this.lastBlockNumber++
+        ) {
+          const blockHash = await this.api.rpc.chain.getBlockHash(
+            this.lastBlockNumber,
           );
-          // check if last_block_number is higher than next block number
-          if (blockNumber > this.lastBlockNumber) {
-            // delete all indexes
-            await this.commandBus.execute(new DeleteAllIndexesCommand());
+
+          // check if env is development
+          if (this.process.env.NODE_ENV === 'development') {
+            await this.startDevelopment(this.lastBlockNumber);
           }
+
+          this.logger.log(`Start => Fetch block at: ${this.lastBlockNumber}`);
+
+          await this.eventFromBlock(this.lastBlockNumber, blockHash);
+
+          this.logger.log(`End => Fetch block at: ${this.lastBlockNumber}`);
+
+          await this.commandBus.execute(
+            new SetLastSubstrateBlockCommand(this.lastBlockNumber),
+          );
         }
-        await this.eventFromBlock(this.lastBlockNumber, blockHash);
       }
     } catch (err) {
       this.logger.log(`Catch error: ${err.name}, ${err.message}, ${err.stack}`);
     } finally {
-      await this.commandBus.execute(
-        new SetLastSubstrateBlockCommand(this.lastBlockNumber),
-      );
       this.isFetching = false;
     }
   }
 
+  async startDevelopment(currentFetchBlockNumber: number) {
+    const blockNumber = await this.queryBus.execute(
+      new GetLastSubstrateBlockQuery(),
+    );
+
+    // check if last_block_number is higher than next block number
+    if (blockNumber > currentFetchBlockNumber) {
+      // delete all indexes
+      await this.commandBus.execute(new DeleteAllIndexesCommand());
+    }
+  }
+
+  /**
+   * It gets the last block number from the database, gets the current block number from the node, and
+   * then processes the blocks in chunks of 1000
+   */
   async syncBlock() {
-    let lastBlockNumber = 1;
+    let lastBlockNumberEs = 1;
     try {
-      lastBlockNumber = await this.queryBus.execute(
+      lastBlockNumberEs = await this.queryBus.execute(
         new GetLastSubstrateBlockQuery(),
       );
-      const currentBlock = await this.api.rpc.chain.getBlock();
-      const currentBlockNumber = currentBlock.block.header.number.toNumber();
       /**
        * Process logs in chunks of blocks
        * */
-      const endBlock = currentBlockNumber;
+      const endBlock = this.lastBlockNumber;
       const chunkSize = 1000;
-      let chunkStart = lastBlockNumber;
-      let chunkEnd = currentBlockNumber;
+      let chunkStart = lastBlockNumberEs;
+      let chunkEnd = this.lastBlockNumber;
       // If chunkEnd is more than chunkSize, set chunkEnd to chunkSize
       if (chunkEnd - chunkStart > chunkSize) {
         chunkEnd = chunkStart + chunkSize;
       }
-      // chunkEnd = 1414343;
       while (chunkStart < endBlock) {
         this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
-        for (let i = chunkStart; i <= chunkEnd; i++) {
+        for (
+          let blockNumber = chunkStart;
+          blockNumber <= chunkEnd;
+          blockNumber++
+        ) {
           // Get block by block number
-          const blockHash = await this.api.rpc.chain.getBlockHash(i);
-          const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
+          const blockHash = await this.api.rpc.chain.getBlockHash(blockNumber);
 
-          this.updateMetaData(blockHash);
+          this.logger.log(`Start => Syncing old block at: ${blockNumber}`);
 
-          const apiAt = await this.api.at(signedBlock.block.header.hash);
-          // Get the event records in the block
-          const allEventRecords = await apiAt.query.system.events();
+          await this.eventFromBlock(blockNumber, blockHash);
 
-          const blockMetaData: BlockMetaData = {
-            blockNumber: i,
-            blockHash: blockHash.toString(),
-          };
-
-          for (let j = 0; j < signedBlock.block.extrinsics.length; j++) {
-            const {
-              method, // eslint-disable-line
-            } = signedBlock.block.extrinsics[j];
-
-            const events = allEventRecords.filter(
-              ({ phase }) =>
-                phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(j),
-            );
-
-            for (const { event } of events) {
-              await this.handleEvent(blockMetaData, event);
-            }
-          }
+          this.logger.log(
+            `End => Syncing old block at: ${blockNumber} Finished`,
+          );
         }
         this.logger.log(`End Syncing block ${chunkStart} - ${chunkEnd}`);
         // Remember the last block number processed
@@ -394,28 +404,12 @@ export class SubstrateService
     }
   }
 
+  /**
+   * It connects to the Substrate node, gets the current block number, and then starts listening for
+   * new blocks
+   * @returns a promise that resolves to the value of the last block number.
+   */
   async startListen() {
-    const indices = [
-      'country-service-request',
-      'last-block-number-request-service',
-      'create-service-request',
-      'certifications',
-      'labs',
-      'genetic-analysis',
-      'genetic-analysis-order',
-      'genetic-analysts-services',
-      'genetic-analysts',
-      'genetic-analysts-qualification',
-      'genetic-data',
-      'data-bounty',
-      'services',
-      'orders',
-    ];
-
-    for (const i of indices) {
-      await this.initializeIndices(i);
-    }
-
     if (this.listenStatus) return;
 
     this.listenStatus = true;
@@ -430,14 +424,12 @@ export class SubstrateService
 
     this.api.on('disconnected', async () => {
       this.logger.log(`Substrate API Disconnected`);
-      await this.stopListen();
-      await this.startListen();
+      await this.restartConnection();
     });
 
     this.api.on('error', async (error) => {
       this.logger.log(`Substrate API Error: ${error}`);
-      await this.stopListen();
-      await this.startListen();
+      await this.restartConnection();
     });
 
     await this.api.isReady;
@@ -447,7 +439,7 @@ export class SubstrateService
     const currentBlock = await this.api.rpc.chain.getBlock();
     const currentBlockNumber = currentBlock.block.header.number.toNumber();
 
-    this.lastBlockNumber = currentBlockNumber - 1;
+    this.lastBlockNumber = currentBlockNumber;
 
     this.syncBlock();
 
@@ -469,6 +461,22 @@ export class SubstrateService
     clearInterval(this.fetchBlockInterval);
   }
 
+  /**
+   * If the connection is active, stop it, then start it again
+   */
+  async restartConnection() {
+    if (this.listenStatus) {
+      this.logger.log('Restart connection to node.');
+      this.stopListen();
+      await this.startListen();
+    }
+  }
+
+  /**
+   * It checks if the runtime version of the block is newer than the current runtime version, and if so,
+   * it updates the metadata
+   * @param {any} blockHash - The block hash of the block you want to get the metadata from.
+   */
   async updateMetaData(blockHash: any) {
     const runtimeVersion = await this.api.rpc.state.getRuntimeVersion(
       blockHash,
@@ -482,16 +490,39 @@ export class SubstrateService
     }
   }
 
-  async initializeIndices(index: string) {
+  /**
+   * If the index doesn't exist, create it
+   * @param {string} index - The name of the index to create.
+   */
+  async initializeIndices() {
     try {
-      const { body: exist } = await this.elasticsearchService.indices.exists({
-        index: index,
-      });
+      const indices = [
+        'country-service-request',
+        'last-block-number-request-service',
+        'create-service-request',
+        'certifications',
+        'labs',
+        'genetic-analysis',
+        'genetic-analysis-order',
+        'genetic-analysts-services',
+        'genetic-analysts',
+        'genetic-analysts-qualification',
+        'genetic-data',
+        'data-bounty',
+        'services',
+        'orders',
+      ];
 
-      if (!exist) {
-        await this.elasticsearchService.indices.create({
-          index: index,
+      for (const i of indices) {
+        const { body: exist } = await this.elasticsearchService.indices.exists({
+          index: i,
         });
+
+        if (!exist) {
+          await this.elasticsearchService.indices.create({
+            index: i,
+          });
+        }
       }
     } catch (err) {
       this.logger.log(
