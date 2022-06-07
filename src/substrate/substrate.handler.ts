@@ -269,7 +269,6 @@ export class SubstrateService
       const { event } = events[i];
       await this.handleEvent(blockMetaData, event);
     }
-    this.logger.log(`End => Fetch block at: ${this.lastBlockNumber}`);
   }
 
   async listenNewBlocks() {
