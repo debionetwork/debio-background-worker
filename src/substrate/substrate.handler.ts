@@ -279,7 +279,6 @@ export class SubstrateService
         }
       }
     }
-    this.logger.log(`End => Fetch block at: ${this.lastBlockNumber}`);
   }
 
   async listenNewBlocks() {
