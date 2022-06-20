@@ -1,9 +1,6 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  SubstrateController,
-  SubstrateService,
-} from '../../src/substrate/substrate.handler';
+import { SubstrateService } from '../../src/substrate/substrate.handler';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ServiceCommandHandlers } from '../../src/substrate/events/services';
 import { LabCommandHandlers } from '../../src/substrate/events/labs';
@@ -15,13 +12,11 @@ import {
 } from './mock';
 
 describe('Substrate Indexer', () => {
-  let substrateController: SubstrateController;
   let substrateService: SubstrateService;
   let commandBus: CommandBus;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [SubstrateController],
       providers: [
         ElasticsearchService,
         ElasticSearchServiceProvider,
@@ -35,31 +30,19 @@ describe('Substrate Indexer', () => {
       ],
     }).compile();
 
-    substrateController = module.get<SubstrateController>(SubstrateController);
     substrateService = module.get<SubstrateService>(SubstrateService);
     commandBus = module.get<CommandBus>(CommandBus);
+
+    await module.init();
   });
 
   describe('Substrate', () => {
-    it('Substrate Controller must defined', () => {
-      expect(substrateController).toBeDefined();
-      expect(substrateController.onApplicationBootstrap).toBeDefined();
-    });
-
     it('Substrate Service must defined', () => {
       expect(substrateService).toBeDefined();
     });
 
     it('CommandBus must defined', () => {
       expect(commandBus).toBeDefined();
-    });
-  });
-
-  describe('Substrate onApplicationBootstrap', () => {
-    it('Substrate onApplicationBootstrap called and call another method in substrate service', async () => {
-      await substrateController.onApplicationBootstrap();
-
-      expect(substrateService.startListen).toBeCalled();
     });
   });
 });
