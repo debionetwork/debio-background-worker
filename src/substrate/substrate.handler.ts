@@ -249,34 +249,24 @@ export class SubstrateService
   }
 
   async eventFromBlock(blockNumber: number, blockHash: string | Uint8Array) {
-    const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
-
     await this.updateMetaData(blockHash);
 
     const apiAt = await this.api.at(blockHash);
 
     const allEventsFromBlock = await apiAt.query.system.events();
 
+    const events = allEventsFromBlock.filter(
+      ({ phase }) => phase.isApplyExtrinsic,
+    );
+
     const blockMetaData: BlockMetaData = {
       blockNumber: blockNumber,
       blockHash: blockHash.toString(),
     };
 
-    for (
-      let signIndex = 0;
-      signIndex < signedBlock.block.extrinsics.length;
-      signIndex++
-    ) {
-      const events = allEventsFromBlock.filter(
-        ({ phase }) =>
-          phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(signIndex),
-      );
-
-      for (const { event } of events) {
-        if (this.api.events.system.ExtrinsicSuccess.is(event)) {
-          await this.handleEvent(blockMetaData, event);
-        }
-      }
+    for (let i = 0; i < events.length; i++) {
+      const { event } = events[i];
+      await this.handleEvent(blockMetaData, event);
     }
   }
 
