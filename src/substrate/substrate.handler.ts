@@ -349,7 +349,7 @@ export class SubstrateService
        * */
       const endBlock = this.lastBlockNumber;
       const chunkSize = 1000;
-      let chunkStart = lastBlockNumberEs;
+      let chunkStart = 1193677;
       let chunkEnd = this.lastBlockNumber;
       // If chunkEnd is more than chunkSize, set chunkEnd to chunkSize
       if (chunkEnd - chunkStart > chunkSize) {
