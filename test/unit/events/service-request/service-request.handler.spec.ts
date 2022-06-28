@@ -174,7 +174,11 @@ describe('Service Request Substrate Event Handler', () => {
           hits: {
             hits: [
               {
-                _source: 1,
+                _source: {
+                  request: {
+                    country: 'string',
+                  },
+                },
               },
             ],
           },
@@ -201,7 +205,15 @@ describe('Service Request Substrate Event Handler', () => {
       const ES_RESULT_COUNTRY_SERVICE_REQUEST = {
         body: {
           hits: {
-            hits: [],
+            hits: [
+              {
+                _source: {
+                  request: {
+                    country: 'string',
+                  },
+                },
+              },
+            ],
           },
         },
       };
@@ -225,7 +237,15 @@ describe('Service Request Substrate Event Handler', () => {
       const ES_RESULT_COUNTRY_SERVICE_REQUEST = {
         body: {
           hits: {
-            hits: [],
+            hits: [
+              {
+                _source: {
+                  request: {
+                    country: 'string',
+                  },
+                },
+              },
+            ],
           },
         },
       };
@@ -256,7 +276,11 @@ describe('Service Request Substrate Event Handler', () => {
           hits: {
             hits: [
               {
-                _source: 1,
+                _source: {
+                  request: {
+                    country: 'string',
+                  },
+                },
               },
             ],
           },
@@ -287,7 +311,11 @@ describe('Service Request Substrate Event Handler', () => {
           hits: {
             hits: [
               {
-                _source: 1,
+                _source: {
+                  request: {
+                    country: 'string',
+                  },
+                },
               },
             ],
           },

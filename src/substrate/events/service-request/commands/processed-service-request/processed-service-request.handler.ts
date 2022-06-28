@@ -44,11 +44,12 @@ export class ProcessedServiceRequestHandler
 
     const service_request = body.hits?.hits[0]?._source || null;
 
-    if (service_request != null) {
+    if (service_request !== null) {
       await this.elasticsearchService.update({
         index: 'country-service-request',
-        id: service_request.country,
+        id: service_request.request.country,
         refresh: 'wait_for',
+        retry_on_conflict: 1,
         body: {
           script: {
             lang: 'painless',
@@ -61,7 +62,7 @@ export class ProcessedServiceRequestHandler
               }
             `,
             params: {
-              id: command.serviceInvoice.requestHash,
+              id: service_request.request.hash,
             },
           },
           upsert: {

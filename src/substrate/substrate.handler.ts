@@ -190,6 +190,7 @@ export class SubstrateService
   private isFetching = false;
   private fetchBlockInterval: NodeJS.Timer;
   private readonly logger: Logger = new Logger(SubstrateService.name);
+  private isError = false;
   constructor(
     private commandBus: CommandBus,
     private queryBus: QueryBus,
@@ -204,6 +205,19 @@ export class SubstrateService
   }
 
   async onModuleInit() {
+    await this.setWsProvider();
+  }
+
+  onModuleDestroy() {
+    this.stopListen();
+  }
+
+  async setWsProvider() {
+    if (this.wsProvider) {
+      this.wsProvider.disconnect();
+      delete this.wsProvider;
+    }
+
     this.wsProvider = new WsProvider(this.process.env.SUBSTRATE_URL);
 
     this.wsProvider.on('connected', () => {
@@ -219,10 +233,6 @@ export class SubstrateService
       this.logger.log(`WS Error: ${error}`);
       await this.restartConnection();
     });
-  }
-
-  onModuleDestroy() {
-    this.stopListen();
   }
 
   async handleEvent(blockMetaData: BlockMetaData, event: Event) {
@@ -251,37 +261,37 @@ export class SubstrateService
   async eventFromBlock(blockNumber: number, blockHash: string | Uint8Array) {
     await this.updateMetaData(blockHash);
 
-    const apiAt = await this.api.at(blockHash);
+    const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
 
-    const allEventsFromBlock = await apiAt.query.system.events();
-
-    const events = allEventsFromBlock.filter(
-      ({ phase }) => phase.isApplyExtrinsic,
-    );
+    const apiAt = await this.api.at(signedBlock.block.header.hash);
 
     const blockMetaData: BlockMetaData = {
       blockNumber: blockNumber,
       blockHash: blockHash.toString(),
     };
 
-    for (let i = 0; i < events.length; i++) {
-      const { event } = events[i];
-      await this.handleEvent(blockMetaData, event);
-    }
+    const allRecords = (await apiAt.query.system.events()) as any;
+
+    signedBlock.block.extrinsics.forEach(
+      // eslint-disable-next-line
+      async ({ method: { method, section } }, index) => {
+        // filter the specific events based on the phase and then the
+        // index of our extrinsic in the block
+        const events = allRecords.filter(
+          ({ phase }) =>
+            phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(index),
+        );
+        for (let i = 0; i < events.length; i++) {
+          const { event } = events[i];
+          await this.handleEvent(blockMetaData, event);
+        }
+      },
+    );
   }
 
   async listenNewBlocks() {
+    if (this.isError) return;
     try {
-      /**
-       * when this function is called
-       * first check connection to node
-       * restart connection when not connected
-       */
-      if (!this.api.isConnected) {
-        await this.restartConnection();
-        return;
-      }
-
       const currentBlock = await this.api.rpc.chain.getBlock();
       const currentBlockNumber =
         currentBlock.block.header.number.toNumber() - 1;
@@ -315,7 +325,9 @@ export class SubstrateService
         }
       }
     } catch (err) {
+      this.isError = true;
       this.logger.log(`Catch error: ${err.name}, ${err.message}, ${err.stack}`);
+      await this.restartConnection();
     } finally {
       this.isFetching = false;
     }
@@ -391,6 +403,7 @@ export class SubstrateService
       this.logger.log(
         `Handling sync block catch : ${err.name}, ${err.message}, ${err.stack}`,
       );
+      await this.restartConnection();
     }
   }
 
@@ -436,19 +449,23 @@ export class SubstrateService
     this.fetchBlockInterval = setInterval(async () => {
       await this.listenNewBlocks();
     }, 6000);
-
     this.schedulerRegistry.addInterval('fetch-block', this.fetchBlockInterval);
+
+    this.isError = false;
   }
 
   stopListen() {
     this.listenStatus = false;
 
     if (this.api) {
+      this.api.disconnect();
       delete this.api;
     }
 
-    this.schedulerRegistry.deleteInterval('fetch-block');
-    clearInterval(this.fetchBlockInterval);
+    if (this.schedulerRegistry.doesExist('interval', 'fetch-block')) {
+      this.schedulerRegistry.deleteInterval('fetch-block');
+      clearInterval(this.fetchBlockInterval);
+    }
   }
 
   /**
@@ -458,6 +475,7 @@ export class SubstrateService
     if (this.listenStatus) {
       this.logger.log('Restart connection to node.');
       this.stopListen();
+      await this.setWsProvider();
       await this.startListen();
     }
   }

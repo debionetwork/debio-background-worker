@@ -32,6 +32,7 @@ export class UnstakedServiceRequestHandler
       index: 'country-service-request',
       id: command.request.country,
       refresh: 'wait_for',
+      retry_on_conflict: 1,
       body: {
         script: {
           lang: 'painless',
