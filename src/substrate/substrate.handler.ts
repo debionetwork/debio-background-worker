@@ -179,9 +179,7 @@ const eventRoutes = {
 };
 
 @Injectable()
-export class SubstrateService
-  implements OnModuleInit, OnModuleDestroy, OnApplicationBootstrap
-{
+export class SubstrateService implements OnModuleInit, OnModuleDestroy {
   private listenStatus = false;
   private api: ApiPromise;
   private lastBlockNumber = 0;
@@ -199,13 +197,10 @@ export class SubstrateService
     private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
-  async onApplicationBootstrap() {
-    await this.initializeIndices();
-    await this.startListen();
-  }
-
   async onModuleInit() {
+    await this.initializeIndices();
     await this.setWsProvider();
+    await this.startListen();
   }
 
   onModuleDestroy() {
@@ -519,6 +514,7 @@ export class SubstrateService
         'data-bounty',
         'services',
         'orders',
+        'last-block-number-substrate',
       ];
 
       for (const i of indices) {

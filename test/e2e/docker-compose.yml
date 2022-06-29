@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  elasticsearch:
+    container_name: debio-elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.1
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "true"
+      xpack.security.audit.enabled: "true"
+      ELASTIC_PASSWORD: elastic
+    ports:
+      - 9200:9200
+      - 9300:9300
+  node:
+    container_name: debio-node
+    image: debionetwork/debio-node:latest
+    command: >
+      --dev
+      --alice
+      --rpc-cors all
+      --rpc-methods unsafe
+      --unsafe-rpc-external
+      --unsafe-ws-external
+      --no-telemetry
+    ports:
+      - 30333:30333
+      - 9933:9933
+      - 9944:9944
+      - 9615:9615
