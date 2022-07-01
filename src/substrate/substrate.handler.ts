@@ -464,15 +464,13 @@ export class SubstrateService implements OnModuleInit, OnModuleDestroy {
   }
 
   /**
-   * If the connection is active, stop it, then start it again
+   * It stops listening to the node, sets the websocket provider, and starts listening to the node.
    */
   async restartConnection() {
-    if (this.listenStatus) {
-      this.logger.log('Restart connection to node.');
-      this.stopListen();
-      await this.setWsProvider();
-      await this.startListen();
-    }
+    this.logger.log('Restart connection to node.');
+    this.stopListen();
+    await this.setWsProvider();
+    await this.startListen();
   }
 
   /**
