@@ -44,31 +44,39 @@ export class FinalizedServiceRequestHandler
 
     const service_request = body.hits?.hits[0]?._source || null;
 
-    if (service_request != null) {
-      await this.elasticsearchService.update({
-        index: 'country-service-request',
-        id: service_request.country,
-        refresh: 'wait_for',
-        body: {
-          script: {
-            lang: 'painless',
-            source: `
-              for (int i = 0; i < ctx._source.service_request.length; i++) {
-                if (ctx._source.service_request[i].id == params.id) {
-                  ctx._source.service_request.remove(i);
-                  break;
-                }
+    if (service_request !== null) {
+      await this.updateCountryServiceRequest(
+        service_request.request.country,
+        service_request.request.hash,
+      );
+    }
+  }
+
+  async updateCountryServiceRequest(id: string, hash: string) {
+    await this.elasticsearchService.update({
+      index: 'country-service-request',
+      id: id,
+      refresh: 'wait_for',
+      retry_on_conflict: 1,
+      body: {
+        script: {
+          lang: 'painless',
+          source: `
+            for (int i = 0; i < ctx._source.service_request.length; i++) {
+              if (ctx._source.service_request[i].id == params.id) {
+                ctx._source.service_request.remove(i);
+                break;
               }
-            `,
-            params: {
-              id: command.serviceInvoice.requestHash,
-            },
-          },
-          upsert: {
-            counter: 1,
+            }
+          `,
+          params: {
+            id: hash,
           },
         },
-      });
-    }
+        upsert: {
+          counter: 1,
+        },
+      },
+    });
   }
 }
