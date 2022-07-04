@@ -179,7 +179,9 @@ const eventRoutes = {
 };
 
 @Injectable()
-export class SubstrateService implements OnModuleInit, OnModuleDestroy {
+export class SubstrateService
+  implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy
+{
   private listenStatus = false;
   private api: ApiPromise;
   private lastBlockNumber = 0;
@@ -197,10 +199,13 @@ export class SubstrateService implements OnModuleInit, OnModuleDestroy {
     private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
-  async onModuleInit() {
-    await this.initializeIndices();
+  async onApplicationBootstrap() {
     await this.setWsProvider();
     await this.startListen();
+  }
+
+  async onModuleInit() {
+    await this.initializeIndices();
   }
 
   onModuleDestroy() {
@@ -288,10 +293,9 @@ export class SubstrateService implements OnModuleInit, OnModuleDestroy {
     if (this.isError) return;
     try {
       const currentBlock = await this.api.rpc.chain.getBlock();
-      const currentBlockNumber =
-        currentBlock.block.header.number.toNumber() - 1;
+      const currentBlockNumber = currentBlock.block.header.number.toNumber();
 
-      if (!this.isFetching && this.lastBlockNumber !== currentBlockNumber) {
+      if (!this.isFetching && this.lastBlockNumber < currentBlockNumber) {
         this.isFetching = true;
 
         for (
@@ -363,11 +367,13 @@ export class SubstrateService implements OnModuleInit, OnModuleDestroy {
       }
       while (chunkStart < endBlock) {
         this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
+        if (!this.listenStatus) break;
         for (
           let blockNumber = chunkStart;
           blockNumber <= chunkEnd;
           blockNumber++
         ) {
+          if (!this.listenStatus) break;
           // Get block by block number
           const blockHash = await this.api.rpc.chain.getBlockHash(blockNumber);
 
@@ -398,7 +404,9 @@ export class SubstrateService implements OnModuleInit, OnModuleDestroy {
       this.logger.log(
         `Handling sync block catch : ${err.name}, ${err.message}, ${err.stack}`,
       );
-      await this.restartConnection();
+      if (this.listenStatus) {
+        await this.restartConnection();
+      }
     }
   }
 
@@ -444,7 +452,13 @@ export class SubstrateService implements OnModuleInit, OnModuleDestroy {
     this.fetchBlockInterval = setInterval(async () => {
       await this.listenNewBlocks();
     }, 6000);
-    this.schedulerRegistry.addInterval('fetch-block', this.fetchBlockInterval);
+
+    if (!this.schedulerRegistry.doesExist('interval', 'fetch-block')) {
+      this.schedulerRegistry.addInterval(
+        'fetch-block',
+        this.fetchBlockInterval,
+      );
+    }
 
     this.isError = false;
   }
@@ -467,6 +481,7 @@ export class SubstrateService implements OnModuleInit, OnModuleDestroy {
    * It stops listening to the node, sets the websocket provider, and starts listening to the node.
    */
   async restartConnection() {
+    if (!this.listenStatus) return;
     this.logger.log('Restart connection to node.');
     this.stopListen();
     await this.setWsProvider();
