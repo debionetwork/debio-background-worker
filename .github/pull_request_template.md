@@ -1,10 +1,10 @@
-### JIRA LINK 🟦
+### JIRA LINK
+- https://blocksphere2020.atlassian.net/browse/DBIO-ISSUE_NUMBER
+
+### Changelog
 - 
 
-### Changelog/Description 🗒️
-- 
-
-### WARNING ⚠️
-- 
-
-### Screenshoot/Video (Optional) 🖼️
+### E2E Test Result
+- Endpoint:
+- Scheduler:
+- Listener: 
