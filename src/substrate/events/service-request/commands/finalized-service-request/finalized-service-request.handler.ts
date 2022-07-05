@@ -73,9 +73,6 @@ export class FinalizedServiceRequestHandler
             id: hash,
           },
         },
-        upsert: {
-          counter: 1,
-        },
       },
     });
   }

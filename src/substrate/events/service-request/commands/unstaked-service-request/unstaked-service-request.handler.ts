@@ -48,9 +48,6 @@ export class UnstakedServiceRequestHandler
             id: command.request.hash,
           },
         },
-        upsert: {
-          counter: 1,
-        },
       },
     });
   }

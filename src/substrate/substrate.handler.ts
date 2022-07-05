@@ -290,14 +290,14 @@ export class SubstrateService
   }
 
   async listenNewBlocks() {
-    if (this.isError) return;
+    if (this.isError || this.isFetching) return;
+
+    this.isFetching = true;
     try {
       const currentBlock = await this.api.rpc.chain.getBlock();
       const currentBlockNumber = currentBlock.block.header.number.toNumber();
 
-      if (!this.isFetching && this.lastBlockNumber < currentBlockNumber) {
-        this.isFetching = true;
-
+      if (this.lastBlockNumber < currentBlockNumber) {
         for (
           ;
           this.lastBlockNumber <= currentBlockNumber;
@@ -357,10 +357,10 @@ export class SubstrateService
       /**
        * Process logs in chunks of blocks
        * */
-      const endBlock = this.lastBlockNumber;
+      const endBlock = this.lastBlockNumber - 1;
       const chunkSize = 1000;
       let chunkStart = lastBlockNumberEs;
-      let chunkEnd = this.lastBlockNumber;
+      let chunkEnd = endBlock;
       // If chunkEnd is more than chunkSize, set chunkEnd to chunkSize
       if (chunkEnd - chunkStart > chunkSize) {
         chunkEnd = chunkStart + chunkSize;
