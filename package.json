@@ -24,7 +24,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/e2e/jest-e2e-substrate.json --runInBand --forceExit"
+    "test:e2e": "jest --config ./test/e2e/jest-e2e-indexer.json --runInBand --forceExit"
   },
   "dependencies": {
     "@debionetwork/nestjs-gcloud-secret-manager": "^0.0.1",
@@ -90,7 +90,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "@polkadot/api(.*)$": "<rootDir>/substrate/substrate.handler.ts"
+      "@polkadot/api(.*)$": "<rootDir>/indexer/indexer.handler.ts"
     }
   }
 }

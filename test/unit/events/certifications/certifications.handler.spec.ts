@@ -4,16 +4,16 @@ import {
   createObjectSearchLab,
   ElasticSearchServiceProvider,
 } from '../../mock';
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
 import {
   CertificationCreatedCommand,
   CertificationDeletedCommand,
   CertificationsCommandHandlers,
   CertificationUpdatedCommand,
-} from '../../../../src/substrate/events/certifications';
-import { CertificationCreatedHandler } from '../../../../src/substrate/events/certifications/commands/certification-created/certification-created.handler';
-import { CertificationUpdatedHandler } from '../../../../src/substrate/events/certifications/commands/certification-updated/certification-updated.handler';
-import { CertificationDeletedHandler } from '../../../../src/substrate/events/certifications/commands/certification-deleted/certification-deleted.handler';
+} from '../../../../src/indexer/events/certifications';
+import { CertificationCreatedHandler } from '../../../../src/indexer/events/certifications/commands/certification-created/certification-created.handler';
+import { CertificationUpdatedHandler } from '../../../../src/indexer/events/certifications/commands/certification-updated/certification-updated.handler';
+import { CertificationDeletedHandler } from '../../../../src/indexer/events/certifications/commands/certification-deleted/certification-deleted.handler';
 import { when } from 'jest-when';
 
 let certificationsCreatedHandler: CertificationCreatedHandler;

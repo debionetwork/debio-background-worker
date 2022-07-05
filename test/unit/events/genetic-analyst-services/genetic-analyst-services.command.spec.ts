@@ -2,12 +2,12 @@ import {
   GeneticAnalystServicesCreatedCommand,
   GeneticAnalystServicesUpdatedCommand,
   GeneticAnalystServicesDeletedCommand,
-} from '../../../../src/substrate/events/genetic-analyst-services';
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
-import { GeneticAnalystsServicesModel } from '../../../../src/substrate/models/genetic-analysts-services/genetic-analysts-services.model';
+} from '../../../../src/indexer/events/genetic-analyst-services';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
+import { GeneticAnalystsServicesModel } from '../../../../src/indexer/models/genetic-analysts-services/genetic-analysts-services.model';
 
 jest.mock(
-  '../../../../src/substrate/models/genetic-analysts-services/genetic-analysts-services.model',
+  '../../../../src/indexer/models/genetic-analysts-services/genetic-analysts-services.model',
 );
 
 describe('Genetic Analysts Services Substrate Event Handler', () => {

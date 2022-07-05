@@ -5,12 +5,12 @@ import {
   GeneticDataCommandHandlers,
   RemoveGeneticDataCommand,
   UpdateGeneticDataCommand,
-} from '../../../../src/substrate/events/genetic-data';
+} from '../../../../src/indexer/events/genetic-data';
 import { ElasticSearchServiceProvider } from '../../mock';
-import { AddGeneticDataHandler } from '../../../../src/substrate/events/genetic-data/commands/add-genetic-data/add-genetic-data.handler';
-import { RemoveGeneticDataHandler } from '../../../../src/substrate/events/genetic-data/commands/remove-genetic-data/remove-genetic-data.handler';
-import { UpdateGeneticDataHandler } from '../../../../src/substrate/events/genetic-data/commands/update-genetic-data/update-genetic-data.handler';
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+import { AddGeneticDataHandler } from '../../../../src/indexer/events/genetic-data/commands/add-genetic-data/add-genetic-data.handler';
+import { RemoveGeneticDataHandler } from '../../../../src/indexer/events/genetic-data/commands/remove-genetic-data/remove-genetic-data.handler';
+import { UpdateGeneticDataHandler } from '../../../../src/indexer/events/genetic-data/commands/update-genetic-data/update-genetic-data.handler';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
 
 describe('Genetic Data Substate Event Handler', () => {
   let elasticsearchService: ElasticsearchService;

@@ -6,16 +6,16 @@ import {
   OrderFulfilledCommand,
   OrderPaidCommand,
   OrderRefundedCommand,
-} from '../../../../src/substrate/events/orders';
-import { OrderCancelledHandler } from '../../../../src/substrate/events/orders/commands/order-cancelled/order-cancelled.handler';
-import { OrderCreatedHandler } from '../../../../src/substrate/events/orders/commands/order-created/order-created.handler';
-import { OrderFailedHandler } from '../../../../src/substrate/events/orders/commands/order-failed/order-failed.handler';
-import { OrderFulfilledHandler } from '../../../../src/substrate/events/orders/commands/order-fulfilled/order-fulfilled.handler';
-import { OrderPaidHandler } from '../../../../src/substrate/events/orders/commands/order-paid/order-paid.handler';
-import { OrderRefundedHandler } from '../../../../src/substrate/events/orders/commands/order-refunded/order-refunded.handler';
-import { OrderStatus } from '../../../../src/substrate/models/order/order-status';
-import { Currency } from '../../../../src/substrate/models/order/currency';
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+} from '../../../../src/indexer/events/orders';
+import { OrderCancelledHandler } from '../../../../src/indexer/events/orders/commands/order-cancelled/order-cancelled.handler';
+import { OrderCreatedHandler } from '../../../../src/indexer/events/orders/commands/order-created/order-created.handler';
+import { OrderFailedHandler } from '../../../../src/indexer/events/orders/commands/order-failed/order-failed.handler';
+import { OrderFulfilledHandler } from '../../../../src/indexer/events/orders/commands/order-fulfilled/order-fulfilled.handler';
+import { OrderPaidHandler } from '../../../../src/indexer/events/orders/commands/order-paid/order-paid.handler';
+import { OrderRefundedHandler } from '../../../../src/indexer/events/orders/commands/order-refunded/order-refunded.handler';
+import { OrderStatus } from '../../../../src/indexer/models/order/order-status';
+import { Currency } from '../../../../src/indexer/models/order/currency';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import {

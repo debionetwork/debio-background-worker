@@ -12,18 +12,18 @@ import {
   GeneticAnalystsUpdateAvailabilityStatusCommand,
   GeneticAnalystUnstakeSuccessfulCommand,
   GeneticAnalystVerificationFailedCommand,
-} from '../../../../src/substrate/events/genetic-analysts';
-import { GeneticAnalystsRegisteredHandler } from '../../../../src/substrate/events/genetic-analysts/commands/genetic-analysts-registered/genetic-analysts-registered.handler';
-import { GeneticAnalystsDeletedHandler } from '../../../../src/substrate/events/genetic-analysts/commands/genetic-analysts-deleted/genetic-analysts-deleted.handler';
-import { GeneticAnalystsUpdatedHandler } from '../../../../src/substrate/events/genetic-analysts/commands/genetic-analysts-updated/genetic-analysts-updated.handler';
+} from '../../../../src/indexer/events/genetic-analysts';
+import { GeneticAnalystsRegisteredHandler } from '../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-registered/genetic-analysts-registered.handler';
+import { GeneticAnalystsDeletedHandler } from '../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-deleted/genetic-analysts-deleted.handler';
+import { GeneticAnalystsUpdatedHandler } from '../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-updated/genetic-analysts-updated.handler';
 
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
-import { GeneticAnalystsStakeSuccessfulHandler } from '../../../../src/substrate/events/genetic-analysts/commands/genetic-analysts-stake-successful/genetic-analysts-stake-successful.handler';
-import { GeneticAnalystsUpdateVerificationStatusHandler } from '../../../../src/substrate/events/genetic-analysts/commands/genetic-analysts-update-verification-status/genetic-analysts-update-verification-status.handler';
-import { GeneticAnalystsRetrieveUnstakeAmountHandler } from '../../../../src/substrate/events/genetic-analysts/commands/genetic-analysts-retrieve-unstake-amount/genetic-analysts-retrieve-unstake-amount.handler';
-import { GeneticAnalystsUpdateAvailabilityStatusHandler } from '../../../../src/substrate/events/genetic-analysts/commands/genetic-analysts-update-availability-status/genetic-analysts-update-availability-status.handler';
-import { GeneticAnalystUnstakeSuccessfulHandler } from '../../../../src/substrate/events/genetic-analysts/commands/genetic-analysts-unstake-successful/genetic-analysts-unstake-successful.handler';
-import { GeneticAnalystVerificationFailedHandler } from '../../../../src/substrate/events/genetic-analysts/commands/genetic-analysts-verification-failed/genetic-analysts-verification-failed.handler';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
+import { GeneticAnalystsStakeSuccessfulHandler } from '../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-stake-successful/genetic-analysts-stake-successful.handler';
+import { GeneticAnalystsUpdateVerificationStatusHandler } from '../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-update-verification-status/genetic-analysts-update-verification-status.handler';
+import { GeneticAnalystsRetrieveUnstakeAmountHandler } from '../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-retrieve-unstake-amount/genetic-analysts-retrieve-unstake-amount.handler';
+import { GeneticAnalystsUpdateAvailabilityStatusHandler } from '../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-update-availability-status/genetic-analysts-update-availability-status.handler';
+import { GeneticAnalystUnstakeSuccessfulHandler } from '../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-unstake-successful/genetic-analysts-unstake-successful.handler';
+import { GeneticAnalystVerificationFailedHandler } from '../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-verification-failed/genetic-analysts-verification-failed.handler';
 
 describe('Genetic Anlaysts Substrate Event Handler', () => {
   let elasticsearchService: ElasticsearchService;

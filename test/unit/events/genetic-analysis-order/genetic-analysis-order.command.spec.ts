@@ -4,13 +4,13 @@ import {
   GeneticAnalysisOrderFulfilledCommand,
   GeneticAnalysisOrderPaidCommand,
   GeneticAnalysisOrderRefundedCommand,
-} from '../../../../src/substrate/events/genetic-analysis-order';
-import { GeneticAnalysisOrderFailedCommand } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-failed/genetic-analysis-order-failed.command';
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
-import { GeneticAnalysisOrderModel } from '../../../../src/substrate/models/genetic-analysis-order/genetic-analysis-order.model';
+} from '../../../../src/indexer/events/genetic-analysis-order';
+import { GeneticAnalysisOrderFailedCommand } from '../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-failed/genetic-analysis-order-failed.command';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
+import { GeneticAnalysisOrderModel } from '../../../../src/indexer/models/genetic-analysis-order/genetic-analysis-order.model';
 
 jest.mock(
-  '../../../../src/substrate/models/genetic-analysis-order/genetic-analysis-order.model',
+  '../../../../src/indexer/models/genetic-analysis-order/genetic-analysis-order.model',
 );
 
 describe('Orders Substrate Event Handler', () => {

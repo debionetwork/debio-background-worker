@@ -1,6 +1,6 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { IndexerHandler } from '../../src/substrate/indexer.handler';
+import { IndexerHandler } from '../../src/indexer/indexer.handler';
 
 export const substrateServiceProvider = {
   provide: IndexerHandler,

@@ -1,11 +1,11 @@
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ClaimedServiceRequestHandler } from '../../../../src/substrate/events/service-request//commands/claimed-service-request/claimed-service-request.handler';
-import { CreateServiceRequestHandler } from '../../../../src/substrate/events/service-request//commands/create-service-request/create-service-request.handler';
-import { FinalizedServiceRequestHandler } from '../../../../src/substrate/events/service-request//commands/finalized-service-request/finalized-service-request.handler';
-import { ProcessedServiceRequestHandler } from '../../../../src/substrate/events/service-request//commands/processed-service-request/processed-service-request.handler';
-import { UnstakedServiceRequestHandler } from '../../../../src/substrate/events/service-request//commands/unstaked-service-request/unstaked-service-request.handler';
-import { UnstakedWaitingServiceRequestHandler } from '../../../../src/substrate/events/service-request//commands/unstakedwaiting-service-request/unstakedwaiting-service-request.handler';
+import { ClaimedServiceRequestHandler } from '../../../../src/indexer/events/service-request/commands/claimed-service-request/claimed-service-request.handler';
+import { CreateServiceRequestHandler } from '../../../../src/indexer/events/service-request/commands/create-service-request/create-service-request.handler';
+import { FinalizedServiceRequestHandler } from '../../../../src/indexer/events/service-request/commands/finalized-service-request/finalized-service-request.handler';
+import { ProcessedServiceRequestHandler } from '../../../../src/indexer/events/service-request/commands/processed-service-request/processed-service-request.handler';
+import { UnstakedServiceRequestHandler } from '../../../../src/indexer/events/service-request/commands/unstaked-service-request/unstaked-service-request.handler';
+import { UnstakedWaitingServiceRequestHandler } from '../../../../src/indexer/events/service-request/commands/unstakedwaiting-service-request/unstakedwaiting-service-request.handler';
 import {
   ClaimedServiceRequestCommand,
   CreateServiceRequestCommand,
@@ -14,9 +14,9 @@ import {
   RequestServiceCommandHandlers,
   UnstakedServiceRequestCommand,
   UnstakedWaitingServiceRequestCommand,
-} from '../../../../src/substrate/events/service-request/';
-import { RequestStatus } from '../../../../src/substrate//models/service-request/requestStatus';
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+} from '../../../../src/indexer/events/service-request';
+import { RequestStatus } from '../../../../src/indexer/models/service-request/requestStatus';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
 import {
   createObjectSearchCountryServiceRequest,
   createObjectSearchServiceRequest,

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { IndexerHandler } from '../../../../../src/substrate/indexer.handler';
+import { IndexerHandler } from '../../../../../src/indexer/indexer.handler';
 import { CommonModule } from '../../../../../src/common/common.module';
 import { ProcessEnvModule } from '../../../../../src/common/process-env/process-env.module';
-import { ServiceCommandHandlers } from '../../../../../src/substrate/events/services';
+import { ServiceCommandHandlers } from '../../../../../src/indexer/events/services';
 import { INestApplication } from '@nestjs/common';
 import { initializeApi } from '../../../polkadot-init';
 import { ApiPromise } from '@polkadot/api';
@@ -29,11 +29,11 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { labDataMock } from '../../../../mock/models/labs/labs.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { serviceDataMock } from '../../../../mock/models/labs/service.mock';
-import { LabCommandHandlers } from '../../../../../src/substrate/events/labs';
-import { RequestServiceCommandHandlers } from '../../../../../src/substrate/events/service-request';
+import { LabCommandHandlers } from '../../../../../src/indexer/events/labs';
+import { RequestServiceCommandHandlers } from '../../../../../src/indexer/events/service-request';
 import { ScheduleModule } from '@nestjs/schedule';
-import { IndexerModule } from '../../../../../src/substrate/indexer.module';
-import { serviceRequestMock } from './../../../../mock/models/service-request/service-request.mock';
+import { IndexerModule } from '../../../../../src/indexer/indexer.module';
+import { serviceRequestMock } from '../../../../mock/models/service-request/service-request.mock';
 
 describe('Event Command Service Request Claimed', () => {
   let app: INestApplication;

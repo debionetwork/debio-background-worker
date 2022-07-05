@@ -3,7 +3,7 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "node",
-  "testRegex": ".*/substrate/.*.spec.ts$",
+  "testRegex": ".*/indexer/.*.spec.ts$",
   "transform": {
     "^.+\\.ts$": "ts-jest",
     "node_modules/@polkadot/.+\\.tsx?$": "ts-jest",

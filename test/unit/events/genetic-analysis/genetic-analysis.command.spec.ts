@@ -3,12 +3,12 @@ import {
   GeneticAnalysisRejectedCommand,
   GeneticAnalysisResultReadyCommand,
   GeneticAnalysisSubmittedCommand,
-} from '../../../../src/substrate/events/genetic-analysis';
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
-import { GeneticAnalysisModel } from '../../../../src/substrate/models/genetic-analysis/genetic-analysis.model';
+} from '../../../../src/indexer/events/genetic-analysis';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
+import { GeneticAnalysisModel } from '../../../../src/indexer/models/genetic-analysis/genetic-analysis.model';
 
 jest.mock(
-  '../../../../src/substrate/models/genetic-analysis/genetic-analysis.model',
+  '../../../../src/indexer/models/genetic-analysis/genetic-analysis.model',
 );
 
 describe('Genetic Analysis Substrate Event Command', () => {

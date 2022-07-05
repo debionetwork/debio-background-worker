@@ -9,13 +9,13 @@ import {
   GeneticAnalystsQualificationCreatedCommand,
   GeneticAnalystsQualificationDeletedCommand,
   GeneticAnalystsQualificationUpdatedCommand,
-} from '../../../../src/substrate/events/genetic-analyst-qualifications';
-import { GeneticAnalystsQualificationCreatedHandler } from '../../../../src/substrate/events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-created/genetic-analysts-qualification-created.handler';
-import { GeneticAnalystsQualificationDeletedHandler } from '../../../../src/substrate/events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-deleted/genetic-analysts-qualification-deleted.handler';
-import { GeneticAnalystsQualificationUpdatedHandler } from '../../../../src/substrate/events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-updated/genetic-analysts-qualification-updated.handler';
+} from '../../../../src/indexer/events/genetic-analyst-qualifications';
+import { GeneticAnalystsQualificationCreatedHandler } from '../../../../src/indexer/events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-created/genetic-analysts-qualification-created.handler';
+import { GeneticAnalystsQualificationDeletedHandler } from '../../../../src/indexer/events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-deleted/genetic-analysts-qualification-deleted.handler';
+import { GeneticAnalystsQualificationUpdatedHandler } from '../../../../src/indexer/events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-updated/genetic-analysts-qualification-updated.handler';
 import { when } from 'jest-when';
 
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
 
 describe('Genetic Anlaysts Qualificatioins Substrate Event Handler', () => {
   let elasticsearchService: ElasticsearchService;

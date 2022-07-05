@@ -8,18 +8,18 @@ import {
   LabUnstakeSuccessfulCommand,
   LabUpdatedCommand,
   LabUpdateVerificationStatusCommand,
-} from '../../../../src/substrate/events/labs';
-import { LabDeregisteredHandler } from '../../../../src/substrate/events/labs/commands/lab-deregistered/lab-deregistered.handler';
-import { LabRegisteredHandler } from '../../../../src/substrate/events/labs/commands/lab-registered/lab-registered.handler';
-import { LabUpdatedHandler } from '../../../../src/substrate/events/labs/commands/lab-updated/lab-updated.handler';
-import { LabUpdateVerificationStatusHandler } from '../../../../src/substrate/events/labs/commands/lab-update-verification-status/lab-update-verification-status.handler';
+} from '../../../../src/indexer/events/labs';
+import { LabDeregisteredHandler } from '../../../../src/indexer/events/labs/commands/lab-deregistered/lab-deregistered.handler';
+import { LabRegisteredHandler } from '../../../../src/indexer/events/labs/commands/lab-registered/lab-registered.handler';
+import { LabUpdatedHandler } from '../../../../src/indexer/events/labs/commands/lab-updated/lab-updated.handler';
+import { LabUpdateVerificationStatusHandler } from '../../../../src/indexer/events/labs/commands/lab-update-verification-status/lab-update-verification-status.handler';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
 import { ElasticSearchServiceProvider } from '../../mock';
-import { StakeStatus } from '../../../../src/substrate/models/stake-status';
-import { LabRetrieveUnstakeAmountHandler } from '../../../../src/substrate/events/labs/commands/lab-retrieve-unstake-amount/lab-retrieve-unstake-amount.handler';
-import { LabStakeSuccessfulHandler } from '../../../../src/substrate/events/labs/commands/lab-stake-successful/lab-stake-successful.handler';
-import { LabUnstakeSuccessfulHandler } from '../../../../src/substrate/events/labs/commands/lab-unstake-successful/lab-unstake-successful.handler';
+import { StakeStatus } from '../../../../src/indexer/models/stake-status';
+import { LabRetrieveUnstakeAmountHandler } from '../../../../src/indexer/events/labs/commands/lab-retrieve-unstake-amount/lab-retrieve-unstake-amount.handler';
+import { LabStakeSuccessfulHandler } from '../../../../src/indexer/events/labs/commands/lab-stake-successful/lab-stake-successful.handler';
+import { LabUnstakeSuccessfulHandler } from '../../../../src/indexer/events/labs/commands/lab-unstake-successful/lab-unstake-successful.handler';
 
 let labDeregisteredHandler: LabDeregisteredHandler;
 let labRegisteredHandler: LabRegisteredHandler;

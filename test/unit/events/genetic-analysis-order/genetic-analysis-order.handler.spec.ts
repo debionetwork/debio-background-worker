@@ -8,19 +8,19 @@ import {
   GeneticAnalysisOrderFulfilledCommand,
   GeneticAnalysisOrderPaidCommand,
   GeneticAnalysisOrderRefundedCommand,
-} from '../../../../src/substrate/events/genetic-analysis-order';
+} from '../../../../src/indexer/events/genetic-analysis-order';
 import {
   createObjectSearchGeneticAnalysts,
   createObjectSearchGeneticAnalystsService,
   ElasticSearchServiceProvider,
 } from '../../mock';
-import { GeneticAnalysisOrderCancelledHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.handler';
-import { GeneticAnalysisOrderCreatedHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-created/genetic-analysis-order-created.handler';
-import { GeneticAnalysisOrderFailedHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-failed/genetic-analysis-order-failed.handler';
-import { GeneticAnalysisOrderFulfilledHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
-import { GeneticAnalysisOrderPaidHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
-import { GeneticAnalysisOrderRefundedHandler } from '../../../../src/substrate/events/genetic-analysis-order/commands/genetic-analysis-order-refunded/genetic-analysis-order-refunded.handler';
-import { BlockMetaData } from '../../../../src/substrate/models/blockMetaData';
+import { GeneticAnalysisOrderCancelledHandler } from '../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.handler';
+import { GeneticAnalysisOrderCreatedHandler } from '../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-created/genetic-analysis-order-created.handler';
+import { GeneticAnalysisOrderFailedHandler } from '../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-failed/genetic-analysis-order-failed.handler';
+import { GeneticAnalysisOrderFulfilledHandler } from '../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
+import { GeneticAnalysisOrderPaidHandler } from '../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
+import { GeneticAnalysisOrderRefundedHandler } from '../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-refunded/genetic-analysis-order-refunded.handler';
+import { BlockMetaData } from '../../../../src/indexer/models/blockMetaData';
 import { when } from 'jest-when';
 
 describe('Genetic Analysis Order Substrate Event Handler', () => {

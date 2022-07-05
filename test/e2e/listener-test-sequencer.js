@@ -6,7 +6,7 @@ class CustomSequencer extends Sequencer {
     
     const sequence = [];
     sequence.push(...testsArray.filter(obj => {
-      return obj.path.includes('substrate/events/service-request/service-request-claimed.spec.ts');
+      return obj.path.includes('indexer/events/service-request/service-request-claimed.spec.ts');
     }));
 
     return sequence;
