@@ -99,6 +99,7 @@ describe('Event Command Service Request Claimed', () => {
 
   it('create service request', async () => {
     const createServicePromise: Promise<ServiceRequest> = new Promise(
+      // eslint-disable-next-line
       (resolve, reject) => {
         createRequest(
           api,
@@ -127,6 +128,7 @@ describe('Event Command Service Request Claimed', () => {
       }),
     );
 
+    // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
         updateLabVerificationStatus(
@@ -147,6 +149,7 @@ describe('Event Command Service Request Claimed', () => {
     expect(lab.info).toEqual(labDataMock.info);
     expect(lab.verificationStatus).toEqual(VerificationStatus.Verified);
 
+    // eslint-disable-next-line
     const servicePromise: Promise<Service> = new Promise((resolve, reject) => {
       createService(
         api,
@@ -166,6 +169,7 @@ describe('Event Command Service Request Claimed', () => {
     service = await servicePromise;
 
     const claimRequestPromise: Promise<ServiceRequest> = new Promise(
+      // eslint-disable-next-line
       (resolve, reject) => {
         claimRequest(
           api,

@@ -73,9 +73,6 @@ export class ProcessedServiceRequestHandler
             id: hash,
           },
         },
-        upsert: {
-          counter: 1,
-        },
       },
     });
   }

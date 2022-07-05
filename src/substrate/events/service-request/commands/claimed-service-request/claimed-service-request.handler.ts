@@ -73,9 +73,6 @@ export class ClaimedServiceRequestHandler
             id: hash,
           },
         },
-        upsert: {
-          counter: 1,
-        },
       },
     });
   }
