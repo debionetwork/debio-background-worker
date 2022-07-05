@@ -3,7 +3,7 @@ import { LabCommandHandlers } from './events/labs';
 import { ServiceCommandHandlers } from './events/services';
 import { CommonModule } from '../common/common.module';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
-import { SubstrateService } from './substrate.handler';
+import { IndexerHandler } from './indexer.handler';
 import { OrderCommandHandlers } from './events/orders';
 import { GeneticTestingCommandHandlers } from './events/genetic-testing';
 import { RequestServiceCommandHandlers } from './events/service-request';
@@ -22,7 +22,7 @@ require('dotenv').config();
 @Module({
   imports: [CommonModule, ProcessEnvModule],
   providers: [
-    SubstrateService,
+    IndexerHandler,
     ...LabCommandHandlers,
     ...ServiceCommandHandlers,
     ...OrderCommandHandlers,
@@ -39,4 +39,4 @@ require('dotenv').config();
     ...GeneticAnalysisOrderCommandHandlers,
   ],
 })
-export class SubstrateModule {}
+export class IndexerModule {}

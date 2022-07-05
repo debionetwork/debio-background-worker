@@ -1,9 +1,9 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { SubstrateService } from '../../src/substrate/substrate.handler';
+import { IndexerHandler } from '../../src/substrate/indexer.handler';
 
 export const substrateServiceProvider = {
-  provide: SubstrateService,
+  provide: IndexerHandler,
   useFactory: () => ({
     handleEvent: jest.fn(),
     listenToEvents: jest.fn(),

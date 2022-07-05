@@ -1,6 +1,6 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { SubstrateService } from '../../src/substrate/substrate.handler';
+import { IndexerHandler } from '../../src/substrate/indexer.handler';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ServiceCommandHandlers } from '../../src/substrate/events/services';
 import { LabCommandHandlers } from '../../src/substrate/events/labs';
@@ -12,7 +12,7 @@ import {
 } from './mock';
 
 describe('Substrate Indexer', () => {
-  let substrateService: SubstrateService;
+  let substrateService: IndexerHandler;
   let commandBus: CommandBus;
 
   beforeAll(async () => {
@@ -20,7 +20,7 @@ describe('Substrate Indexer', () => {
       providers: [
         ElasticsearchService,
         ElasticSearchServiceProvider,
-        SubstrateService,
+        IndexerHandler,
         substrateServiceProvider,
         CommandBus,
         CommandBusProvider,
@@ -30,7 +30,7 @@ describe('Substrate Indexer', () => {
       ],
     }).compile();
 
-    substrateService = module.get<SubstrateService>(SubstrateService);
+    substrateService = module.get<IndexerHandler>(IndexerHandler);
     commandBus = module.get<CommandBus>(CommandBus);
 
     await module.init();
