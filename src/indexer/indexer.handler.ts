@@ -10,7 +10,7 @@ import {
   DeleteAllIndexesCommand,
   GetLastSubstrateBlockQuery,
 } from './blocks';
-import { ProcessEnvProxy } from '../common/process-env/process-env.proxy';
+import { ProcessEnvProxy } from '../common/proxies/process-env/process-env.proxy';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { u32 } from '@polkadot/types';
 import { SchedulerRegistry } from '@nestjs/schedule';

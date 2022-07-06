@@ -10,8 +10,8 @@
     "node_modules/@polkadot/.+\\.jsx?$": "babel-jest",
     "^.+\\.(js|jsx)$": "babel-jest"
   },
-  "globalSetup": "./setup.ts",
-  "globalTeardown": "./teardown.ts",
+  "globalSetup": "./setup.indexer.ts",
+  "globalTeardown": "./teardown.indexer.ts",
   "collectCoverageFrom": [
     "**/*.(t|j)s"
   ],
