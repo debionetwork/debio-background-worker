@@ -11,6 +11,6 @@ echo "#!/bin/sh
 
 npm run format
 npm run lint
-npm run test
+npm run test:unit
 " > .git/hooks/pre-push
 chmod +x .git/hooks/pre-push 
