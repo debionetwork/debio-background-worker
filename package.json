@@ -1,5 +1,5 @@
 {
-  "name": "debio-indexer",
+  "name": "debio-background-worker",
   "version": "2.0.0",
   "description": "AGPL-3.0",
   "author": "DeBio Dev Team <debio_dev@blocksphere.id>",
