@@ -29,7 +29,7 @@ services:
       - 9300:9300
   node:
     container_name: debio-node
-    image: debionetwork/debio-node:latest
+    image: debionetwork/debio-node:latest-pre-alpha
     command: >
       --dev
       --alice

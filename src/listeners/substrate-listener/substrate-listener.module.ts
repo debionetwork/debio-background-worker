@@ -40,9 +40,8 @@ import {
     CqrsModule,
     DateTimeModule,
     NotificationModule,
-    GCloudSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      imports: [GCloudSecretManagerModule],
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,

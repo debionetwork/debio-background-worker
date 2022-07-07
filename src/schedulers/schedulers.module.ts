@@ -18,7 +18,7 @@ import { UnstakedService } from './unstaked/unstaked.service';
   imports: [
     GCloudSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      imports: [GCloudSecretManagerModule],
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,

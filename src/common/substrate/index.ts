@@ -4,9 +4,12 @@ import { ProcessEnvModule } from '../proxies/process-env/process-env.module';
 import { SubstrateService } from './substrate.service';
 
 @Module({
-  imports: [ProcessEnvModule, GCloudSecretManagerModule],
+  imports: [
+    ProcessEnvModule,
+    GCloudSecretManagerModule.withConfig(process.env.PARENT),
+  ],
   providers: [SubstrateService],
-  exports: [GCloudSecretManagerModule, SubstrateService],
+  exports: [SubstrateService],
 })
 export class SubstrateModule {}
 

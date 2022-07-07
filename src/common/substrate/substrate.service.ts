@@ -27,6 +27,7 @@ export class SubstrateService implements OnModuleInit {
 
   async onModuleInit() {
     this._wsProvider = new WsProvider(this.process.env.SUBSTRATE_URL);
+    await this.gCloudSecretManagerService.loadSecrets();
 
     const keyring = new Keyring({ type: 'sr25519' });
     await waitReady();

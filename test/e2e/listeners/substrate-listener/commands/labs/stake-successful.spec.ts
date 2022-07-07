@@ -32,8 +32,9 @@ import { LocationModule } from '../../../../../../src/common/location/location.m
 import { CqrsModule } from '@nestjs/cqrs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import { LabCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/labs';
+import { LabStakeSuccessfullHandler } from '../../../../../../src/listeners/substrate-listener/commands/labs/stake-successfull/stake-successful.handler';
 import { createConnection } from 'typeorm';
+import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('lab staking Integration Tests', () => {
   let app: INestApplication;
@@ -61,31 +62,11 @@ describe('lab staking Integration Tests', () => {
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
         ProcessEnvModule,
-        LocationModule,
         TransactionLoggingModule,
         SubstrateModule,
-        DebioConversionModule,
-        MailModule,
         CqrsModule,
         DateTimeModule,
-        NotificationModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
-            },
-          }),
-        }),
       ],
       providers: [
         {
@@ -93,7 +74,7 @@ describe('lab staking Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...LabCommandHandlers,
+        LabStakeSuccessfullHandler,
       ],
     }).compile();
 
