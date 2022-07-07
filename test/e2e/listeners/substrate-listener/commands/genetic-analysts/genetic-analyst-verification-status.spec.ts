@@ -30,7 +30,7 @@ import { SubstrateListenerHandler } from '../../../../../../src/listeners/substr
 import { dummyCredentials } from '../../../../../e2e/config';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import { initializeApi } from '../../../../../e2e/polkadot-init';
-import { geneticAnalystsDataMock } from '../../../../../mocks/models/genetic-analysts/genetic-analysts.mock';
+import { geneticAnalystsDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analysts.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';

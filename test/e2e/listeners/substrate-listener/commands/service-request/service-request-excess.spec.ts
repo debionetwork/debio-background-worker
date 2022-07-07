@@ -45,9 +45,9 @@ import {
   ServiceRequest,
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
-import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
-import { serviceDataMock } from '../../../../../mocks/models/labs/services.mock';
-import { serviceRequestMock } from '../../../../../mocks/models/labs/service-request.mock';
+import { labDataMock } from '../../../../../mock/models/labs/labs.mock';
+import { serviceDataMock } from '../../../../../mock/models/labs/services.mock';
+import { serviceRequestMock } from '../../../../../mock/models/labs/service-request.mock';
 import { createConnection } from 'typeorm';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';

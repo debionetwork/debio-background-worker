@@ -29,10 +29,10 @@ import {
   registerLab,
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider/lib/command/labs';
-import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
+import { labDataMock } from '../../../../../mock/models/labs/labs.mock';
 import { Service } from '@debionetwork/polkadot-provider/lib/models/labs/services';
 import { Order } from '@debionetwork/polkadot-provider/lib/models/labs/orders';
-import { serviceDataMock } from '../../../../../mocks/models/labs/services.mock';
+import { serviceDataMock } from '../../../../../mock/models/labs/services.mock';
 import { DnaSampleStatus } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample-status';
 import { TestingModule } from '@nestjs/testing/testing-module';
 import { Test } from '@nestjs/testing/test';

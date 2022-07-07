@@ -6,7 +6,7 @@ export class NotificationDto {
   read: boolean;
   created_at: Date;
   updated_at: Date;
-  deleted_at: Date
+  deleted_at: Date;
   from: string;
   to: string;
 }

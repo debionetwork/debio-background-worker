@@ -34,8 +34,8 @@ import { dummyCredentials } from '../../../../config';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import { ApiPromise } from '@polkadot/api';
 import { initializeApi } from '../../../../polkadot-init';
-import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
-import { serviceDataMock } from '../../../../../mocks/models/labs/services.mock';
+import { labDataMock } from '../../../../../mock/models/labs/labs.mock';
+import { serviceDataMock } from '../../../../../mock/models/labs/services.mock';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 

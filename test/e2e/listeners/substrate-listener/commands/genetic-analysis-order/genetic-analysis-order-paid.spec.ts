@@ -43,8 +43,8 @@ import {
   queryGeneticDataByOwnerId,
   setGeneticAnalysisOrderPaid,
 } from '@debionetwork/polkadot-provider';
-import { geneticAnalystsDataMock } from '../../../../../mocks/models/genetic-analysts/genetic-analysts.mock';
-import { geneticAnalystServiceDataMock } from '../../../../../mocks/models/genetic-analysts/genetic-analyst-service.mock';
+import { geneticAnalystsDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analysts.mock';
+import { geneticAnalystServiceDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 
