@@ -13,7 +13,7 @@ import { Test } from '@nestjs/testing/test';
 import { INestApplication } from '@nestjs/common/interfaces/nest-application.interface';
 import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
-import { LabRating } from '../../../../../../src/common/rating/models/rating.entity';
+import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
 import { LocationEntities } from '../../../../../../src/common/location/models';
 import { dummyCredentials } from '../../../../config';

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { IndexerHandler } from '../../../../../src/indexer/indexer.handler';
 import { CommonModule } from '../../../../../src/common/common.module';
-import { ProcessEnvModule } from '../../../../../src/common/process-env/process-env.module';
+import { ProcessEnvModule } from '../../../../../src/common/proxies/process-env/process-env.module';
 import { ServiceCommandHandlers } from '../../../../../src/indexer/events/services';
 import { INestApplication } from '@nestjs/common';
 import { initializeApi } from '../../../polkadot-init';

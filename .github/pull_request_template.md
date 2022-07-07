@@ -5,6 +5,6 @@
 - 
 
 ### E2E Test Result
-- Endpoint:
+- Indexer:
 - Scheduler:
 - Listener: 

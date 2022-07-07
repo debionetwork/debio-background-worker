@@ -1,23 +1,23 @@
 import { connectionRetries, dummyCredentials } from './config';
 import { Connection, createConnection } from 'typeorm';
-import { LabRating } from '../../src/common/rating/models/rating.entity';
+import { LabRating } from '../mock/models/rating/rating.entity';
 import { LocationEntities } from '../../src/common/location/models';
 import { TransactionRequest } from '../../src/common/transaction-logging/models/transaction-request.entity';
-import { DataStakingEvents } from '../../src/common/bounty/models/data-staking-events.entity';
-import { DataTokenToDatasetMapping } from '../../src/common/bounty/models/data-token-to-dataset-mapping.entity';
+import { DataStakingEvents } from '../mock/models/bounty/data-staking-events.entity';
+import { DataTokenToDatasetMapping } from '../mock/models/bounty/data-token-to-dataset-mapping.entity';
 import { EmailNotification } from '../../src/common/database/email-notification';
 import { Country } from '../../src/common/location/models/country.entity';
 import { State } from '../../src/common/location/models/state.entity';
 import { City } from '../../src/common/location/models/city.entity';
-import { EmrCategory } from '../../src/common/category/emr/models/emr.entity';
-import { ServiceCategory } from '../../src/common/category/service/models/service-category.service';
-import { SpecializationCategory } from '../../src/common/category/specialization/models/specialization.entity';
-import { DnaCollectionCategory } from '../../src/common/category/dna-collection/models/dna-collection.entity';
-import { emrList } from './common/category/emr.mock.data';
-import { serviceList } from './common/category/service.mock.data';
-import { specializationList } from './common/category/specialization.mock.data';
-import { Notification } from '../../src/common/notification/models/notification.entity';
-import { dnaCollectionList } from './common/category/dna-collection.mock.data';
+import { EmrCategory } from '../mock/models/category/emr.entity';
+import { ServiceCategory } from '../mock/models/category/service-category.service';
+import { SpecializationCategory } from '../mock/models/category/specialization.entity';
+import { DnaCollectionCategory } from '../mock/models/category/dna-collection.entity';
+import { emrList } from '../mock/models/category/emr.mock.data';
+import { serviceList } from '../mock/models/category/service.mock.data';
+import { specializationList } from '../mock/models/category/specialization.mock.data';
+import { Notification } from '../mock/models/notification/notification.entity';
+import { dnaCollectionList } from '../mock/models/category/dna-collection.mock.data';
 
 function initalPostgresConnection(): Promise<Connection> {
   return createConnection({

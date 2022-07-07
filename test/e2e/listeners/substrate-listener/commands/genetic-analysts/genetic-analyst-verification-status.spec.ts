@@ -25,7 +25,7 @@ import { EscrowService } from '../../../../../../src/common/escrow/escrow.servic
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
 import { LocationModule } from '../../../../../../src/common/location/location.module';
 import { LocationEntities } from '../../../../../../src/common/location/models';
-import { LabRating } from '../../../../../../src/common/rating/models/rating.entity';
+import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { dummyCredentials } from '../../../../../e2e/config';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';

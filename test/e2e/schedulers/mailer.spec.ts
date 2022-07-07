@@ -10,6 +10,7 @@ import {
   SubstrateModule,
   MailModule,
   MailerManager,
+  ProcessEnvModule,
 } from '../../../src/common';
 import { MailerService } from '../../../src/schedulers/mailer/mailer.service';
 import { Keyring } from '@polkadot/api';
@@ -26,7 +27,6 @@ describe('Mailer Scheduler (e2e)', () => {
   let mailerManager: MailerManager;
   let substrateService: SubstrateService;
   let emailNotificationService: EmailNotificationService;
-  let gCloudSecretManagerService: GCloudSecretManagerService;
 
   let app: INestApplication;
 
@@ -66,6 +66,7 @@ describe('Mailer Scheduler (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        ProcessEnvModule,
         GCloudSecretManagerModule,
         TypeOrmModule.forRoot({
           name: 'default',
@@ -86,9 +87,8 @@ describe('Mailer Scheduler (e2e)', () => {
     mailerManager = module.get(MailerManager);
     substrateService = module.get(SubstrateService);
     emailNotificationService = module.get(EmailNotificationService);
-    gCloudSecretManagerService = module.get(GCloudSecretManagerService);
+
     service = new MailerService(
-      gCloudSecretManagerService,
       mailerManager,
       emailNotificationService,
       substrateService,
@@ -96,11 +96,12 @@ describe('Mailer Scheduler (e2e)', () => {
 
     app = module.createNestApplication();
     await app.init();
-  });
+  }, 25000);
 
   afterAll(async () => {
     await substrateService.stopListen();
     substrateService.destroy();
+    await app.close();
   });
 
   it('handlePendingLabRegister should not throw', async () => {

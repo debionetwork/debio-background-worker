@@ -8,7 +8,7 @@ import { OrderCommandHandlers } from './events/orders';
 import { GeneticTestingCommandHandlers } from './events/genetic-testing';
 import { RequestServiceCommandHandlers } from './events/service-request';
 import { CertificationsCommandHandlers } from './events/certifications';
-import { ProcessEnvModule } from '../common/process-env/process-env.module';
+import { ProcessEnvModule } from '../common/proxies/process-env/process-env.module';
 import { GeneticDataCommandHandlers } from './events/genetic-data';
 import { GeneticAnalystQualificationsCommandHandlers } from './events/genetic-analyst-qualifications';
 import { GeneticAnalystServicesCommandHandlers } from './events/genetic-analyst-services';
