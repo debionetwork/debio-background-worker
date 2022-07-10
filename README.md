@@ -1,7 +1,28 @@
-# TODO
-- [ ] Check substrate event listener not listen event from debio-node
+<div align="center">
+<img src="https://avatars.githubusercontent.com/u/76637246?s=200&v=4">
+</div>
 
-## Description
+<div align="Center">
+<h1> DeBio Network Background Worker</h1>
+<h2> Decentralized Sovereign Biomed </h2>
+The Anonymous-First Platform for Medical and Bioinformatics Data.
+
+<br>
+<br>
+
+[![Node.js version](https://img.shields.io/badge/Node.js-%5E14.0.0-green?logo=Node.Js)](https://nodejs.org/)
+[![NestJS version](https://img.shields.io/badge/NestJS-%5E8.0.0-red?logo=NestJS)](https://github.com/nestjs/nest)
+[![Medium](https://img.shields.io/badge/Medium-DeBio%20Network-brightgreen?logo=medium)](https://blog.debio.network)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=debionetwork_debio-indexer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=debionetwork_debio-indexer)
+[![Builder](https://github.com/debionetwork/debio-indexer/actions/workflows/builder.yml/badge.svg)](https://github.com/debionetwork/debio-indexer/actions/workflows/builder.yml)
+[![Tester](https://github.com/debionetwork/debio-indexer/actions/workflows/tester.yml/badge.svg)](https://github.com/debionetwork/debio-indexer/actions/workflows/tester.yml)
+
+</div>
+
+---
+
+DeBio Network is a decentralized anonymous-first platform for medical and bioinformatics data. It uses blockchain technology as the immutable transaction ledger to support its processes.
+
 Debio Indexer is service to handle event from substrate node and create index of data from event to elasticsearch.
 
 # Substrate Handler
