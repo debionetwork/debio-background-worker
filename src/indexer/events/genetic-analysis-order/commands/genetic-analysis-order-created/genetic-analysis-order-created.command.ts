@@ -1,5 +1,5 @@
 import { GeneticAnalysisOrderModel } from '../../../../models/genetic-analysis-order/genetic-analysis-order.model';
-import { BlockMetaData } from '../../../../models/blockMetaData';
+import { BlockMetaData } from '../../../../models/block-meta-data';
 
 export class GeneticAnalysisOrderCreatedCommand {
   public geneticAnalysisOrderModel: GeneticAnalysisOrderModel;

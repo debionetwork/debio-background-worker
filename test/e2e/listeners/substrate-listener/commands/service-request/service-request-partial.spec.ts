@@ -51,6 +51,10 @@ import { serviceRequestMock } from '../../../../../mock/models/labs/service-requ
 import { createConnection } from 'typeorm';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Service Request Excess Integration Tests', () => {
   let app: INestApplication;
@@ -71,9 +75,30 @@ describe('Service Request Excess Integration Tests', () => {
     error: jest.fn(),
   };
 
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['EMAIL', process.env.EMAIL],
+      ['PASS_EMAIL', process.env.PASS_EMAIL],
+    ]);
+
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -97,15 +122,6 @@ describe('Service Request Excess Integration Tests', () => {
         CqrsModule,
         DateTimeModule,
         NotificationModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
-            },
-          }),
-        }),
       ],
       providers: [
         {
@@ -115,7 +131,10 @@ describe('Service Request Excess Integration Tests', () => {
         SubstrateListenerHandler,
         ...ServiceRequestCommandHandlers,
       ],
-    }).compile();
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     app = module.createNestApplication();
     await app.init();

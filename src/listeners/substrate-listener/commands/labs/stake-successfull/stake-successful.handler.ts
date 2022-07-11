@@ -37,7 +37,7 @@ export class LabStakeSuccessfullHandler
         amount: lab.stakeAmount,
         created_at: new Date(this.dateTimeProxy.now()),
         currency: 'DBIO',
-        parent_id: BigInt(Number(labParent.id)) || BigInt(0),
+        parent_id: labParent?.id ? BigInt(Number(labParent?.id)) : BigInt(0),
         ref_number: lab.accountId,
         transaction_status: 26, // Lab Staked
         transaction_type: 6, // Staking Lab
@@ -50,6 +50,7 @@ export class LabStakeSuccessfullHandler
             Number(new Date(isLabHasBeenInsert.created_at).getTime()) <=
           tenMinuteInMiliSecond;
       }
+
       if (!isLabHasBeenInsert || isLabHasBeenInsertTenMinuteAgo === false) {
         await this.loggingService.create(labLogging);
       }

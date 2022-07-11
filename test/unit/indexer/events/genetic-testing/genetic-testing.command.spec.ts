@@ -1,4 +1,4 @@
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { DataStakedCommand } from '../../../../../src/indexer/events/genetic-testing';
 import { DataStaked } from '../../../../../src/indexer/models/genetic-testing/data-staked';
 

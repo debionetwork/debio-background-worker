@@ -35,6 +35,10 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { createConnection } from 'typeorm';
 import { LabCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/labs';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Lab unstaking Integration Tests', () => {
   let app: INestApplication;
@@ -52,9 +56,29 @@ describe('Lab unstaking Integration Tests', () => {
     error: jest.fn(),
   };
 
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['EMAIL', process.env.EMAIL],
+      ['PASS_EMAIL', process.env.PASS_EMAIL],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -69,7 +93,6 @@ describe('Lab unstaking Integration Tests', () => {
           entities: [...LocationEntities],
           autoLoadEntities: true,
         }),
-        ProcessEnvModule,
         LocationModule,
         TransactionLoggingModule,
         SubstrateModule,
@@ -78,15 +101,6 @@ describe('Lab unstaking Integration Tests', () => {
         CqrsModule,
         DateTimeModule,
         NotificationModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
-            },
-          }),
-        }),
       ],
       providers: [
         {
@@ -96,7 +110,10 @@ describe('Lab unstaking Integration Tests', () => {
         SubstrateListenerHandler,
         ...LabCommandHandlers,
       ],
-    }).compile();
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     app = module.createNestApplication();
     await app.init();
@@ -171,5 +188,5 @@ describe('Lab unstaking Integration Tests', () => {
     expect(transactionLogs[0].transaction_status).toEqual(27);
 
     await deregisterLab(api, pair);
-  }, 180000);
+  }, 210000);
 });

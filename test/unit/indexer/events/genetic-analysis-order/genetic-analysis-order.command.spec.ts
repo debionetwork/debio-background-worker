@@ -6,7 +6,7 @@ import {
   GeneticAnalysisOrderRefundedCommand,
 } from '../../../../../src/indexer/events/genetic-analysis-order';
 import { GeneticAnalysisOrderFailedCommand } from '../../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-failed/genetic-analysis-order-failed.command';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { GeneticAnalysisOrderModel } from '../../../../../src/indexer/models/genetic-analysis-order/genetic-analysis-order.model';
 
 jest.mock(

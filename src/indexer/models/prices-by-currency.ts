@@ -1,5 +1,5 @@
 import { Price } from './service/price';
-import { CurrencyType } from './currencyType';
+import { CurrencyType } from './currency-type';
 
 export class PricesByCurrency {
   constructor(priceByCurrency: any) {

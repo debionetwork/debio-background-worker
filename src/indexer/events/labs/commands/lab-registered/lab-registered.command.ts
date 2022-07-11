@@ -1,4 +1,4 @@
-import { BlockMetaData } from '../../../../models/blockMetaData';
+import { BlockMetaData } from '../../../../models/block-meta-data';
 import { Lab } from '../../../../models/lab/lab';
 
 export class LabRegisteredCommand {

@@ -4,7 +4,7 @@ import {
   LabUpdatedCommand,
   LabUpdateVerificationStatusCommand,
 } from '../../../../../src/indexer/events/labs';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { Lab } from '../../../../../src/indexer/models/lab/lab';
 import { StakeStatus } from '../../../../../src/indexer/models/stake-status';
 import { LabRetrieveUnstakeAmountCommand } from '../../../../../src/indexer/events/labs/commands/lab-retrieve-unstake-amount/lab-retrieve-unstake-amount.command';

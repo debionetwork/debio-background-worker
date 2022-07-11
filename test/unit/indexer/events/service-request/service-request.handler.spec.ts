@@ -15,8 +15,8 @@ import {
   UnstakedServiceRequestCommand,
   UnstakedWaitingServiceRequestCommand,
 } from '../../../../../src/indexer/events/service-request';
-import { RequestStatus } from '../../../../../src/indexer/models/service-request/requestStatus';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { RequestStatus } from '../../../../../src/indexer/models/service-request/request-status';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import {
   createObjectSearchCountryServiceRequest,
   createObjectSearchServiceRequest,

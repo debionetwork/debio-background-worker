@@ -3,7 +3,7 @@ import { OnApplicationBootstrap, OnModuleDestroy } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Event } from '@polkadot/types/interfaces';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { BlockMetaData } from './models/blockMetaData';
+import { BlockMetaData } from './models/block-meta-data';
 import {
   SetLastSubstrateBlockCommand,
   SetLastSubstrateBlockOldCommand,
@@ -15,6 +15,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { u32 } from '@polkadot/types';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { eventRoutes } from './indexer.routes';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Injectable()
 export class IndexerHandler
@@ -32,7 +33,7 @@ export class IndexerHandler
   constructor(
     private commandBus: CommandBus,
     private queryBus: QueryBus,
-    private process: ProcessEnvProxy,
+    private gCloudSecretManagerService: GCloudSecretManagerService,
     private readonly elasticsearchService: ElasticsearchService,
     private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
@@ -56,7 +57,9 @@ export class IndexerHandler
       delete this.wsProvider;
     }
 
-    this.wsProvider = new WsProvider(this.process.env.SUBSTRATE_URL);
+    this.wsProvider = new WsProvider(
+      this.gCloudSecretManagerService.getSecret('SUBSTRATE_URL').toString(),
+    );
 
     this.wsProvider.on('connected', () => {
       this.logger.log(`WS Connected`);
@@ -146,7 +149,10 @@ export class IndexerHandler
           );
 
           // check if env is development
-          if (this.process.env.NODE_ENV === 'development') {
+          if (
+            this.gCloudSecretManagerService.getSecret('NODE_ENV') ===
+            'development'
+          ) {
             await this.startDevelopment(this.lastBlockNumber);
           }
 

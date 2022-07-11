@@ -4,7 +4,7 @@ import {
   GeneticAnalysisResultReadyCommand,
   GeneticAnalysisSubmittedCommand,
 } from '../../../../../src/indexer/events/genetic-analysis';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { GeneticAnalysisModel } from '../../../../../src/indexer/models/genetic-analysis/genetic-analysis.model';
 
 jest.mock(

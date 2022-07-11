@@ -1,5 +1,5 @@
-import { BlockMetaData } from '../../../../models/blockMetaData';
-import { ServiceInvoice } from '../../../../models/service-request/serviceInvoice';
+import { BlockMetaData } from '../../../../models/block-meta-data';
+import { ServiceInvoice } from '../../../../models/service-request/service-invoice';
 
 export class FinalizedServiceRequestCommand {
   serviceInvoice: ServiceInvoice;

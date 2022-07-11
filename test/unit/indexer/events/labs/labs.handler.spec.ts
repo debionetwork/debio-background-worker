@@ -14,7 +14,7 @@ import { LabRegisteredHandler } from '../../../../../src/indexer/events/labs/com
 import { LabUpdatedHandler } from '../../../../../src/indexer/events/labs/commands/lab-updated/lab-updated.handler';
 import { LabUpdateVerificationStatusHandler } from '../../../../../src/indexer/events/labs/commands/lab-update-verification-status/lab-update-verification-status.handler';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { ElasticSearchServiceProvider } from '../../../mock';
 import { StakeStatus } from '../../../../../src/indexer/models/stake-status';
 import { LabRetrieveUnstakeAmountHandler } from '../../../../../src/indexer/events/labs/commands/lab-retrieve-unstake-amount/lab-retrieve-unstake-amount.handler';

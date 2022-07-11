@@ -3,7 +3,7 @@ import {
   GeneticAnalystsQualificationDeletedCommand,
   GeneticAnalystsQualificationUpdatedCommand,
 } from '../../../../../src/indexer/events/genetic-analyst-qualifications';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { GeneticAnalystsQualificationModel } from '../../../../../src/indexer/models/genetic-analysts-qualifications/genetic-analysts-qualifications.model';
 
 jest.mock(

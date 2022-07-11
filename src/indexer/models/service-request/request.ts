@@ -1,5 +1,5 @@
 import { hexToUtf8, isHex } from '../util';
-import { RequestStatus } from './requestStatus';
+import { RequestStatus } from './request-status';
 
 export class RequestModel {
   constructor(request: any) {

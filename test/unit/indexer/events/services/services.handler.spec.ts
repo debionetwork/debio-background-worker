@@ -6,7 +6,7 @@ import {
   ServiceDeletedCommand,
   ServiceUpdatedCommand,
 } from '../../../../../src/indexer/events/services';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { ServiceFlow } from '../../../../../src/indexer/models/service-flow';
 import { ServiceCreatedHandler } from '../../../../../src/indexer/events/services/commands/service-created/service-created.handler';
 import { ServiceDeletedHandler } from '../../../../../src/indexer/events/services/commands/service-deleted/service-deleted.handler';

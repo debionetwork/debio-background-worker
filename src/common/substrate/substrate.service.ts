@@ -13,7 +13,6 @@ export class SubstrateService implements OnModuleInit {
   private readonly _logger: Logger = new Logger(SubstrateService.name);
 
   constructor(
-    private readonly process: ProcessEnvProxy,
     private readonly gCloudSecretManagerService: GCloudSecretManagerService,
   ) {}
 
@@ -26,8 +25,9 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    this._wsProvider = new WsProvider(this.process.env.SUBSTRATE_URL);
-    await this.gCloudSecretManagerService.loadSecrets();
+    this._wsProvider = new WsProvider(
+      this.gCloudSecretManagerService.getSecret('SUBSTRATE_URL').toString(),
+    );
 
     const keyring = new Keyring({ type: 'sr25519' });
     await waitReady();

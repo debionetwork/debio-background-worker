@@ -48,6 +48,10 @@ import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitiv
 import { geneticAnalystServiceDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Genetic Analysis Order Created Integration Test', () => {
   let app: INestApplication;
@@ -68,9 +72,30 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     error: jest.fn(),
   };
 
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['EMAIL', process.env.EMAIL],
+      ['PASS_EMAIL', process.env.PASS_EMAIL],
+    ]);
+
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -94,15 +119,6 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         CqrsModule,
         DateTimeModule,
         NotificationModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
-            },
-          }),
-        }),
       ],
       providers: [
         {
@@ -112,7 +128,10 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         SubstrateListenerHandler,
         ...GeneticAnalysisOrderCommandHandlers,
       ],
-    }).compile();
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     app = module.createNestApplication();
     await app.init();
@@ -253,5 +272,5 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         `You've successfully submitted your requested test for ${geneticAnalysisOrder.id}.`,
       ),
     ).toBeTruthy();
-  }, 180000);
+  }, 210000);
 });

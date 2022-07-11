@@ -15,7 +15,7 @@ import { GeneticAnalystsQualificationDeletedHandler } from '../../../../../src/i
 import { GeneticAnalystsQualificationUpdatedHandler } from '../../../../../src/indexer/events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-updated/genetic-analysts-qualification-updated.handler';
 import { when } from 'jest-when';
 
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 
 describe('Genetic Anlaysts Qualificatioins Substrate Event Handler', () => {
   let elasticsearchService: ElasticsearchService;

@@ -3,7 +3,7 @@ import {
   GeneticAnalystServicesUpdatedCommand,
   GeneticAnalystServicesDeletedCommand,
 } from '../../../../../src/indexer/events/genetic-analyst-services';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { GeneticAnalystsServicesModel } from '../../../../../src/indexer/models/genetic-analysts-services/genetic-analysts-services.model';
 
 jest.mock(

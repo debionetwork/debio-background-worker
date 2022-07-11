@@ -1,4 +1,4 @@
-import { BlockMetaData } from '../../../../models/blockMetaData';
+import { BlockMetaData } from '../../../../models/block-meta-data';
 import { Orders } from '../../../../models/order/orders';
 
 export class OrderRefundedCommand {

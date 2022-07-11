@@ -1,4 +1,4 @@
-import { BlockMetaData } from '../../../../models/blockMetaData';
+import { BlockMetaData } from '../../../../models/block-meta-data';
 import { Certification } from '../../../../models/certification/certification';
 
 export class CertificationDeletedCommand {

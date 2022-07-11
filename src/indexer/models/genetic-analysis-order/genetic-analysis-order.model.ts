@@ -1,5 +1,5 @@
 import { Price } from '../service/price';
-import { CurrencyType } from '../currencyType';
+import { CurrencyType } from '../currency-type';
 import { GeneticAnalysisOrderStatus } from './genetic-analysis-order.status';
 
 export class GeneticAnalysisOrderModel {

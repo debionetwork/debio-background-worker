@@ -4,6 +4,7 @@ import { DateTimeProxy } from '../../../../../common';
 import { LabUpdateVerificationStatusCommand } from './update-verification-status.command';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
 import { NotificationService } from '../../../../../common/notification/notification.service';
+import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 @Injectable()
 @CommandHandler(LabUpdateVerificationStatusCommand)
 export class LabUpdateVerificationStatusHandler
@@ -23,11 +24,17 @@ export class LabUpdateVerificationStatusHandler
       `Lab ID: ${lab.accountId} Update Verification Status ${lab.verificationStatus}!`,
     );
 
+    const description = this.notificationDescription(lab.verificationStatus);
+
+    if (description === null) {
+      return;
+    }
+
     const notificationInput: NotificationDto = {
       role: 'Lab',
       entity_type: 'Verification',
       entity: `Account ${lab.verificationStatus}`,
-      description: `Your account has been ${lab.verificationStatus.toLowerCase()}.`,
+      description: description,
       read: false,
       created_at: await this.dateTimeProxy.new(),
       updated_at: await this.dateTimeProxy.new(),
@@ -36,14 +43,22 @@ export class LabUpdateVerificationStatusHandler
       to: lab.accountId,
     };
 
-    if (lab.verificationStatus == 'Verified') {
-      notificationInput.description =
-        'Congrats! ' + notificationInput.description;
-    }
     try {
       await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);
+    }
+  }
+
+  private notificationDescription(status: VerificationStatus): string | null {
+    if (status === VerificationStatus.Rejected) {
+      return 'Your account verification has been rejected.';
+    } else if (status === VerificationStatus.Revoked) {
+      return 'Your account has been revoked.';
+    } else if (status === VerificationStatus.Verified) {
+      return 'Congrats! Your account has been verified.';
+    } else {
+      return null;
     }
   }
 }

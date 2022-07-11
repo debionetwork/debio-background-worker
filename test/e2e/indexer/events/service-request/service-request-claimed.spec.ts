@@ -28,12 +28,16 @@ import {
 import { CqrsModule } from '@nestjs/cqrs';
 import { labDataMock } from '../../../../mock/models/labs/labs.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { serviceDataMock } from '../../../../mock/models/labs/services.mockk';
+import { serviceDataMock } from '../../../../mock/models/labs/services.mock';
 import { LabCommandHandlers } from '../../../../../src/indexer/events/labs';
 import { RequestServiceCommandHandlers } from '../../../../../src/indexer/events/service-request';
 import { ScheduleModule } from '@nestjs/schedule';
 import { IndexerModule } from '../../../../../src/indexer/indexer.module';
 import { serviceRequestMock } from '../../../../mock/models/service-request/service-request.mock';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Event Command Service Request Claimed', () => {
   let app: INestApplication;
@@ -54,22 +58,32 @@ describe('Event Command Service Request Claimed', () => {
     error: jest.fn(),
   };
 
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['EMAIL', process.env.EMAIL],
+      ['PASS_EMAIL', process.env.PASS_EMAIL],
+    ]);
+
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         CommonModule,
         ProcessEnvModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => {
-            return {
-              node: process.env.ELASTICSEARCH_NODE,
-              auth: {
-                username: process.env.ELASTICSEARCH_USERNAME,
-                password: process.env.ELASTICSEARCH_PASSWORD,
-              },
-            };
-          },
-        }),
         CqrsModule,
         ScheduleModule.forRoot(),
         IndexerModule,
@@ -80,7 +94,10 @@ describe('Event Command Service Request Claimed', () => {
         ...ServiceCommandHandlers,
         ...RequestServiceCommandHandlers,
       ],
-    }).compile();
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     elasticsearchService =
       module.get<ElasticsearchService>(ElasticsearchService);
@@ -93,9 +110,10 @@ describe('Event Command Service Request Claimed', () => {
   }, 450000);
 
   afterAll(async () => {
-    api.disconnect();
+    await api.disconnect();
     await elasticsearchService.close();
-  });
+    await app.close();
+  }, 12000);
 
   it('create service request', async () => {
     const createServicePromise: Promise<ServiceRequest> = new Promise(
@@ -244,5 +262,5 @@ describe('Event Command Service Request Claimed', () => {
     const dataRegionServiceRequest =
       regionServiceRequest.body.hits.hits[0]._source;
     expect(dataRegionServiceRequest['service_request']).toEqual([]);
-  }, 120000);
+  }, 140000);
 });

@@ -21,12 +21,14 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
 
 describe('Mailer Scheduler (e2e)', () => {
   let service: MailerService;
   let mailerManager: MailerManager;
   let substrateService: SubstrateService;
   let emailNotificationService: EmailNotificationService;
+  let gCloudSecretManagerService: GCloudSecretManagerService;
 
   let app: INestApplication;
 
@@ -44,6 +46,8 @@ describe('Mailer Scheduler (e2e)', () => {
       return null;
     }
     _secretsList = new Map<string, string>([
+      ['POSTGRES_HOST', 'localhost'],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
       ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
       ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
       ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
@@ -53,6 +57,7 @@ describe('Mailer Scheduler (e2e)', () => {
       ['PASS_EMAIL', process.env.PASS_EMAIL],
       ['UNSTAKE_TIMER', process.env.UNSTAKE_TIMER],
       ['UNSTAKE_INTERVAL', process.env.UNSTAKE_INTERVAL],
+      ['EMAILS', process.env.EMAILS],
     ]);
     loadSecrets() {
       return null;
@@ -67,7 +72,23 @@ describe('Mailer Scheduler (e2e)', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ProcessEnvModule,
-        GCloudSecretManagerModule,
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        ElasticsearchModule.registerAsync({
+          inject: [GCloudSecretManagerService],
+          useFactory: async (
+            gCloudSecretManagerService: GCloudSecretManagerService,
+          ) => ({
+            node: process.env.ELASTICSEARCH_NODE,
+            auth: {
+              username: gCloudSecretManagerService
+                .getSecret('ELASTICSEARCH_USERNAME')
+                .toString(),
+              password: gCloudSecretManagerService
+                .getSecret('ELASTICSEARCH_PASSWORD')
+                .toString(),
+            },
+          }),
+        }),
         TypeOrmModule.forRoot({
           name: 'default',
           ...dummyCredentials,
@@ -87,8 +108,10 @@ describe('Mailer Scheduler (e2e)', () => {
     mailerManager = module.get(MailerManager);
     substrateService = module.get(SubstrateService);
     emailNotificationService = module.get(EmailNotificationService);
+    gCloudSecretManagerService = module.get(GCloudSecretManagerService);
 
     service = new MailerService(
+      gCloudSecretManagerService,
       mailerManager,
       emailNotificationService,
       substrateService,

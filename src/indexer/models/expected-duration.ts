@@ -1,4 +1,4 @@
-import { DurationType } from './durationType';
+import { DurationType } from './duration-type';
 
 export class ExpectedDuration {
   constructor(expectedDuration: any) {

@@ -29,6 +29,7 @@ function initalPostgresConnection(): Promise<Connection> {
 module.exports = async () => {
   // Wait for database to open connection.
   console.log('Waiting for debio-postgres to resolve ⏰...');
+  await new Promise((resolve) => setTimeout(resolve, 15000));
   const mainConnection: Connection = await connectionRetries(
     initalPostgresConnection,
     40,

@@ -1,5 +1,5 @@
 import { GeneticAnalysisModel } from '../../../../models/genetic-analysis/genetic-analysis.model';
-import { BlockMetaData } from '../../../../models/blockMetaData';
+import { BlockMetaData } from '../../../../models/block-meta-data';
 
 export class GeneticAnalysisResultReadyCommand {
   public geneticAnalysisModel: GeneticAnalysisModel;

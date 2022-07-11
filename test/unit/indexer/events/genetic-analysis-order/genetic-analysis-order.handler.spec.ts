@@ -20,7 +20,7 @@ import { GeneticAnalysisOrderFailedHandler } from '../../../../../src/indexer/ev
 import { GeneticAnalysisOrderFulfilledHandler } from '../../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
 import { GeneticAnalysisOrderPaidHandler } from '../../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
 import { GeneticAnalysisOrderRefundedHandler } from '../../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-refunded/genetic-analysis-order-refunded.handler';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { when } from 'jest-when';
 
 describe('Genetic Analysis Order Substrate Event Handler', () => {

@@ -1,5 +1,5 @@
 import { GeneticDataModel } from '../../../../models/genetic-data/genetic-data.model';
-import { BlockMetaData } from '../../../../models/blockMetaData';
+import { BlockMetaData } from '../../../../models/block-meta-data';
 
 export class RemoveGeneticDataCommand {
   public geneticData: GeneticDataModel;

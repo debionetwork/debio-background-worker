@@ -1,5 +1,5 @@
 import { GeneticAnalystsQualificationModel } from '../../../../models/genetic-analysts-qualifications/genetic-analysts-qualifications.model';
-import { BlockMetaData } from '../../../../models/blockMetaData';
+import { BlockMetaData } from '../../../../models/block-meta-data';
 
 export class GeneticAnalystsQualificationCreatedCommand {
   public geneticAnalystsQualificationModel: GeneticAnalystsQualificationModel;

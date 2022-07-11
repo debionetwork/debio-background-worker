@@ -1,5 +1,5 @@
 import { GeneticAnalystsModel } from '../../../../models/genetic-analysts/genetic-analysts.model';
-import { BlockMetaData } from '../../../../models/blockMetaData';
+import { BlockMetaData } from '../../../../models/block-meta-data';
 
 export class GeneticAnalystsUpdatedCommand {
   public geneticAnalystsModel: GeneticAnalystsModel;

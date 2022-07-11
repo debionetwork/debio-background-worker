@@ -35,6 +35,7 @@ import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitiv
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Genetic analyst verification status', () => {
   let app: INestApplication;
@@ -51,6 +52,26 @@ describe('Genetic analyst verification status', () => {
     warn: jest.fn(),
     error: jest.fn(),
   };
+
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['EMAIL', process.env.EMAIL],
+      ['PASS_EMAIL', process.env.PASS_EMAIL],
+    ]);
+
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -96,7 +117,10 @@ describe('Genetic analyst verification status', () => {
         SubstrateListenerHandler,
         ...GeneticAnalystCommandHandlers,
       ],
-    }).compile();
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     app = module.createNestApplication();
     await app.init();

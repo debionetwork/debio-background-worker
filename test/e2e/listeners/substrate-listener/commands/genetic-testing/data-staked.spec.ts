@@ -50,17 +50,19 @@ import {
   DebioConversionModule,
   MailModule,
   NotificationModule,
-  ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
 } from '../../../../../../src/common';
 import { LocationModule } from '../../../../../../src/common/location/location.module';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { createConnection } from 'typeorm';
-import { GeneticTestingCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { GeneticTestingCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
 
 describe('Data Staked Integration Tests', () => {
   let app: INestApplication;
@@ -80,9 +82,33 @@ describe('Data Staked Integration Tests', () => {
     error: jest.fn(),
   };
 
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['EMAIL', process.env.EMAIL],
+      ['PASS_EMAIL', process.env.PASS_EMAIL],
+      ['REDIS_STORE_URL', process.env.REDIS_STORE_URL],
+      ['REDIS_STORE_USERNAME', process.env.REDIS_STORE_USERNAME],
+      ['REDIS_STORE_PASSWORD', process.env.REDIS_STORE_PASSWORD],
+    ]);
+
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -97,7 +123,6 @@ describe('Data Staked Integration Tests', () => {
           entities: [...LocationEntities],
           autoLoadEntities: true,
         }),
-        ProcessEnvModule,
         LocationModule,
         TransactionLoggingModule,
         SubstrateModule,
@@ -106,15 +131,6 @@ describe('Data Staked Integration Tests', () => {
         CqrsModule,
         DateTimeModule,
         NotificationModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
-            },
-          }),
-        }),
       ],
       providers: [
         {
@@ -124,7 +140,10 @@ describe('Data Staked Integration Tests', () => {
         SubstrateListenerHandler,
         ...GeneticTestingCommandHandlers,
       ],
-    }).compile();
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     app = module.createNestApplication();
     await app.init();
@@ -270,5 +289,5 @@ describe('Data Staked Integration Tests', () => {
     });
 
     expect(await deletePromise).toEqual(0);
-  }, 180000);
+  }, 210000);
 });

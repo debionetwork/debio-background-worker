@@ -35,7 +35,7 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
     );
 
     const debioToDai = Number(
-      (await this.exchangeCacheService.getExchange())['dbioToDai'],
+      (await this.exchangeCacheService.getExchange())['dbioToDai'] ?? 0,
     );
     const rewardPrice = +dataOrder.prices[0].value * debioToDai;
 

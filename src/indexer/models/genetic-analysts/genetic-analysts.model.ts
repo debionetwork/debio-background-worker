@@ -1,6 +1,6 @@
-import { AvailabilityStatus } from '../availabilityStatus';
+import { AvailabilityStatus } from '../availability-status';
 import { StakeStatus } from '../stake-status';
-import { VerificationStatus } from '../verificationStatus';
+import { VerificationStatus } from '../verification-status';
 import { GeneticAnalystsInfo } from './genetic-analysts.info';
 
 export class GeneticAnalystsModel {

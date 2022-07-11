@@ -4,7 +4,7 @@ import {
   createObjectSearchLab,
   ElasticSearchServiceProvider,
 } from '../../../mock';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import {
   CertificationCreatedCommand,
   CertificationDeletedCommand,

@@ -1,5 +1,5 @@
-import { BlockMetaData } from '../../../../models/blockMetaData';
-import { ClaimRequestModel } from '../../../../models/service-request/claimRequest';
+import { BlockMetaData } from '../../../../models/block-meta-data';
+import { ClaimRequestModel } from '../../../../models/service-request/claim-request';
 
 export class ClaimedServiceRequestCommand {
   claimRequest: ClaimRequestModel;

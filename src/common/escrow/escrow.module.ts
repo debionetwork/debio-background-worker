@@ -8,7 +8,6 @@ import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-ma
 require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
-    GCloudSecretManagerModule,
     TypeOrmModule.forFeature([EscrowAccounts]),
     SubstrateModule,
     forwardRef(() => EthereumModule),

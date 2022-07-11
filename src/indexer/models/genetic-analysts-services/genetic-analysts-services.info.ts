@@ -1,5 +1,5 @@
-import { ExpectedDuration } from '../expectedDuration';
-import { PricesByCurrency } from '../pricesByCurrency';
+import { ExpectedDuration } from '../expected-duration';
+import { PricesByCurrency } from '../prices-by-currency';
 
 export class GeneticAnalystsServicesInfo {
   constructor(info: any) {

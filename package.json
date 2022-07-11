@@ -27,7 +27,7 @@
     "test:e2e-indexer": "jest --config ./test/e2e/jest-e2e-indexer.json --runInBand --forceExit"
   },
   "dependencies": {
-    "@debionetwork/nestjs-gcloud-secret-manager": "^0.0.1",
+    "@debionetwork/nestjs-gcloud-secret-manager": "^0.0.2-beta.2",
     "@elastic/elasticsearch": "^7.13.0",
     "@google-cloud/storage": "^6.2.2",
     "@nestjs-modules/mailer": "^1.7.1",

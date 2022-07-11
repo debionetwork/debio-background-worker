@@ -15,7 +15,7 @@ import { OrderPaidHandler } from '../../../../../src/indexer/events/orders/comma
 import { OrderRefundedHandler } from '../../../../../src/indexer/events/orders/commands/order-refunded/order-refunded.handler';
 import { OrderStatus } from '../../../../../src/indexer/models/order/order-status';
 import { Currency } from '../../../../../src/indexer/models/order/currency';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import {

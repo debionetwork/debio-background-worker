@@ -47,14 +47,15 @@ describe('Lab Staked Successful Handler Event', () => {
 
   it('should not called logging service create', async () => {
     // Arrange
-    jest
-      .useRealTimers()
-      .setSystemTime(new Date('Thu Jan 24 2022 07:02:00 GMT+0700').getTime());
     const lab = createMockLab();
 
     const RESULT_STATUS = {
       created_at: new Date('Thu Jan 24 2022 07:00:00 GMT+0700').getTime(),
     };
+
+    jest
+      .spyOn(dateTimeProxyMock, 'now')
+      .mockReturnValue(new Date('Thu Jan 24 2022 07:02:00 GMT+0700').getTime());
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(lab.toHuman().accountId, 26)

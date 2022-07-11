@@ -7,14 +7,14 @@ import {
   UnstakedServiceRequestCommand,
   UnstakedWaitingServiceRequestCommand,
 } from '../../../../../src/indexer/events/service-request';
-import { RequestStatus } from '../../../../../src/indexer/models/service-request/requestStatus';
-import { BlockMetaData } from '../../../../../src/indexer/models/blockMetaData';
-import { ClaimRequestModel } from '../../../../../src/indexer/models/service-request/claimRequest';
-import { ServiceInvoice } from '../../../../../src/indexer/models/service-request/serviceInvoice';
+import { RequestStatus } from '../../../../../src/indexer/models/service-request/request-status';
+import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
+import { ClaimRequestModel } from '../../../../../src/indexer/models/service-request/claim-request';
+import { ServiceInvoice } from '../../../../../src/indexer/models/service-request/service-invoice';
 
 jest.mock('../../../../../src/indexer/models/service-request/request');
-jest.mock('../../../../../src/indexer/models/service-request/claimRequest');
-jest.mock('../../../../../src/indexer/models/service-request/serviceInvoice');
+jest.mock('../../../../../src/indexer/models/service-request/claim-request');
+jest.mock('../../../../../src/indexer/models/service-request/service-invoice');
 
 describe('Service Request Substrate Event Handler', () => {
   const createMockRequest = (requestStatus: RequestStatus) => {

@@ -23,10 +23,7 @@ import { LabCommandHandlers } from './commands/labs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-services';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
@@ -41,14 +38,14 @@ import {
     DateTimeModule,
     NotificationModule,
     ElasticsearchModule.registerAsync({
-      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        await gCloudSecretManagerService.loadSecrets();
         return {
-          node: process.env.ELASTICSEARCH_NODE,
+          node: gCloudSecretManagerService
+            .getSecret('ELASTICSEARCH_NODE')
+            .toString(),
           auth: {
             username: gCloudSecretManagerService
               .getSecret('ELASTICSEARCH_USERNAME')

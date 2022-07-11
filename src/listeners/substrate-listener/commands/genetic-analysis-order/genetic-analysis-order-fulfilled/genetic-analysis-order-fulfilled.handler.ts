@@ -64,27 +64,27 @@ export class GeneticAnalysisOrderFulfilledHandler
       if (!isGeneticAnalysisOrderHasBeenInsert) {
         await this.loggingService.create(geneticAnalysisOrderLogging);
         await this.loggingService.create(serviceChargeLogging);
-
-        const currDate = this.dateTimeProxy.new();
-
-        const receivePaymentNotification: NotificationDto = {
-          role: 'GA',
-          entity_type: 'Genetic Analysis Order',
-          entity: 'Order Fulfilled',
-          description: `You've received ${+geneticAnalysisOrder.prices[0]
-            .value} DBIO for completing the requested analysis for ${
-            geneticAnalysisOrder.geneticAnalysisTrackingId
-          }.`,
-          read: false,
-          created_at: currDate,
-          updated_at: currDate,
-          deleted_at: null,
-          from: 'Debio Network',
-          to: geneticAnalysisOrder.sellerId,
-        };
-
-        await this.notificationService.insert(receivePaymentNotification);
       }
+
+      const currDate = this.dateTimeProxy.new();
+
+      const receivePaymentNotification: NotificationDto = {
+        role: 'GA',
+        entity_type: 'Genetic Analysis Order',
+        entity: 'Order Fulfilled',
+        description: `You've received ${+geneticAnalysisOrder.prices[0]
+          .value} DBIO for completing the requested analysis for ${
+          geneticAnalysisOrder.geneticAnalysisTrackingId
+        }.`,
+        read: false,
+        created_at: currDate,
+        updated_at: currDate,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: geneticAnalysisOrder.sellerId,
+      };
+
+      await this.notificationService.insert(receivePaymentNotification);
     } catch (error) {
       await this.logger.log(error);
     }

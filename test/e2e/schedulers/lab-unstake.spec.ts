@@ -32,6 +32,7 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
 
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
       ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
       ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
@@ -57,9 +58,8 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule,
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         ElasticsearchModule.registerAsync({
-          imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
           inject: [GCloudSecretManagerService],
           useFactory: async (
             gCloudSecretManagerService: GCloudSecretManagerService,
@@ -98,12 +98,12 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
 
     app = module.createNestApplication();
     await app.init();
-  });
+  }, 60000);
 
   afterAll(async () => {
     await substrateService.stopListen();
     substrateService.destroy();
-  });
+  }, 8000);
 
   it('lab-unstaked-interval must registered', async () => {
     labUnstakedService.onModuleInit();
@@ -150,5 +150,5 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
 
     // Assert
     expect(queryLabByIdSpy).toBeCalledTimes(1);
-  });
+  }, 12000);
 });
