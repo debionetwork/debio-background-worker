@@ -41,6 +41,7 @@ export class LabUpdateVerificationStatusHandler
       deleted_at: null,
       from: 'Debio Network',
       to: lab.accountId,
+      block_number: "",
     };
 
     try {

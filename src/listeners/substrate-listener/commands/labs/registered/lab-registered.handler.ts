@@ -59,6 +59,7 @@ export class LabRegisteredHandler
         deleted_at: null,
         from: lab.accountId,
         to: 'Admin',
+        block_number: "",
       };
 
       await this.notificationService.insert(notificationInput);

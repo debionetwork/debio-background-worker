@@ -62,6 +62,7 @@ export class ServiceRequestStakingAmountIncreasedHandler
         deleted_at: null,
         from: 'Debio Network',
         to: requesterId,
+        block_number: "",
       };
 
       await this.notificationService.insert(notificationInput);

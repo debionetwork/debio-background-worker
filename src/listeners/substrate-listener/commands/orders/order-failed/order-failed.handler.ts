@@ -71,6 +71,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         deleted_at: null,
         from: 'Debio Network',
         to: order.sellerId,
+        block_number: "",
       };
 
       await this.notificationService.insert(labNotification);

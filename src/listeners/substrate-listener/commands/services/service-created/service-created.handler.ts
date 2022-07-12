@@ -64,6 +64,7 @@ export class ServiceCreatedHandler
       deleted_at: null,
       from: 'Debio Network',
       to: service.ownerId,
+      block_number: ""
     };
 
     await this.notificationService.insert(notificationInput);

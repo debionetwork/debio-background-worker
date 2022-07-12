@@ -160,6 +160,7 @@ describe('Order Refunded Handler Event', () => {
         deleted_at: null,
         from: 'Debio Network',
         to: ORDER.toHuman().customerId,
+        block_number: "",
       }),
     );
   });

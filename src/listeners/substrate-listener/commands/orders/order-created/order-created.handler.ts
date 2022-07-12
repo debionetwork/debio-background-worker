@@ -61,6 +61,7 @@ export class OrderCreatedHandler
           deleted_at: null,
           from: 'Debio Network',
           to: order.customerId,
+          block_number: "",
         };
 
         await this.notificationService.insert(notificationInput);

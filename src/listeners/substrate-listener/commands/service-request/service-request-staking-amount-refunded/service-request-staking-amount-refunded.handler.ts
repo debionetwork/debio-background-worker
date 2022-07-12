@@ -30,6 +30,7 @@ export class ServiceRequestStakingAmountRefundedHandler
       deleted_at: null,
       from: 'Debio Network',
       to: requesterId,
+      block_number: "",
     };
 
     this.notificationService.insert(refundedNotification);

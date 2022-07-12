@@ -72,6 +72,7 @@ export class ServiceRequestCreatedHandler
         deleted_at: null,
         from: 'Debio Network',
         to: serviceRequest.requesterAddress,
+        block_number: "",
       };
 
       await this.notificationService.insert(notificationInput);

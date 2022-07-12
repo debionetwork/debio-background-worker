@@ -66,6 +66,7 @@ export class GeneticAnalysisOrderPaidHandler
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalysisOrder.sellerId,
+        block_number: "",
       };
 
       this.notificationService.insert(notificationNewOrderGeneticAnalyst);

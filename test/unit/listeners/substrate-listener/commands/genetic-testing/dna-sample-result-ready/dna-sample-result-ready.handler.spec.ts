@@ -66,6 +66,7 @@ describe('DNA Sample Result Ready Handler Event', () => {
         deleted_at: null,
         from: 'Debio Network',
         to: dnaSample.ownerId,
+        block_number: "",
       }),
     );
   });

@@ -58,6 +58,7 @@ export class GeneticAnalysisOrderCreatedHandler
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalysisOrder.customerId,
+        block_number: "",
       };
 
       if (!isGeneticAnalysisOrderHasBeenInsert) {

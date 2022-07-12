@@ -148,6 +148,7 @@ describe('Service Created Handler Event', () => {
         deleted_at: null,
         from: 'Debio Network',
         to: service.ownerId,
+        block_number: "",
       }),
     );
   });
