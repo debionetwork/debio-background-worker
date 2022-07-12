@@ -141,6 +141,7 @@ describe('Service Request Created Handler Event', () => {
     // Assert
     const TRANSACTION_STATUS = false;
     const requestData = createMockRequest(RequestStatus.Open);
+    const HASH = 'XX';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(requestData[1].toHuman().hash_, 7)
@@ -163,6 +164,15 @@ describe('Service Request Created Handler Event', () => {
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
     expect(spyEmail).toHaveBeenCalled();
     expect(notificationServiceMock.insert).toHaveBeenCalled();
-    expect(notificationServiceMock.insert).toHaveProperty('description');
+    expect(notificationServiceMock.insert).toBeCalledWith(
+      expect.objectContaining({
+        role: 'Customer',
+        entity_type: 'ServiceRequest',
+        entity: 'ServiceRequestCreated',
+        description: `You've successfully submitted your requested service with staking ID ${HASH}.`,
+        from: 'Debio Network',
+        to: HASH,
+      }),
+    );
   });
 });
