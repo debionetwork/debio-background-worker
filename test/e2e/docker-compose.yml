@@ -1,6 +1,21 @@
 version: '3'
 
 services:
+  db:
+    container_name: debio-postgres
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      POSTGRES_DATABASE: postgres
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - 5432:5432
+  redis:
+    container_name: debio-redis
+    image: redis:6.2.6-alpine
+    ports:
+      - 6379:6379
   elasticsearch:
     container_name: debio-elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.11.1
@@ -14,7 +29,7 @@ services:
       - 9300:9300
   node:
     container_name: debio-node
-    image: debionetwork/debio-node:latest
+    image: debionetwork/debio-node:latest-pre-alpha
     command: >
       --dev
       --alice

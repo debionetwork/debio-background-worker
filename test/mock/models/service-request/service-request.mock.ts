@@ -3,5 +3,5 @@ export const serviceRequestMock = {
   region: 'JK',
   city: 'Kota Administrasi Jakarta Barat',
   serviceCategory: 'Single Gene',
-  stakingAmount: 3,
+  stakingAmount: BigInt(3),
 };
