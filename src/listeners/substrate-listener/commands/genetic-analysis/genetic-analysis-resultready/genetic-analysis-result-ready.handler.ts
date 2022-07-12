@@ -48,6 +48,7 @@ export class GeneticAnalysisResultReadyHandler
         deleted_at: null,
         from: geneticAnalysis.ownerId,
         to: 'Debio Network',
+        block_number: "",
       };
 
       await this.notificationService.insert(notificationInput);

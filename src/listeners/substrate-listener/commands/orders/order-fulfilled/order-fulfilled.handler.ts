@@ -128,6 +128,7 @@ export class OrderFulfilledHandler
               deleted_at: null,
               from: 'Debio Network',
               to: order.customerId,
+              block_number: "",
             };
 
             this.callbackInsertNotificationLogging(customerNotificationInput);
@@ -175,6 +176,7 @@ export class OrderFulfilledHandler
               deleted_at: null,
               from: 'Debio Network',
               to: order.sellerId,
+              block_number: "",
             };
 
             this.callbackInsertNotificationLogging(labNotificationInput);
@@ -211,6 +213,7 @@ export class OrderFulfilledHandler
         deleted_at: null,
         from: 'Debio Network',
         to: order.sellerId,
+        block_number: "",
       };
 
       await this.notificationService.insert(labPaymentNotification);

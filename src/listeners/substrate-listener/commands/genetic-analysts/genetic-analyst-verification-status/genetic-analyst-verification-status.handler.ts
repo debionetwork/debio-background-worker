@@ -90,6 +90,7 @@ export class GeneticAnalystVerificationStatusHandler
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalyst.accountId,
+        block_number: "",
       };
 
       await this.notificationService.insert(geneticAnalystNotification);

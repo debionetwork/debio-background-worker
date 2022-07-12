@@ -9,4 +9,5 @@ export class NotificationDto {
   deleted_at: Date;
   from: string;
   to: string;
+  block_number: string;
 }

@@ -30,6 +30,7 @@ export class DnaSampleRejectedCommandHandler
       deleted_at: null,
       from: 'Debio Network',
       to: dnaSample.ownerId,
+      block_number: "",
     };
 
     await this.notificationService.insert(sampleRejectedNotification);

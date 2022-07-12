@@ -49,6 +49,7 @@ export class GeneticAnalysisRejectedHandler
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalysis.ownerId,
+        block_number: "",
       };
 
       await this.notificationService.insert(orderRefundedNotification);

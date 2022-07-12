@@ -30,6 +30,7 @@ export class ServiceRequestClaimedCommandHandler
       deleted_at: null,
       from: 'Debio Network',
       to: requestData.requesterAddress,
+      block_number: "",
     };
 
     await this.notificationService.insert(serviceAvailableNotificationInput);

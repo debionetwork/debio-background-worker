@@ -36,4 +36,7 @@ export class Notification {
 
   @Column()
   to: string;
+
+  @Column()
+  block_number: string;
 }

@@ -33,6 +33,7 @@ export class GeneticAnalystServiceCreatedCommandHandler
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalystService.ownerId,
+        block_number: "",
       };
 
       await this.notificationService.insert(geneticAnalystServiceNotification);
