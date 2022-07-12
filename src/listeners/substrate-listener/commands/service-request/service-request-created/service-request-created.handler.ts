@@ -65,7 +65,7 @@ export class ServiceRequestCreatedHandler
         role: 'Customer',
         entity_type: 'ServiceRequest',
         entity: 'ServiceRequestCreated',
-        description: `Congrats! Your requested service with staking ID ${serviceRequest.hash} has been submitted.`,
+        description: `You've successfully submitted your requested service with staking ID ${serviceRequest.hash}.`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,

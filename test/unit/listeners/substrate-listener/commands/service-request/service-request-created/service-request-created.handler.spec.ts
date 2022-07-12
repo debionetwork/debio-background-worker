@@ -163,5 +163,6 @@ describe('Service Request Created Handler Event', () => {
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
     expect(spyEmail).toHaveBeenCalled();
     expect(notificationServiceMock.insert).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveProperty('description');
   });
 });
