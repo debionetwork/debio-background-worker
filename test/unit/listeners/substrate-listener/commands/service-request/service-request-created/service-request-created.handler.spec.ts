@@ -163,7 +163,7 @@ describe('Service Request Created Handler Event', () => {
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
     expect(spyEmail).toHaveBeenCalled();
-    expect(notificationServiceMock.insert).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toBeCalledTimes(1);
     expect(notificationServiceMock.insert).toBeCalledWith(
       expect.objectContaining({
         role: 'Customer',
