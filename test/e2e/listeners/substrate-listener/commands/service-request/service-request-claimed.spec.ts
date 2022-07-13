@@ -1,45 +1,31 @@
 import { INestApplication } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiPromise } from '@polkadot/api';
 import {
   DateTimeModule,
   DebioConversionModule,
-  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
-  TransactionLoggingModule,
 } from '../../../../../../src/common';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { LocationModule } from '../../../../../../src/common/location/location.module';
-import { LocationEntities } from '../../../../../../src/common/location/models';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
-import { ServiceRequestCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { dummyCredentials } from '../../../../config';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import { initializeApi } from '../../../../polkadot-init';
 import {
   claimRequest,
-  createOrder,
   createRequest,
   createService,
-  deleteService,
-  deregisterLab,
   Lab,
-  Order,
-  processRequest,
   queryLabById,
-  queryLastOrderHashByCustomer,
-  queryOrderDetailByOrderID,
   queryServiceRequestByAccountId,
   queryServiceRequestById,
   queryServicesByMultipleIds,
-  queryServicesCount,
   registerLab,
   Service,
   ServiceRequest,
@@ -51,17 +37,17 @@ import { serviceRequestMock } from '../../../../../mock/models/labs/service-requ
 import { createConnection } from 'typeorm';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { ServiceRequestClaimedCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-claimed/service-request-claimed.handler';
 
 describe('Service Request Excess Integration Tests', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
-  let lab: Lab;
-  let service: Service;
-  let order: Order;
-  let serviceRequest: ServiceRequest;
 
   global.console = {
     ...console,
@@ -95,6 +81,7 @@ describe('Service Request Excess Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -102,31 +89,12 @@ describe('Service Request Excess Integration Tests', () => {
           entities: [LabRating, TransactionRequest, Notification],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
         ProcessEnvModule,
-        LocationModule,
-        TransactionLoggingModule,
         SubstrateModule,
         DebioConversionModule,
-        MailModule,
         CqrsModule,
         DateTimeModule,
         NotificationModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
-            },
-          }),
-        }),
       ],
       providers: [
         {
@@ -134,7 +102,7 @@ describe('Service Request Excess Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...ServiceRequestCommandHandlers,
+        ServiceRequestClaimedCommandHandler,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -150,11 +118,16 @@ describe('Service Request Excess Integration Tests', () => {
   }, 360000);
 
   afterAll(async () => {
+    app.flushLogs();
     await api.disconnect();
     await app.close();
-  });
+    app = null;
+    api = null;
+  }, 12000);
 
   it('service request partial event', async () => {
+    let serviceRequest: ServiceRequest;
+
     const serviceRequestPromise: Promise<ServiceRequest> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
@@ -176,7 +149,8 @@ describe('Service Request Excess Integration Tests', () => {
     );
 
     serviceRequest = await serviceRequestPromise;
-    expect(serviceRequest.normalize()).toEqual(
+    serviceRequest = serviceRequest.normalize();
+    expect(serviceRequest).toEqual(
       expect.objectContaining({
         country: serviceRequestMock.country,
         region: serviceRequestMock.region,
@@ -201,7 +175,7 @@ describe('Service Request Excess Integration Tests', () => {
       });
     });
 
-    lab = await labPromise;
+    const lab: Lab = await labPromise;
     expect(lab.info).toEqual(labDataMock.info);
     expect(lab.verificationStatus).toEqual(VerificationStatus.Verified);
 
@@ -222,7 +196,9 @@ describe('Service Request Excess Integration Tests', () => {
       );
     });
 
-    service = await servicePromise;
+    const service: Service = await servicePromise;
+    expect(service.info).toEqual(serviceDataMock.info);
+    expect(service.serviceFlow).toEqual(serviceDataMock.serviceFlow);
 
     const claimRequestPromise: Promise<ServiceRequest> = new Promise(
       // eslint-disable-next-line
@@ -244,6 +220,13 @@ describe('Service Request Excess Integration Tests', () => {
     );
 
     serviceRequest = await claimRequestPromise;
+    expect(serviceRequest.requesterAddress).toEqual(pair.address);
+    expect(serviceRequest.serviceCategory).toEqual(
+      serviceRequestMock.serviceCategory,
+    );
+    expect(serviceRequest.region).toEqual(serviceRequestMock.region);
+    expect(serviceRequest.city).toEqual(serviceRequestMock.city);
+    expect(serviceRequest.country).toEqual(serviceRequestMock.country);
 
     const dbConnection = await createConnection({
       ...dummyCredentials,
@@ -255,14 +238,17 @@ describe('Service Request Excess Integration Tests', () => {
     const notifications = await dbConnection
       .getRepository(Notification)
       .createQueryBuilder('notification')
-      .where('notification.to = :to', {
-        to: serviceRequest.requesterAddress,
-      })
-      .where('notification.entity = :entity', {
-        entity: 'Requested Service Available',
-      })
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: serviceRequest.requesterAddress,
+          entity: 'Requested Service Available',
+          role: 'Customer',
+        },
+      )
       .getMany();
 
+    expect(notifications.length).toEqual(1);
     expect(notifications[0].to).toEqual(serviceRequest.requesterAddress);
     expect(notifications[0].entity).toEqual('Requested Service Available');
     expect(
@@ -270,5 +256,7 @@ describe('Service Request Excess Integration Tests', () => {
         `Congrats! Your requested service is available now. Click here to see your order details.`,
       ),
     ).toBeTruthy();
-  });
+
+    await dbConnection.destroy();
+  }, 180000);
 });

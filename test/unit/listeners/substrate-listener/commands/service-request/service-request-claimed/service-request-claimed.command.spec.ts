@@ -1,8 +1,11 @@
 import { ServiceRequestClaimedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
-import { ServiceRequest, RequestStatus } from '@debionetwork/polkadot-provider';
+import { RequestStatus } from '@debionetwork/polkadot-provider';
+import { ClaimRequestModel } from '../../../../../../../src/indexer/models/service-request/claim-request';
 
-jest.mock('@debionetwork/polkadot-provider');
+jest.mock(
+  '../../../../../../../src/indexer/models/service-request/claim-request',
+);
 
 describe('Service Request Claimed Command Event', () => {
   const createMockRequest = (requestStatus: RequestStatus) => {
@@ -40,8 +43,8 @@ describe('Service Request Claimed Command Event', () => {
     const _ = new ServiceRequestClaimedCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
     expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
-    expect(ServiceRequest).toHaveBeenCalled();
-    expect(ServiceRequest).toHaveBeenCalledWith(MOCK_DATA[1].toHuman());
+    expect(ClaimRequestModel).toHaveBeenCalled();
+    expect(ClaimRequestModel).toHaveBeenCalledWith(MOCK_DATA[1].toHuman());
   });
 
   it('should throw error', () => {

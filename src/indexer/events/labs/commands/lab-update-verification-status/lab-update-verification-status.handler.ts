@@ -11,15 +11,15 @@ export class LabUpdateVerificationStatusHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: LabUpdateVerificationStatusCommand) {
-    const { labs: lab } = command;
+    const { accountId, verificationStatus } = command.labs;
 
     await this.elasticsearchService.update({
       index: 'labs',
-      id: lab.accountId,
+      id: accountId,
       refresh: 'wait_for',
       body: {
         doc: {
-          verification_status: lab.verificationStatus,
+          verification_status: verificationStatus,
         },
       },
     });

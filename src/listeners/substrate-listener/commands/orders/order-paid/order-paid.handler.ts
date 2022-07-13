@@ -41,7 +41,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           amount: +order.additionalPrices[0].value + +order.prices[0].value,
           created_at: order.updatedAt,
           currency: order.currency.toUpperCase(),
-          parent_id: BigInt(orderHistory.id),
+          parent_id: orderHistory?.id ? BigInt(orderHistory.id) : BigInt(0),
           ref_number: order.id,
           transaction_status: 2,
           transaction_type: 1,

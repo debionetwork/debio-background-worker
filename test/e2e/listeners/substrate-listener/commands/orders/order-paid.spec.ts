@@ -6,7 +6,6 @@ import {
 } from '@debionetwork/polkadot-provider/lib/query/labs/orders';
 import {
   createOrder,
-  fulfillOrder,
   setOrderPaid,
 } from '@debionetwork/polkadot-provider/lib/command/labs/orders';
 import {
@@ -36,27 +35,25 @@ import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { LocationEntities } from '../../../../../../src/common/location/models';
 import { dummyCredentials } from '../../../../config';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
-  DebioConversionModule,
-  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
 } from '../../../../../../src/common';
-import { LocationModule } from '../../../../../../src/common/location/location.module';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import { OrderCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { OrderPaidHandler } from '../../../../../../src/listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
 
 describe('Order Fulfilled Integration Tests', () => {
   let app: INestApplication;
@@ -99,6 +96,7 @@ describe('Order Fulfilled Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -106,31 +104,12 @@ describe('Order Fulfilled Integration Tests', () => {
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
         ProcessEnvModule,
-        LocationModule,
         TransactionLoggingModule,
-        SubstrateModule,
-        DebioConversionModule,
-        MailModule,
         CqrsModule,
+        SubstrateModule,
         DateTimeModule,
         NotificationModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
-            },
-          }),
-        }),
       ],
       providers: [
         {
@@ -138,7 +117,7 @@ describe('Order Fulfilled Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...OrderCommandHandlers,
+        OrderPaidHandler,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -154,8 +133,11 @@ describe('Order Fulfilled Integration Tests', () => {
   }, 360000);
 
   afterAll(async () => {
+    app.flushLogs();
     await api.disconnect();
     await app.close();
+    app = null;
+    api = null;
   });
 
   it('fulfill order event', async () => {
@@ -242,10 +224,14 @@ describe('Order Fulfilled Integration Tests', () => {
     const notifications = await dbConnection
       .getRepository(Notification)
       .createQueryBuilder('notification')
-      .where('notification.to = :to', {
-        to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-      })
-      .where('notification.entity = :entity', { entity: 'New Order' })
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+          entity: 'New Order',
+          role: 'Lab',
+        },
+      )
       .getMany();
 
     expect(notifications.length).toEqual(1);
@@ -271,5 +257,7 @@ describe('Order Fulfilled Integration Tests', () => {
     });
 
     expect(await deletePromise).toEqual(0);
-  });
+
+    await dbConnection.destroy();
+  }, 180000);
 });

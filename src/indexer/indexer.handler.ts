@@ -36,6 +36,7 @@ export class IndexerHandler
     private gCloudSecretManagerService: GCloudSecretManagerService,
     private readonly elasticsearchService: ElasticsearchService,
     private readonly schedulerRegistry: SchedulerRegistry,
+    private readonly process: ProcessEnvProxy,
   ) {}
 
   async onApplicationBootstrap() {
@@ -149,10 +150,7 @@ export class IndexerHandler
           );
 
           // check if env is development
-          if (
-            this.gCloudSecretManagerService.getSecret('NODE_ENV') ===
-            'development'
-          ) {
+          if (this.process.env.NODE_ENV === 'development') {
             await this.startDevelopment(this.lastBlockNumber);
           }
 

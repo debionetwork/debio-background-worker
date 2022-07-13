@@ -3,46 +3,40 @@ import {
   queryGeneticAnalystByAccountId,
   registerGeneticAnalyst,
   stakeGeneticAnalyst,
-  updateGeneticAnalystVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { INestApplication } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiPromise } from '@polkadot/api';
-import { GeneticAnalystCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysts';
 import {
   DateTimeModule,
-  DebioConversionModule,
-  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
-  TransactionLoggingModule,
 } from '../../../../../../src/common';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { LocationModule } from '../../../../../../src/common/location/location.module';
-import { LocationEntities } from '../../../../../../src/common/location/models';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { dummyCredentials } from '../../../../../e2e/config';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import { initializeApi } from '../../../../../e2e/polkadot-init';
 import { geneticAnalystsDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analysts.mock';
-import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { GeneticAnalystRegisteredHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-registered/genetic-analyst-registered.handler';
 
 describe('Genetic analyst verification status', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
-  let ga: GeneticAnalyst;
 
   global.console = {
     ...console,
@@ -76,6 +70,7 @@ describe('Genetic analyst verification status', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -83,31 +78,11 @@ describe('Genetic analyst verification status', () => {
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
         ProcessEnvModule,
-        LocationModule,
-        TransactionLoggingModule,
-        SubstrateModule,
-        DebioConversionModule,
-        MailModule,
         CqrsModule,
+        SubstrateModule,
         DateTimeModule,
         NotificationModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
-            },
-          }),
-        }),
       ],
       providers: [
         {
@@ -115,7 +90,7 @@ describe('Genetic analyst verification status', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...GeneticAnalystCommandHandlers,
+        GeneticAnalystRegisteredHandler,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -149,7 +124,7 @@ describe('Genetic analyst verification status', () => {
       },
     );
 
-    ga = await geneticAnalystPromise;
+    const ga: GeneticAnalyst = await geneticAnalystPromise;
 
     expect(ga.info).toEqual(
       expect.objectContaining({
@@ -179,12 +154,14 @@ describe('Genetic analyst verification status', () => {
     const notifications = await dbConnection
       .getRepository(Notification)
       .createQueryBuilder('notification')
-      .where('notification.to = :to', {
-        to: ga.accountId,
-      })
-      .where('notification.entity = :entity', {
-        entity: 'registration and verification',
-      })
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: ga.accountId,
+          entity: 'registration and verification',
+          role: 'GA',
+        },
+      )
       .getMany();
 
     expect(notifications.length).toEqual(1);
@@ -195,5 +172,5 @@ describe('Genetic analyst verification status', () => {
         `You've successfully submitted your account verification.`,
       ),
     ).toBeTruthy();
-  });
+  }, 180000);
 });

@@ -10,22 +10,15 @@ import {
   submitDataBountyDetails,
   submitTestResult,
 } from '@debionetwork/polkadot-provider/lib/command/labs/genetic-testing';
-import {
-  createService,
-  deleteService,
-} from '@debionetwork/polkadot-provider/lib/command/labs/services';
+import { createService } from '@debionetwork/polkadot-provider/lib/command/labs/services';
 import {
   queryLabById,
   queryStakedDataByAccountId,
   queryStakedDataByOrderId,
 } from '@debionetwork/polkadot-provider/lib/query/labs';
-import {
-  queryServicesByMultipleIds,
-  queryServicesCount,
-} from '@debionetwork/polkadot-provider/lib/query/labs/services';
+import { queryServicesByMultipleIds } from '@debionetwork/polkadot-provider/lib/query/labs/services';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
 import {
-  deregisterLab,
   registerLab,
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider/lib/command/labs';
@@ -41,19 +34,15 @@ import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { LocationEntities } from '../../../../../../src/common/location/models';
 import { dummyCredentials } from '../../../../config';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
-  DateTimeModule,
   DebioConversionModule,
-  MailModule,
-  NotificationModule,
+  ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
 } from '../../../../../../src/common';
-import { LocationModule } from '../../../../../../src/common/location/location.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { createConnection } from 'typeorm';
@@ -62,16 +51,13 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { GeneticTestingCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
+import { DataStakedHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing/data-staked/data-staked.handler';
 
 describe('Data Staked Integration Tests', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
-  let lab: Lab;
-  let service: Service;
-  let order: Order;
 
   global.console = {
     ...console,
@@ -116,21 +102,11 @@ describe('Data Staked Integration Tests', () => {
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
-        LocationModule,
+        ProcessEnvModule,
         TransactionLoggingModule,
         SubstrateModule,
         DebioConversionModule,
-        MailModule,
         CqrsModule,
-        DateTimeModule,
-        NotificationModule,
       ],
       providers: [
         {
@@ -138,7 +114,7 @@ describe('Data Staked Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...GeneticTestingCommandHandlers,
+        DataStakedHandler,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -176,7 +152,7 @@ describe('Data Staked Integration Tests', () => {
       });
     });
 
-    lab = await labPromise;
+    const lab: Lab = await labPromise;
     expect(lab.info).toEqual(labDataMock.info);
 
     // eslint-disable-next-line
@@ -196,7 +172,7 @@ describe('Data Staked Integration Tests', () => {
       );
     });
 
-    service = await servicePromise;
+    const service: Service = await servicePromise;
 
     // eslint-disable-next-line
     const orderPromise: Promise<Order> = new Promise((resolve, reject) => {
@@ -217,7 +193,7 @@ describe('Data Staked Integration Tests', () => {
       );
     });
 
-    order = await orderPromise;
+    const order: Order = await orderPromise;
     expect(order.customerId).toEqual(pair.address);
     expect(order.sellerId).toEqual(pair.address);
     expect(order.serviceId).toEqual(service.id);
@@ -265,29 +241,17 @@ describe('Data Staked Integration Tests', () => {
     const transactionLogs = await dbConnection
       .getRepository(TransactionRequest)
       .createQueryBuilder('transaction_logs')
-      .where('transaction_logs.transaction_type = :transaction_type', {
-        transaction_type: 8,
-      })
-      .where('transaction_logs.transaction_status = :transaction_status', {
-        transaction_status: 34,
-      })
+      .where(
+        'transaction_logs.transaction_type = :transaction_type AND transaction_logs.transaction_status = :transaction_status',
+        {
+          transaction_type: 8,
+          transaction_status: 34,
+        },
+      )
       .getMany();
 
     expect(transactionLogs[0].ref_number).toEqual(order.id);
     expect(transactionLogs[0].transaction_type).toEqual(8);
     expect(transactionLogs[0].transaction_status).toEqual(34);
-
-    // eslint-disable-next-line
-    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
-      deleteService(api, pair, service.id, () => {
-        queryServicesCount(api).then((res) => {
-          deregisterLab(api, pair, () => {
-            resolve(res);
-          });
-        });
-      });
-    });
-
-    expect(await deletePromise).toEqual(0);
-  }, 210000);
+  }, 200000);
 });

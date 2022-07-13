@@ -13,16 +13,11 @@ import { EscrowService } from '../../../../../../src/common/escrow/escrow.servic
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
-  DebioConversionModule,
-  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
-  TransactionLoggingModule,
 } from '../../../../../../src/common';
-import { LocationModule } from '../../../../../../src/common/location/location.module';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import {
   GeneticAnalysis,
@@ -32,16 +27,18 @@ import {
   GeneticAnalystService,
   GeneticData,
 } from '@debionetwork/polkadot-provider/lib/models/genetic-analysts';
-import { GeneticAnalysisOrderCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import {
   addGeneticData,
   createGeneticAnalysisOrder,
   createGeneticAnalystService,
+  deleteGeneticAnalystService,
+  deregisterGeneticAnalyst,
   queryGeneticAnalysisByGeneticAnalysisTrackingId,
   queryGeneticAnalysisOrderByCustomerId,
   queryGeneticAnalysisOrderById,
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
+  queryGeneticAnalystServicesCountByOwner,
   queryGeneticDataByOwnerId,
   registerGeneticAnalyst,
   rejectGeneticAnalysis,
@@ -54,19 +51,17 @@ import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitiv
 import { geneticAnalystServiceDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
-import { GeneticAnalysisCommandHandlers } from 'src/indexer/events/genetic-analysis';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { GeneticAnalysisRejectedHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-rejected/genetic-analysis-rejected.handler';
 
 describe('Genetic Analysis Order Created Integration Test', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
-  let ga: GeneticAnalyst;
-  let gaService: GeneticAnalystService;
-  let geneticData: GeneticData;
-  let geneticAnalysisOrder: GeneticAnalysisOrder;
-  let geneticAnalysis: GeneticAnalysis;
 
   global.console = {
     ...console,
@@ -100,6 +95,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -115,11 +111,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
           autoLoadEntities: true,
         }),
         ProcessEnvModule,
-        LocationModule,
-        TransactionLoggingModule,
         SubstrateModule,
-        DebioConversionModule,
-        MailModule,
         CqrsModule,
         DateTimeModule,
         NotificationModule,
@@ -130,7 +122,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...GeneticAnalysisCommandHandlers,
+        GeneticAnalysisRejectedHandler,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -151,6 +143,9 @@ describe('Genetic Analysis Order Created Integration Test', () => {
   });
 
   it('genetic analysis rejected event', async () => {
+    let ga: GeneticAnalyst;
+    let geneticAnalysisOrder: GeneticAnalysisOrder;
+
     const gaPromise: Promise<GeneticAnalyst> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
@@ -175,7 +170,8 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     );
 
     ga = await gaPromise;
-    expect(ga.normalize().info).toEqual(geneticAnalystsDataMock.info);
+    ga = ga.normalize();
+    expect(ga.info).toEqual(geneticAnalystsDataMock.info);
 
     const gaServicePromise: Promise<GeneticAnalystService> = new Promise(
       // eslint-disable-next-line
@@ -197,7 +193,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
       },
     );
 
-    gaService = await gaServicePromise;
+    const gaService: GeneticAnalystService = await gaServicePromise;
     expect(gaService.info).toEqual(
       expect.objectContaining({
         name: geneticAnalystServiceDataMock.info.name,
@@ -217,7 +213,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
       },
     );
 
-    geneticData = await geneticDataPromise;
+    const geneticData: GeneticData = await geneticDataPromise;
     expect(geneticData).toEqual(
       expect.objectContaining({
         title: 'string',
@@ -229,9 +225,22 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     const geneticAnalysisOrderPromise: Promise<GeneticAnalysisOrder> =
       // eslint-disable-next-line
       new Promise((resolve, reject) => {
-        queryGeneticAnalysisOrderByCustomerId(api, pair.address).then((res) => {
-          resolve(res.at(-1));
-        });
+        createGeneticAnalysisOrder(
+          api,
+          pair,
+          geneticData.id,
+          gaService.id,
+          0,
+          geneticData.reportLink,
+          '0x8d2f0702072c07d31251be881104acde7953ecc1c8b33c31fce59ec6b0799ecc',
+          () => {
+            queryGeneticAnalysisOrderByCustomerId(api, pair.address).then(
+              (res) => {
+                resolve(res.at(-1));
+              },
+            );
+          },
+        );
       });
 
     geneticAnalysisOrder = await geneticAnalysisOrderPromise;
@@ -260,6 +269,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     );
 
     const geneticAnalysisRejectedPromise: Promise<GeneticAnalysis> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         rejectGeneticAnalysis(
           api,
@@ -278,7 +288,8 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         );
       });
 
-    geneticAnalysis = await geneticAnalysisRejectedPromise;
+    const geneticAnalysis: GeneticAnalysis =
+      await geneticAnalysisRejectedPromise;
 
     const dbConnection = await createConnection({
       ...dummyCredentials,
@@ -290,10 +301,14 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     const notifications = await dbConnection
       .getRepository(Notification)
       .createQueryBuilder('notification')
-      .where('notification.to = :to', {
-        to: geneticAnalysis.ownerId,
-      })
-      .where('notification.entity = :entity', { entity: 'Order Rejected' })
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: geneticAnalysis.ownerId,
+          entity: 'Order Rejected',
+          role: 'Customer',
+        },
+      )
       .getMany();
 
     expect(notifications.length).toEqual(1);
@@ -304,5 +319,22 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         `Your sample from ${geneticAnalysis.geneticAnalysisOrderId} has been rejected. Click here to see your order details.`,
       ),
     ).toBeTruthy();
-  });
+
+    // eslint-disable-next-line
+    const deleteGa: Promise<number> = new Promise((resolve, reject) => {
+      queryGeneticAnalystByAccountId(api, pair.address).then((ga) => {
+        deleteGeneticAnalystService(api, pair, ga.services[0], () => {
+          queryGeneticAnalystServicesCountByOwner(api, pair.address).then(
+            (res) => {
+              deregisterGeneticAnalyst(api, pair, () => {
+                resolve(res);
+              });
+            },
+          );
+        });
+      });
+    });
+
+    expect(await deleteGa).toEqual(0);
+  }, 180000);
 });

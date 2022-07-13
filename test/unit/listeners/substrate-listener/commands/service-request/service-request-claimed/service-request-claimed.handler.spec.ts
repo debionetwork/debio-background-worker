@@ -7,14 +7,16 @@ import {
   transactionLoggingServiceMockFactory,
   notificationServiceMockFactory,
   dateTimeProxyMockFactory,
+  substrateServiceMockFactory,
 } from '../../../../../mock';
 import {
   MailerManager,
   ProcessEnvProxy,
   TransactionLoggingService,
   DateTimeProxy,
+  SubstrateService,
 } from '../../../../../../../src/common';
-import { RequestStatus } from '@debionetwork/polkadot-provider';
+import { RequestStatus, ServiceRequest } from '@debionetwork/polkadot-provider';
 import { CountryService } from '../../../../../../../src/common/location/country.service';
 import { StateService } from '../../../../../../../src/common/location/state.service';
 import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
@@ -22,6 +24,7 @@ import { BlockMetaData } from '../../../../../../../src/listeners/substrate-list
 import { when } from 'jest-when';
 import { ServiceRequestClaimedCommandHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-claimed/service-request-claimed.handler';
 import { ServiceRequestClaimedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
+import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
 
 describe('Service Request Created Handler Event', () => {
   let serviceRequesClaimedHandler: ServiceRequestClaimedCommandHandler;
@@ -72,6 +75,10 @@ describe('Service Request Created Handler Event', () => {
       providers: [
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
         {
+          provide: SubstrateService,
+          useFactory: substrateServiceMockFactory,
+        },
+        {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
         },
@@ -118,15 +125,26 @@ describe('Service Request Created Handler Event', () => {
     // Assert
     const TRANSACTION_STATUS = false;
     const requestData = createMockRequest(RequestStatus.Open);
+    const serviceRequest = requestData[1].toHuman();
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(requestData[1].toHuman().hash_, 7)
       .mockReturnValue(TRANSACTION_STATUS);
 
+    const queryServiceRequestMock = jest
+      .spyOn(serviceRequestQuery, 'queryServiceRequestById')
+      .mockImplementation(async () => ({
+        ...new ServiceRequest(serviceRequest),
+        normalize: (): ServiceRequest => {
+          return new ServiceRequest(serviceRequest);
+        },
+      }));
+
     const serviceRequestClaimedCommand: ServiceRequestClaimedCommand =
       new ServiceRequestClaimedCommand(requestData, mockBlockNumber());
 
     await serviceRequesClaimedHandler.execute(serviceRequestClaimedCommand);
+    expect(queryServiceRequestMock);
     expect(notificationServiceMock.insert).toHaveBeenCalled();
     expect(notificationServiceMock.insert).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -137,7 +155,7 @@ describe('Service Request Created Handler Event', () => {
         read: false,
         deleted_at: null,
         from: 'Debio Network',
-        to: requestData[1].toHuman().requesterAddress,
+        to: serviceRequest.requesterAddress,
         block_number: '1',
       }),
     );

@@ -14,7 +14,12 @@ describe('Service Request Staking Amount Refunded Command Event', () => {
   it('should called Model and toHuman()', () => {
     const REQUESTER_ID = 'XX';
     const REQUEST_ID = 'XX';
-    const MOCK_DATA = new Array<string>(REQUESTER_ID, REQUEST_ID);
+    const STAKING_AMOUNT = '1';
+    const MOCK_DATA = new Array<string>(
+      REQUESTER_ID,
+      REQUEST_ID,
+      STAKING_AMOUNT,
+    );
     const serviceRequestStakingAmountRefunded =
       new ServiceRequestStakingAmountRefundedCommand(
         MOCK_DATA,

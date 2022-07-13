@@ -6,7 +6,6 @@ import {
   labToLabRegister,
   MailerManager,
   NotificationService,
-  ProcessEnvProxy,
   SubstrateService,
 } from '../../../../../common';
 import { Lab, queryLabById, Service } from '@debionetwork/polkadot-provider';

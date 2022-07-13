@@ -12,6 +12,7 @@
   },
   "globalSetup": "./setup.indexer.ts",
   "globalTeardown": "./teardown.indexer.ts",
+  "testSequencer": "./indexer-test-sequencer.js",
   "collectCoverageFrom": [
     "**/*.(t|j)s"
   ],

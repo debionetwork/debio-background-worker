@@ -1,14 +1,8 @@
 import { ApiPromise } from '@polkadot/api';
 import 'regenerator-runtime/runtime';
-import {
-  deregisterLab,
-  stakeLab,
-  unstakeLab,
-} from '@debionetwork/polkadot-provider/lib/command/labs';
+import { unstakeLab } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
-import { registerLab } from '@debionetwork/polkadot-provider/lib/command/labs';
-import { labDataMock } from '../../../../../mock/models/labs/labs.mock';
 import { TestingModule } from '@nestjs/testing/testing-module';
 import { Test } from '@nestjs/testing/test';
 import { INestApplication } from '@nestjs/common/interfaces/nest-application.interface';
@@ -16,29 +10,23 @@ import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { LocationEntities } from '../../../../../../src/common/location/models';
 import { dummyCredentials } from '../../../../config';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
-  DebioConversionModule,
-  MailModule,
-  NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
 } from '../../../../../../src/common';
-import { LocationModule } from '../../../../../../src/common/location/location.module';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { createConnection } from 'typeorm';
-import { LabCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/labs';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { labUnstakedHandler } from '../../../../../../src/listeners/substrate-listener/commands/labs/unstake-successfull/unstaked-successful.handler';
 
 describe('Lab unstaking Integration Tests', () => {
   let app: INestApplication;
@@ -86,21 +74,11 @@ describe('Lab unstaking Integration Tests', () => {
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
-        LocationModule,
+        ProcessEnvModule,
         TransactionLoggingModule,
         SubstrateModule,
-        DebioConversionModule,
-        MailModule,
         CqrsModule,
         DateTimeModule,
-        NotificationModule,
       ],
       providers: [
         {
@@ -108,7 +86,7 @@ describe('Lab unstaking Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...LabCommandHandlers,
+        labUnstakedHandler,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -124,33 +102,23 @@ describe('Lab unstaking Integration Tests', () => {
   }, 360000);
 
   afterAll(async () => {
+    app.flushLogs();
     await api.disconnect();
     await app.close();
+    app = null;
+    api = null;
+    lab = null;
   });
 
   it('lab unstaking event', async () => {
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
-      registerLab(api, pair, labDataMock.info, () => {
-        queryLabById(api, pair.address).then((res) => {
-          resolve(res);
-        });
+      queryLabById(api, pair.address).then((res) => {
+        resolve(res);
       });
     });
 
     lab = await labPromise;
-    expect(lab.stakeStatus).toEqual('Unstaked');
-
-    // eslint-disable-next-line
-    const stakedLabPromise: Promise<Lab> = new Promise((resolve, reject) => {
-      stakeLab(api, pair, () => {
-        queryLabById(api, pair.address).then((res) => {
-          resolve(res);
-        });
-      });
-    });
-
-    lab = await stakedLabPromise;
     expect(lab.stakeStatus).toEqual('Staked');
 
     // eslint-disable-next-line
@@ -175,18 +143,17 @@ describe('Lab unstaking Integration Tests', () => {
     const transactionLogs = await dbConnection
       .getRepository(TransactionRequest)
       .createQueryBuilder('transaction_logs')
-      .where('transaction_logs.transaction_type = :transaction_type', {
-        transaction_type: 6,
-      })
-      .where('transaction_logs.transaction_status = :transaction_status', {
-        transaction_status: 27,
-      })
+      .where(
+        'transaction_logs.transaction_type = :transaction_type AND transaction_logs.transaction_status = :transaction_status',
+        {
+          transaction_type: 6,
+          transaction_status: 27,
+        },
+      )
       .getMany();
 
     expect(transactionLogs[0].ref_number).toEqual(lab.accountId);
     expect(transactionLogs[0].transaction_type).toEqual(6);
     expect(transactionLogs[0].transaction_status).toEqual(27);
-
-    await deregisterLab(api, pair);
-  }, 210000);
+  }, 180000);
 });

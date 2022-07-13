@@ -1,4 +1,9 @@
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  Logger,
+  OnModuleDestroy,
+} from '@nestjs/common';
 import { SubstrateService } from '../../common';
 import { Header, Event } from '@polkadot/types/interfaces';
 import {
@@ -38,6 +43,7 @@ import {
   GeneticAnalysisResultReadyCommand,
 } from './commands/genetic-analysis';
 import {
+  GeneticAnalystRegisteredCommand,
   GeneticAnalystStakedCommand,
   GeneticAnalystUnstakedCommand,
   GeneticAnalystVerificationStatusCommand,
@@ -55,7 +61,7 @@ import {
   DnaSampleRejectedCommand,
   DnaSampleResultReadyCommand,
 } from './commands/genetic-testing';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { ProcessEnvProxy } from '../../common/proxies/process-env/process-env.proxy';
 
 const eventRoutes = {
   services: {
@@ -97,6 +103,7 @@ const eventRoutes = {
     GeneticAnalysisResultReady: GeneticAnalysisResultReadyCommand,
   },
   geneticAnalysts: {
+    GeneticAnalystRegistered: GeneticAnalystRegisteredCommand,
     GeneticAnalystStakeSuccessful: GeneticAnalystStakedCommand,
     GeneticAnalystUnstakeSuccessful: GeneticAnalystUnstakedCommand,
     GeneticAnalystUpdateVerificationStatus:
@@ -115,7 +122,7 @@ const eventRoutes = {
 };
 
 @Injectable()
-export class SubstrateListenerHandler implements OnModuleInit {
+export class SubstrateListenerHandler implements OnModuleInit, OnModuleDestroy {
   private event: any;
   private readonly logger: Logger = new Logger(SubstrateListenerHandler.name);
   private lastBlock = 0;
@@ -125,8 +132,13 @@ export class SubstrateListenerHandler implements OnModuleInit {
     private readonly substrate: SubstrateService,
     private readonly commandBus: CommandBus,
     private queryBus: QueryBus,
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly process: ProcessEnvProxy,
   ) {}
+
+  onModuleDestroy() {
+    this.event && this.event();
+    this.head && this.head();
+  }
 
   async onModuleInit() {
     await this.listenToEvents();
@@ -232,10 +244,7 @@ export class SubstrateListenerHandler implements OnModuleInit {
           );
 
           // check if env is development
-          if (
-            this.gCloudSecretManagerService.getSecret('NODE_ENV').toString() ===
-            'development'
-          ) {
+          if (this.process.env.NODE_ENV === 'development') {
             this.lastBlock = await this.queryBus.execute(
               new GetLastSubstrateBlockQuery(),
             );

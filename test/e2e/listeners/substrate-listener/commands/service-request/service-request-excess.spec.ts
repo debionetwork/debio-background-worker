@@ -1,13 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiPromise } from '@polkadot/api';
 import {
   DateTimeModule,
-  DebioConversionModule,
-  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
@@ -15,10 +12,7 @@ import {
 } from '../../../../../../src/common';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { LocationModule } from '../../../../../../src/common/location/location.module';
-import { LocationEntities } from '../../../../../../src/common/location/models';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
-import { ServiceRequestCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { dummyCredentials } from '../../../../config';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
@@ -55,16 +49,13 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { ServiceRequestStakingAmountExcessRefunded } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-excess/service-request-excess.handler';
 
 describe('Service Request Excess Integration Tests', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
-  let lab: Lab;
-  let service: Service;
-  let order: Order;
-  let serviceRequest: ServiceRequest;
 
   global.console = {
     ...console,
@@ -106,20 +97,10 @@ describe('Service Request Excess Integration Tests', () => {
           entities: [LabRating, TransactionRequest, Notification],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
         ProcessEnvModule,
-        LocationModule,
         TransactionLoggingModule,
-        SubstrateModule,
-        DebioConversionModule,
-        MailModule,
         CqrsModule,
+        SubstrateModule,
         DateTimeModule,
         NotificationModule,
       ],
@@ -129,7 +110,7 @@ describe('Service Request Excess Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...ServiceRequestCommandHandlers,
+        ServiceRequestStakingAmountExcessRefunded,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -145,11 +126,16 @@ describe('Service Request Excess Integration Tests', () => {
   }, 360000);
 
   afterAll(async () => {
+    app.flushLogs();
     await api.disconnect();
     await app.close();
+    app = null;
+    api = null;
   });
 
   it('service request excess event', async () => {
+    let serviceRequest: ServiceRequest;
+
     const serviceRequestPromise: Promise<ServiceRequest> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
@@ -171,7 +157,8 @@ describe('Service Request Excess Integration Tests', () => {
     );
 
     serviceRequest = await serviceRequestPromise;
-    expect(serviceRequest.normalize()).toEqual(
+    serviceRequest = serviceRequest.normalize();
+    expect(serviceRequest).toEqual(
       expect.objectContaining({
         country: serviceRequestMock.country,
         region: serviceRequestMock.region,
@@ -196,7 +183,7 @@ describe('Service Request Excess Integration Tests', () => {
       });
     });
 
-    lab = await labPromise;
+    const lab: Lab = await labPromise;
     expect(lab.info).toEqual(labDataMock.info);
     expect(lab.verificationStatus).toEqual(VerificationStatus.Verified);
 
@@ -217,7 +204,7 @@ describe('Service Request Excess Integration Tests', () => {
       );
     });
 
-    service = await servicePromise;
+    const service: Service = await servicePromise;
 
     const claimRequestPromise: Promise<ServiceRequest> = new Promise(
       // eslint-disable-next-line
@@ -259,7 +246,7 @@ describe('Service Request Excess Integration Tests', () => {
       );
     });
 
-    order = await orderPromise;
+    const order: Order = await orderPromise;
     expect(order.customerId).toEqual(pair.address);
     expect(order.sellerId).toEqual(pair.address);
     expect(order.serviceId).toEqual(service.id);
@@ -298,17 +285,20 @@ describe('Service Request Excess Integration Tests', () => {
     const notifications = await dbConnection
       .getRepository(Notification)
       .createQueryBuilder('notification')
-      .where('notification.to = :to', {
-        to: serviceRequest.requesterAddress,
-      })
-      .where('notification.entity = :entity', {
-        entity: 'ServiceRequestStakingAmountExessRefunded',
-      })
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: serviceRequest.requesterAddress,
+          entity: 'Service Request Staking Amount Exess Refunded',
+          role: 'Customer',
+        },
+      )
       .getMany();
 
+    expect(notifications.length).toEqual(1);
     expect(notifications[0].to).toEqual(serviceRequest.requesterAddress);
     expect(notifications[0].entity).toEqual(
-      'ServiceRequestStakingAmountExessRefunded',
+      'Service Request Staking Amount Exess Refunded',
     );
     expect(
       notifications[0].description.includes(
@@ -328,5 +318,5 @@ describe('Service Request Excess Integration Tests', () => {
     });
 
     expect(await deletePromise).toEqual(0);
-  }, 240000);
+  }, 210000);
 });

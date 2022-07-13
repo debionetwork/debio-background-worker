@@ -49,7 +49,12 @@ describe('Service Request Staking Amount Refunded Handler Event', () => {
   it('should called ServiceRequestStakingAmountRefundedHandler from command bus', async () => {
     const REQUESTER_ID = 'XX';
     const REQUEST_ID = 'XX';
-    const requestData = new Array<string>(REQUESTER_ID, REQUEST_ID);
+    const STAKING_AMOUNT = '1';
+    const requestData = new Array<string>(
+      REQUESTER_ID,
+      REQUEST_ID,
+      STAKING_AMOUNT,
+    );
 
     const serviceRequestStakingAmountRefundedCommand: ServiceRequestStakingAmountRefundedCommand =
       new ServiceRequestStakingAmountRefundedCommand(
