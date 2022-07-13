@@ -1,6 +1,5 @@
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Injectable, Logger } from '@nestjs/common';
-import { ProcessEnvProxy } from '../proxies';
 import axios from 'axios';
 
 @Injectable()

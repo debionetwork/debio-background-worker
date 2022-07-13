@@ -13,7 +13,7 @@ export const notificationData = {
       deleted_at: null,
       from: null,
       to: '5GRB3...',
-      block_number: "",
+      block_number: '1',
     },
   ],
 };

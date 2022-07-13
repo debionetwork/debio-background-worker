@@ -25,6 +25,7 @@ export class GeneticAnalysisResultReadyHandler
 
   async execute(command: GeneticAnalysisResultReadyCommand) {
     const geneticAnalysis = command.geneticAnalysis.normalize();
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     await this.logger.log(
       `Genetic Analysis Result Ready With Tracking ID: ${geneticAnalysis.geneticAnalysisTrackingId}!`,
     );
@@ -48,7 +49,7 @@ export class GeneticAnalysisResultReadyHandler
         deleted_at: null,
         from: geneticAnalysis.ownerId,
         to: 'Debio Network',
-        block_number: "",
+        block_number: blockNumber,
       };
 
       await this.notificationService.insert(notificationInput);

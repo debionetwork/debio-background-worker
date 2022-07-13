@@ -24,6 +24,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   async execute(command: OrderPaidCommand) {
     const order: Order = command.orders;
     order.normalize();
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     await this.logger.log(`OrderPaid with Order ID: ${order.id}!`);
 
     try {
@@ -62,7 +63,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           deleted_at: null,
           from: 'Debio Network',
           to: order.sellerId,
-          block_number: "",
+          block_number: blockNumber,
         };
         await this.notificationService.insert(notificationNewOrder);
       }

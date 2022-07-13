@@ -127,7 +127,7 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
         deleted_at: null,
         from: 'Debio Network',
         to: GA_ORDER.toHuman().sellerId,
-        block_number: "",
+        block_number: '1',
       }),
     );
   });

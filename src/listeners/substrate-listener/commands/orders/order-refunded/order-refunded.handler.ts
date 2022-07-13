@@ -26,6 +26,7 @@ export class OrderRefundedHandler
   async execute(command: OrderRefundedCommand) {
     const order: Order = command.orders;
     order.normalize();
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     await this.logger.log(`OrderRefunded With Order ID: ${order.id}!`);
 
     try {
@@ -63,7 +64,7 @@ export class OrderRefundedHandler
         deleted_at: null,
         from: 'Debio Network',
         to: order.customerId,
-        block_number: "",
+        block_number: blockNumber,
       };
       await this.notificationService.insert(customerOrderRefundedNotification);
     } catch (error) {

@@ -25,6 +25,7 @@ export class GeneticAnalysisRejectedHandler
 
   async execute(command: GeneticAnalysisRejectedCommand) {
     const geneticAnalysis = command.geneticAnalysis.normalize();
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     await this.logger.log(
       `Genetic Analysis Rejected With Tracking ID: ${geneticAnalysis.geneticAnalysisTrackingId}!`,
     );
@@ -49,7 +50,7 @@ export class GeneticAnalysisRejectedHandler
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalysis.ownerId,
-        block_number: "",
+        block_number: blockNumber,
       };
 
       await this.notificationService.insert(orderRefundedNotification);

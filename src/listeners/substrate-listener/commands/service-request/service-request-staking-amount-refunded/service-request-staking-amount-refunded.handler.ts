@@ -18,6 +18,7 @@ export class ServiceRequestStakingAmountRefundedHandler
     const { requesterId, requestId } = command;
 
     const currDateTime = this.dateTimeProxy.new();
+    const blockNumber = command.blockMetaData.blockNumber.toString();
 
     const refundedNotification: NotificationDto = {
       role: 'Customer',
@@ -30,7 +31,7 @@ export class ServiceRequestStakingAmountRefundedHandler
       deleted_at: null,
       from: 'Debio Network',
       to: requesterId,
-      block_number: "",
+      block_number: blockNumber,
     };
 
     this.notificationService.insert(refundedNotification);

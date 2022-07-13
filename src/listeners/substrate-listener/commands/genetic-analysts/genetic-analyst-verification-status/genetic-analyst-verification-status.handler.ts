@@ -27,6 +27,7 @@ export class GeneticAnalystVerificationStatusHandler
     let notificationDescription = '';
     let entity = '';
     const geneticAnalyst = command.geneticAnalyst.normalize();
+    const blockNumber = command.blockMetaData.blockNumber.toString();
 
     await this.logger.log(
       `Genetic Analyst ID: ${geneticAnalyst.accountId} Verify Status ${geneticAnalyst.verificationStatus}!`,
@@ -90,7 +91,7 @@ export class GeneticAnalystVerificationStatusHandler
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalyst.accountId,
-        block_number: "",
+        block_number: blockNumber,
       };
 
       await this.notificationService.insert(geneticAnalystNotification);

@@ -34,6 +34,7 @@ export class ServiceRequestCreatedHandler
 
   async execute(command: ServiceRequestCreatedCommand) {
     const serviceRequest = command.request.normalize();
+    const blockNumber = command.blockMetadata.blockNumber.toString();
     await this.logger.log(
       `Service Request Created With Hash: ${serviceRequest.hash}!`,
     );
@@ -72,7 +73,7 @@ export class ServiceRequestCreatedHandler
         deleted_at: null,
         from: 'Debio Network',
         to: serviceRequest.requesterAddress,
-        block_number: "",
+        block_number: blockNumber,
       };
 
       await this.notificationService.insert(notificationInput);

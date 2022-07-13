@@ -138,7 +138,7 @@ describe('Service Request Created Handler Event', () => {
         deleted_at: null,
         from: 'Debio Network',
         to: requestData[1].toHuman().requesterAddress,
-        block_number: "",
+        block_number: '1',
       }),
     );
   });

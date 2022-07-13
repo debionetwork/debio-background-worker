@@ -20,6 +20,7 @@ export class LabUpdateVerificationStatusHandler
 
   async execute(command: LabUpdateVerificationStatusCommand) {
     const lab = command.labs.normalize();
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     await this.logger.log(
       `Lab ID: ${lab.accountId} Update Verification Status ${lab.verificationStatus}!`,
     );
@@ -41,7 +42,7 @@ export class LabUpdateVerificationStatusHandler
       deleted_at: null,
       from: 'Debio Network',
       to: lab.accountId,
-      block_number: "",
+      block_number: blockNumber,
     };
 
     try {

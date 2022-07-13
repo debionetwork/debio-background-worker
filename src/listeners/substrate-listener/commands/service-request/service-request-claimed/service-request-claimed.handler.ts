@@ -16,6 +16,7 @@ export class ServiceRequestClaimedCommandHandler
 
   async execute(command: ServiceRequestClaimedCommand) {
     const requestData = command.request.normalize();
+    const blockNumber = command.blockMetadata.blockNumber.toString();
 
     const currDateTime = this.dateTimeProxy.new();
 
@@ -30,7 +31,7 @@ export class ServiceRequestClaimedCommandHandler
       deleted_at: null,
       from: 'Debio Network',
       to: requestData.requesterAddress,
-      block_number: "",
+      block_number: blockNumber,
     };
 
     await this.notificationService.insert(serviceAvailableNotificationInput);

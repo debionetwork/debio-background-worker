@@ -25,6 +25,7 @@ export class GeneticAnalysisOrderFulfilledHandler
 
   async execute(command: GeneticAnalysisOrderFulfilledCommand) {
     const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     await this.logger.log(
       `Genetic Analysis Order Fulfilled! With GA Order ID: ${geneticAnalysisOrder.id}`,
     );
@@ -82,7 +83,7 @@ export class GeneticAnalysisOrderFulfilledHandler
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalysisOrder.sellerId,
-        block_number: "",
+        block_number: blockNumber,
       };
 
       await this.notificationService.insert(receivePaymentNotification);

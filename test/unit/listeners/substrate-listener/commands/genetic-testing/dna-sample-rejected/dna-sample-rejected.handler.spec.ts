@@ -64,7 +64,7 @@ describe('DNA Sample Rejected Handler Event', () => {
         deleted_at: null,
         from: 'Debio Network',
         to: dnaSample.ownerId,
-        block_number: "",
+        block_number: '1',
       }),
     );
   });
