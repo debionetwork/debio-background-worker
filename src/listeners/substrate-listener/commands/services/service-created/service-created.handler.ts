@@ -30,6 +30,7 @@ export class ServiceCreatedHandler
 
   async execute(command: ServiceCreatedCommand) {
     const service: Service = command.services;
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     await this.logger.log(
       `Lab ID: ${service.ownerId} Service Created With ID: ${service.id}`,
     );
@@ -64,7 +65,7 @@ export class ServiceCreatedHandler
       deleted_at: null,
       from: 'Debio Network',
       to: service.ownerId,
-      block_number: '',
+      block_number: blockNumber,
     };
 
     await this.notificationService.insert(notificationInput);
