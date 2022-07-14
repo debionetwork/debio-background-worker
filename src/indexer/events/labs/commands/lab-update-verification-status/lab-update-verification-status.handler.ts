@@ -11,7 +11,10 @@ export class LabUpdateVerificationStatusHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: LabUpdateVerificationStatusCommand) {
-    const { accountId, verificationStatus } = command.labs;
+    const {
+      labs: { accountId, verificationStatus },
+      blockMetaData,
+    } = command;
 
     await this.elasticsearchService.update({
       index: 'labs',
@@ -20,6 +23,7 @@ export class LabUpdateVerificationStatusHandler
       body: {
         doc: {
           verification_status: verificationStatus,
+          blockMetaData: blockMetaData,
         },
       },
     });
