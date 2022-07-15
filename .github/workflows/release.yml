@@ -14,8 +14,6 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
-    outputs:
-      release_name: ${{ steps.input-check.outputs.release_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -40,86 +38,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           release_id: ${{ steps.get_release.outputs.id }}
-
-  deploy-release:
-    runs-on: ubuntu-20.04
-    needs:
-      - release
-    env:
-      DEPLOY: ${{ secrets.MAINNET_DEPLOY }}
-    permissions:
-      contents: "read"
-      id-token: "write"
-    steps:
-      - name: Checkout code
-        if: "${{ env.DEPLOY == 'true' }}"
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Authenticate to Google Cloud
-        if: "${{ env.DEPLOY == 'true' }}"
-        id: "auth"
-        uses: "google-github-actions/auth@v0"
-        with:
-          workload_identity_provider: ${{ secrets.MAINNET_GOOGLE_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.MAINNET_SERVICE_ACCOUNT_EMAIL }}
-          project_id: ${{ secrets.MAINNET_GCP_PROJECT_ID }}
-      - name: Set up Cloud SDK
-        if: "${{ env.DEPLOY == 'true' }}"
-        uses: google-github-actions/setup-gcloud@v0
-      - name: Get secrets
-        if: "${{ env.DEPLOY == 'true' }}"
-        id: secrets
-        uses: google-github-actions/get-secretmanager-secrets@main
-        with:
-          secrets: |-
-            ELASTICSEARCH_NODE:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
-            ELASTICSEARCH_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
-            ELASTICSEARCH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
-            MINIMAL_STARTING_BLOCK:${{ secrets.MAINNET_GCP_PROJECT_ID }}/MINIMAL_STARTING_BLOCK
-            REQUEST_SERVICE_CONTRACT_ADDRESS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REQUEST_SERVICE_CONTRACT_ADDRESS
-            SUBSTRATE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SUBSTRATE_URL
-            WEB3_RPC_HTTPS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
-            SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
-            SSH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_USERNAME
-            SSH_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_KEY
-            SSH_PORT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_PORT
-      - name: Deploy
-        if: "${{ env.DEPLOY == 'true' }}"
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ steps.secrets.outputs.SSH_HOST }}
-          username: ${{ steps.secrets.outputs.SSH_USERNAME }}
-          key: ${{ steps.secrets.outputs.SSH_KEY }}
-          port: ${{ steps.secrets.outputs.SSH_PORT }}
-          script: |
-            ./connect.sh
-            helm repo add debio https://charts.debio.network
-            helm repo update
-            helm upgrade debio-indexer debio/debio-indexer \
-              --install \
-              --set-string image.tag=${{ needs.release.outputs.release_name }} \
-              --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
-              --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
-              --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
-              --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
-              --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
-              --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
-              --set-string config.web3RpcHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
-              --set-string resources.requests.cpu=100m \
-              --set-string resources.requests.memory=512Mi \
-              --set-string resources.limits.cpu=300m \
-              --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=1 \
-              --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=11 \
-              --set-string nodeSelector.pool=general
-            kubectl rollout status deployment/debio-indexer
-      - name: Sleuth webhook
-        if: "${{ env.DEPLOY == 'true' }}"
-        shell: bash
-        run: |
-          curl -X POST -d api_key=${{ secrets.SLEUTH_API_KEY }} \
-          -d environment=${{ secrets.MAINNET_SLEUTH_ENVIRONMENT }} \
-          -d sha=$GITHUB_SHA ${{ secrets.INDEXER_SLEUTH_WEBHOOK }}
