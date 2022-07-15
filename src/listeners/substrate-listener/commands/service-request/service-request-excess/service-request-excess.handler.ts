@@ -27,6 +27,7 @@ export class ServiceRequestStakingAmountExcessRefunded
   async execute(command: ServiceRequestStakingAmountExcessRefundedCommand) {
     await this.logger.log('Service Request Staking Amount Excess Refunded!');
     const { requesterId, requestId, additionalStakingAmount } = command;
+    const blockNumber = command.blockMetadata.blockNumber.toString();
     const loggingServiceRequest = await this.loggingService.getLoggingByOrderId(
       requestId,
     );
@@ -61,6 +62,7 @@ export class ServiceRequestStakingAmountExcessRefunded
           deleted_at: null,
           from: 'Debio Network',
           to: requesterId,
+          block_number: blockNumber,
         };
 
         await this.notificationService.insert(notificationInput);

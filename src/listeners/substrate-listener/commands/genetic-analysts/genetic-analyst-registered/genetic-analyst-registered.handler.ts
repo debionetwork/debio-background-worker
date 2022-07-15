@@ -18,6 +18,7 @@ export class GeneticAnalystRegisteredHandler
   ) {}
   async execute(command: GeneticAnalystRegisteredCommand) {
     const geneticAnalyst = command.geneticAnalyst;
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     try {
       const currDateTime = this.dateTimeProxy.new();
 
@@ -32,6 +33,7 @@ export class GeneticAnalystRegisteredHandler
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalyst.accountId,
+        block_number: blockNumber,
       };
 
       await this.notificationService.insert(geneticAnalystServiceNotification);

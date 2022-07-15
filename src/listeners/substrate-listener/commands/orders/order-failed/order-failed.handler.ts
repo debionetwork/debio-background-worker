@@ -32,6 +32,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   async execute(command: OrderFailedCommand) {
     const order: Order = command.orders;
     order.normalize();
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     await this.logger.log(`OrderFailed With Order ID: ${order.id}!`);
 
     try {
@@ -71,6 +72,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         deleted_at: null,
         from: 'Debio Network',
         to: order.sellerId,
+        block_number: blockNumber,
       };
 
       await this.notificationService.insert(labNotification);

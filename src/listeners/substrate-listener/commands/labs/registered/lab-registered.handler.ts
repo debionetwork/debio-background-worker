@@ -24,6 +24,7 @@ export class LabRegisteredHandler
 
   async execute(command: LabRegisteredCommand) {
     const lab = command.lab.normalize();
+    const blockNumber = command.blockMetadata.blockNumber.toString();
     await this.logger.log(`Lab ID: ${lab.accountId} is Registered!`);
     const stakingLogging: TransactionLoggingDto = {
       address: lab.accountId,
@@ -59,6 +60,7 @@ export class LabRegisteredHandler
         deleted_at: null,
         from: lab.accountId,
         to: 'Admin',
+        block_number: blockNumber,
       };
 
       await this.notificationService.insert(notificationInput);

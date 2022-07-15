@@ -16,6 +16,7 @@ export class DnaSampleResultReadyCommandHandler
 
   async execute(command: DnaSampleResultReadyCommand) {
     const dnaSample = command.dnaSample;
+    const blockNumber = command.blockMetaData.blockNumber.toString();
 
     const currDateTime = this.dateTimeProxy.new();
 
@@ -30,6 +31,7 @@ export class DnaSampleResultReadyCommandHandler
       deleted_at: null,
       from: 'Debio Network',
       to: dnaSample.ownerId,
+      block_number: blockNumber,
     };
 
     await this.notificationService.insert(testResultNotification);

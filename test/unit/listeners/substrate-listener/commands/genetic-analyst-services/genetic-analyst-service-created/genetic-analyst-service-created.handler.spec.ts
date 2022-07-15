@@ -68,6 +68,7 @@ describe('Genetic Analyst Service Created Handler Event', () => {
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalystServiceData.ownerId,
+        block_number: '1',
       }),
     );
   });

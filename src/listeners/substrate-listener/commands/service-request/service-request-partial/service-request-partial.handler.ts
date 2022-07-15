@@ -30,6 +30,7 @@ export class ServiceRequestStakingAmountIncreasedHandler
     const loggingServiceRequest = await this.loggingService.getLoggingByOrderId(
       requestId,
     );
+    const blockNumber = command.blockMetadata.blockNumber.toString();
 
     const stakingLogging: TransactionLoggingDto = {
       address: requesterId,
@@ -62,6 +63,7 @@ export class ServiceRequestStakingAmountIncreasedHandler
         deleted_at: null,
         from: 'Debio Network',
         to: requesterId,
+        block_number: blockNumber,
       };
 
       await this.notificationService.insert(notificationInput);

@@ -25,6 +25,7 @@ export class OrderCreatedHandler
 
   async execute(command: OrderCreatedCommand) {
     const order: Order = command.orders;
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     order.normalize();
     await this.logger.log(`OrderCreated With Order ID: ${order.id}!`);
 
@@ -61,6 +62,7 @@ export class OrderCreatedHandler
           deleted_at: null,
           from: 'Debio Network',
           to: order.customerId,
+          block_number: blockNumber,
         };
 
         await this.notificationService.insert(notificationInput);

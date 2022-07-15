@@ -41,6 +41,7 @@ export class OrderFulfilledHandler
   async execute(command: OrderFulfilledCommand) {
     const order: Order = command.orders;
     order.normalize();
+    const blockNumber = command.blockMetaData.blockNumber.toString();
     await this.logger.log(`Order Fulfilled With Order ID: ${order.id}!`);
 
     try {
@@ -128,6 +129,7 @@ export class OrderFulfilledHandler
               deleted_at: null,
               from: 'Debio Network',
               to: order.customerId,
+              block_number: blockNumber,
             };
 
             this.callbackInsertNotificationLogging(customerNotificationInput);
@@ -175,6 +177,7 @@ export class OrderFulfilledHandler
               deleted_at: null,
               from: 'Debio Network',
               to: order.sellerId,
+              block_number: blockNumber,
             };
 
             this.callbackInsertNotificationLogging(labNotificationInput);
@@ -211,6 +214,7 @@ export class OrderFulfilledHandler
         deleted_at: null,
         from: 'Debio Network',
         to: order.sellerId,
+        block_number: blockNumber,
       };
 
       await this.notificationService.insert(labPaymentNotification);

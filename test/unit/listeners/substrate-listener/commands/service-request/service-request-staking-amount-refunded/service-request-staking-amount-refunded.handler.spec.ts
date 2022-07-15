@@ -68,6 +68,7 @@ describe('Service Request Staking Amount Refunded Handler Event', () => {
         description: `Your staked amount from staking ID ${REQUEST_ID} has been refunded, kindly check your balance.`,
         from: 'Debio Network',
         to: REQUESTER_ID,
+        block_number: '1',
       }),
     );
   });
