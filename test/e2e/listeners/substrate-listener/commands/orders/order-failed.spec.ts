@@ -87,7 +87,7 @@ describe('Order Failed Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,

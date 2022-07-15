@@ -57,7 +57,7 @@ describe('Unstaked Scheduler (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
         ElasticsearchModule.registerAsync({
           inject: [GCloudSecretManagerService],
           useFactory: async (

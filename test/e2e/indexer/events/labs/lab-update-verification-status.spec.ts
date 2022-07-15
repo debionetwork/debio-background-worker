@@ -62,7 +62,7 @@ describe('Event Command Service Request Claimed', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
