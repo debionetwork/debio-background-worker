@@ -2,7 +2,7 @@ import { connectionRetries, setElasticsearchDummyCredentials } from './config';
 import { Client } from '@elastic/elasticsearch';
 
 async function initalElasticsearchConnection(): Promise<Client> {
-  await new Promise((resolve) => setTimeout(resolve, 10000));
+  await new Promise((resolve) => setTimeout(resolve, 60000));
   setElasticsearchDummyCredentials();
   return new Client({
     node: process.env.ELASTICSEARCH_NODE,

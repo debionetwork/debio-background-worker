@@ -7,22 +7,16 @@ import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { LocationEntities } from '../../../../../../src/common/location/models';
 import { dummyCredentials } from '../../../../config';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
-  DebioConversionModule,
-  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
-  TransactionLoggingModule,
 } from '../../../../../../src/common';
-import { LocationModule } from '../../../../../../src/common/location/location.module';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import {
   GeneticAnalyst,
@@ -30,8 +24,11 @@ import {
 } from '@debionetwork/polkadot-provider/lib/models/genetic-analysts';
 import {
   createGeneticAnalystService,
+  deleteGeneticAnalystService,
+  deregisterGeneticAnalyst,
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
+  queryGeneticAnalystServicesCountByOwner,
   registerGeneticAnalyst,
   stakeGeneticAnalyst,
   updateGeneticAnalystVerificationStatus,
@@ -41,16 +38,17 @@ import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitiv
 import { geneticAnalystServiceDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
-import { GeneticAnalystServiceCommandHandler } from 'src/listeners/substrate-listener/commands/genetic-analyst-services';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { GeneticAnalystServiceCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analyst-services';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Genetic Analyst Service Created Event', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
-  let ga: GeneticAnalyst;
-  let gaService: GeneticAnalystService;
 
   global.console = {
     ...console,
@@ -84,6 +82,7 @@ describe('Genetic Analyst Service Created Event', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -91,31 +90,11 @@ describe('Genetic Analyst Service Created Event', () => {
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
         ProcessEnvModule,
-        LocationModule,
-        TransactionLoggingModule,
-        SubstrateModule,
-        DebioConversionModule,
-        MailModule,
         CqrsModule,
+        SubstrateModule,
         DateTimeModule,
         NotificationModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
-            },
-          }),
-        }),
       ],
       providers: [
         {
@@ -144,6 +123,8 @@ describe('Genetic Analyst Service Created Event', () => {
   });
 
   it('genetic analyst service created event', async () => {
+    let ga: GeneticAnalyst;
+
     const gaPromise: Promise<GeneticAnalyst> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
@@ -168,7 +149,8 @@ describe('Genetic Analyst Service Created Event', () => {
     );
 
     ga = await gaPromise;
-    expect(ga.normalize().info).toEqual(geneticAnalystsDataMock.info);
+    ga = ga.normalize();
+    expect(ga.info).toEqual(geneticAnalystsDataMock.info);
 
     const gaServicePromise: Promise<GeneticAnalystService> = new Promise(
       // eslint-disable-next-line
@@ -190,7 +172,7 @@ describe('Genetic Analyst Service Created Event', () => {
       },
     );
 
-    gaService = await gaServicePromise;
+    const gaService: GeneticAnalystService = await gaServicePromise;
     expect(gaService.info).toEqual(
       expect.objectContaining({
         name: geneticAnalystServiceDataMock.info.name,
@@ -209,10 +191,14 @@ describe('Genetic Analyst Service Created Event', () => {
     const notifications = await dbConnection
       .getRepository(Notification)
       .createQueryBuilder('notification')
-      .where('notification.to = :to', {
-        to: gaService.ownerId,
-      })
-      .where('notification.entity = :entity', { entity: 'Add service' })
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: gaService.ownerId,
+          entity: 'Add service',
+          role: 'GA',
+        },
+      )
       .getMany();
 
     expect(notifications.length).toEqual(1);
@@ -223,5 +209,22 @@ describe('Genetic Analyst Service Created Event', () => {
         `You've successfully added your new service - ${gaService.info.name}.`,
       ),
     ).toBeTruthy();
-  });
+
+    // eslint-disable-next-line
+    const deleteGa: Promise<number> = new Promise((resolve, reject) => {
+      queryGeneticAnalystByAccountId(api, pair.address).then((ga) => {
+        deleteGeneticAnalystService(api, pair, ga.services[0], () => {
+          queryGeneticAnalystServicesCountByOwner(api, pair.address).then(
+            (res) => {
+              deregisterGeneticAnalyst(api, pair, () => {
+                resolve(res);
+              });
+            },
+          );
+        });
+      });
+    });
+
+    expect(await deleteGa).toEqual(0);
+  }, 180000);
 });

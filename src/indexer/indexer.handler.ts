@@ -36,6 +36,7 @@ export class IndexerHandler
     private gCloudSecretManagerService: GCloudSecretManagerService,
     private readonly elasticsearchService: ElasticsearchService,
     private readonly schedulerRegistry: SchedulerRegistry,
+    private readonly process: ProcessEnvProxy,
   ) {}
 
   async onApplicationBootstrap() {
@@ -100,34 +101,40 @@ export class IndexerHandler
   }
 
   async eventFromBlock(blockNumber: number, blockHash: string | Uint8Array) {
-    await this.updateMetaData(blockHash);
+    try {
+      await this.updateMetaData(blockHash);
 
-    const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
+      const signedBlock = await this.api.rpc.chain.getBlock(blockHash);
 
-    const apiAt = await this.api.at(signedBlock.block.header.hash);
+      const apiAt = await this.api.at(signedBlock.block.header.hash);
 
-    const blockMetaData: BlockMetaData = {
-      blockNumber: blockNumber,
-      blockHash: blockHash.toString(),
-    };
+      const blockMetaData: BlockMetaData = {
+        blockNumber: blockNumber,
+        blockHash: blockHash.toString(),
+      };
 
-    const allRecords = (await apiAt.query.system.events()) as any;
+      const allRecords = (await apiAt.query.system.events()) as any;
 
-    signedBlock.block.extrinsics.forEach(
-      // eslint-disable-next-line
-      async ({ method: { method, section } }, index) => {
-        // filter the specific events based on the phase and then the
-        // index of our extrinsic in the block
-        const events = allRecords.filter(
-          ({ phase }) =>
-            phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(index),
-        );
-        for (let i = 0; i < events.length; i++) {
-          const { event } = events[i];
-          await this.handleEvent(blockMetaData, event);
-        }
-      },
-    );
+      signedBlock.block.extrinsics.forEach(
+        // eslint-disable-next-line
+        async ({ method: { method, section } }, index) => {
+          // filter the specific events based on the phase and then the
+          // index of our extrinsic in the block
+          const events = allRecords.filter(
+            ({ phase }) =>
+              phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(index),
+          );
+          for (let i = 0; i < events.length; i++) {
+            const { event } = events[i];
+            await this.handleEvent(blockMetaData, event);
+          }
+        },
+      );
+    } catch (err) {
+      this.logger.log(
+        `Catch dispatch error: ${err.name}, ${err.message}, ${err.stack}`,
+      );
+    }
   }
 
   async listenNewBlocks() {
@@ -149,10 +156,7 @@ export class IndexerHandler
           );
 
           // check if env is development
-          if (
-            this.gCloudSecretManagerService.getSecret('NODE_ENV') ===
-            'development'
-          ) {
+          if (this.process.env.NODE_ENV === 'development') {
             await this.startDevelopment(this.lastBlockNumber);
           }
 

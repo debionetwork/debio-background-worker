@@ -10,8 +10,11 @@ import {
   claimRequest,
   createRequest,
   createService,
+  deleteService,
+  deregisterLab,
   Lab,
   queryLabById,
+  queryLabCount,
   queryServiceRequestByAccountId,
   queryServiceRequestById,
   queryServicesByMultipleIds,
@@ -21,10 +24,7 @@ import {
   ServiceRequest,
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
-import {
-  ElasticsearchModule,
-  ElasticsearchService,
-} from '@nestjs/elasticsearch';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CqrsModule } from '@nestjs/cqrs';
 import { labDataMock } from '../../../../mock/models/labs/labs.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
@@ -81,7 +81,7 @@ describe('Event Command Service Request Claimed', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
@@ -144,6 +144,35 @@ describe('Event Command Service Request Claimed', () => {
         city: serviceRequestMock.city,
         serviceCategory: serviceRequestMock.serviceCategory,
       }),
+    );
+
+    const regionServiceRequest = await elasticsearchService.search({
+      index: 'country-service-request',
+      body: {
+        query: {
+          match: {
+            _id: {
+              query: serviceRequest.country,
+            },
+          },
+        },
+      },
+    });
+
+    expect(regionServiceRequest.body.hits.hits.length).toEqual(1);
+    const dataRegionServiceRequest =
+      regionServiceRequest.body.hits.hits[0]._source;
+    expect(dataRegionServiceRequest['service_request']).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          amount: serviceRequestMock.stakingAmount.toString(),
+          category: serviceRequest.serviceCategory,
+          city: serviceRequest.city,
+          region: serviceRequest.region,
+          requester: serviceRequest.requesterAddress,
+          id: serviceRequest.hash,
+        }),
+      ]),
     );
 
     // eslint-disable-next-line
@@ -245,22 +274,17 @@ describe('Event Command Service Request Claimed', () => {
       RequestStatus.Claimed,
     );
 
-    const regionServiceRequest = await elasticsearchService.search({
-      index: 'country-service-request',
-      body: {
-        query: {
-          match: {
-            _id: {
-              query: serviceRequest.country,
-            },
-          },
-        },
-      },
+    // eslint-disable-next-line
+    const deleteLabs: Promise<number> = new Promise((resolve, reject) => {
+      deleteService(api, pair, service.id, () => {
+        deregisterLab(api, pair, () => {
+          queryLabCount(api).then((res) => {
+            resolve(res);
+          });
+        });
+      });
     });
 
-    expect(regionServiceRequest.body.hits.hits.length).toEqual(1);
-    const dataRegionServiceRequest =
-      regionServiceRequest.body.hits.hits[0]._source;
-    expect(dataRegionServiceRequest['service_request']).toEqual([]);
+    expect(await deleteLabs).toEqual(0);
   }, 140000);
 });

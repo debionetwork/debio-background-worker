@@ -37,7 +37,9 @@ export class ServiceRequestStakingAmountIncreasedHandler
       amount: Number(additionalStakingAmount),
       created_at: this.dateTimeProxy.new(),
       currency: 'DBIO',
-      parent_id: loggingServiceRequest.id,
+      parent_id: loggingServiceRequest?.id
+        ? loggingServiceRequest.id
+        : BigInt(0),
       ref_number: requestId,
       transaction_status: 10,
       transaction_type: 2,

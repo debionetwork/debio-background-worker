@@ -72,7 +72,7 @@ describe('Mailer Scheduler (e2e)', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ProcessEnvModule,
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
         ElasticsearchModule.registerAsync({
           inject: [GCloudSecretManagerService],
           useFactory: async (

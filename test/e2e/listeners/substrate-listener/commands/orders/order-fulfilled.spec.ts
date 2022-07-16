@@ -12,14 +12,9 @@ import {
   processDnaSample,
   submitTestResult,
 } from '@debionetwork/polkadot-provider/lib/command/labs/genetic-testing';
-import { deleteService } from '@debionetwork/polkadot-provider/lib/command/labs/services';
 import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
-import {
-  queryServicesByMultipleIds,
-  queryServicesCount,
-} from '@debionetwork/polkadot-provider/lib/query/labs/services';
+import { queryServicesByMultipleIds } from '@debionetwork/polkadot-provider/lib/query/labs/services';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
-import { deregisterLab } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { labDataMock } from '../../../../../mock/models/labs/labs.mock';
 import { Service } from '@debionetwork/polkadot-provider/lib/models/labs/services';
 import {
@@ -35,39 +30,32 @@ import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { LocationEntities } from '../../../../../../src/common/location/models';
 import { dummyCredentials } from '../../../../config';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
   DebioConversionModule,
-  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
 } from '../../../../../../src/common';
-import { LocationModule } from '../../../../../../src/common/location/location.module';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import { OrderCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { OrderFulfilledHandler } from '../../../../../../src/listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
 
 describe('Order Fulfilled Integration Tests', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
-  let lab: Lab;
-  let service: Service;
-  let order: Order;
 
   global.console = {
     ...console,
@@ -101,7 +89,7 @@ describe('Order Fulfilled Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -109,19 +97,10 @@ describe('Order Fulfilled Integration Tests', () => {
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
         ProcessEnvModule,
-        LocationModule,
         TransactionLoggingModule,
         SubstrateModule,
         DebioConversionModule,
-        MailModule,
         CqrsModule,
         DateTimeModule,
         NotificationModule,
@@ -132,7 +111,7 @@ describe('Order Fulfilled Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...OrderCommandHandlers,
+        OrderFulfilledHandler,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -148,8 +127,11 @@ describe('Order Fulfilled Integration Tests', () => {
   }, 360000);
 
   afterAll(async () => {
+    app.flushLogs();
     await api.disconnect();
     await app.close();
+    app = null;
+    api = null;
   });
 
   it('fulfill order event', async () => {
@@ -160,7 +142,7 @@ describe('Order Fulfilled Integration Tests', () => {
       });
     });
 
-    lab = await labPromise;
+    const lab: Lab = await labPromise;
     expect(lab.info).toEqual(labDataMock.info);
 
     // eslint-disable-next-line
@@ -172,7 +154,7 @@ describe('Order Fulfilled Integration Tests', () => {
       });
     });
 
-    service = await servicePromise;
+    const service: Service = await servicePromise;
 
     // eslint-disable-next-line
     const orderPromise: Promise<Order> = new Promise((resolve, reject) => {
@@ -193,7 +175,7 @@ describe('Order Fulfilled Integration Tests', () => {
       );
     });
 
-    order = await orderPromise;
+    const order: Order = await orderPromise;
     expect(order.customerId).toEqual(pair.address);
     expect(order.sellerId).toEqual(pair.address);
     expect(order.serviceId).toEqual(service.id);
@@ -236,32 +218,23 @@ describe('Order Fulfilled Integration Tests', () => {
     const notifications = await dbConnection
       .getRepository(Notification)
       .createQueryBuilder('notification')
-      .where('notification.to = :to', {
-        to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-      })
-      .where('notification.entity = :entity', { entity: 'Order Fulfilled' })
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: order.sellerId,
+          entity: 'Order Fulfilled',
+          role: 'Lab',
+        },
+      )
       .getMany();
 
     expect(notifications.length).toEqual(1);
-    expect(notifications[0].to).toEqual(
-      '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-    );
+    expect(notifications[0].to).toEqual(order.sellerId);
     expect(notifications[0].entity).toEqual('Order Fulfilled');
     expect(
       notifications[0].description.includes("You've received 2e-18 DAI"),
     ).toBeTruthy();
 
-    // eslint-disable-next-line
-    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
-      deleteService(api, pair, service.id, () => {
-        queryServicesCount(api).then((res) => {
-          deregisterLab(api, pair, () => {
-            resolve(res);
-          });
-        });
-      });
-    });
-
-    expect(await deletePromise).toEqual(0);
-  }, 210000);
+    await dbConnection.destroy();
+  }, 200000);
 });

@@ -1,22 +1,18 @@
 import {
   createService,
-  deleteService,
-  deregisterLab,
   Lab,
   queryLabById,
   queryServicesByMultipleIds,
-  queryServicesCount,
   registerLab,
   Service,
+  updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { INestApplication } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   DateTimeModule,
-  DebioConversionModule,
   MailModule,
   NotificationModule,
   ProcessEnvModule,
@@ -25,8 +21,6 @@ import {
 } from '../../../../../../src/common';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { LocationModule } from '../../../../../../src/common/location/location.module';
-import { LocationEntities } from '../../../../../../src/common/location/models';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { ServiceCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/services';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
@@ -42,6 +36,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 
 describe('Service Created Integration Tests', () => {
   let app: INestApplication;
@@ -85,7 +80,7 @@ describe('Service Created Integration Tests', () => {
   beforeAll(async () => {
     const modules: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -93,18 +88,9 @@ describe('Service Created Integration Tests', () => {
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
         ProcessEnvModule,
-        LocationModule,
         TransactionLoggingModule,
         SubstrateModule,
-        DebioConversionModule,
         MailModule,
         CqrsModule,
         DateTimeModule,
@@ -132,17 +118,30 @@ describe('Service Created Integration Tests', () => {
   }, 360000);
 
   afterAll(async () => {
+    app.flushLogs();
     await api.disconnect();
     await app.close();
+    app = null;
+    api = null;
+    lab = null;
+    service = null;
   });
 
   it('service created event', async () => {
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
-        queryLabById(api, pair.address).then((res) => {
-          resolve(res);
-        });
+        updateLabVerificationStatus(
+          api,
+          pair,
+          pair.address,
+          VerificationStatus.Verified,
+          () => {
+            queryLabById(api, pair.address).then((res) => {
+              resolve(res);
+            });
+          },
+        );
       });
     });
 
@@ -180,10 +179,14 @@ describe('Service Created Integration Tests', () => {
     const notifications = await dbConnection
       .getRepository(Notification)
       .createQueryBuilder('notification')
-      .where('notification.to = :to', {
-        to: service.ownerId,
-      })
-      .where('notification.entity = :entity', { entity: 'Add service' })
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: service.ownerId,
+          entity: 'Add service',
+          role: 'Lab',
+        },
+      )
       .getMany();
 
     expect(notifications.length).toEqual(1);
@@ -197,18 +200,5 @@ describe('Service Created Integration Tests', () => {
     expect(
       notifications[0].description.includes(service.info.name),
     ).toBeTruthy();
-
-    // eslint-disable-next-line
-    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
-      deleteService(api, pair, service.id, () => {
-        queryServicesCount(api).then((res) => {
-          deregisterLab(api, pair, () => {
-            resolve(res);
-          });
-        });
-      });
-    });
-
-    expect(await deletePromise).toEqual(0);
-  }, 200000);
+  }, 180000);
 });

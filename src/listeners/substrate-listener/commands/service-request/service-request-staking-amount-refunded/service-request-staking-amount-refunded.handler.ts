@@ -34,6 +34,6 @@ export class ServiceRequestStakingAmountRefundedHandler
       block_number: blockNumber,
     };
 
-    this.notificationService.insert(refundedNotification);
+    await this.notificationService.insert(refundedNotification);
   }
 }

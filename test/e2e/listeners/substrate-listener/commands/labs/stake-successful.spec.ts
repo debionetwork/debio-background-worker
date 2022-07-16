@@ -1,9 +1,6 @@
 import { ApiPromise } from '@polkadot/api';
 import 'regenerator-runtime/runtime';
-import {
-  deregisterLab,
-  stakeLab,
-} from '@debionetwork/polkadot-provider/lib/command/labs';
+import { stakeLab } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
 import { registerLab } from '@debionetwork/polkadot-provider/lib/command/labs';
@@ -20,6 +17,7 @@ import { EscrowService } from '../../../../../../src/common/escrow/escrow.servic
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
+  ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
 } from '../../../../../../src/common';
@@ -49,8 +47,6 @@ describe('lab staking Integration Tests', () => {
     error: jest.fn(),
   };
 
-  const apiKey = 'DEBIO_API_KEY';
-
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([
       ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
@@ -71,7 +67,7 @@ describe('lab staking Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -79,6 +75,7 @@ describe('lab staking Integration Tests', () => {
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         }),
+        ProcessEnvModule,
         TransactionLoggingModule,
         SubstrateModule,
         CqrsModule,
@@ -106,8 +103,12 @@ describe('lab staking Integration Tests', () => {
   }, 360000);
 
   afterAll(async () => {
+    app.flushLogs();
     await api.disconnect();
     await app.close();
+    app = null;
+    api = null;
+    lab = null;
   });
 
   it('lab staking event', async () => {
@@ -146,19 +147,18 @@ describe('lab staking Integration Tests', () => {
     const labLogging = await dbConnection
       .getRepository(TransactionRequest)
       .createQueryBuilder('transaction_logs')
-      .where('transaction_logs.transaction_type = :transaction_type', {
-        transaction_type: 6,
-      })
-      .where('transaction_logs.transaction_status = :transaction_status', {
-        transaction_status: 26,
-      })
+      .where(
+        'transaction_logs.transaction_type = :transaction_type AND transaction_logs.transaction_status = :transaction_status',
+        {
+          transaction_type: 6,
+          transaction_status: 26,
+        },
+      )
       .getMany();
 
     expect(labLogging.length).toBeGreaterThan(0);
     expect(labLogging[0].ref_number).toEqual(lab.accountId);
     expect(labLogging[0].transaction_type).toEqual(6);
     expect(labLogging[0].transaction_status).toEqual(26);
-
-    await deregisterLab(api, pair);
-  }, 210000);
+  }, 180000);
 });

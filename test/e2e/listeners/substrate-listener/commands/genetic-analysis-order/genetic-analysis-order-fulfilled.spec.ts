@@ -14,7 +14,7 @@ import {
   queryGeneticAnalysisOrderById,
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
-  queryGeneticAnalystServicesCount,
+  queryGeneticAnalystServicesCountByOwner,
   queryGeneticDataByOwnerId,
   setGeneticAnalysisOrderFulfilled,
   setGeneticAnalysisOrderPaid,
@@ -22,24 +22,18 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { INestApplication } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiPromise } from '@polkadot/api';
 import {
   DateTimeModule,
-  DebioConversionModule,
   EscrowService,
-  LocationEntities,
-  LocationModule,
-  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
 } from '../../../../../../src/common';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { GeneticAnalysisOrderCommandHandlers } from '../../../../../../src/indexer/events/genetic-analysis-order';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { dummyCredentials } from '../../../../config';
 import { initializeApi } from '../../../../polkadot-init';
@@ -49,18 +43,17 @@ import { geneticAnalystsDataMock } from '../../../../../mock/models/genetic-anal
 import { geneticAnalystServiceDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
 import { createConnection } from 'typeorm';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { GeneticAnalysisOrderFulfilledHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
 
 describe('Genetic Analysis Order Fulfilled Integration Test', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
-  let ga: GeneticAnalyst;
-  let gaService: GeneticAnalystService;
-  let geneticData: GeneticData;
-  let geneticAnalysisOrder: GeneticAnalysisOrder;
-  let geneticAnalysis: GeneticAnalysis;
 
   global.console = {
     ...console,
@@ -94,6 +87,7 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -101,31 +95,12 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         }),
-        TypeOrmModule.forRoot({
-          name: 'dbLocation',
-          ...dummyCredentials,
-          database: 'db_postgres',
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        }),
         ProcessEnvModule,
-        LocationModule,
         TransactionLoggingModule,
         SubstrateModule,
-        DebioConversionModule,
-        MailModule,
         CqrsModule,
         DateTimeModule,
         NotificationModule,
-        ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
-            },
-          }),
-        }),
       ],
       providers: [
         {
@@ -133,7 +108,7 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...GeneticAnalysisOrderCommandHandlers,
+        GeneticAnalysisOrderFulfilledHandler,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -154,6 +129,10 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
   });
 
   it('genetic analysis order fulfilled event', async () => {
+    let ga: GeneticAnalyst;
+    let geneticAnalysisOrder: GeneticAnalysisOrder;
+    let geneticAnalysis: GeneticAnalysis;
+
     const gaPromise: Promise<GeneticAnalyst> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
@@ -164,7 +143,8 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
     );
 
     ga = await gaPromise;
-    expect(ga.normalize().info).toEqual(geneticAnalystsDataMock.info);
+    ga = ga.normalize();
+    expect(ga.info).toEqual(geneticAnalystsDataMock.info);
 
     const gaServicePromise: Promise<GeneticAnalystService> = new Promise(
       // eslint-disable-next-line
@@ -175,7 +155,7 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
       },
     );
 
-    gaService = await gaServicePromise;
+    const gaService: GeneticAnalystService = await gaServicePromise;
     expect(gaService.info).toEqual(
       expect.objectContaining({
         name: geneticAnalystServiceDataMock.info.name,
@@ -193,7 +173,7 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
       },
     );
 
-    geneticData = await geneticDataPromise;
+    const geneticData: GeneticData = await geneticDataPromise;
     expect(geneticData).toEqual(
       expect.objectContaining({
         title: 'string',
@@ -236,6 +216,7 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
     );
 
     const processGeneticAnalysisPromise: Promise<GeneticAnalysis> = new Promise(
+      // eslint-disable-next-line
       (resolve, reject) => {
         processGeneticAnalysis(
           api,
@@ -255,8 +236,10 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
     );
 
     geneticAnalysis = await processGeneticAnalysisPromise;
+    expect(geneticAnalysis.status).toEqual(GeneticAnalysisStatus.InProgress);
 
     const submitGeneticAnalysisPromise: Promise<GeneticAnalysis> = new Promise(
+      // eslint-disable-next-line
       (resolve, reject) => {
         submitGeneticAnalysis(
           api,
@@ -277,8 +260,11 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
     );
 
     geneticAnalysis = await submitGeneticAnalysisPromise;
+    expect(geneticAnalysis.reportLink).toEqual('string');
+    expect(geneticAnalysis.comment).toEqual('string');
 
     const processGeneticAnalysisResultReadyPromise: Promise<GeneticAnalysis> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         processGeneticAnalysis(
           api,
@@ -297,8 +283,10 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
       });
 
     geneticAnalysis = await processGeneticAnalysisResultReadyPromise;
+    expect(geneticAnalysis.status).toEqual(GeneticAnalysisStatus.ResultReady);
 
     const geneticAnalysisOrderFulfilledPromise: Promise<GeneticAnalysisOrder> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         setGeneticAnalysisOrderFulfilled(
           api,
@@ -315,6 +303,7 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
       });
 
     geneticAnalysisOrder = await geneticAnalysisOrderFulfilledPromise;
+    geneticAnalysisOrder = geneticAnalysisOrder.normalize();
     expect(geneticAnalysisOrder.serviceId).toEqual(gaService.id);
     expect(geneticAnalysisOrder.customerId).toEqual(pair.address);
     expect(geneticAnalysisOrder.sellerId).toEqual(pair.address);
@@ -332,10 +321,14 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
     const notifications = await dbConnection
       .getRepository(Notification)
       .createQueryBuilder('notification')
-      .where('notification.to = :to', {
-        to: geneticAnalysisOrder.sellerId,
-      })
-      .where('notification.entity = :entity', { entity: 'Order Fulfilled' })
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: geneticAnalysisOrder.sellerId,
+          entity: 'Order Fulfilled',
+          role: 'GA',
+        },
+      )
       .getMany();
 
     expect(notifications.length).toEqual(1);
@@ -351,16 +344,20 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
     ).toBeTruthy();
 
     // eslint-disable-next-line
-    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
-      deleteGeneticAnalystService(api, pair, gaService.id, () => {
-        queryGeneticAnalystServicesCount(api).then((res) => {
-          deregisterGeneticAnalyst(api, pair, () => {
-            resolve(res);
-          });
+    const deleteGa: Promise<number> = new Promise((resolve, reject) => {
+      queryGeneticAnalystByAccountId(api, pair.address).then((ga) => {
+        deleteGeneticAnalystService(api, pair, ga.services[0], () => {
+          queryGeneticAnalystServicesCountByOwner(api, pair.address).then(
+            (res) => {
+              deregisterGeneticAnalyst(api, pair, () => {
+                resolve(res);
+              });
+            },
+          );
         });
       });
     });
 
-    expect(await deletePromise).toEqual(0);
+    expect(await deleteGa).toEqual(0);
   }, 180000);
 });

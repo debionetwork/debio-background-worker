@@ -37,7 +37,7 @@ export class NotificationService {
     notification.deleted_at = data.deleted_at;
     notification.from = data.from;
     notification.to = data.to;
-    notification.block_number = data.block_number
+    notification.block_number = data.block_number;
 
     return this.notificationRepository.save(notification);
   }

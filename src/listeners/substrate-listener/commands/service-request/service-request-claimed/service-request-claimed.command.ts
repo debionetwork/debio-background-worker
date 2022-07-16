@@ -1,10 +1,10 @@
 import { BlockMetaData } from '../../../models/block-metadata.event-model';
-import { ServiceRequest } from '@debionetwork/polkadot-provider';
+import { ClaimRequestModel } from '../../../../../indexer/models/service-request/claim-request';
 
 export class ServiceRequestClaimedCommand {
-  request: ServiceRequest;
+  request: ClaimRequestModel;
   constructor(args: Array<any>, public readonly blockMetadata: BlockMetaData) {
     const requestData = args[1];
-    this.request = new ServiceRequest(requestData.toHuman());
+    this.request = new ClaimRequestModel(requestData.toHuman());
   }
 }

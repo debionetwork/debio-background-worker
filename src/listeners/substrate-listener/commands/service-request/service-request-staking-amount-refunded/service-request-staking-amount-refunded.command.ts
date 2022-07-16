@@ -5,8 +5,8 @@ export class ServiceRequestStakingAmountRefundedCommand {
   public requestId: string;
   public stakingAmount: string;
   constructor(args: Array<any>, public readonly blockMetaData: BlockMetaData) {
-    this.requesterId = args[0];
-    this.requestId = args[1];
-    this.stakingAmount = args[2];
+    this.requesterId = args[0].toString();
+    this.requestId = args[1].toString();
+    this.stakingAmount = args[2].toString();
   }
 }

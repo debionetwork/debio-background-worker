@@ -25,7 +25,7 @@ export class ServiceRequestStakingAmountExcessRefunded
   ) {}
 
   async execute(command: ServiceRequestStakingAmountExcessRefundedCommand) {
-    await this.logger.log('Service Request Staking Amount Excess Refunded!');
+    this.logger.log('Service Request Staking Amount Excess Refunded!');
     const { requesterId, requestId, additionalStakingAmount } = command;
     const blockNumber = command.blockMetadata.blockNumber.toString();
     const loggingServiceRequest = await this.loggingService.getLoggingByOrderId(
@@ -37,7 +37,9 @@ export class ServiceRequestStakingAmountExcessRefunded
       amount: Number(additionalStakingAmount),
       created_at: this.dateTimeProxy.new(),
       currency: 'DBIO',
-      parent_id: loggingServiceRequest.id,
+      parent_id: loggingServiceRequest?.id
+        ? loggingServiceRequest.id
+        : BigInt(0),
       ref_number: requestId.toString(),
       transaction_status: 9,
       transaction_type: 2,
@@ -54,7 +56,7 @@ export class ServiceRequestStakingAmountExcessRefunded
         const notificationInput: NotificationDto = {
           role: 'Customer',
           entity_type: 'ServiceRequest',
-          entity: 'ServiceRequestStakingAmountExessRefunded',
+          entity: 'Service Request Staking Amount Exess Refunded',
           description: `Your over payment staking service request with ID ${requestId} has been refunded.`,
           read: false,
           created_at: currDateTime,
@@ -68,7 +70,7 @@ export class ServiceRequestStakingAmountExcessRefunded
         await this.notificationService.insert(notificationInput);
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

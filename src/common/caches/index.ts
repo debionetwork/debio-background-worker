@@ -1,9 +1,7 @@
 import { CacheModule, Module } from '@nestjs/common';
 import { CachesService } from './caches.service';
 import * as redisStore from 'cache-manager-redis-store';
-import {
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 require('dotenv').config(); // eslint-disable-line
 
