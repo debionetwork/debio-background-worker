@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'notification' })
+@Entity({ name: 'error_logging' })
 export class ErrorLogging {
   @PrimaryGeneratedColumn()
   id: number;
