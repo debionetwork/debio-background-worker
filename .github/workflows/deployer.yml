@@ -70,6 +70,7 @@ jobs:
             ELASTICSEARCH_NODE:${{ secrets.DEV_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_PASSWORD:${{ secrets.DEV_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             ELASTICSEARCH_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
+            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.DEV_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             MINIMAL_STARTING_BLOCK:${{ secrets.DEV_GCP_PROJECT_ID }}/MINIMAL_STARTING_BLOCK
             REQUEST_SERVICE_CONTRACT_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/REQUEST_SERVICE_CONTRACT_ADDRESS
             SUBSTRATE_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/SUBSTRATE_URL
@@ -96,7 +97,8 @@ jobs:
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
-              --set-string config.google.parent=projects/debio-network-development \
+              --set-string config.google.serviceAccountBase64= ${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.google.parent=projects/${{ secrets.DEV_GCP_PROJECT_ID }} \
               --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
@@ -154,6 +156,7 @@ jobs:
             ELASTICSEARCH_NODE:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             ELASTICSEARCH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
+            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             MINIMAL_STARTING_BLOCK:${{ secrets.TESTNET_GCP_PROJECT_ID }}/MINIMAL_STARTING_BLOCK
             REQUEST_SERVICE_CONTRACT_ADDRESS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REQUEST_SERVICE_CONTRACT_ADDRESS
             SUBSTRATE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SUBSTRATE_URL
@@ -180,7 +183,8 @@ jobs:
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
-              --set-string config.google.parent=projects/debio-network-testnet \
+              --set-string config.google.serviceAccountBase64= ${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.google.parent=projects/${{ secrets.TESTNET_GCP_PROJECT_ID }} \
               --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
@@ -238,6 +242,7 @@ jobs:
             ELASTICSEARCH_NODE:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             ELASTICSEARCH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
+            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             MINIMAL_STARTING_BLOCK:${{ secrets.MAINNET_GCP_PROJECT_ID }}/MINIMAL_STARTING_BLOCK
             REQUEST_SERVICE_CONTRACT_ADDRESS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REQUEST_SERVICE_CONTRACT_ADDRESS
             SUBSTRATE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SUBSTRATE_URL
@@ -264,7 +269,8 @@ jobs:
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
-              --set-string config.google.parent=projects/debio-network \
+              --set-string config.google.serviceAccountBase64= ${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.google.parent=projects/${{ secrets.MAINNET_GCP_PROJECT_ID }} \
               --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
@@ -322,6 +328,7 @@ jobs:
             ELASTICSEARCH_NODE:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             ELASTICSEARCH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
+            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             MINIMAL_STARTING_BLOCK:${{ secrets.MAINNET_GCP_PROJECT_ID }}/MINIMAL_STARTING_BLOCK
             REQUEST_SERVICE_CONTRACT_ADDRESS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REQUEST_SERVICE_CONTRACT_ADDRESS
             SUBSTRATE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SUBSTRATE_URL
@@ -348,7 +355,8 @@ jobs:
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
-              --set-string config.google.parent=projects/debio-network \
+              --set-string config.google.serviceAccountBase64= ${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.google.parent=projects/${{ secrets.MAINNET_GCP_PROJECT_ID }} \
               --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
