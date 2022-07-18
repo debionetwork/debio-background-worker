@@ -90,7 +90,7 @@ jobs:
             ./connect.sh
             helm repo add debio https://charts.debio.network
             helm repo update
-            helm upgrade debio-indexer debio/debio-indexer \
+            helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
@@ -109,7 +109,7 @@ jobs:
               --set autoscaling.minReplicas=1 \
               --set autoscaling.maxReplicas=1 \
               --set-string nodeSelector.pool=general
-            kubectl rollout status deployment/debio-indexer
+            kubectl rollout status deployment/debio-background-worker
       - name: Sleuth webhook
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash
@@ -173,7 +173,7 @@ jobs:
             ./connect.sh
             helm repo add debio https://charts.debio.network
             helm repo update
-            helm upgrade debio-indexer debio/debio-indexer \
+            helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
@@ -192,7 +192,7 @@ jobs:
               --set autoscaling.minReplicas=1 \
               --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
-            kubectl rollout status deployment/debio-indexer
+            kubectl rollout status deployment/debio-background-worker
       - name: Sleuth webhook
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash
@@ -256,7 +256,7 @@ jobs:
             ./connect.sh
             helm repo add debio https://charts.debio.network
             helm repo update
-            helm upgrade debio-indexer debio/debio-indexer \
+            helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
@@ -275,7 +275,7 @@ jobs:
               --set autoscaling.minReplicas=1 \
               --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
-            kubectl rollout status deployment/debio-indexer
+            kubectl rollout status deployment/debio-background-worker
       - name: Sleuth webhook
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash
@@ -339,7 +339,7 @@ jobs:
             ./connect.sh
             helm repo add debio https://charts.debio.network
             helm repo update
-            helm upgrade debio-indexer debio/debio-indexer \
+            helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
@@ -358,7 +358,7 @@ jobs:
               --set autoscaling.minReplicas=1 \
               --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
-            kubectl rollout status deployment/debio-indexer
+            kubectl rollout status deployment/debio-background-worker
       - name: Sleuth webhook
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash

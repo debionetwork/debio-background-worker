@@ -2,8 +2,8 @@ version: '3'
 
 services:
   web:
-    container_name: debio-indexer
-    image: debionetwork/debio-indexer
+    container_name: debio-background-worker
+    image: debionetwork/debio-background-worker
     build:
       context: ../../
       dockerfile: .maintain/docker/Dockerfile
@@ -18,7 +18,7 @@ services:
       debio:
         ipv4_address: 172.27.1.3
         aliases:
-          - debio-indexer
+          - debio-background-worker
 
 networks:
   debio:
