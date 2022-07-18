@@ -6,7 +6,7 @@
   "homepage": "https://debio.network",
   "repository": {
     "type": "git",
-    "url": "https://github.com/debionetwork/debio-indexer"
+    "url": "https://github.com/debionetwork/debio-background-worker"
   },
   "private": true,
   "license": "UNLICENSED",

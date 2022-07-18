@@ -90,12 +90,13 @@ jobs:
             ./connect.sh
             helm repo add debio https://charts.debio.network
             helm repo update
-            helm upgrade debio-indexer debio/debio-indexer \
+            helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
+              --set-string config.google.parent=projects/${{ secrets.DEV_GCP_PROJECT_ID }} \
               --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
@@ -109,7 +110,7 @@ jobs:
               --set autoscaling.minReplicas=1 \
               --set autoscaling.maxReplicas=1 \
               --set-string nodeSelector.pool=general
-            kubectl rollout status deployment/debio-indexer
+            kubectl rollout status deployment/debio-background-worker
       - name: Sleuth webhook
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash
@@ -173,12 +174,13 @@ jobs:
             ./connect.sh
             helm repo add debio https://charts.debio.network
             helm repo update
-            helm upgrade debio-indexer debio/debio-indexer \
+            helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
+              --set-string config.google.parent=projects/${{ secrets.TESTNET_GCP_PROJECT_ID }} \
               --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
@@ -192,7 +194,7 @@ jobs:
               --set autoscaling.minReplicas=1 \
               --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
-            kubectl rollout status deployment/debio-indexer
+            kubectl rollout status deployment/debio-background-worker
       - name: Sleuth webhook
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash
@@ -256,12 +258,13 @@ jobs:
             ./connect.sh
             helm repo add debio https://charts.debio.network
             helm repo update
-            helm upgrade debio-indexer debio/debio-indexer \
+            helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
+              --set-string config.google.parent=projects/${{ secrets.MAINNET_GCP_PROJECT_ID }} \
               --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
@@ -275,7 +278,7 @@ jobs:
               --set autoscaling.minReplicas=1 \
               --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
-            kubectl rollout status deployment/debio-indexer
+            kubectl rollout status deployment/debio-background-worker
       - name: Sleuth webhook
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash
@@ -339,12 +342,13 @@ jobs:
             ./connect.sh
             helm repo add debio https://charts.debio.network
             helm repo update
-            helm upgrade debio-indexer debio/debio-indexer \
+            helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
+              --set-string config.google.parent=projects/${{ secrets.MAINNET_GCP_PROJECT_ID }} \
               --set-string config.minimalStartingBlock=${{ steps.secrets.outputs.MINIMAL_STARTING_BLOCK }} \
               --set-string config.requestServiceContractAddress=${{ steps.secrets.outputs.REQUEST_SERVICE_CONTRACT_ADDRESS }} \
               --set-string config.substrateUrl=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
@@ -358,7 +362,7 @@ jobs:
               --set autoscaling.minReplicas=1 \
               --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
-            kubectl rollout status deployment/debio-indexer
+            kubectl rollout status deployment/debio-background-worker
       - name: Sleuth webhook
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash

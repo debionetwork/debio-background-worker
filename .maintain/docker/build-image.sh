@@ -8,7 +8,7 @@ pushd .
 PROJECT_ROOT=`git rev-parse --show-toplevel`
 cd $PROJECT_ROOT
 
-IMAGE_NAME=debionetwork/debio-indexer
+IMAGE_NAME=debionetwork/debio-background-worker
 
 # Build the image
 echo "Building ${IMAGE_NAME}:latest docker image, hang on!"
