@@ -67,6 +67,7 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            POSTGRES_HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_HOST
             POSTGRES_DB:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_DB
             POSTGRES_DB_LOCATIONS:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
             ELASTICSEARCH_NODE:${{ secrets.DEV_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
@@ -96,6 +97,7 @@ jobs:
             helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }} \
+              --set-string config.postgres.dbHost=${{ steps.secrets.outputs.POSTGRES_HOST }} \
               --set-string config.postgres.dbName=${{ steps.secrets.outputs.POSTGRES_DB }} \
               --set-string config.postgres.dbLocationName=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
@@ -157,6 +159,7 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            POSTGRES_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_HOST
             POSTGRES_DB:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB
             POSTGRES_DB_LOCATIONS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
             ELASTICSEARCH_NODE:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
@@ -186,6 +189,7 @@ jobs:
             helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.postgres.dbHost=${{ steps.secrets.outputs.POSTGRES_HOST }} \
               --set-string config.postgres.dbName=${{ steps.secrets.outputs.POSTGRES_DB }} \
               --set-string config.postgres.dbLocationName=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
@@ -247,6 +251,7 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            POSTGRES_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/POSTGRES_HOST
             POSTGRES_DB:${{ secrets.MAINNET_GCP_PROJECT_ID }}/POSTGRES_DB
             POSTGRES_DB_LOCATIONS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
             ELASTICSEARCH_NODE:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
@@ -276,6 +281,7 @@ jobs:
             helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.postgres.dbHost=${{ steps.secrets.outputs.POSTGRES_HOST }} \
               --set-string config.postgres.dbName=${{ steps.secrets.outputs.POSTGRES_DB }} \
               --set-string config.postgres.dbLocationName=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
@@ -337,6 +343,7 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            POSTGRES_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/POSTGRES_HOST
             POSTGRES_DB:${{ secrets.MAINNET_GCP_PROJECT_ID }}/POSTGRES_DB
             POSTGRES_DB_LOCATIONS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
             ELASTICSEARCH_NODE:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
@@ -366,6 +373,7 @@ jobs:
             helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.postgres.dbHost=${{ steps.secrets.outputs.POSTGRES_HOST }} \
               --set-string config.postgres.dbName=${{ steps.secrets.outputs.POSTGRES_DB }} \
               --set-string config.postgres.dbLocationName=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
