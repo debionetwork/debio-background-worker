@@ -37,7 +37,7 @@ require('dotenv').config();
           password: gCloudSecretManagerService
             .getSecret('POSTGRES_PASSWORD')
             .toString(),
-          database: process.env.DB_POSTGRES,
+          database: process.env.DB_POSTGRES ?? 'debio_escrow_dev',
           entities: [EscrowAccounts],
           autoLoadEntities: true,
         };
@@ -61,7 +61,7 @@ require('dotenv').config();
           password: gCloudSecretManagerService
             .getSecret('POSTGRES_PASSWORD')
             .toString(),
-          database: process.env.DB_LOCATIONS,
+          database: process.env.DB_LOCATIONS ?? 'debio_locations',
           entities: [...LocationEntities],
           autoLoadEntities: true,
         };
