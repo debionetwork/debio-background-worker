@@ -67,6 +67,8 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            POSTGRES_DB:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_DB
+            POSTGRES_DB_LOCATIONS:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
             ELASTICSEARCH_NODE:${{ secrets.DEV_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_PASSWORD:${{ secrets.DEV_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             ELASTICSEARCH_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
@@ -94,6 +96,8 @@ jobs:
             helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }} \
+              --set-string config.postgres.dbName=${{ steps.secrets.outputs.POSTGRES_DB }} \
+              --set-string config.postgres.dbLocationName=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
@@ -153,6 +157,8 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            POSTGRES_DB:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB
+            POSTGRES_DB_LOCATIONS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
             ELASTICSEARCH_NODE:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             ELASTICSEARCH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
@@ -180,6 +186,8 @@ jobs:
             helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.postgres.dbName=${{ steps.secrets.outputs.POSTGRES_DB }} \
+              --set-string config.postgres.dbLocationName=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
@@ -239,6 +247,8 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            POSTGRES_DB:${{ secrets.MAINNET_GCP_PROJECT_ID }}/POSTGRES_DB
+            POSTGRES_DB_LOCATIONS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
             ELASTICSEARCH_NODE:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             ELASTICSEARCH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
@@ -266,6 +276,8 @@ jobs:
             helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.postgres.dbName=${{ steps.secrets.outputs.POSTGRES_DB }} \
+              --set-string config.postgres.dbLocationName=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
@@ -325,6 +337,8 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
+            POSTGRES_DB:${{ secrets.MAINNET_GCP_PROJECT_ID }}/POSTGRES_DB
+            POSTGRES_DB_LOCATIONS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
             ELASTICSEARCH_NODE:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             ELASTICSEARCH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
@@ -352,6 +366,8 @@ jobs:
             helm upgrade debio-background-worker debio/debio-background-worker \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.postgres.dbName=${{ steps.secrets.outputs.POSTGRES_DB }} \
+              --set-string config.postgres.dbLocationName=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.elasticSearch.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elasticSearch.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.elasticSearch.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
