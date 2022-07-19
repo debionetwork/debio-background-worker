@@ -3,7 +3,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import {
   ProcessEnvModule,
-  ProcessEnvProxy,
   SubstrateModule,
   SubstrateService,
 } from '../../../src/common';
@@ -24,7 +23,7 @@ describe('Unstaked Scheduler (e2e)', () => {
   let schedulerRegistry: SchedulerRegistry;
   let unstakedService: UnstakedService;
   let substrateService: SubstrateService;
-  let processEnvProxy: ProcessEnvProxy;
+  let gCloudSecretManagerService: GCloudSecretManagerService;
   let elasticsearchService: ElasticsearchService;
 
   let app: INestApplication;
@@ -35,6 +34,8 @@ describe('Unstaked Scheduler (e2e)', () => {
       ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
       ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['UNSTAKE_TIMER', process.env.UNSTAKE_TIMER],
+      ['UNSTAKE_INTERVAL', process.env.UNSTAKE_INTERVAL],
     ]);
     loadSecrets() {
       return null;
@@ -85,11 +86,11 @@ describe('Unstaked Scheduler (e2e)', () => {
 
     schedulerRegistry = module.get(SchedulerRegistry);
     substrateService = module.get(SubstrateService);
-    processEnvProxy = module.get(ProcessEnvProxy);
+    gCloudSecretManagerService = module.get(GCloudSecretManagerService);
     elasticsearchService = module.get(ElasticsearchService);
 
     unstakedService = new UnstakedService(
-      processEnvProxy,
+      gCloudSecretManagerService,
       elasticsearchService,
       substrateService,
       schedulerRegistry,
