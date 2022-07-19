@@ -23,7 +23,10 @@ import { LabCommandHandlers } from './commands/labs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-services';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
@@ -38,6 +41,7 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
     DateTimeModule,
     NotificationModule,
     ElasticsearchModule.registerAsync({
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,
@@ -59,18 +63,18 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
     }),
   ],
   providers: [
-    SubstrateListenerHandler,
-    ...ServiceCommandHandlers,
-    ...GeneticTestingCommandHandlers,
-    ...ServiceRequestCommandHandlers,
-    ...OrderCommandHandlers,
-    ...GeneticAnalysisOrderCommandHandlers,
-    ...GeneticAnalysisCommandHandlers,
-    ...GeneticAnalystCommandHandlers,
-    ...LabCommandHandlers,
-    ...BlockCommandHandlers,
-    ...BlockQueryHandlers,
-    ...GeneticAnalystServiceCommandHandler,
+    // SubstrateListenerHandler,
+    // ...ServiceCommandHandlers,
+    // ...GeneticTestingCommandHandlers,
+    // ...ServiceRequestCommandHandlers,
+    // ...OrderCommandHandlers,
+    // ...GeneticAnalysisOrderCommandHandlers,
+    // ...GeneticAnalysisCommandHandlers,
+    // ...GeneticAnalystCommandHandlers,
+    // ...LabCommandHandlers,
+    // ...BlockCommandHandlers,
+    // ...BlockQueryHandlers,
+    // ...GeneticAnalystServiceCommandHandler,
   ],
 })
 export class SubstrateListenerModule {}

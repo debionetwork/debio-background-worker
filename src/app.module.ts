@@ -51,6 +51,7 @@ require('dotenv').config();
       },
     }),
     TypeOrmModule.forRootAsync({
+      name: 'dbLocation',
       imports: [
         ProcessEnvModule.setDefault({
           PARENT: 'PARENT',

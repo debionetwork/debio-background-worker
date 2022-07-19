@@ -1032,10 +1032,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@debionetwork/nestjs-gcloud-secret-manager@^0.0.2-beta.2":
-  "integrity" "sha512-PiDymQXhsofnGNjs8bLGynzhLGgxfqG5C+0IY5cgfT3vJk+RrFnqtpz5ERZNTsTWGM8Xz+XUY/sPA/+tzJKWYQ=="
-  "resolved" "https://registry.npmjs.org/@debionetwork/nestjs-gcloud-secret-manager/-/nestjs-gcloud-secret-manager-0.0.2-beta.2.tgz"
-  "version" "0.0.2-beta.2"
+"@debionetwork/nestjs-gcloud-secret-manager@^0.0.2-beta.4":
+  "integrity" "sha512-RYOFSOd7ko6RYJvOYqTaJsYsx5NzCJwF5P5gh1pVFHF6zt8MWz4Kyfhf3MXjy8Q2hzObudP8nPnpm5YNGgeL+w=="
+  "resolved" "https://registry.npmjs.org/@debionetwork/nestjs-gcloud-secret-manager/-/nestjs-gcloud-secret-manager-0.0.2-beta.4.tgz"
+  "version" "0.0.2-beta.4"
   dependencies:
     "@google-cloud/secret-manager" "^4.0.0"
 
