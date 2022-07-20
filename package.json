@@ -1,15 +1,14 @@
 {
   "name": "debio-background-worker",
-  "version": "2.0.0",
-  "description": "AGPL-3.0",
+  "version": "2.1.4",
+  "private": true,
+  "license": "AGPL-3.0",
   "author": "DeBio Dev Team <debio_dev@blocksphere.id>",
   "homepage": "https://debio.network",
   "repository": {
     "type": "git",
-    "url": "https://github.com/debionetwork/debio-background-worker"
+    "url": "https://github.com/debionetwork/debio-background-worker.git"
   },
-  "private": true,
-  "license": "UNLICENSED",
   "scripts": {
     "install:hooks": ".maintain/install-hooks.sh",
     "prebuild": "rimraf dist",
