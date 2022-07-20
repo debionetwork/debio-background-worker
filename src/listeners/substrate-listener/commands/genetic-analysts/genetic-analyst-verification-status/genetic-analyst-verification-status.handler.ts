@@ -44,7 +44,8 @@ export class GeneticAnalystVerificationStatusHandler
       if (geneticAnalyst.verificationStatus === 'Unverified') {
         transactionStatus = 19;
         entity = 'Account unverified';
-        notificationDescription = 'Your account verification has been rejected.';
+        notificationDescription =
+          'Your account verification has been rejected.';
       }
       if (geneticAnalyst.verificationStatus === 'Verified') {
         transactionStatus = 20;
