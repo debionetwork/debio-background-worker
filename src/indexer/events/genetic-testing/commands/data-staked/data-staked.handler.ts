@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { DataStakedCommand } from './data-staked.command';
+import { DataStakedCommandIndexer } from './data-staked.command';
 
 @Injectable()
-@CommandHandler(DataStakedCommand)
-export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
+@CommandHandler(DataStakedCommandIndexer)
+export class DataStakedHandler
+  implements ICommandHandler<DataStakedCommandIndexer>
+{
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: DataStakedCommand) {
+  async execute(command: DataStakedCommandIndexer) {
     await this.elasticsearchService.update({
       index: 'orders',
       id: command.dataStaked.orderId,

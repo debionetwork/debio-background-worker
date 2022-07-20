@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CertificationDeletedCommand } from './certification-deleted.command';
+import { CertificationDeletedCommandIndexer } from './certification-deleted.command';
 
 @Injectable()
-@CommandHandler(CertificationDeletedCommand)
+@CommandHandler(CertificationDeletedCommandIndexer)
 export class CertificationDeletedHandler
-  implements ICommandHandler<CertificationDeletedCommand>
+  implements ICommandHandler<CertificationDeletedCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: CertificationDeletedCommand) {
+  async execute(command: CertificationDeletedCommandIndexer) {
     const { certification } = command;
 
     await this.elasticsearchService.delete({

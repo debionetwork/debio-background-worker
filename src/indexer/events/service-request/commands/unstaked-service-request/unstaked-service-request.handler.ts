@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { RequestStatus } from '../../../../models/service-request/request-status';
-import { UnstakedServiceRequestCommand } from './unstaked-service-request.command';
+import { UnstakedServiceRequestCommandIndexer } from './unstaked-service-request.command';
 
 @Injectable()
-@CommandHandler(UnstakedServiceRequestCommand)
+@CommandHandler(UnstakedServiceRequestCommandIndexer)
 export class UnstakedServiceRequestHandler
-  implements ICommandHandler<UnstakedServiceRequestCommand>
+  implements ICommandHandler<UnstakedServiceRequestCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: UnstakedServiceRequestCommand) {
+  async execute(command: UnstakedServiceRequestCommandIndexer) {
     await this.elasticsearchService.update({
       index: 'create-service-request',
       id: command.request.hash,

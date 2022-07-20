@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LabRetrieveUnstakeAmountCommand } from './lab-retrieve-unstake-amount.command';
+import { LabRetrieveUnstakeAmountCommandIndexer } from './lab-retrieve-unstake-amount.command';
 
 @Injectable()
-@CommandHandler(LabRetrieveUnstakeAmountCommand)
+@CommandHandler(LabRetrieveUnstakeAmountCommandIndexer)
 export class LabRetrieveUnstakeAmountHandler
-  implements ICommandHandler<LabRetrieveUnstakeAmountCommand>
+  implements ICommandHandler<LabRetrieveUnstakeAmountCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: LabRetrieveUnstakeAmountCommand) {
+  async execute(command: LabRetrieveUnstakeAmountCommandIndexer) {
     const { labs: lab } = command;
     await this.elasticsearchService.update({
       index: 'labs',

@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ServiceCreatedCommand } from './service-created.command';
+import { ServiceCreatedCommandIndexer } from './service-created.command';
 
 @Injectable()
-@CommandHandler(ServiceCreatedCommand)
+@CommandHandler(ServiceCreatedCommandIndexer)
 export class ServiceCreatedHandler
-  implements ICommandHandler<ServiceCreatedCommand>
+  implements ICommandHandler<ServiceCreatedCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: ServiceCreatedCommand) {
+  async execute(command: ServiceCreatedCommandIndexer) {
     const { services: service } = command;
 
     const ownerId = service.ownerId.toString();

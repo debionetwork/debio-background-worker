@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { RequestStatus } from '../../../../models/service-request/request-status';
-import { FinalizedServiceRequestCommand } from './finalized-service-request.command';
+import { FinalizedServiceRequestCommandIndexer } from './finalized-service-request.command';
 
 @Injectable()
-@CommandHandler(FinalizedServiceRequestCommand)
+@CommandHandler(FinalizedServiceRequestCommandIndexer)
 export class FinalizedServiceRequestHandler
-  implements ICommandHandler<FinalizedServiceRequestCommand>
+  implements ICommandHandler<FinalizedServiceRequestCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: FinalizedServiceRequestCommand) {
+  async execute(command: FinalizedServiceRequestCommandIndexer) {
     await this.elasticsearchService.update({
       index: 'create-service-request',
       id: command.serviceInvoice.requestHash,

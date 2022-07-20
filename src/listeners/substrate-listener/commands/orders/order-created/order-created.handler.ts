@@ -24,10 +24,9 @@ export class OrderCreatedHandler
   ) {}
 
   async execute(command: OrderCreatedCommand) {
-    const order: Order = command.orders;
+    const order: Order = command.orders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    order.normalize();
-    await this.logger.log(`OrderCreated With Order ID: ${order.id}!`);
+    this.logger.log(`OrderCreated With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
@@ -68,7 +67,7 @@ export class OrderCreatedHandler
         await this.notificationService.insert(notificationInput);
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

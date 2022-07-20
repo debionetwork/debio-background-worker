@@ -6,9 +6,9 @@ import {
 } from '../../../mock';
 import {
   GeneticAnalystQualificationsCommandHandlers,
-  GeneticAnalystsQualificationCreatedCommand,
-  GeneticAnalystsQualificationDeletedCommand,
-  GeneticAnalystsQualificationUpdatedCommand,
+  GeneticAnalystsQualificationCreatedCommandIndexer,
+  GeneticAnalystsQualificationDeletedCommandIndexer,
+  GeneticAnalystsQualificationUpdatedCommandIndexer,
 } from '../../../../../src/indexer/events/genetic-analyst-qualifications';
 import { GeneticAnalystsQualificationCreatedHandler } from '../../../../../src/indexer/events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-created/genetic-analysts-qualification-created.handler';
 import { GeneticAnalystsQualificationDeletedHandler } from '../../../../../src/indexer/events/genetic-analyst-qualifications/commands/genetic-analysts-qualification-deleted/genetic-analysts-qualification-deleted.handler';
@@ -70,8 +70,8 @@ describe('Genetic Anlaysts Qualificatioins Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_QUALIFICATIONS_PARAM =
         createMockGeneticAnalystsQualifications();
 
-      const geneticAnalystsQualificationCreatedCommand: GeneticAnalystsQualificationCreatedCommand =
-        new GeneticAnalystsQualificationCreatedCommand(
+      const geneticAnalystsQualificationCreatedCommand: GeneticAnalystsQualificationCreatedCommandIndexer =
+        new GeneticAnalystsQualificationCreatedCommandIndexer(
           [GENETIC_ANALYSTS_QUALIFICATIONS_PARAM],
           mockBlockNumber(),
         );
@@ -111,8 +111,8 @@ describe('Genetic Anlaysts Qualificatioins Substrate Event Handler', () => {
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
 
-      const geneticAnalystsQualificationDeletedCommand: GeneticAnalystsQualificationDeletedCommand =
-        new GeneticAnalystsQualificationDeletedCommand(
+      const geneticAnalystsQualificationDeletedCommand: GeneticAnalystsQualificationDeletedCommandIndexer =
+        new GeneticAnalystsQualificationDeletedCommandIndexer(
           [GENETIC_ANALYSTS_QUALIFICATIONS_PARAM],
           mockBlockNumber(),
         );
@@ -154,8 +154,8 @@ describe('Genetic Anlaysts Qualificatioins Substrate Event Handler', () => {
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
 
-      const geneticAnalystsQualificationUpdatedCommand: GeneticAnalystsQualificationUpdatedCommand =
-        new GeneticAnalystsQualificationUpdatedCommand(
+      const geneticAnalystsQualificationUpdatedCommand: GeneticAnalystsQualificationUpdatedCommandIndexer =
+        new GeneticAnalystsQualificationUpdatedCommandIndexer(
           [GENETIC_ANALYSTS_QUALIFICATIONS_PARAM],
           mockBlockNumber(),
         );

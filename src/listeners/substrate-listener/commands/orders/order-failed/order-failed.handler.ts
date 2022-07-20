@@ -30,10 +30,9 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   ) {}
 
   async execute(command: OrderFailedCommand) {
-    const order: Order = command.orders;
-    order.normalize();
+    const order: Order = command.orders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(`OrderFailed With Order ID: ${order.id}!`);
+    this.logger.log(`OrderFailed With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =

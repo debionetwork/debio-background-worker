@@ -1,11 +1,11 @@
 import {
-  GeneticAnalysisOrderCancelledCommand,
-  GeneticAnalysisOrderCreatedCommand,
-  GeneticAnalysisOrderFulfilledCommand,
-  GeneticAnalysisOrderPaidCommand,
-  GeneticAnalysisOrderRefundedCommand,
+  GeneticAnalysisOrderCancelledCommandIndexer,
+  GeneticAnalysisOrderCreatedCommandIndexer,
+  GeneticAnalysisOrderFulfilledCommandIndexer,
+  GeneticAnalysisOrderPaidCommandIndexer,
+  GeneticAnalysisOrderRefundedCommandIndexer,
 } from '../../../../../src/indexer/events/genetic-analysis-order';
-import { GeneticAnalysisOrderFailedCommand } from '../../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-failed/genetic-analysis-order-failed.command';
+import { GeneticAnalysisOrderFailedCommandIndexer } from '../../../../../src/indexer/events/genetic-analysis-order/commands/genetic-analysis-order-failed/genetic-analysis-order-failed.command';
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { GeneticAnalysisOrderModel } from '../../../../../src/indexer/models/genetic-analysis-order/genetic-analysis-order.model';
 
@@ -54,8 +54,8 @@ describe('Orders Substrate Event Handler', () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
       /* eslint-disable */
-      const _geneticAnalysisOrderCreatedCommand: GeneticAnalysisOrderCreatedCommand =
-        new GeneticAnalysisOrderCreatedCommand(
+      const _geneticAnalysisOrderCreatedCommand: GeneticAnalysisOrderCreatedCommandIndexer =
+        new GeneticAnalysisOrderCreatedCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -70,8 +70,11 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _geneticAnalysisOrderCreatedCommand: GeneticAnalysisOrderCreatedCommand =
-          new GeneticAnalysisOrderCreatedCommand([{}], mockBlockNumber());
+        const _geneticAnalysisOrderCreatedCommand: GeneticAnalysisOrderCreatedCommandIndexer =
+          new GeneticAnalysisOrderCreatedCommandIndexer(
+            [{}],
+            mockBlockNumber(),
+          );
         /* eslint-enable */
       }).toThrowError();
     });
@@ -82,8 +85,8 @@ describe('Orders Substrate Event Handler', () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
       /* eslint-disable */
-      const _geneticAnalysisOrderCancelledCommand: GeneticAnalysisOrderCancelledCommand =
-        new GeneticAnalysisOrderCancelledCommand(
+      const _geneticAnalysisOrderCancelledCommand: GeneticAnalysisOrderCancelledCommandIndexer =
+        new GeneticAnalysisOrderCancelledCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -98,8 +101,11 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _geneticAnalysisOrderCancelledCommand: GeneticAnalysisOrderCancelledCommand =
-          new GeneticAnalysisOrderCancelledCommand([{}], mockBlockNumber());
+        const _geneticAnalysisOrderCancelledCommand: GeneticAnalysisOrderCancelledCommandIndexer =
+          new GeneticAnalysisOrderCancelledCommandIndexer(
+            [{}],
+            mockBlockNumber(),
+          );
         /* eslint-enable */
       }).toThrowError();
     });
@@ -110,8 +116,8 @@ describe('Orders Substrate Event Handler', () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
       /* eslint-disable */
-      const _geneticAnalysisOrderFailedCommand: GeneticAnalysisOrderFailedCommand =
-        new GeneticAnalysisOrderFailedCommand(
+      const _geneticAnalysisOrderFailedCommand: GeneticAnalysisOrderFailedCommandIndexer =
+        new GeneticAnalysisOrderFailedCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -126,8 +132,8 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _geneticAnalysisOrderFailedCommand: GeneticAnalysisOrderFailedCommand =
-          new GeneticAnalysisOrderFailedCommand([{}], mockBlockNumber());
+        const _geneticAnalysisOrderFailedCommand: GeneticAnalysisOrderFailedCommandIndexer =
+          new GeneticAnalysisOrderFailedCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -138,8 +144,8 @@ describe('Orders Substrate Event Handler', () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
       /* eslint-disable */
-      const _geneticAnalysisOrderFulfilledCommand: GeneticAnalysisOrderFulfilledCommand =
-        new GeneticAnalysisOrderFulfilledCommand(
+      const _geneticAnalysisOrderFulfilledCommand: GeneticAnalysisOrderFulfilledCommandIndexer =
+        new GeneticAnalysisOrderFulfilledCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -154,8 +160,11 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _geneticAnalysisOrderFulfilledCommand: GeneticAnalysisOrderFulfilledCommand =
-          new GeneticAnalysisOrderFulfilledCommand([{}], mockBlockNumber());
+        const _geneticAnalysisOrderFulfilledCommand: GeneticAnalysisOrderFulfilledCommandIndexer =
+          new GeneticAnalysisOrderFulfilledCommandIndexer(
+            [{}],
+            mockBlockNumber(),
+          );
         /* eslint-enable */
       }).toThrowError();
     });
@@ -166,8 +175,8 @@ describe('Orders Substrate Event Handler', () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
       /* eslint-disable */
-      const _geneticAnalysisOrderPaidCommand: GeneticAnalysisOrderPaidCommand =
-        new GeneticAnalysisOrderPaidCommand(
+      const _geneticAnalysisOrderPaidCommand: GeneticAnalysisOrderPaidCommandIndexer =
+        new GeneticAnalysisOrderPaidCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -182,8 +191,8 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _geneticAnalysisOrderPaidCommand: GeneticAnalysisOrderPaidCommand =
-          new GeneticAnalysisOrderPaidCommand([{}], mockBlockNumber());
+        const _geneticAnalysisOrderPaidCommand: GeneticAnalysisOrderPaidCommandIndexer =
+          new GeneticAnalysisOrderPaidCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -194,8 +203,8 @@ describe('Orders Substrate Event Handler', () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
       /* eslint-disable */
-      const _geneticAnalysisOrderRefundedCommand: GeneticAnalysisOrderRefundedCommand =
-        new GeneticAnalysisOrderRefundedCommand(
+      const _geneticAnalysisOrderRefundedCommand: GeneticAnalysisOrderRefundedCommandIndexer =
+        new GeneticAnalysisOrderRefundedCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -210,8 +219,11 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _geneticAnalysisOrderRefundedCommand: GeneticAnalysisOrderRefundedCommand =
-          new GeneticAnalysisOrderRefundedCommand([{}], mockBlockNumber());
+        const _geneticAnalysisOrderRefundedCommand: GeneticAnalysisOrderRefundedCommandIndexer =
+          new GeneticAnalysisOrderRefundedCommandIndexer(
+            [{}],
+            mockBlockNumber(),
+          );
         /* eslint-enable */
       }).toThrowError();
     });

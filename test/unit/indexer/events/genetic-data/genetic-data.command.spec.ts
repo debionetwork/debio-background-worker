@@ -1,7 +1,7 @@
 import {
-  AddGeneticDataCommand,
-  RemoveGeneticDataCommand,
-  UpdateGeneticDataCommand,
+  AddGeneticDataCommandIndexer,
+  RemoveGeneticDataCommandIndexer,
+  UpdateGeneticDataCommandIndexer,
 } from '../../../../../src/indexer/events/genetic-data';
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { GeneticDataModel } from '../../../../../src/indexer/models/genetic-data/genetic-data.model';
@@ -34,8 +34,11 @@ describe('Genetic Data Substrate Event Handler', () => {
       const GENETIC_DATA_PARAM = createMockGeneticData();
 
       /* eslint-disable */
-      const _addGeneticDataCommand: AddGeneticDataCommand =
-        new AddGeneticDataCommand([GENETIC_DATA_PARAM], mockBlockNumber());
+      const _addGeneticDataCommand: AddGeneticDataCommandIndexer =
+        new AddGeneticDataCommandIndexer(
+          [GENETIC_DATA_PARAM],
+          mockBlockNumber(),
+        );
       /* eslint-enable */
       expect(GeneticDataModel).toHaveBeenCalled();
       expect(GeneticDataModel).toHaveBeenCalledWith(
@@ -47,8 +50,8 @@ describe('Genetic Data Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _addGeneticDataCommand: AddGeneticDataCommand =
-          new AddGeneticDataCommand([{}], mockBlockNumber());
+        const _addGeneticDataCommand: AddGeneticDataCommandIndexer =
+          new AddGeneticDataCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -59,8 +62,11 @@ describe('Genetic Data Substrate Event Handler', () => {
       const GENETIC_DATA_PARAM = createMockGeneticData();
 
       /* eslint-disable */
-      const _removeGeneticDataCommand: RemoveGeneticDataCommand =
-        new RemoveGeneticDataCommand([GENETIC_DATA_PARAM], mockBlockNumber());
+      const _removeGeneticDataCommand: RemoveGeneticDataCommandIndexer =
+        new RemoveGeneticDataCommandIndexer(
+          [GENETIC_DATA_PARAM],
+          mockBlockNumber(),
+        );
       /* eslint-enable */
       expect(GeneticDataModel).toHaveBeenCalled();
       expect(GeneticDataModel).toHaveBeenCalledWith(
@@ -72,8 +78,8 @@ describe('Genetic Data Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _removeGeneticDataCommand: RemoveGeneticDataCommand =
-          new RemoveGeneticDataCommand([{}], mockBlockNumber());
+        const _removeGeneticDataCommand: RemoveGeneticDataCommandIndexer =
+          new RemoveGeneticDataCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -84,8 +90,11 @@ describe('Genetic Data Substrate Event Handler', () => {
       const GENETIC_DATA_PARAM = createMockGeneticData();
 
       /* eslint-disable */
-      const _updateGeneticDataCommand: UpdateGeneticDataCommand =
-        new UpdateGeneticDataCommand([GENETIC_DATA_PARAM], mockBlockNumber());
+      const _updateGeneticDataCommand: UpdateGeneticDataCommandIndexer =
+        new UpdateGeneticDataCommandIndexer(
+          [GENETIC_DATA_PARAM],
+          mockBlockNumber(),
+        );
       /* eslint-enable */
       expect(GeneticDataModel).toHaveBeenCalled();
       expect(GeneticDataModel).toHaveBeenCalledWith(
@@ -97,8 +106,8 @@ describe('Genetic Data Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _updateGeneticDataCommand: UpdateGeneticDataCommand =
-          new UpdateGeneticDataCommand([{}], mockBlockNumber());
+        const _updateGeneticDataCommand: UpdateGeneticDataCommandIndexer =
+          new UpdateGeneticDataCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
