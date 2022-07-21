@@ -1,10 +1,10 @@
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
-  AddGeneticDataCommand,
+  AddGeneticDataCommandIndexer,
   GeneticDataCommandHandlers,
-  RemoveGeneticDataCommand,
-  UpdateGeneticDataCommand,
+  RemoveGeneticDataCommandIndexer,
+  UpdateGeneticDataCommandIndexer,
 } from '../../../../../src/indexer/events/genetic-data';
 import { ElasticSearchServiceProvider } from '../../../mock';
 import { AddGeneticDataHandler } from '../../../../../src/indexer/events/genetic-data/commands/add-genetic-data/add-genetic-data.handler';
@@ -57,8 +57,11 @@ describe('Genetic Data Substate Event Handler', () => {
     it('create index genetic data', async () => {
       const GENETIC_DATA_PARAM = createMockGeneticData();
 
-      const addGeneticDataCommand: AddGeneticDataCommand =
-        new AddGeneticDataCommand([GENETIC_DATA_PARAM], mockBlockNumber());
+      const addGeneticDataCommand: AddGeneticDataCommandIndexer =
+        new AddGeneticDataCommandIndexer(
+          [GENETIC_DATA_PARAM],
+          mockBlockNumber(),
+        );
 
       await addGeneticDataHandler.execute(addGeneticDataCommand);
 
@@ -70,8 +73,11 @@ describe('Genetic Data Substate Event Handler', () => {
     it('delete index genetic data', async () => {
       const GENETIC_DATA_PARAM = createMockGeneticData();
 
-      const removeGeneticDataCommand: RemoveGeneticDataCommand =
-        new RemoveGeneticDataCommand([GENETIC_DATA_PARAM], mockBlockNumber());
+      const removeGeneticDataCommand: RemoveGeneticDataCommandIndexer =
+        new RemoveGeneticDataCommandIndexer(
+          [GENETIC_DATA_PARAM],
+          mockBlockNumber(),
+        );
 
       await removeGeneticDataHandler.execute(removeGeneticDataCommand);
 
@@ -83,8 +89,11 @@ describe('Genetic Data Substate Event Handler', () => {
     it('update index genetic data', async () => {
       const GENETIC_DATA_PARAM = createMockGeneticData();
 
-      const updateGeneticDataCommand: UpdateGeneticDataCommand =
-        new UpdateGeneticDataCommand([GENETIC_DATA_PARAM], mockBlockNumber());
+      const updateGeneticDataCommand: UpdateGeneticDataCommandIndexer =
+        new UpdateGeneticDataCommandIndexer(
+          [GENETIC_DATA_PARAM],
+          mockBlockNumber(),
+        );
 
       await updateGeneticDataHandler.execute(updateGeneticDataCommand);
 

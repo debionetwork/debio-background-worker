@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CertificationCreatedCommand } from './certification-created.command';
+import { CertificationCreatedCommandIndexer } from './certification-created.command';
 
 @Injectable()
-@CommandHandler(CertificationCreatedCommand)
+@CommandHandler(CertificationCreatedCommandIndexer)
 export class CertificationCreatedHandler
-  implements ICommandHandler<CertificationCreatedCommand>
+  implements ICommandHandler<CertificationCreatedCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: CertificationCreatedCommand) {
+  async execute(command: CertificationCreatedCommandIndexer) {
     const { certification } = command;
 
     await this.elasticsearchService.index({

@@ -19,9 +19,8 @@ export class OrderCancelledHandler
   ) {}
 
   async execute(command: OrderCancelledCommand) {
-    const order: Order = command.orders;
-    order.normalize();
-    await this.logger.log(`OrderCancelled With Order ID: ${order.id}!`);
+    const order: Order = command.orders.normalize();
+    this.logger.log(`OrderCancelled With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
@@ -46,7 +45,7 @@ export class OrderCancelledHandler
         await this.loggingService.create(orderLogging);
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

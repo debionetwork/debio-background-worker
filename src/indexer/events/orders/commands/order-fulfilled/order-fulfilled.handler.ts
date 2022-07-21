@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { OrderFulfilledCommand } from './order-fulfilled.command';
+import { OrderFulfilledCommandIndexer } from './order-fulfilled.command';
 
 @Injectable()
-@CommandHandler(OrderFulfilledCommand)
+@CommandHandler(OrderFulfilledCommandIndexer)
 export class OrderFulfilledHandler
-  implements ICommandHandler<OrderFulfilledCommand>
+  implements ICommandHandler<OrderFulfilledCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: OrderFulfilledCommand) {
+  async execute(command: OrderFulfilledCommandIndexer) {
     const { orders: order } = command;
 
     return await this.elasticsearchService.update({

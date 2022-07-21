@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { GeneticAnalystsRetrieveUnstakeAmountCommand } from './genetic-analysts-retrieve-unstake-amount.command';
+import { GeneticAnalystsRetrieveUnstakeAmountCommandIndexer } from './genetic-analysts-retrieve-unstake-amount.command';
 
 @Injectable()
-@CommandHandler(GeneticAnalystsRetrieveUnstakeAmountCommand)
+@CommandHandler(GeneticAnalystsRetrieveUnstakeAmountCommandIndexer)
 export class GeneticAnalystsRetrieveUnstakeAmountHandler
-  implements ICommandHandler<GeneticAnalystsRetrieveUnstakeAmountCommand>
+  implements
+    ICommandHandler<GeneticAnalystsRetrieveUnstakeAmountCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: GeneticAnalystsRetrieveUnstakeAmountCommand) {
+  async execute(command: GeneticAnalystsRetrieveUnstakeAmountCommandIndexer) {
     const { geneticAnalystsModel, blockMetaData } = command;
 
     await this.elasticsearchService.update({

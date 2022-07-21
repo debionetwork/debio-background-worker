@@ -2,10 +2,10 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   GeneticAnalysisCommandHandlers,
-  GeneticAnalysisInProgressCommand,
-  GeneticAnalysisRejectedCommand,
-  GeneticAnalysisResultReadyCommand,
-  GeneticAnalysisSubmittedCommand,
+  GeneticAnalysisInProgressCommandIndexer,
+  GeneticAnalysisRejectedCommandIndexer,
+  GeneticAnalysisResultReadyCommandIndexer,
+  GeneticAnalysisSubmittedCommandIndexer,
 } from '../../../../../src/indexer/events/genetic-analysis';
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { ElasticSearchServiceProvider } from '../../../mock';
@@ -77,8 +77,8 @@ describe('Genetic Analysis Substrate Event Handler', () => {
     it('should update genetic analysis to in progress', async () => {
       const GENETIC_ANALYSIS_PARAM = createMockGeneticAnalysis();
 
-      const geneticAnalysisInProgressCommand: GeneticAnalysisInProgressCommand =
-        new GeneticAnalysisInProgressCommand(
+      const geneticAnalysisInProgressCommand: GeneticAnalysisInProgressCommandIndexer =
+        new GeneticAnalysisInProgressCommandIndexer(
           [GENETIC_ANALYSIS_PARAM],
           mockBlockNumber(),
         );
@@ -94,8 +94,8 @@ describe('Genetic Analysis Substrate Event Handler', () => {
     it('should update genetic analysis status to rejected', async () => {
       const GENETIC_ANALYSIS_PARAM = createMockGeneticAnalysis();
 
-      const geneticAnalysisRejectedCommand: GeneticAnalysisRejectedCommand =
-        new GeneticAnalysisRejectedCommand(
+      const geneticAnalysisRejectedCommand: GeneticAnalysisRejectedCommandIndexer =
+        new GeneticAnalysisRejectedCommandIndexer(
           [GENETIC_ANALYSIS_PARAM],
           mockBlockNumber(),
         );
@@ -111,8 +111,8 @@ describe('Genetic Analysis Substrate Event Handler', () => {
     it('should update genetic analysis status to result ready', async () => {
       const GENETIC_ANALYSIS_PARAM = createMockGeneticAnalysis();
 
-      const geneticAnalysisResultReadyCommand: GeneticAnalysisResultReadyCommand =
-        new GeneticAnalysisResultReadyCommand(
+      const geneticAnalysisResultReadyCommand: GeneticAnalysisResultReadyCommandIndexer =
+        new GeneticAnalysisResultReadyCommandIndexer(
           [GENETIC_ANALYSIS_PARAM],
           mockBlockNumber(),
         );
@@ -128,8 +128,8 @@ describe('Genetic Analysis Substrate Event Handler', () => {
     it('should insert genetic analysis', async () => {
       const GENETIC_ANALYSIS_PARAM = createMockGeneticAnalysis();
 
-      const geneticAnalysisSubmittedCommand: GeneticAnalysisSubmittedCommand =
-        new GeneticAnalysisSubmittedCommand(
+      const geneticAnalysisSubmittedCommand: GeneticAnalysisSubmittedCommandIndexer =
+        new GeneticAnalysisSubmittedCommandIndexer(
           [GENETIC_ANALYSIS_PARAM],
           mockBlockNumber(),
         );

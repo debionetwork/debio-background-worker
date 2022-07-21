@@ -2,9 +2,9 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   ServiceCommandHandlers,
-  ServiceCreatedCommand,
-  ServiceDeletedCommand,
-  ServiceUpdatedCommand,
+  ServiceCreatedCommandIndexer,
+  ServiceDeletedCommandIndexer,
+  ServiceUpdatedCommandIndexer,
 } from '../../../../../src/indexer/events/services';
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { ServiceFlow } from '../../../../../src/indexer/models/service-flow';
@@ -118,8 +118,8 @@ describe('Services Substrate Event Handler', () => {
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
 
-      const serviceCreatedCommand: ServiceCreatedCommand =
-        new ServiceCreatedCommand([service], mockBlockNumber());
+      const serviceCreatedCommand: ServiceCreatedCommandIndexer =
+        new ServiceCreatedCommandIndexer([service], mockBlockNumber());
       await serviceCreatedHandler.execute(serviceCreatedCommand);
       expect(elasticsearchService.search).toHaveBeenCalled();
       expect(elasticsearchService.index).toHaveBeenCalled();
@@ -148,8 +148,8 @@ describe('Services Substrate Event Handler', () => {
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
 
-      const serviceDeletedCommand: ServiceDeletedCommand =
-        new ServiceDeletedCommand([service], mockBlockNumber());
+      const serviceDeletedCommand: ServiceDeletedCommandIndexer =
+        new ServiceDeletedCommandIndexer([service], mockBlockNumber());
       await serviceDeletedHandler.execute(serviceDeletedCommand);
       expect(elasticsearchService.search).toHaveBeenCalled();
       expect(elasticsearchService.delete).toHaveBeenCalled();
@@ -183,8 +183,8 @@ describe('Services Substrate Event Handler', () => {
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
 
-      const serviceUpdatedCommand: ServiceUpdatedCommand =
-        new ServiceUpdatedCommand([service], mockBlockNumber());
+      const serviceUpdatedCommand: ServiceUpdatedCommandIndexer =
+        new ServiceUpdatedCommandIndexer([service], mockBlockNumber());
       await serviceUpdatedHandler.execute(serviceUpdatedCommand);
       expect(elasticsearchService.search).toHaveBeenCalled();
       expect(elasticsearchService.update).toHaveBeenCalled();

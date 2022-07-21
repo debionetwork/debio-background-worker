@@ -1,11 +1,11 @@
 import {
-  OrderCancelledCommand,
+  OrderCancelledCommandIndexer,
   OrderCommandHandlers,
-  OrderCreatedCommand,
-  OrderFailedCommand,
-  OrderFulfilledCommand,
-  OrderPaidCommand,
-  OrderRefundedCommand,
+  OrderCreatedCommandIndexer,
+  OrderFailedCommandIndexer,
+  OrderFulfilledCommandIndexer,
+  OrderPaidCommandIndexer,
+  OrderRefundedCommandIndexer,
 } from '../../../../../src/indexer/events/orders';
 import { OrderCancelledHandler } from '../../../../../src/indexer/events/orders/commands/order-cancelled/order-cancelled.handler';
 import { OrderCreatedHandler } from '../../../../../src/indexer/events/orders/commands/order-created/order-created.handler';
@@ -98,8 +98,8 @@ describe('Orders Substrate Event Handler', () => {
     it('Order Cancelled Handler', async () => {
       const order = createMockOrder(OrderStatus.Cancelled);
 
-      const orderCancelledCommand: OrderCancelledCommand =
-        new OrderCancelledCommand([order], mockBlockNumber());
+      const orderCancelledCommand: OrderCancelledCommandIndexer =
+        new OrderCancelledCommandIndexer([order], mockBlockNumber());
 
       await orderCancelledHandler.execute(orderCancelledCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
@@ -146,10 +146,8 @@ describe('Orders Substrate Event Handler', () => {
         .calledWith(SERVICE_CALLED_WITH)
         .mockReturnValue(ES_RESULT_SERVICE);
 
-      const orderCreatedCommand: OrderCreatedCommand = new OrderCreatedCommand(
-        [order],
-        mockBlockNumber(),
-      );
+      const orderCreatedCommand: OrderCreatedCommandIndexer =
+        new OrderCreatedCommandIndexer([order], mockBlockNumber());
 
       await orderCreatedHandler.execute(orderCreatedCommand);
       expect(elasticsearchService.search).toHaveBeenCalledTimes(2);
@@ -159,10 +157,8 @@ describe('Orders Substrate Event Handler', () => {
     it('Order Failed Handler', async () => {
       const order = createMockOrder(OrderStatus.Cancelled);
 
-      const orderFailedCommand: OrderFailedCommand = new OrderFailedCommand(
-        [order],
-        mockBlockNumber(),
-      );
+      const orderFailedCommand: OrderFailedCommandIndexer =
+        new OrderFailedCommandIndexer([order], mockBlockNumber());
 
       await orderFailedHandler.execute(orderFailedCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
@@ -171,8 +167,8 @@ describe('Orders Substrate Event Handler', () => {
     it('Order Fulfilled Handler', async () => {
       const order = createMockOrder(OrderStatus.Cancelled);
 
-      const orderFulfilledCommand: OrderFulfilledCommand =
-        new OrderFulfilledCommand([order], mockBlockNumber());
+      const orderFulfilledCommand: OrderFulfilledCommandIndexer =
+        new OrderFulfilledCommandIndexer([order], mockBlockNumber());
 
       await orderFulfilledHandler.execute(orderFulfilledCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
@@ -181,10 +177,8 @@ describe('Orders Substrate Event Handler', () => {
     it('Order Paid Handler', async () => {
       const order = createMockOrder(OrderStatus.Cancelled);
 
-      const orderPaidCommand: OrderPaidCommand = new OrderPaidCommand(
-        [order],
-        mockBlockNumber(),
-      );
+      const orderPaidCommand: OrderPaidCommandIndexer =
+        new OrderPaidCommandIndexer([order], mockBlockNumber());
 
       await orderPaidHandler.execute(orderPaidCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
@@ -193,8 +187,8 @@ describe('Orders Substrate Event Handler', () => {
     it('Order Refunded Handler', async () => {
       const order = createMockOrder(OrderStatus.Cancelled);
 
-      const orderRefundedCommand: OrderRefundedCommand =
-        new OrderRefundedCommand([order], mockBlockNumber());
+      const orderRefundedCommand: OrderRefundedCommandIndexer =
+        new OrderRefundedCommandIndexer([order], mockBlockNumber());
 
       await orderRefundedHandler.execute(orderRefundedCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();

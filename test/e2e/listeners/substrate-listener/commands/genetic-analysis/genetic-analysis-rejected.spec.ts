@@ -336,5 +336,5 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     });
 
     expect(await deleteGa).toEqual(0);
-  }, 180000);
+  }, 240000);
 });

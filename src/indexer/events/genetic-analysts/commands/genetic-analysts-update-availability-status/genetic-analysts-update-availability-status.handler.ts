@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { GeneticAnalystsUpdateAvailabilityStatusCommand } from './genetic-analysts-update-availability-status.command';
+import { GeneticAnalystsUpdateAvailabilityStatusCommandIndexer } from './genetic-analysts-update-availability-status.command';
 
 @Injectable()
-@CommandHandler(GeneticAnalystsUpdateAvailabilityStatusCommand)
+@CommandHandler(GeneticAnalystsUpdateAvailabilityStatusCommandIndexer)
 export class GeneticAnalystsUpdateAvailabilityStatusHandler
-  implements ICommandHandler<GeneticAnalystsUpdateAvailabilityStatusCommand>
+  implements
+    ICommandHandler<GeneticAnalystsUpdateAvailabilityStatusCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: GeneticAnalystsUpdateAvailabilityStatusCommand) {
+  async execute(
+    command: GeneticAnalystsUpdateAvailabilityStatusCommandIndexer,
+  ) {
     const { geneticAnalystsModel, blockMetaData } = command;
 
     await this.elasticsearchService.update({

@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { RequestStatus } from '../../../../models/service-request/request-status';
-import { ProcessedServiceRequestCommand } from './processed-service-request.command';
+import { ProcessedServiceRequestCommandIndexer } from './processed-service-request.command';
 
 @Injectable()
-@CommandHandler(ProcessedServiceRequestCommand)
+@CommandHandler(ProcessedServiceRequestCommandIndexer)
 export class ProcessedServiceRequestHandler
-  implements ICommandHandler<ProcessedServiceRequestCommand>
+  implements ICommandHandler<ProcessedServiceRequestCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: ProcessedServiceRequestCommand) {
+  async execute(command: ProcessedServiceRequestCommandIndexer) {
     await this.elasticsearchService.update({
       index: 'create-service-request',
       id: command.serviceInvoice.requestHash,

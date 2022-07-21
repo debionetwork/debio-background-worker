@@ -3,15 +3,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ElasticSearchServiceProvider } from '../../../mock';
 import {
   GeneticAnalystsCommandHandlers,
-  GeneticAnalystsRegisteredCommand,
-  GeneticAnalystsDeletedCommand,
-  GeneticAnalystsUpdatedCommand,
-  GeneticAnalystsStakeSuccessfulCommand,
-  GeneticAnalystsUpdateVerificationStatusCommand,
-  GeneticAnalystsRetrieveUnstakeAmountCommand,
-  GeneticAnalystsUpdateAvailabilityStatusCommand,
-  GeneticAnalystUnstakeSuccessfulCommand,
-  GeneticAnalystVerificationFailedCommand,
+  GeneticAnalystsRegisteredCommandIndexer,
+  GeneticAnalystsDeletedCommandIndexer,
+  GeneticAnalystsUpdatedCommandIndexer,
+  GeneticAnalystsStakeSuccessfulCommandIndexer,
+  GeneticAnalystsUpdateVerificationStatusCommandIndexer,
+  GeneticAnalystsRetrieveUnstakeAmountCommandIndexer,
+  GeneticAnalystsUpdateAvailabilityStatusCommandIndexer,
+  GeneticAnalystUnstakeSuccessfulCommandIndexer,
+  GeneticAnalystVerificationFailedCommandIndexer,
 } from '../../../../../src/indexer/events/genetic-analysts';
 import { GeneticAnalystsRegisteredHandler } from '../../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-registered/genetic-analysts-registered.handler';
 import { GeneticAnalystsDeletedHandler } from '../../../../../src/indexer/events/genetic-analysts/commands/genetic-analysts-deleted/genetic-analysts-deleted.handler';
@@ -108,8 +108,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
     it('should Genetic create index Analysts', async () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([], []);
 
-      const geneticAnalystsRegisteredCommand: GeneticAnalystsRegisteredCommand =
-        new GeneticAnalystsRegisteredCommand(
+      const geneticAnalystsRegisteredCommand: GeneticAnalystsRegisteredCommandIndexer =
+        new GeneticAnalystsRegisteredCommandIndexer(
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );
@@ -126,8 +126,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
     it('should delete index Genetic Analysts', async () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([], []);
 
-      const geneticAnalystsDeletedCommand: GeneticAnalystsDeletedCommand =
-        new GeneticAnalystsDeletedCommand(
+      const geneticAnalystsDeletedCommand: GeneticAnalystsDeletedCommandIndexer =
+        new GeneticAnalystsDeletedCommandIndexer(
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );
@@ -143,8 +143,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
     it('should delete index Genetic Analysts and delete index qualification and service include in genetic analysts', async () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([1], [1]);
 
-      const geneticAnalystsDeletedCommand: GeneticAnalystsDeletedCommand =
-        new GeneticAnalystsDeletedCommand(
+      const geneticAnalystsDeletedCommand: GeneticAnalystsDeletedCommandIndexer =
+        new GeneticAnalystsDeletedCommandIndexer(
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );
@@ -162,8 +162,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
     it('should update index Genetic Analysts', async () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([], []);
 
-      const geneticAnalystsUpdatedCommand: GeneticAnalystsUpdatedCommand =
-        new GeneticAnalystsUpdatedCommand(
+      const geneticAnalystsUpdatedCommand: GeneticAnalystsUpdatedCommandIndexer =
+        new GeneticAnalystsUpdatedCommandIndexer(
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );
@@ -180,8 +180,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
     it('should update index Genetic Analysts', async () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([], []);
 
-      const geneticAnalystsStakeSuccessfulCommand: GeneticAnalystsStakeSuccessfulCommand =
-        new GeneticAnalystsStakeSuccessfulCommand(
+      const geneticAnalystsStakeSuccessfulCommand: GeneticAnalystsStakeSuccessfulCommandIndexer =
+        new GeneticAnalystsStakeSuccessfulCommandIndexer(
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );
@@ -198,8 +198,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
     it('should update index Genetic Analysts', async () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([], []);
 
-      const geneticAnalystsUpdateVerificationStatusCommand: GeneticAnalystsUpdateVerificationStatusCommand =
-        new GeneticAnalystsUpdateVerificationStatusCommand(
+      const geneticAnalystsUpdateVerificationStatusCommand: GeneticAnalystsUpdateVerificationStatusCommandIndexer =
+        new GeneticAnalystsUpdateVerificationStatusCommandIndexer(
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );
@@ -216,8 +216,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
     it('should update index Genetic Analysts', async () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([], []);
 
-      const geneticAnalystsUpdateAvailabilityStatusCommand: GeneticAnalystsUpdateAvailabilityStatusCommand =
-        new GeneticAnalystsUpdateVerificationStatusCommand(
+      const geneticAnalystsUpdateAvailabilityStatusCommand: GeneticAnalystsUpdateAvailabilityStatusCommandIndexer =
+        new GeneticAnalystsUpdateAvailabilityStatusCommandIndexer(
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );
@@ -234,8 +234,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
     it('should update index Genetic Analysts', async () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([], []);
 
-      const geneticAnalystsRetrieveUnstakeAmountCommand: GeneticAnalystsRetrieveUnstakeAmountCommand =
-        new GeneticAnalystsUpdateVerificationStatusCommand(
+      const geneticAnalystsRetrieveUnstakeAmountCommand: GeneticAnalystsRetrieveUnstakeAmountCommandIndexer =
+        new GeneticAnalystsRetrieveUnstakeAmountCommandIndexer(
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );
@@ -252,8 +252,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
     it('should update index Genetic Analysts', async () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([], []);
 
-      const geneticAnalystsUnstakeSuccessfulCommand: GeneticAnalystUnstakeSuccessfulCommand =
-        new GeneticAnalystUnstakeSuccessfulCommand(
+      const geneticAnalystsUnstakeSuccessfulCommand: GeneticAnalystUnstakeSuccessfulCommandIndexer =
+        new GeneticAnalystUnstakeSuccessfulCommandIndexer(
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );
@@ -270,8 +270,8 @@ describe('Genetic Anlaysts Substrate Event Handler', () => {
     it('should update index Genetic Analysts', async () => {
       const GENETIC_ANALYSTS_PARAM = createMockGeneticAnalysts([], []);
 
-      const geneticAnalystsVerificationFailedCommand: GeneticAnalystVerificationFailedCommand =
-        new GeneticAnalystVerificationFailedCommand(
+      const geneticAnalystsVerificationFailedCommand: GeneticAnalystVerificationFailedCommandIndexer =
+        new GeneticAnalystVerificationFailedCommandIndexer(
           [GENETIC_ANALYSTS_PARAM],
           mockBlockNumber(),
         );

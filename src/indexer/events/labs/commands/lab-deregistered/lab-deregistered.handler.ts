@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LabDeregisteredCommand } from './lab-deregistered.command';
+import { LabDeregisteredCommandIndexer } from './lab-deregistered.command';
 
 @Injectable()
-@CommandHandler(LabDeregisteredCommand)
+@CommandHandler(LabDeregisteredCommandIndexer)
 export class LabDeregisteredHandler
-  implements ICommandHandler<LabDeregisteredCommand>
+  implements ICommandHandler<LabDeregisteredCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: LabDeregisteredCommand) {
+  async execute(command: LabDeregisteredCommandIndexer) {
     const { labs: lab } = command;
     await this.elasticsearchService.delete({
       index: 'labs',

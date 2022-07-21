@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   LabCommandHandlers,
-  LabDeregisteredCommand,
-  LabRegisteredCommand,
-  LabRetrieveUnstakeAmountCommand,
-  LabStakeSuccessfulCommand,
-  LabUnstakeSuccessfulCommand,
-  LabUpdatedCommand,
-  LabUpdateVerificationStatusCommand,
+  LabDeregisteredCommandIndexer,
+  LabRegisteredCommandIndexer,
+  LabRetrieveUnstakeAmountCommandIndexer,
+  LabStakeSuccessfulCommandIndexer,
+  LabUnstakeSuccessfulCommandIndexer,
+  LabUpdatedCommandIndexer,
+  LabUpdateVerificationStatusCommandIndexer,
 } from '../../../../../src/indexer/events/labs';
 import { LabDeregisteredHandler } from '../../../../../src/indexer/events/labs/commands/lab-deregistered/lab-deregistered.handler';
 import { LabRegisteredHandler } from '../../../../../src/indexer/events/labs/commands/lab-registered/lab-registered.handler';
@@ -105,17 +105,8 @@ describe('Labs Substrate Event Handler', () => {
     it('Lab Deregistered Handler', async () => {
       const lab = createMockLab();
 
-      const labDeregisteredCommand: LabDeregisteredCommand =
-        new LabDeregisteredCommand([lab], mockBlockNumber());
-      await labDeregisteredHandler.execute(labDeregisteredCommand);
-      expect(elasticsearchService.delete).toHaveBeenCalled();
-    });
-
-    it('Lab Deregistered Handler', async () => {
-      const lab = createMockLab();
-
-      const labDeregisteredCommand: LabDeregisteredCommand =
-        new LabDeregisteredCommand([lab], mockBlockNumber());
+      const labDeregisteredCommand: LabDeregisteredCommandIndexer =
+        new LabDeregisteredCommandIndexer([lab], mockBlockNumber());
       await labDeregisteredHandler.execute(labDeregisteredCommand);
       expect(elasticsearchService.delete).toHaveBeenCalled();
       expect(elasticsearchService.deleteByQuery).toHaveBeenCalled();
@@ -124,8 +115,8 @@ describe('Labs Substrate Event Handler', () => {
     it('Lab Registered Handler', async () => {
       const lab = createMockLab();
 
-      const labRegisteredCommand: LabDeregisteredCommand =
-        new LabRegisteredCommand([lab], mockBlockNumber());
+      const labRegisteredCommand: LabRegisteredCommandIndexer =
+        new LabRegisteredCommandIndexer([lab], mockBlockNumber());
       await labRegisteredHandler.execute(labRegisteredCommand);
       expect(elasticsearchService.index).toHaveBeenCalled();
     });
@@ -133,10 +124,8 @@ describe('Labs Substrate Event Handler', () => {
     it('Lab Updated Handler', async () => {
       const lab = createMockLab();
 
-      const labUpdatedCommand: LabUpdatedCommand = new LabUpdatedCommand(
-        [lab],
-        mockBlockNumber(),
-      );
+      const labUpdatedCommand: LabUpdatedCommandIndexer =
+        new LabUpdatedCommandIndexer([lab], mockBlockNumber());
       await labUpdatedHandler.execute(labUpdatedCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
     });
@@ -144,8 +133,8 @@ describe('Labs Substrate Event Handler', () => {
     it('Lab Updated Verification Status Handler', async () => {
       const lab = createMockLab();
 
-      const labUpdatedVerificationStatusCommand: LabUpdateVerificationStatusCommand =
-        new LabUpdateVerificationStatusCommand([lab], mockBlockNumber());
+      const labUpdatedVerificationStatusCommand: LabUpdateVerificationStatusCommandIndexer =
+        new LabUpdateVerificationStatusCommandIndexer([lab], mockBlockNumber());
       await labUpdateVerificationStatusHandler.execute(
         labUpdatedVerificationStatusCommand,
       );
@@ -155,8 +144,8 @@ describe('Labs Substrate Event Handler', () => {
     it('Lab Retrieve Unstake Amount Handler', async () => {
       const lab = createMockLab();
 
-      const labRetrieveUnstakeAmountCommand: LabRetrieveUnstakeAmountCommand =
-        new LabRetrieveUnstakeAmountCommand([lab], mockBlockNumber());
+      const labRetrieveUnstakeAmountCommand: LabRetrieveUnstakeAmountCommandIndexer =
+        new LabRetrieveUnstakeAmountCommandIndexer([lab], mockBlockNumber());
       await labRetrieveUnstakeAmountHandler.execute(
         labRetrieveUnstakeAmountCommand,
       );
@@ -166,8 +155,8 @@ describe('Labs Substrate Event Handler', () => {
     it('Lab Stake Successful Handler', async () => {
       const lab = createMockLab();
 
-      const labStakeSuccessfulCommand: LabStakeSuccessfulCommand =
-        new LabStakeSuccessfulCommand([lab], mockBlockNumber());
+      const labStakeSuccessfulCommand: LabStakeSuccessfulCommandIndexer =
+        new LabStakeSuccessfulCommandIndexer([lab], mockBlockNumber());
       await labStakeSuccessfulHandler.execute(labStakeSuccessfulCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
     });
@@ -175,8 +164,8 @@ describe('Labs Substrate Event Handler', () => {
     it('Lab Unstake Successful Handler', async () => {
       const lab = createMockLab();
 
-      const labUnstakeSuccessfulCommand: LabUnstakeSuccessfulCommand =
-        new LabUnstakeSuccessfulCommand([lab], mockBlockNumber());
+      const labUnstakeSuccessfulCommand: LabUnstakeSuccessfulCommandIndexer =
+        new LabUnstakeSuccessfulCommandIndexer([lab], mockBlockNumber());
       await labUnstakeSuccessfulHandler.execute(labUnstakeSuccessfulCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
     });

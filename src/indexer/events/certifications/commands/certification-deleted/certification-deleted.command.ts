@@ -1,7 +1,7 @@
 import { BlockMetaData } from '../../../../models/block-meta-data';
 import { Certification } from '../../../../models/certification/certification';
 
-export class CertificationDeletedCommand {
+export class CertificationDeletedCommandIndexer {
   certification: Certification;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
     const certificationData = data[0];

@@ -1,7 +1,7 @@
 import { BlockMetaData } from '../../../../models/block-meta-data';
 import { Service } from '../../../../models/service/service';
 
-export class ServiceDeletedCommand {
+export class ServiceDeletedCommandIndexer {
   services: Service;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
     const serviceData = data[0];

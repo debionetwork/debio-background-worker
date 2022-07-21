@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { GeneticAnalystsRegisteredCommand } from './genetic-analysts-registered.command';
+import { GeneticAnalystsRegisteredCommandIndexer } from './genetic-analysts-registered.command';
 
 @Injectable()
-@CommandHandler(GeneticAnalystsRegisteredCommand)
+@CommandHandler(GeneticAnalystsRegisteredCommandIndexer)
 export class GeneticAnalystsRegisteredHandler
-  implements ICommandHandler<GeneticAnalystsRegisteredCommand>
+  implements ICommandHandler<GeneticAnalystsRegisteredCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: GeneticAnalystsRegisteredCommand) {
+  async execute(command: GeneticAnalystsRegisteredCommandIndexer) {
     const { geneticAnalystsModel, blockMetaData } = command;
 
     await this.elasticsearchService.index({

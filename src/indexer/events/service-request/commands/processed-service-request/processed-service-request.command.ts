@@ -1,7 +1,7 @@
 import { BlockMetaData } from '../../../../models/block-meta-data';
 import { ServiceInvoice } from '../../../../models/service-request/service-invoice';
 
-export class ProcessedServiceRequestCommand {
+export class ProcessedServiceRequestCommandIndexer {
   serviceInvoice: ServiceInvoice;
   constructor(args: Array<any>, public readonly blockMetaData: BlockMetaData) {
     const serviceInvoiceData = args[1];

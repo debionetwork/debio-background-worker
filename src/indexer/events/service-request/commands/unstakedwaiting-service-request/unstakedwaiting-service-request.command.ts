@@ -1,7 +1,7 @@
 import { BlockMetaData } from '../../../../models/block-meta-data';
 import { RequestModel } from '../../../../models/service-request/request';
 
-export class UnstakedWaitingServiceRequestCommand {
+export class UnstakedWaitingServiceRequestCommandIndexer {
   request: RequestModel;
   constructor(args: Array<any>, public readonly blockMetaData: BlockMetaData) {
     const requestData = args[1];
