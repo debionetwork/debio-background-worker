@@ -75,7 +75,7 @@ export class GeneticAnalysisOrderFulfilledHandler
         entity: 'Order Fulfilled',
         description: `You've received ${+geneticAnalysisOrder.prices[0]
           .value} DBIO for completing the requested analysis for ${
-          geneticAnalysisOrder.geneticAnalysisTrackingId
+          geneticAnalysisOrder.id
         }.`,
         read: false,
         created_at: currDate,

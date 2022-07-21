@@ -338,7 +338,7 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
       notifications[0].description.includes(
         `You've received ${+geneticAnalysisOrder.prices[0]
           .value} DBIO for completing the requested analysis for ${
-          geneticAnalysisOrder.geneticAnalysisTrackingId
+          geneticAnalysisOrder.id
         }.`,
       ),
     ).toBeTruthy();

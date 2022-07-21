@@ -121,7 +121,7 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
         entity: 'Order Fulfilled',
         description: `You've received ${+GA_ORDER.toHuman().prices[0]
           .value} DBIO for completing the requested analysis for ${
-          GA_ORDER.toHuman().geneticAnalysisTrackingId
+          GA_ORDER.toHuman().id
         }.`,
         read: false,
         deleted_at: null,
