@@ -137,14 +137,14 @@ describe('Event Command Service Request Claimed', () => {
     );
 
     serviceRequest = await createServicePromise;
-    expect(serviceRequest.normalize()).toEqual(
-      expect.objectContaining({
-        country: serviceRequestMock.country,
-        region: serviceRequestMock.region,
-        city: serviceRequestMock.city,
-        serviceCategory: serviceRequestMock.serviceCategory,
-      }),
+    expect(serviceRequest.city).toEqual(serviceRequestMock.city);
+    expect(serviceRequest.region).toEqual(serviceRequestMock.region);
+    expect(serviceRequest.country).toEqual(serviceRequestMock.country);
+    expect(serviceRequest.serviceCategory).toEqual(
+      serviceRequestMock.serviceCategory,
     );
+    expect(serviceRequest.status).toEqual(RequestStatus.Open);
+    expect(serviceRequest.requesterAddress).toEqual(pair.address);
 
     const regionServiceRequest = await elasticsearchService.search({
       index: 'country-service-request',

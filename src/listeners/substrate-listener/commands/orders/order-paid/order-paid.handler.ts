@@ -22,10 +22,9 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   ) {}
 
   async execute(command: OrderPaidCommand) {
-    const order: Order = command.orders;
-    order.normalize();
+    const order: Order = command.orders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(`OrderPaid with Order ID: ${order.id}!`);
+    this.logger.log(`OrderPaid with Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
@@ -68,7 +67,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
         await this.notificationService.insert(notificationNewOrder);
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

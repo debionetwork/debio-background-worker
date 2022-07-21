@@ -1,7 +1,7 @@
 import { BlockMetaData } from '../../../../models/block-meta-data';
 import { ClaimRequestModel } from '../../../../models/service-request/claim-request';
 
-export class ClaimedServiceRequestCommand {
+export class ClaimedServiceRequestCommandIndexer {
   claimRequest: ClaimRequestModel;
   constructor(args: Array<any>, public readonly blockMetadata: BlockMetaData) {
     const claimRequestData = args[1];

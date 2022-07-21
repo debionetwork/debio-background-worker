@@ -39,10 +39,9 @@ export class OrderFulfilledHandler
   ) {}
 
   async execute(command: OrderFulfilledCommand) {
-    const order: Order = command.orders;
-    order.normalize();
+    const order: Order = command.orders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(`Order Fulfilled With Order ID: ${order.id}!`);
+    this.logger.log(`Order Fulfilled With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
@@ -223,7 +222,7 @@ export class OrderFulfilledHandler
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);
     } catch (err) {
-      await this.logger.log(err);
+      this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
     }
   }

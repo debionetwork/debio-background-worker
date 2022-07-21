@@ -1,10 +1,10 @@
 import {
-  OrderCancelledCommand,
-  OrderCreatedCommand,
-  OrderFailedCommand,
-  OrderFulfilledCommand,
-  OrderPaidCommand,
-  OrderRefundedCommand,
+  OrderCancelledCommandIndexer,
+  OrderCreatedCommandIndexer,
+  OrderFailedCommandIndexer,
+  OrderFulfilledCommandIndexer,
+  OrderPaidCommandIndexer,
+  OrderRefundedCommandIndexer,
 } from '../../../../../src/indexer/events/orders';
 import { OrderStatus } from '../../../../../src/indexer/models/order/order-status';
 import { Currency } from '../../../../../src/indexer/models/order/currency';
@@ -55,10 +55,8 @@ describe('Orders Substrate Event Handler', () => {
       const ORDER_PARAM = createMockOrder(OrderStatus.Unpaid);
 
       /* eslint-disable */
-      const _orderCreatedCommand: OrderCreatedCommand = new OrderCreatedCommand(
-        [ORDER_PARAM],
-        mockBlockNumber(),
-      );
+      const _orderCreatedCommand: OrderCreatedCommandIndexer =
+        new OrderCreatedCommandIndexer([ORDER_PARAM], mockBlockNumber());
       /* eslint-enable */
       expect(Orders).toHaveBeenCalled();
       expect(Orders).toHaveBeenCalledWith(ORDER_PARAM.toHuman());
@@ -68,8 +66,8 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _orderCreatedCommand: OrderCreatedCommand =
-          new OrderCreatedCommand([{}], mockBlockNumber());
+        const _orderCreatedCommand: OrderCreatedCommandIndexer =
+          new OrderCreatedCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -80,8 +78,8 @@ describe('Orders Substrate Event Handler', () => {
       const ORDER_PARAM = createMockOrder(OrderStatus.Cancelled);
 
       /* eslint-disable */
-      const _orderCancelledCommand: OrderCancelledCommand =
-        new OrderCancelledCommand([ORDER_PARAM], mockBlockNumber());
+      const _orderCancelledCommand: OrderCancelledCommandIndexer =
+        new OrderCancelledCommandIndexer([ORDER_PARAM], mockBlockNumber());
       /* eslint-enable */
       expect(Orders).toHaveBeenCalled();
       expect(Orders).toHaveBeenCalledWith(ORDER_PARAM.toHuman());
@@ -91,8 +89,8 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _orderCancelledCommand: OrderCancelledCommand =
-          new OrderCancelledCommand([{}], mockBlockNumber());
+        const _orderCancelledCommand: OrderCancelledCommandIndexer =
+          new OrderCancelledCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -103,10 +101,8 @@ describe('Orders Substrate Event Handler', () => {
       const ORDER_PARAM = createMockOrder(OrderStatus.Failed);
 
       /* eslint-disable */
-      const _orderFailedCommand: OrderFailedCommand = new OrderFailedCommand(
-        [ORDER_PARAM],
-        mockBlockNumber(),
-      );
+      const _orderFailedCommand: OrderFailedCommandIndexer =
+        new OrderFailedCommandIndexer([ORDER_PARAM], mockBlockNumber());
       /* eslint-enable */
       expect(Orders).toHaveBeenCalled();
       expect(Orders).toHaveBeenCalledWith(ORDER_PARAM.toHuman());
@@ -116,10 +112,8 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _orderFailedCommand: OrderFailedCommand = new OrderFailedCommand(
-          [{}],
-          mockBlockNumber(),
-        );
+        const _orderFailedCommand: OrderFailedCommandIndexer =
+          new OrderFailedCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -130,8 +124,8 @@ describe('Orders Substrate Event Handler', () => {
       const ORDER_PARAM = createMockOrder(OrderStatus.Fulfilled);
 
       /* eslint-disable */
-      const _orderFulfilledCommand: OrderFulfilledCommand =
-        new OrderFulfilledCommand([ORDER_PARAM], mockBlockNumber());
+      const _orderFulfilledCommand: OrderFulfilledCommandIndexer =
+        new OrderFulfilledCommandIndexer([ORDER_PARAM], mockBlockNumber());
       /* eslint-enable */
       expect(Orders).toHaveBeenCalled();
       expect(Orders).toHaveBeenCalledWith(ORDER_PARAM.toHuman());
@@ -141,8 +135,8 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _orderFulfilledCommand: OrderFulfilledCommand =
-          new OrderFulfilledCommand([{}], mockBlockNumber());
+        const _orderFulfilledCommand: OrderFulfilledCommandIndexer =
+          new OrderFulfilledCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -153,10 +147,8 @@ describe('Orders Substrate Event Handler', () => {
       const ORDER_PARAM = createMockOrder(OrderStatus.Paid);
 
       /* eslint-disable */
-      const _orderPaidCommand: OrderPaidCommand = new OrderPaidCommand(
-        [ORDER_PARAM],
-        mockBlockNumber(),
-      );
+      const _orderPaidCommand: OrderPaidCommandIndexer =
+        new OrderPaidCommandIndexer([ORDER_PARAM], mockBlockNumber());
       /* eslint-enable */
       expect(Orders).toHaveBeenCalled();
       expect(Orders).toHaveBeenCalledWith(ORDER_PARAM.toHuman());
@@ -166,10 +158,8 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _orderPaidCommand: OrderPaidCommand = new OrderPaidCommand(
-          [{}],
-          mockBlockNumber(),
-        );
+        const _orderPaidCommand: OrderPaidCommandIndexer =
+          new OrderPaidCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -180,8 +170,8 @@ describe('Orders Substrate Event Handler', () => {
       const ORDER_PARAM = createMockOrder(OrderStatus.Refunded);
 
       /* eslint-disable */
-      const _orderRefundedCommand: OrderRefundedCommand =
-        new OrderRefundedCommand([ORDER_PARAM], mockBlockNumber());
+      const _orderRefundedCommand: OrderRefundedCommandIndexer =
+        new OrderRefundedCommandIndexer([ORDER_PARAM], mockBlockNumber());
       /* eslint-enable */
       expect(Orders).toHaveBeenCalled();
       expect(Orders).toHaveBeenCalledWith(ORDER_PARAM.toHuman());
@@ -191,8 +181,8 @@ describe('Orders Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _orderRefundedCommand: OrderRefundedCommand =
-          new OrderRefundedCommand([{}], mockBlockNumber());
+        const _orderRefundedCommand: OrderRefundedCommandIndexer =
+          new OrderRefundedCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });

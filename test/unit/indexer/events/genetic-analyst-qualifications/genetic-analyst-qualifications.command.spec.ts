@@ -1,7 +1,7 @@
 import {
-  GeneticAnalystsQualificationCreatedCommand,
-  GeneticAnalystsQualificationDeletedCommand,
-  GeneticAnalystsQualificationUpdatedCommand,
+  GeneticAnalystsQualificationCreatedCommandIndexer,
+  GeneticAnalystsQualificationDeletedCommandIndexer,
+  GeneticAnalystsQualificationUpdatedCommandIndexer,
 } from '../../../../../src/indexer/events/genetic-analyst-qualifications';
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { GeneticAnalystsQualificationModel } from '../../../../../src/indexer/models/genetic-analysts-qualifications/genetic-analysts-qualifications.model';
@@ -34,8 +34,8 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
         createMockGeneticAnalystsQualifications();
 
       /* eslint-disable */
-      const _geneticAnalystsQualificationsCreated: GeneticAnalystsQualificationCreatedCommand =
-        new GeneticAnalystsQualificationCreatedCommand(
+      const _geneticAnalystsQualificationsCreated: GeneticAnalystsQualificationCreatedCommandIndexer =
+        new GeneticAnalystsQualificationCreatedCommandIndexer(
           [GENETIC_ANALYSTS_QUALIFICATIONS_PARAM],
           mockBlockNumber(),
         );
@@ -50,8 +50,8 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _geneticAnalystsQualificationsCreated: GeneticAnalystsQualificationCreatedCommand =
-          new GeneticAnalystsQualificationCreatedCommand(
+        const _geneticAnalystsQualificationsCreated: GeneticAnalystsQualificationCreatedCommandIndexer =
+          new GeneticAnalystsQualificationCreatedCommandIndexer(
             [{}],
             mockBlockNumber(),
           );
@@ -66,8 +66,8 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
         createMockGeneticAnalystsQualifications();
 
       /* eslint-disable */
-      const _geneticAnalystsQualificationsUpdated: GeneticAnalystsQualificationUpdatedCommand =
-        new GeneticAnalystsQualificationUpdatedCommand(
+      const _geneticAnalystsQualificationsUpdated: GeneticAnalystsQualificationUpdatedCommandIndexer =
+        new GeneticAnalystsQualificationUpdatedCommandIndexer(
           [GENETIC_ANALYSTS_QUALIFICATIONS_PARAM],
           mockBlockNumber(),
         );
@@ -82,8 +82,8 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _geneticAnalystsQualificationsUpdated: GeneticAnalystsQualificationUpdatedCommand =
-          new GeneticAnalystsQualificationUpdatedCommand(
+        const _geneticAnalystsQualificationsUpdated: GeneticAnalystsQualificationUpdatedCommandIndexer =
+          new GeneticAnalystsQualificationUpdatedCommandIndexer(
             [{}],
             mockBlockNumber(),
           );
@@ -98,8 +98,8 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
         createMockGeneticAnalystsQualifications();
 
       /* eslint-disable */
-      const _geneticAnalystsQualificationsDeleted: GeneticAnalystsQualificationDeletedCommand =
-        new GeneticAnalystsQualificationDeletedCommand(
+      const _geneticAnalystsQualificationsDeleted: GeneticAnalystsQualificationDeletedCommandIndexer =
+        new GeneticAnalystsQualificationDeletedCommandIndexer(
           [GENETIC_ANALYSTS_QUALIFICATIONS_PARAM],
           mockBlockNumber(),
         );
@@ -114,8 +114,8 @@ describe('Genetic Analysts Qualifications Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _geneticAnalystsQualificationsDeleted: GeneticAnalystsQualificationDeletedCommand =
-          new GeneticAnalystsQualificationDeletedCommand(
+        const _geneticAnalystsQualificationsDeleted: GeneticAnalystsQualificationDeletedCommandIndexer =
+          new GeneticAnalystsQualificationDeletedCommandIndexer(
             [{}],
             mockBlockNumber(),
           );

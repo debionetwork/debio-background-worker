@@ -1,13 +1,13 @@
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
-  GeneticAnalysisOrderCancelledCommand,
+  GeneticAnalysisOrderCancelledCommandIndexer,
   GeneticAnalysisOrderCommandHandlers,
-  GeneticAnalysisOrderCreatedCommand,
-  GeneticAnalysisOrderFailedCommand,
-  GeneticAnalysisOrderFulfilledCommand,
-  GeneticAnalysisOrderPaidCommand,
-  GeneticAnalysisOrderRefundedCommand,
+  GeneticAnalysisOrderCreatedCommandIndexer,
+  GeneticAnalysisOrderFailedCommandIndexer,
+  GeneticAnalysisOrderFulfilledCommandIndexer,
+  GeneticAnalysisOrderPaidCommandIndexer,
+  GeneticAnalysisOrderRefundedCommandIndexer,
 } from '../../../../../src/indexer/events/genetic-analysis-order';
 import {
   createObjectSearchGeneticAnalysts,
@@ -105,8 +105,8 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
     it('should update genetic analysis order status to cancelled', async () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
-      const geneticAnalysisOrderCancelledCommand: GeneticAnalysisOrderCancelledCommand =
-        new GeneticAnalysisOrderCancelledCommand(
+      const geneticAnalysisOrderCancelledCommand: GeneticAnalysisOrderCancelledCommandIndexer =
+        new GeneticAnalysisOrderCancelledCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -123,8 +123,8 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
     it('should create index genetic analysis order', async () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
-      const geneticAnalysisOrderCreatedCommand: GeneticAnalysisOrderCreatedCommand =
-        new GeneticAnalysisOrderCreatedCommand(
+      const geneticAnalysisOrderCreatedCommand: GeneticAnalysisOrderCreatedCommandIndexer =
+        new GeneticAnalysisOrderCreatedCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -185,8 +185,8 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
     it('should update genetic analysis order status to failed', async () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
-      const geneticAnalysisOrderFailedCommand: GeneticAnalysisOrderFailedCommand =
-        new GeneticAnalysisOrderFailedCommand(
+      const geneticAnalysisOrderFailedCommand: GeneticAnalysisOrderFailedCommandIndexer =
+        new GeneticAnalysisOrderFailedCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -203,8 +203,8 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
     it('should update genetic analysis order status fulfilled', async () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
-      const geneticAnalysisOrderFulfilledCommand: GeneticAnalysisOrderFulfilledCommand =
-        new GeneticAnalysisOrderFulfilledCommand(
+      const geneticAnalysisOrderFulfilledCommand: GeneticAnalysisOrderFulfilledCommandIndexer =
+        new GeneticAnalysisOrderFulfilledCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -221,8 +221,8 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
     it('should update genetic analysis order status paid', async () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
-      const geneticAnalysisOrderPaidCommand: GeneticAnalysisOrderPaidCommand =
-        new GeneticAnalysisOrderPaidCommand(
+      const geneticAnalysisOrderPaidCommand: GeneticAnalysisOrderPaidCommandIndexer =
+        new GeneticAnalysisOrderPaidCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );
@@ -239,8 +239,8 @@ describe('Genetic Analysis Order Substrate Event Handler', () => {
     it('should update genetic analysis order status refunded', async () => {
       const GENETIC_ANALYSIS_ORDER_PARAM = createMockGeneticAnalysisOrder();
 
-      const geneticAnalysisOrderRefundedCommand: GeneticAnalysisOrderRefundedCommand =
-        new GeneticAnalysisOrderRefundedCommand(
+      const geneticAnalysisOrderRefundedCommand: GeneticAnalysisOrderRefundedCommandIndexer =
+        new GeneticAnalysisOrderRefundedCommandIndexer(
           [GENETIC_ANALYSIS_ORDER_PARAM],
           mockBlockNumber(),
         );

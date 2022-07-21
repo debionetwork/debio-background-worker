@@ -1,17 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ServiceUpdatedCommand } from './service-updated.command';
+import { ServiceUpdatedCommandIndexer } from './service-updated.command';
 
 @Injectable()
-@CommandHandler(ServiceUpdatedCommand)
+@CommandHandler(ServiceUpdatedCommandIndexer)
 export class ServiceUpdatedHandler
-  implements ICommandHandler<ServiceUpdatedCommand>
+  implements ICommandHandler<ServiceUpdatedCommandIndexer>
 {
   private readonly logger: Logger = new Logger(ServiceUpdatedHandler.name);
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: ServiceUpdatedCommand) {
+  async execute(command: ServiceUpdatedCommandIndexer) {
     const { services: service } = command;
 
     await this.elasticsearchService.update({

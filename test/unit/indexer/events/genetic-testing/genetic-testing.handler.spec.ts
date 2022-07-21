@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import { DataStakedHandler } from '../../../../../src/indexer/events/genetic-testing/commands/data-staked/data-staked.handler';
 import {
-  DataStakedCommand,
+  DataStakedCommandIndexer,
   GeneticTestingCommandHandlers,
 } from '../../../../../src/indexer/events/genetic-testing';
 import { ElasticSearchServiceProvider } from '../../../mock';
@@ -44,10 +44,8 @@ describe('Genetic Testing Substrate Event Handler', () => {
     it('Data Staked Handler', async () => {
       const staked = createMockDataStaked();
 
-      const dataStakedCommand: DataStakedCommand = new DataStakedCommand(
-        staked,
-        mockBlockNumber(),
-      );
+      const dataStakedCommand: DataStakedCommandIndexer =
+        new DataStakedCommandIndexer(staked, mockBlockNumber());
 
       await dataStakedHandler.execute(dataStakedCommand);
       expect(elasticsearchService.update).toHaveBeenCalled();
