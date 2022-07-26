@@ -11,7 +11,7 @@ export class CreateServiceRequestHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: CreateServiceRequestCommandIndexer) {
-    await this.elasticsearchService.index({
+    await this.elasticsearchService.create({
       index: 'create-service-request',
       id: command.request.hash,
       refresh: 'wait_for',
