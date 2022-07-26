@@ -108,6 +108,8 @@ describe('Genetic analyst verification status', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('genetic analyst registered event', async () => {
@@ -172,5 +174,7 @@ describe('Genetic analyst verification status', () => {
         `You've successfully submitted your account verification.`,
       ),
     ).toBeTruthy();
+
+    await dbConnection.destroy();
   }, 180000);
 });

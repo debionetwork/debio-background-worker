@@ -123,6 +123,8 @@ describe('Data Staked Integration Tests', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('genetic testing DNA sample result ready event', async () => {
@@ -231,5 +233,7 @@ describe('Data Staked Integration Tests', () => {
         `Your sample from ${dnaSample.trackingId} has been rejected. Click here to see your order details.`,
       ),
     ).toBeTruthy();
+
+    await dbConnection.destroy();
   }, 180000);
 });

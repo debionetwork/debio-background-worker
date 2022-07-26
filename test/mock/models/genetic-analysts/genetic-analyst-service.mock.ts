@@ -6,17 +6,17 @@ export const geneticAnalystServiceDataMock = {
     pricesByCurrency: [
       {
         currency: 'DAI',
-        totalPrice: 1,
+        totalPrice: BigInt('1000000000000000000'),
         priceComponents: [
           {
             component: 'string',
-            value: 1,
+            value: BigInt('900000000000000000'),
           },
         ],
         additionalPrices: [
           {
             component: 'string',
-            value: 1,
+            value: BigInt('100000000000000000'),
           },
         ],
       },

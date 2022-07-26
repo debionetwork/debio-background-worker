@@ -125,6 +125,8 @@ describe('Genetic Analysis Order Created Integration Test', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('genetic analysis order created event', async () => {
@@ -261,5 +263,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         `You've successfully submitted your requested test for ${geneticAnalysisOrder.id}.`,
       ),
     ).toBeTruthy();
+
+    await dbConnection.destroy();
   }, 200000);
 });

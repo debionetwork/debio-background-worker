@@ -165,7 +165,7 @@ describe('Event Command Service Request Claimed', () => {
     expect(dataRegionServiceRequest['service_request']).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          amount: serviceRequestMock.stakingAmount.toString(),
+          amount: '1,000,000,000,000,000,000',
           category: serviceRequest.serviceCategory,
           city: serviceRequest.city,
           region: serviceRequest.region,
@@ -223,8 +223,8 @@ describe('Event Command Service Request Claimed', () => {
           pair,
           serviceRequest.hash,
           service.id,
-          '1',
-          '1',
+          '900000000000000000',
+          '100000000000000000',
           () => {
             queryServiceRequestById(api, serviceRequest.hash).then((res) => {
               resolve(res);
