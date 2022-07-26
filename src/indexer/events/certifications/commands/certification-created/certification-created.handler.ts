@@ -13,7 +13,6 @@ export class CertificationCreatedHandler
   async execute(command: CertificationCreatedCommandIndexer) {
     const { certification } = command;
 
-    console.log(certification);
     await this.elasticsearchService.index({
       index: 'certifications',
       refresh: 'wait_for',
