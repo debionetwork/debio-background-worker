@@ -3,10 +3,10 @@ export const notificationData = {
     {
       id: 43,
       role: 'Customer',
-      entity_type: 'Order',
-      entity: 'OrderCreated',
+      entity_type: 'Genetic Testing Order',
+      entity: 'Order Created',
       description:
-        'Congrats! Your requested test for 0xd908eb33... has been submitted.',
+        "You've successfully submitted your requested test for 0xd908eb33... .",
       read: false,
       created_at: '2022-04-27T09:51:30.117Z',
       updated_at: '2022-04-27T09:51:30.118Z',

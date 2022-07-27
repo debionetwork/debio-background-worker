@@ -64,8 +64,8 @@ export class ServiceRequestCreatedHandler
 
       const notificationInput: NotificationDto = {
         role: 'Customer',
-        entity_type: 'ServiceRequest',
-        entity: 'ServiceRequestCreated',
+        entity_type: 'Request Service Staking',
+        entity: 'Requested Service Created',
         description: `You've successfully submitted your requested service with staking ID ${serviceRequest.hash}.`,
         read: false,
         created_at: currDateTime,
