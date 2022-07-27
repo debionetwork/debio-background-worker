@@ -110,6 +110,7 @@ describe('Indexer Genetic Testing Event', () => {
   it('should register lab', async () => {
     const { info: labInfo } = labDataMock;
 
+    // eslint-disable-next-line
     const verifiedLab: Promise<Lab> = new Promise((resolve, reject) => {
       updateLabVerificationStatus(
         api,
@@ -132,6 +133,7 @@ describe('Indexer Genetic Testing Event', () => {
 
   it('should create service', async () => {
     const { info: serviceInfo, serviceFlow } = serviceDataMock;
+    // eslint-disable-next-line
     const servicePromise: Promise<Service> = new Promise((resolve, reject) => {
       createService(api, pair, serviceInfo, serviceFlow, () => {
         queryLabById(api, pair.address).then((lab) => {
@@ -150,6 +152,7 @@ describe('Indexer Genetic Testing Event', () => {
 
   it('should create order', async () => {
     const createOrderPromise: Promise<Order> = new Promise(
+      // eslint-disable-next-line
       (resolve, reject) => {
         createOrder(
           api,
@@ -173,6 +176,7 @@ describe('Indexer Genetic Testing Event', () => {
     expect(order.sellerId).toEqual(lab.accountId);
     expect(order.status).toEqual(OrderStatus.Unpaid);
 
+    // eslint-disable-next-line
     const paidOrderPromise: Promise<Order> = new Promise((resolve, reject) => {
       setOrderPaid(api, pair, order.id, () => {
         queryOrdersByCustomer(api, pair.address).then((res) => {

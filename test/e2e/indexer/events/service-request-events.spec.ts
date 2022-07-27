@@ -147,6 +147,44 @@ describe('Event Command Service Request Claimed', () => {
     expect(serviceRequest.status).toEqual(RequestStatus.Open);
     expect(serviceRequest.requesterAddress).toEqual(pair.address);
 
+    const serviceRequestES = await elasticsearchService.search({
+      index: 'create-service-request',
+      body: {
+        query: {
+          match: {
+            _id: {
+              query: serviceRequest.hash,
+            },
+          },
+        },
+      },
+    });
+
+    expect(serviceRequestES.body.hits.hits.length).toEqual(1);
+    const serviceRequestSource = serviceRequestES.body.hits.hits[0]._source;
+
+    expect(serviceRequestSource['request']['hash']).toEqual(
+      serviceRequest.hash,
+    );
+    expect(serviceRequestSource['request']['requester_address']).toEqual(
+      serviceRequest.requesterAddress,
+    );
+    expect(serviceRequestSource['request']['country']).toEqual(
+      serviceRequest.country,
+    );
+    expect(serviceRequestSource['request']['city']).toEqual(
+      serviceRequest.city,
+    );
+    expect(serviceRequestSource['request']['region']).toEqual(
+      serviceRequest.region,
+    );
+    expect(serviceRequestSource['request']['service_category']).toEqual(
+      serviceRequest.serviceCategory,
+    );
+    expect(serviceRequestSource['request']['status']).toEqual(
+      RequestStatus.Open,
+    );
+
     const regionServiceRequest = await elasticsearchService.search({
       index: 'country-service-request',
       body: {
@@ -246,6 +284,44 @@ describe('Event Command Service Request Claimed', () => {
         serviceCategory: serviceRequestMock.serviceCategory,
         status: RequestStatus.Claimed,
       }),
+    );
+
+    const serviceRequestES = await elasticsearchService.search({
+      index: 'create-service-request',
+      body: {
+        query: {
+          match: {
+            _id: {
+              query: serviceRequest.hash,
+            },
+          },
+        },
+      },
+    });
+
+    expect(serviceRequestES.body.hits.hits.length).toEqual(1);
+    const serviceRequestSource = serviceRequestES.body.hits.hits[0]._source;
+
+    expect(serviceRequestSource['request']['hash']).toEqual(
+      serviceRequest.hash,
+    );
+    expect(serviceRequestSource['request']['requester_address']).toEqual(
+      serviceRequest.requesterAddress,
+    );
+    expect(serviceRequestSource['request']['country']).toEqual(
+      serviceRequest.country,
+    );
+    expect(serviceRequestSource['request']['city']).toEqual(
+      serviceRequest.city,
+    );
+    expect(serviceRequestSource['request']['region']).toEqual(
+      serviceRequest.region,
+    );
+    expect(serviceRequestSource['request']['service_category']).toEqual(
+      serviceRequest.serviceCategory,
+    );
+    expect(serviceRequestSource['request']['status']).toEqual(
+      RequestStatus.Claimed,
     );
 
     const createServiceRequset = await elasticsearchService.search({
