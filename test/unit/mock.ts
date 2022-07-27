@@ -403,6 +403,9 @@ export const ElasticSearchServiceProvider = {
     update: jest.fn(() => ({
       catch: jest.fn(),
     })),
+    create: jest.fn(() => ({
+      catch: jest.fn(),
+    })),
     updateByQuery: jest.fn(() => ({
       catch: jest.fn(),
     })),

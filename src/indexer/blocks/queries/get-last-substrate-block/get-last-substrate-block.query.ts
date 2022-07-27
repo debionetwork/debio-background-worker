@@ -1,1 +1,1 @@
-export class GetLastSubstrateBlockQuery {}
+export class GetLastSubstrateBlockQueryIndexer {}

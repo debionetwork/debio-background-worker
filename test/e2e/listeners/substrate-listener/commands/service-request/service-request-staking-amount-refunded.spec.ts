@@ -194,5 +194,7 @@ describe('Service Request Excess Integration Tests', () => {
         `Your staked amount from staking ID ${serviceRequest.hash} has been refunded, kindly check your balance.`,
       ),
     ).toBeTruthy();
+
+    await dbConnection.destroy();
   }, 180000);
 });

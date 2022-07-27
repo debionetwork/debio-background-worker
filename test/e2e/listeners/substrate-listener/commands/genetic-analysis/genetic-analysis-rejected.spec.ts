@@ -140,6 +140,8 @@ describe('Genetic Analysis Order Created Integration Test', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('genetic analysis rejected event', async () => {
@@ -336,5 +338,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     });
 
     expect(await deleteGa).toEqual(0);
+
+    await dbConnection.destroy();
   }, 240000);
 });

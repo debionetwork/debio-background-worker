@@ -160,5 +160,7 @@ describe('lab staking Integration Tests', () => {
     expect(labLogging[0].ref_number).toEqual(lab.accountId);
     expect(labLogging[0].transaction_type).toEqual(6);
     expect(labLogging[0].transaction_status).toEqual(26);
+
+    await dbConnection.destroy();
   }, 180000);
 });

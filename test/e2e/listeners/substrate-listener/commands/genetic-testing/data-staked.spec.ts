@@ -132,6 +132,8 @@ describe('Data Staked Integration Tests', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('data staked event', async () => {
@@ -253,5 +255,7 @@ describe('Data Staked Integration Tests', () => {
     expect(transactionLogs[0].ref_number).toEqual(order.id);
     expect(transactionLogs[0].transaction_type).toEqual(8);
     expect(transactionLogs[0].transaction_status).toEqual(34);
+
+    await dbConnection.destroy();
   }, 200000);
 });

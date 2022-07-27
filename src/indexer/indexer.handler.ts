@@ -8,7 +8,7 @@ import {
   SetLastSubstrateBlockCommand,
   SetLastSubstrateBlockOldCommand,
   DeleteAllIndexesCommand,
-  GetLastSubstrateBlockQuery,
+  GetLastSubstrateBlockQueryIndexer,
 } from './blocks';
 import { ProcessEnvProxy } from '../common/proxies/process-env/process-env.proxy';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
@@ -182,7 +182,7 @@ export class IndexerHandler
 
   async startDevelopment(currentFetchBlockNumber: number) {
     const blockNumber = await this.queryBus.execute(
-      new GetLastSubstrateBlockQuery(),
+      new GetLastSubstrateBlockQueryIndexer(),
     );
 
     // check if last_block_number is higher than next block number
@@ -200,7 +200,7 @@ export class IndexerHandler
     let lastBlockNumberEs = 1;
     try {
       lastBlockNumberEs = await this.queryBus.execute(
-        new GetLastSubstrateBlockQuery(),
+        new GetLastSubstrateBlockQueryIndexer(),
       );
       /**
        * Process logs in chunks of blocks

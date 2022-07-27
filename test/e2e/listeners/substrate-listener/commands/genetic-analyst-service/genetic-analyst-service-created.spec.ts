@@ -120,6 +120,8 @@ describe('Genetic Analyst Service Created Event', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('genetic analyst service created event', async () => {
@@ -226,5 +228,7 @@ describe('Genetic Analyst Service Created Event', () => {
     });
 
     expect(await deleteGa).toEqual(0);
+
+    await dbConnection.destroy();
   }, 180000);
 });
