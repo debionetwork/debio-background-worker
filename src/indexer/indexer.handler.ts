@@ -5,8 +5,8 @@ import { Event } from '@polkadot/types/interfaces';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { BlockMetaData } from './models/block-meta-data';
 import {
-  SetLastSubstrateBlockCommand,
-  SetLastSubstrateBlockOldCommand,
+  SetLastSubstrateBlockCommandIndexer,
+  SetLastSubstrateBlockOldCommandIndexer,
   DeleteAllIndexesCommand,
   GetLastSubstrateBlockQueryIndexer,
 } from './blocks';
@@ -167,7 +167,7 @@ export class IndexerHandler
           this.logger.log(`End => Fetch block at: ${this.lastBlockNumber}`);
 
           await this.commandBus.execute(
-            new SetLastSubstrateBlockCommand(this.lastBlockNumber),
+            new SetLastSubstrateBlockCommandIndexer(this.lastBlockNumber),
           );
         }
       }
@@ -236,7 +236,7 @@ export class IndexerHandler
         this.logger.log(`End Syncing block ${chunkStart} - ${chunkEnd}`);
         // Remember the last block number processed
         await this.commandBus.execute(
-          new SetLastSubstrateBlockOldCommand(chunkEnd),
+          new SetLastSubstrateBlockOldCommandIndexer(chunkEnd),
         );
 
         // set chunkStart to 1 block after chunkEnd
