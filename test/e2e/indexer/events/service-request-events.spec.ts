@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { IndexerHandler } from '../../../../../src/indexer/indexer.handler';
-import { CommonModule } from '../../../../../src/common/common.module';
-import { ProcessEnvModule } from '../../../../../src/common/proxies/process-env/process-env.module';
-import { ServiceCommandHandlers } from '../../../../../src/indexer/events/services';
+import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
+import { CommonModule } from '../../../../src/common/common.module';
+import { ProcessEnvModule } from '../../../../src/common/proxies/process-env/process-env.module';
+import { ServiceCommandHandlers } from '../../../../src/indexer/events/services';
 import { INestApplication } from '@nestjs/common';
-import { initializeApi } from '../../../polkadot-init';
+import { initializeApi } from '../../polkadot-init';
 import { ApiPromise } from '@polkadot/api';
 import {
   claimRequest,
@@ -26,14 +26,14 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CqrsModule } from '@nestjs/cqrs';
-import { labDataMock } from '../../../../mock/models/labs/labs.mock';
+import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { serviceDataMock } from '../../../../mock/models/labs/services.mock';
-import { LabCommandHandlers } from '../../../../../src/indexer/events/labs';
-import { RequestServiceCommandHandlers } from '../../../../../src/indexer/events/service-request';
+import { serviceDataMock } from '../../../mock/models/labs/services.mock';
+import { LabCommandHandlers } from '../../../../src/indexer/events/labs';
+import { RequestServiceCommandHandlers } from '../../../../src/indexer/events/service-request';
 import { ScheduleModule } from '@nestjs/schedule';
-import { IndexerModule } from '../../../../../src/indexer/indexer.module';
-import { serviceRequestMock } from '../../../../mock/models/service-request/service-request.mock';
+import { IndexerModule } from '../../../../src/indexer/indexer.module';
+import { serviceRequestMock } from '../../../mock/models/service-request/service-request.mock';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
@@ -136,7 +136,8 @@ describe('Event Command Service Request Claimed', () => {
       },
     );
 
-    serviceRequest = await createServicePromise;
+    serviceRequest = (await createServicePromise).normalize();
+
     expect(serviceRequest.city).toEqual(serviceRequestMock.city);
     expect(serviceRequest.region).toEqual(serviceRequestMock.region);
     expect(serviceRequest.country).toEqual(serviceRequestMock.country);
@@ -145,6 +146,44 @@ describe('Event Command Service Request Claimed', () => {
     );
     expect(serviceRequest.status).toEqual(RequestStatus.Open);
     expect(serviceRequest.requesterAddress).toEqual(pair.address);
+
+    const serviceRequestES = await elasticsearchService.search({
+      index: 'create-service-request',
+      body: {
+        query: {
+          match: {
+            _id: {
+              query: serviceRequest.hash,
+            },
+          },
+        },
+      },
+    });
+
+    expect(serviceRequestES.body.hits.hits.length).toEqual(1);
+    const serviceRequestSource = serviceRequestES.body.hits.hits[0]._source;
+
+    expect(serviceRequestSource['request']['hash']).toEqual(
+      serviceRequest.hash,
+    );
+    expect(serviceRequestSource['request']['requester_address']).toEqual(
+      serviceRequest.requesterAddress,
+    );
+    expect(serviceRequestSource['request']['country']).toEqual(
+      serviceRequest.country,
+    );
+    expect(serviceRequestSource['request']['city']).toEqual(
+      serviceRequest.city,
+    );
+    expect(serviceRequestSource['request']['region']).toEqual(
+      serviceRequest.region,
+    );
+    expect(serviceRequestSource['request']['service_category']).toEqual(
+      serviceRequest.serviceCategory,
+    );
+    expect(serviceRequestSource['request']['status']).toEqual(
+      RequestStatus.Open,
+    );
 
     const regionServiceRequest = await elasticsearchService.search({
       index: 'country-service-request',
@@ -174,7 +213,9 @@ describe('Event Command Service Request Claimed', () => {
         }),
       ]),
     );
+  }, 80000);
 
+  it('claim service request', async () => {
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
@@ -245,6 +286,44 @@ describe('Event Command Service Request Claimed', () => {
       }),
     );
 
+    const serviceRequestES = await elasticsearchService.search({
+      index: 'create-service-request',
+      body: {
+        query: {
+          match: {
+            _id: {
+              query: serviceRequest.hash,
+            },
+          },
+        },
+      },
+    });
+
+    expect(serviceRequestES.body.hits.hits.length).toEqual(1);
+    const serviceRequestSource = serviceRequestES.body.hits.hits[0]._source;
+
+    expect(serviceRequestSource['request']['hash']).toEqual(
+      serviceRequest.hash,
+    );
+    expect(serviceRequestSource['request']['requester_address']).toEqual(
+      serviceRequest.requesterAddress,
+    );
+    expect(serviceRequestSource['request']['country']).toEqual(
+      serviceRequest.country,
+    );
+    expect(serviceRequestSource['request']['city']).toEqual(
+      serviceRequest.city,
+    );
+    expect(serviceRequestSource['request']['region']).toEqual(
+      serviceRequest.region,
+    );
+    expect(serviceRequestSource['request']['service_category']).toEqual(
+      serviceRequest.serviceCategory,
+    );
+    expect(serviceRequestSource['request']['status']).toEqual(
+      RequestStatus.Claimed,
+    );
+
     const createServiceRequset = await elasticsearchService.search({
       index: 'create-service-request',
       body: {
@@ -286,5 +365,5 @@ describe('Event Command Service Request Claimed', () => {
     });
 
     expect(await deleteLabs).toEqual(0);
-  }, 140000);
+  }, 120000);
 });

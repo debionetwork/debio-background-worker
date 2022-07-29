@@ -18,9 +18,11 @@ export class GeneticAnalystVerificationFailedHandler
       id: geneticAnalystsModel.account_id,
       refresh: 'wait_for',
       body: {
-        verification_status: geneticAnalystsModel.verification_status,
-        stake_amount: geneticAnalystsModel.stake_amount,
-        blockMetaData: blockMetaData,
+        doc: {
+          verification_status: geneticAnalystsModel.verification_status,
+          stake_amount: geneticAnalystsModel.stake_amount,
+          blockMetaData: blockMetaData,
+        },
       },
     });
   }
