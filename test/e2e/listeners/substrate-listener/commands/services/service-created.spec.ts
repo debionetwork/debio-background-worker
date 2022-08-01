@@ -200,5 +200,7 @@ describe('Service Created Integration Tests', () => {
     expect(
       notifications[0].description.includes(service.info.name),
     ).toBeTruthy();
+
+    await dbConnection.destroy();
   }, 180000);
 });

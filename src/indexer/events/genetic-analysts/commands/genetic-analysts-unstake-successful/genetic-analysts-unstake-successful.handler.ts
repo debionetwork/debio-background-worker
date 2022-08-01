@@ -18,10 +18,12 @@ export class GeneticAnalystUnstakeSuccessfulHandler
       id: geneticAnalystsModel.account_id,
       refresh: 'wait_for',
       body: {
-        stake_amount: geneticAnalystsModel.stake_amount,
-        stake_status: geneticAnalystsModel.stake_status,
-        blockMetaData: blockMetaData,
-        unstake_at: geneticAnalystsModel.unstake_at,
+        doc: {
+          stake_amount: geneticAnalystsModel.stake_amount,
+          stake_status: geneticAnalystsModel.stake_status,
+          blockMetaData: blockMetaData,
+          unstake_at: geneticAnalystsModel.unstake_at,
+        },
       },
     });
   }

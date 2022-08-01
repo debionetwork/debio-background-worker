@@ -126,6 +126,8 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('genetic analysis order fulfilled event', async () => {
@@ -359,5 +361,7 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
     });
 
     expect(await deleteGa).toEqual(0);
+
+    await dbConnection.destroy();
   }, 180000);
 });

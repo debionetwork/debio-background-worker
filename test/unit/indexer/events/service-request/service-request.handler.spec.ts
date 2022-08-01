@@ -208,15 +208,7 @@ describe('Service Request Substrate Event Handler', () => {
       const ES_RESULT_COUNTRY_SERVICE_REQUEST = {
         body: {
           hits: {
-            hits: [
-              {
-                _source: {
-                  request: {
-                    country: 'string',
-                  },
-                },
-              },
-            ],
+            hits: [],
           },
         },
       };
@@ -226,7 +218,7 @@ describe('Service Request Substrate Event Handler', () => {
         .mockReturnValue(ES_RESULT_COUNTRY_SERVICE_REQUEST);
 
       await createServiceRequestHandler.execute(createServiceRequestCommand);
-      expect(elasticsearchService.index).toHaveBeenCalled();
+      expect(elasticsearchService.create).toHaveBeenCalled();
       expect(elasticsearchService.search).toHaveBeenCalled();
       expect(elasticsearchService.index).toHaveBeenCalled();
     });
@@ -260,7 +252,7 @@ describe('Service Request Substrate Event Handler', () => {
       const createServiceRequestCommand: CreateServiceRequestCommandIndexer =
         new CreateServiceRequestCommandIndexer(requestData, mockBlockNumber());
       await createServiceRequestHandler.execute(createServiceRequestCommand);
-      expect(elasticsearchService.index).toHaveBeenCalled();
+      expect(elasticsearchService.create).toHaveBeenCalled();
       expect(elasticsearchService.search).toHaveBeenCalled();
       expect(elasticsearchService.update).toHaveBeenCalled();
     });

@@ -318,5 +318,7 @@ describe('Service Request Excess Integration Tests', () => {
     });
 
     expect(await deletePromise).toEqual(0);
+
+    await dbConnection.destroy();
   }, 210000);
 });
