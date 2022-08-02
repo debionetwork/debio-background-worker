@@ -71,15 +71,14 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       const currDateTime = this.dateTimeProxy.new();
 
       const valueMessage =
-        eventTypes.role.lab.geneticTesting.DnaSampleQualityControlled
-          .value_message;
+        eventTypes.role.lab.geneticTesting.DnaSampleQualityControlled.value_message.trimEnd();
 
       // QC notification to lab
       const labNotification: NotificationDto = {
         role: 'Lab',
         entity_type: 'Genetic Testing Order',
         entity: 'Order Failed',
-        description: `${valueMessage}${amountToForward} DAI as quality control fees for ${order.dnaSampleTrackingId}.`,
+        description: `${valueMessage} ${amountToForward} DAI as quality control fees for ${order.dnaSampleTrackingId}.`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
