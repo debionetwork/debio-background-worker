@@ -3,11 +3,19 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
+  MailerManager,
   NotificationService,
+  ProcessEnvProxy,
+  SubstrateService,
   TransactionLoggingService,
 } from '../../../../../common';
 import { GeneticAnalysisOrderPaidCommand } from './genetic-analysis-order-paid.command';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import {
+  Order,
+  queryGeneticAnalystByAccountId,
+  queryGeneticAnalystServicesByHashId,
+} from '@debionetwork/polkadot-provider';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderPaidCommand)
@@ -17,10 +25,14 @@ export class GeneticAnalysisOrderPaidHandler
   private readonly logger: Logger = new Logger(
     GeneticAnalysisOrderPaidCommand.name,
   );
+
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
+    private readonly mailerManager: MailerManager,
+    private readonly substrateService: SubstrateService,
+    private readonly process: ProcessEnvProxy,
   ) {}
 
   async execute(command: GeneticAnalysisOrderPaidCommand) {
@@ -71,6 +83,31 @@ export class GeneticAnalysisOrderPaidHandler
       };
 
       this.notificationService.insert(notificationNewOrderGeneticAnalyst);
+
+      const geneticAnaystDetail = await queryGeneticAnalystByAccountId(
+        this.substrateService.api,
+        geneticAnalysisOrder.sellerId,
+      );
+      const geneticAnalystServiceDetail =
+        await queryGeneticAnalystServicesByHashId(
+          this.substrateService.api,
+          geneticAnalysisOrder.serviceId,
+        );
+
+      const linkOrder =
+        this.process.env.GA_ORDER_LINK + geneticAnalysisOrder.id;
+
+      await this.mailerManager.sendNewOrderToGa(
+        geneticAnaystDetail.info.email,
+        {
+          service: geneticAnalystServiceDetail.info.name,
+          price:
+            geneticAnalystServiceDetail.info.pricesByCurrency[0].totalPrice.toString(),
+          order_id: geneticAnalysisOrder.id,
+          order_date: geneticAnalysisOrder.createdAt.toDateString(),
+          link_order: linkOrder,
+        },
+      );
     } catch (error) {
       await this.logger.log(error);
     }

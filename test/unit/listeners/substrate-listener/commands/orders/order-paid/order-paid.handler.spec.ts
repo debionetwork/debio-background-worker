@@ -1,5 +1,8 @@
 import {
   DateTimeProxy,
+  MailerManager,
+  ProcessEnvProxy,
+  SubstrateService,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
@@ -8,9 +11,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
   dateTimeProxyMockFactory,
+  mailerManagerMockFactory,
   mockBlockNumber,
   MockType,
   notificationServiceMockFactory,
+  substrateServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { OrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
@@ -22,6 +27,14 @@ import { NotificationService } from '../../../../../../../src/common/notificatio
 describe('Order Paid Handler Event', () => {
   let orderPaidHandler: OrderPaidHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
+  let proceccEnvProxy: MockType<ProcessEnvProxy>; // eslint-disable-line
+
+  const LAB_ORDER_LINK = 'http://localhost/lab/orders/';
+  class ProcessEnvProxyMock {
+    env = {
+      LAB_ORDER_LINK,
+    };
+  }
 
   beforeEach(async () => {
     jest
@@ -40,6 +53,18 @@ describe('Order Paid Handler Event', () => {
         {
           provide: DateTimeProxy,
           useFactory: dateTimeProxyMockFactory,
+        },
+        {
+          provide: MailerManager,
+          useFactory: mailerManagerMockFactory,
+        },
+        {
+          provide: SubstrateService,
+          useFactory: substrateServiceMockFactory,
+        },
+        {
+          provide: ProcessEnvProxy,
+          useClass: ProcessEnvProxyMock,
         },
         OrderPaidHandler,
       ],
