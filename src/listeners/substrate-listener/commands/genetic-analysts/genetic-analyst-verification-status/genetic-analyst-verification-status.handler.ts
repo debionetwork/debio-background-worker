@@ -45,7 +45,6 @@ export class GeneticAnalystVerificationStatusHandler
           21,
         );
       let transactionStatus;
-
       if (geneticAnalyst.verificationStatus === 'Verified') {
         transactionStatus = 20;
         entity = 'Account verified';
