@@ -12,7 +12,6 @@ import {
 import { GeneticAnalysisOrderPaidCommand } from './genetic-analysis-order-paid.command';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
 import {
-  Order,
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
 } from '@debionetwork/polkadot-provider';

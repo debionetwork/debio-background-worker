@@ -40,6 +40,7 @@ import { EscrowService } from '../../../../../../src/common/escrow/escrow.servic
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
+  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
@@ -110,6 +111,7 @@ describe('Order Fulfilled Integration Tests', () => {
         SubstrateModule,
         DateTimeModule,
         NotificationModule,
+        MailModule,
       ],
       providers: [
         {
