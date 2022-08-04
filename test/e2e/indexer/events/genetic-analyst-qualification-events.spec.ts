@@ -5,7 +5,6 @@ import {
 import {
   createQualification,
   deleteQualification,
-  GeneticAnalyst,
   GeneticAnalystQualification,
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystQualificationsByHashId,
@@ -20,7 +19,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ApiPromise } from '@polkadot/api';
 import { initializeApi } from '../../polkadot-init';
 import { CommonModule, ProcessEnvModule } from '../../../../src/common';
-import { GeneticAnalystsCommandHandlers } from '../../../../src/indexer/events/genetic-analysts';
 import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
 import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { geneticAnalystQualificationsDataMock } from '../../../mock/models/genetic-analysts/genetic-analyst-qualifications.mock';
@@ -72,7 +70,7 @@ describe('Genetic Analyst Qualification Events', () => {
         ScheduleModule.forRoot(),
         IndexerModule,
       ],
-      providers: [IndexerHandler, ...GeneticAnalystsCommandHandlers],
+      providers: [IndexerHandler],
     })
       .overrideProvider(GCloudSecretManagerService)
       .useClass(GoogleSecretManagerServiceMock)

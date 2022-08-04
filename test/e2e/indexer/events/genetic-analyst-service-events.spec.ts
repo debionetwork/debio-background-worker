@@ -76,7 +76,7 @@ describe('Genetic Analyst Service Events', () => {
         ScheduleModule.forRoot(),
         IndexerModule,
       ],
-      providers: [IndexerHandler, ...GeneticAnalystsCommandHandlers],
+      providers: [IndexerHandler],
     })
       .overrideProvider(GCloudSecretManagerService)
       .useClass(GoogleSecretManagerServiceMock)
