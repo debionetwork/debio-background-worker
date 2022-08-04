@@ -26,7 +26,7 @@ import { GeneticAnalystsCommandHandlers } from '../../../../src/indexer/events/g
 import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
 import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { geneticAnalystsDataMock } from '../../../mock/models/genetic-analysts/genetic-analysts.mock';
-import { geneticAnalystServiceDataMock } from 'test/mock/models/genetic-analysts/genetic-analyst-service.mock';
+import { geneticAnalystServiceDataMock } from '../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
 
 describe('Genetic Analyst Service Events', () => {
   let app: INestApplication;
@@ -158,8 +158,51 @@ describe('Genetic Analyst Service Events', () => {
   it('should create service for genetic analyst', async () => {
     const { info } = geneticAnalystServiceDataMock;
 
-    // eslint-disable-next-line
+    const EXPECTED_PRICE_CURRENCY = [
+      {
+        currency: 'DAI',
+        totalPrice: '1,000,000,000,000,000,000',
+        priceComponents: [
+          {
+            component: 'string',
+            value: '900,000,000,000,000,000',
+          },
+        ],
+        additionalPrices: [
+          {
+            component: 'string',
+            value: '100,000,000,000,000,000',
+          },
+        ],
+      },
+    ];
+
+    const EXPECTED_PRICE_CURRENCY_ES = [
+      {
+        currency: 'DAI',
+        total_price: '1,000,000,000,000,000,000',
+        price_components: [
+          {
+            component: 'string',
+            value: '900,000,000,000,000,000',
+          },
+        ],
+        additional_prices: [
+          {
+            component: 'string',
+            value: '100,000,000,000,000,000',
+          },
+        ],
+      },
+    ];
+
+    const EXPECTED_DURATION_ES = {
+      duration: '1',
+      duration_type: 'WorkingDays',
+    };
+
     const createGeneticAnalystServicePromise: Promise<GeneticAnalystService> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         createGeneticAnalystService(api, pair, info, () => {
           queryGetAllGeneticAnalystServices(api).then((service) => {
@@ -173,7 +216,7 @@ describe('Genetic Analyst Service Events', () => {
     expect(gaService.info.description).toEqual(info.description);
     expect(gaService.info.expectedDuration).toEqual(info.expectedDuration);
     expect(gaService.info.name).toEqual(info.name);
-    expect(gaService.info.pricesByCurrency).toEqual(info.pricesByCurrency);
+    expect(gaService.info.pricesByCurrency).toEqual(EXPECTED_PRICE_CURRENCY);
 
     const esGeneticAnalystService = await elasticsearchService.search({
       index: 'genetic-analysts-services',
@@ -198,19 +241,62 @@ describe('Genetic Analyst Service Events', () => {
       info.name,
     );
     expect(geneticAnalystServiceSource['info']['prices_by_currency']).toEqual(
-      info.pricesByCurrency,
+      EXPECTED_PRICE_CURRENCY_ES,
     );
     expect(geneticAnalystServiceSource['info']['expected_duration']).toEqual(
-      info.expectedDuration,
+      EXPECTED_DURATION_ES,
     );
-  });
+  }, 120000);
 
   it('should update service for genetic analyst', async () => {
     const { info } = geneticAnalystServiceDataMock;
     const UPDATE_NAME = 'string2';
 
-    // eslint-disable-next-line
+    const EXPECTED_PRICE_CURRENCY = [
+      {
+        currency: 'DAI',
+        totalPrice: '1,000,000,000,000,000,000',
+        priceComponents: [
+          {
+            component: 'string',
+            value: '900,000,000,000,000,000',
+          },
+        ],
+        additionalPrices: [
+          {
+            component: 'string',
+            value: '100,000,000,000,000,000',
+          },
+        ],
+      },
+    ];
+
+    const EXPECTED_PRICE_CURRENCY_ES = [
+      {
+        currency: 'DAI',
+        total_price: '1,000,000,000,000,000,000',
+        price_components: [
+          {
+            component: 'string',
+            value: '900,000,000,000,000,000',
+          },
+        ],
+        additional_prices: [
+          {
+            component: 'string',
+            value: '100,000,000,000,000,000',
+          },
+        ],
+      },
+    ];
+
+    const EXPECTED_DURATION_ES = {
+      duration: '1',
+      duration_type: 'WorkingDays',
+    };
+
     const updateGeneticAnalystServicePromise: Promise<GeneticAnalystService> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         updateGeneticAnalystService(
           api,
@@ -232,7 +318,7 @@ describe('Genetic Analyst Service Events', () => {
     expect(gaService.info.description).toEqual(info.description);
     expect(gaService.info.expectedDuration).toEqual(info.expectedDuration);
     expect(gaService.info.name).toEqual(UPDATE_NAME);
-    expect(gaService.info.pricesByCurrency).toEqual(info.pricesByCurrency);
+    expect(gaService.info.pricesByCurrency).toEqual(EXPECTED_PRICE_CURRENCY);
 
     const esGeneticAnalystService = await elasticsearchService.search({
       index: 'genetic-analysts-services',
@@ -257,16 +343,16 @@ describe('Genetic Analyst Service Events', () => {
       info.name,
     );
     expect(geneticAnalystServiceSource['info']['prices_by_currency']).toEqual(
-      info.pricesByCurrency,
+      EXPECTED_PRICE_CURRENCY_ES,
     );
     expect(geneticAnalystServiceSource['info']['expected_duration']).toEqual(
-      info.expectedDuration,
+      EXPECTED_DURATION_ES,
     );
-  });
+  }, 120000);
 
   it('should delete service for genetic analyst', async () => {
-    // eslint-disable-next-line
     const deleteGeneticAnalystServicePromise: Promise<number> = new Promise(
+      // eslint-disable-next-line
       (resolve, reject) => {
         deleteGeneticAnalystService(api, pair, gaService.id, () => {
           queryGeneticAnalystServicesCountByOwner(api, pair.address).then(
@@ -294,5 +380,5 @@ describe('Genetic Analyst Service Events', () => {
     });
 
     expect(esGeneticAnalystService.body.count).toEqual(0);
-  });
+  }, 120000);
 });

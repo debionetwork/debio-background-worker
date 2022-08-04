@@ -10,6 +10,7 @@ import {
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystQualificationsByHashId,
   queryGeneticAnalystQualificationsCountByOwner,
+  updateQualification,
 } from '@debionetwork/polkadot-provider';
 import { INestApplication } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -22,14 +23,13 @@ import { CommonModule, ProcessEnvModule } from '../../../../src/common';
 import { GeneticAnalystsCommandHandlers } from '../../../../src/indexer/events/genetic-analysts';
 import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
 import { IndexerModule } from '../../../../src/indexer/indexer.module';
-import { geneticAnalystQualificationsDataMock } from 'test/mock/models/genetic-analysts/genetic-analyst-qualifications.mock';
+import { geneticAnalystQualificationsDataMock } from '../../../mock/models/genetic-analysts/genetic-analyst-qualifications.mock';
 
 describe('Genetic Analyst Qualification Events', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
-  let ga: GeneticAnalyst;
   let gaQualification: GeneticAnalystQualification;
   let elasticsearchService: ElasticsearchService;
 
@@ -95,18 +95,30 @@ describe('Genetic Analyst Qualification Events', () => {
   }, 12000);
 
   it('should create genetic analyst qualification', async () => {
-    ga = await queryGeneticAnalystByAccountId(api, pair.address);
     const { info } = geneticAnalystQualificationsDataMock;
 
-    // eslint-disable-next-line
+    const EXPECTED_QUALIFICATIONS_ES = [
+      {
+        title: 'string',
+        issuer: 'string',
+        month: 'string',
+        year: 'string',
+        description: 'string',
+        supporting_document: 'string',
+      },
+    ];
+
     const createGeneticAnalystQualificationPromise: Promise<GeneticAnalystQualification> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         createQualification(api, pair, info, () => {
-          queryGeneticAnalystQualificationsByHashId(
-            api,
-            ga.qualifications.at(-1),
-          ).then((res) => {
-            resolve(res);
+          queryGeneticAnalystByAccountId(api, pair.address).then((ga) => {
+            queryGeneticAnalystQualificationsByHashId(
+              api,
+              ga.qualifications.at(-1),
+            ).then((res) => {
+              resolve(res);
+            });
           });
         });
       });
@@ -138,12 +150,11 @@ describe('Genetic Analyst Qualification Events', () => {
       info.experience,
     );
     expect(geneticAnalystQualificationSource['info']['certification']).toEqual(
-      info.certification,
+      EXPECTED_QUALIFICATIONS_ES,
     );
-  });
+  }, 120000);
 
   it('should update genetic analyst qualification', async () => {
-    ga = await queryGeneticAnalystByAccountId(api, pair.address);
     const { info } = geneticAnalystQualificationsDataMock;
 
     const UPDATE_EXPERIENCE = [
@@ -152,25 +163,39 @@ describe('Genetic Analyst Qualification Events', () => {
       },
     ];
 
-    // eslint-disable-next-line
-    const createGeneticAnalystQualificationPromise: Promise<GeneticAnalystQualification> =
+    const EXPECTED_QUALIFICATIONS_ES = [
+      {
+        title: 'string',
+        issuer: 'string',
+        month: 'string',
+        year: 'string',
+        description: 'string',
+        supporting_document: 'string',
+      },
+    ];
+
+    const updateGeneticAnalystQualificationPromise: Promise<GeneticAnalystQualification> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
-        createQualification(
+        updateQualification(
           api,
           pair,
+          gaQualification.id,
           { ...info, experience: UPDATE_EXPERIENCE },
           () => {
-            queryGeneticAnalystQualificationsByHashId(
-              api,
-              ga.qualifications.at(-1),
-            ).then((res) => {
-              resolve(res);
+            queryGeneticAnalystByAccountId(api, pair.address).then((ga) => {
+              queryGeneticAnalystQualificationsByHashId(
+                api,
+                ga.qualifications.at(-1),
+              ).then((res) => {
+                resolve(res);
+              });
             });
           },
         );
       });
 
-    gaQualification = await createGeneticAnalystQualificationPromise;
+    gaQualification = await updateGeneticAnalystQualificationPromise;
 
     expect(gaQualification.info.certification).toEqual(info.certification);
     expect(gaQualification.info.experience).toEqual(UPDATE_EXPERIENCE);
@@ -197,13 +222,13 @@ describe('Genetic Analyst Qualification Events', () => {
       UPDATE_EXPERIENCE,
     );
     expect(geneticAnalystQualificationSource['info']['certification']).toEqual(
-      info.certification,
+      EXPECTED_QUALIFICATIONS_ES,
     );
-  });
+  }, 120000);
 
   it('should delete genetic analyst qualifications', async () => {
-    // eslint-disable-next-line
     const deleteGeneticAnalystQualificationPromise: Promise<number> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         deleteQualification(api, pair, gaQualification.id, () => {
           queryGeneticAnalystQualificationsCountByOwner(api, pair.address).then(
@@ -214,7 +239,9 @@ describe('Genetic Analyst Qualification Events', () => {
         });
       });
 
-    expect(await deleteGeneticAnalystQualificationPromise).toEqual(0);
+    const count = await deleteGeneticAnalystQualificationPromise;
+
+    expect(count).toEqual(0);
 
     const esGeneticAnalystQualification = await elasticsearchService.count({
       index: 'genetic-analysts-qualification',
@@ -230,5 +257,5 @@ describe('Genetic Analyst Qualification Events', () => {
     });
 
     expect(esGeneticAnalystQualification.body.count).toEqual(0);
-  });
+  }, 120000);
 });
