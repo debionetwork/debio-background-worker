@@ -21,9 +21,7 @@ import {
   queryGeneticDataByOwnerId,
   rejectGeneticAnalysis,
   setGeneticAnalysisOrderPaid,
-  stakeGeneticAnalyst,
   submitGeneticAnalysis,
-  updateGeneticAnalystVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { INestApplication } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -36,7 +34,6 @@ import { CommonModule, ProcessEnvModule } from '../../../../src/common';
 import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
 import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { geneticAnalystServiceDataMock } from '../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
-import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 
 describe('Genetic Analysis Events', () => {
   let app: INestApplication;
@@ -112,6 +109,7 @@ describe('Genetic Analysis Events', () => {
     const { info: infoGAService } = geneticAnalystServiceDataMock;
 
     const registerGaPromise: Promise<GeneticAnalyst> = new Promise(
+      // eslint-disable-next-line
       (resolve, reject) => {
         queryGeneticAnalystByAccountId(api, pair.address).then((res) => {
           resolve(res);
@@ -119,9 +117,11 @@ describe('Genetic Analysis Events', () => {
       },
     );
 
+    // eslint-disable-next-line
     const ga = (await registerGaPromise).normalize();
 
     const createServiceGeneticAnalystPromise: Promise<GeneticAnalystService> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         createGeneticAnalystService(api, pair, infoGAService, () => {
           queryGeneticAnalystByAccountId(api, pair.address).then((ga) => {
@@ -202,6 +202,7 @@ describe('Genetic Analysis Events', () => {
     expect(geneticAnalysisOrder.sellerId).toEqual(pair.address);
 
     const geneticAnalysisPromise: Promise<GeneticAnalysis> = new Promise(
+      // eslint-disable-next-line
       (resolve, reject) => {
         submitGeneticAnalysis(
           api,
@@ -259,70 +260,11 @@ describe('Genetic Analysis Events', () => {
     expect(geneticAnalysisSource['status']).toEqual(
       GeneticAnalysisStatus.Registered,
     );
-  }, 50000);
-
-  it('should in progress genetic analysis', async () => {
-    const geneticAnalysisInProgressPromise: Promise<GeneticAnalysis> =
-      new Promise((resolve, reject) => {
-        processGeneticAnalysis(
-          api,
-          pair,
-          geneticAnalysisOrder.geneticAnalysisTrackingId,
-          GeneticAnalysisStatus.InProgress,
-          () => {
-            queryGeneticAnalysisByGeneticAnalysisTrackingId(
-              api,
-              geneticAnalysisOrder.geneticAnalysisTrackingId,
-            ).then((res) => {
-              resolve(res);
-            });
-          },
-        );
-      });
-
-    geneticAnalysis = await geneticAnalysisInProgressPromise;
-
-    expect(geneticAnalysis.comment).toEqual('string');
-    expect(geneticAnalysis.reportLink).toEqual(geneticData.reportLink);
-    expect(geneticAnalysis.geneticAnalysisOrderId).toEqual(
-      geneticAnalysisOrder.id,
-    );
-    expect(geneticAnalysis.geneticAnalysisTrackingId).toEqual(
-      geneticAnalysisOrder.geneticAnalysisTrackingId,
-    );
-    expect(geneticAnalysis.status).toEqual(GeneticAnalysisStatus.InProgress);
-
-    const esGeneticAnalysis = await elasticsearchService.search({
-      index: 'genetic-analysis',
-      body: {
-        query: {
-          match: {
-            _id: {
-              query: geneticAnalysis.geneticAnalystId,
-            },
-          },
-        },
-      },
-    });
-
-    expect(esGeneticAnalysis.body.hits.hits.length).toEqual(1);
-
-    const geneticAnalysisSource = esGeneticAnalysis.body.hits.hits[0]._source;
-
-    expect(geneticAnalysisSource['genetic_analysis_tracking_id']).toEqual(
-      geneticAnalysisOrder.geneticAnalysisTrackingId,
-    );
-    expect(geneticAnalysisSource['owner_id']).toEqual(pair.address);
-    expect(geneticAnalysisSource['report_link']).toEqual(
-      geneticData.reportLink,
-    );
-    expect(geneticAnalysisSource['status']).toEqual(
-      GeneticAnalysisStatus.InProgress,
-    );
-  });
+  }, 180000);
 
   it('should result ready genetic analysis', async () => {
     const geneticAnalysisInProgressPromise: Promise<GeneticAnalysis> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         processGeneticAnalysis(
           api,
@@ -350,7 +292,7 @@ describe('Genetic Analysis Events', () => {
     expect(geneticAnalysis.geneticAnalysisTrackingId).toEqual(
       geneticAnalysisOrder.geneticAnalysisTrackingId,
     );
-    expect(geneticAnalysis.status).toEqual(GeneticAnalysisStatus.InProgress);
+    expect(geneticAnalysis.status).toEqual(GeneticAnalysisStatus.ResultReady);
 
     const esGeneticAnalysis = await elasticsearchService.search({
       index: 'genetic-analysis',
@@ -379,10 +321,11 @@ describe('Genetic Analysis Events', () => {
     expect(geneticAnalysisSource['status']).toEqual(
       GeneticAnalysisStatus.ResultReady,
     );
-  });
+  }, 80000);
 
-  it('should result ready genetic analysis', async () => {
+  it('should reject genetic analysis', async () => {
     const geneticAnalysisInProgressPromise: Promise<GeneticAnalysis> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         rejectGeneticAnalysis(
           api,
@@ -413,7 +356,7 @@ describe('Genetic Analysis Events', () => {
     );
     expect(geneticAnalysis.rejectedTitle).toEqual('string');
     expect(geneticAnalysis.rejectedDescription).toEqual('string');
-    expect(geneticAnalysis.status).toEqual(GeneticAnalysisStatus.InProgress);
+    expect(geneticAnalysis.status).toEqual(GeneticAnalysisStatus.Rejected);
 
     const esGeneticAnalysis = await elasticsearchService.search({
       index: 'genetic-analysis',
@@ -444,5 +387,5 @@ describe('Genetic Analysis Events', () => {
     expect(geneticAnalysisSource['status']).toEqual(
       GeneticAnalysisStatus.Rejected,
     );
-  });
+  }, 80000);
 });

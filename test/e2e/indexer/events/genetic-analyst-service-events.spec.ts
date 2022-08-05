@@ -22,7 +22,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ApiPromise } from '@polkadot/api';
 import { initializeApi } from '../../polkadot-init';
 import { CommonModule, ProcessEnvModule } from '../../../../src/common';
-import { GeneticAnalystsCommandHandlers } from '../../../../src/indexer/events/genetic-analysts';
 import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
 import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { geneticAnalystsDataMock } from '../../../mock/models/genetic-analysts/genetic-analysts.mock';

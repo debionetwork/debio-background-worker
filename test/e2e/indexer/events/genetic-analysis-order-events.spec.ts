@@ -14,7 +14,6 @@ import {
   GeneticAnalyst,
   GeneticAnalystService,
   GeneticData,
-  OrderStatus,
   processGeneticAnalysis,
   queryGeneticAnalysisByGeneticAnalysisTrackingId,
   queryGeneticAnalysisOrderByCustomerId,
@@ -118,30 +117,29 @@ describe('Genetic Analysis Events', () => {
     const { info: infoGAService } = geneticAnalystServiceDataMock;
 
     const registerGaPromise: Promise<GeneticAnalyst> = new Promise(
+      // eslint-disable-next-line
       (resolve, reject) => {
-        queryGeneticAnalystByAccountId(api, pair.address).then((ga) => {
-          stakeGeneticAnalyst(api, pair, () => {
-            updateGeneticAnalystVerificationStatus(
-              api,
-              pair,
-              pair.address,
-              VerificationStatus.Verified,
-              () => {
-                queryGeneticAnalystByAccountId(api, pair.address).then(
-                  (res) => {
-                    resolve(res);
-                  },
-                );
-              },
-            );
-          });
+        stakeGeneticAnalyst(api, pair, () => {
+          updateGeneticAnalystVerificationStatus(
+            api,
+            pair,
+            pair.address,
+            VerificationStatus.Verified,
+            () => {
+              queryGeneticAnalystByAccountId(api, pair.address).then((res) => {
+                resolve(res);
+              });
+            },
+          );
         });
       },
     );
 
+    // eslint-disable-next-line
     ga = (await registerGaPromise).normalize();
 
     const createServiceGeneticAnalystPromise: Promise<GeneticAnalystService> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         createGeneticAnalystService(api, pair, infoGAService, () => {
           queryGeneticAnalystByAccountId(api, pair.address).then((ga) => {
@@ -183,7 +181,7 @@ describe('Genetic Analysis Events', () => {
         reportLink: 'string',
       }),
     );
-  }, 50000);
+  }, 120000);
 
   it('it should create genetic analysis order', async () => {
     const geneticAnalysisOrderPromise: Promise<GeneticAnalysisOrder> =
@@ -246,6 +244,7 @@ describe('Genetic Analysis Events', () => {
 
   it('should set paid order', async () => {
     const paidGeneticAnalysisOrderPromise: Promise<GeneticAnalysisOrder> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         setGeneticAnalysisOrderPaid(api, pair, geneticAnalysisOrder.id, () => {
           queryGeneticAnalysisOrderById(api, geneticAnalysisOrder.id).then(
@@ -422,9 +421,9 @@ describe('Genetic Analysis Events', () => {
       geneticData.id,
     );
     expect(geneticAnalysisOrderSource['status']).toEqual(
-      GeneticAnalysisOrderStatus.Paid,
+      GeneticAnalysisOrderStatus.Fulfilled,
     );
-  }, 50000);
+  }, 180000);
 
   it('should canceled order', async () => {
     const geneticAnalysisOrderPromise: Promise<GeneticAnalysisOrder> =
@@ -491,7 +490,7 @@ describe('Genetic Analysis Events', () => {
     expect(geneticAnalysisOrderSource['status']).toEqual(
       GeneticAnalysisOrderStatus.Cancelled,
     );
-  }, 50000);
+  }, 120000);
 
   it('should refunded order', async () => {
     const geneticAnalysisOrderPromise: Promise<GeneticAnalysisOrder> =
@@ -521,6 +520,7 @@ describe('Genetic Analysis Events', () => {
                       queryGeneticAnalysisByGeneticAnalysisTrackingId(
                         api,
                         order.geneticAnalysisTrackingId,
+                        // eslint-disable-next-line
                       ).then((geneticAnalysis) => {
                         rejectGeneticAnalysis(
                           api,
@@ -592,5 +592,5 @@ describe('Genetic Analysis Events', () => {
     expect(geneticAnalysisOrderSource['status']).toEqual(
       GeneticAnalysisOrderStatus.Refunded,
     );
-  }, 50000);
+  }, 180000);
 });
