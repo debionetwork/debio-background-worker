@@ -2,8 +2,8 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { CustomerStakingRequestService, LabRegister } from './models';
-import { NewOrderGA } from './models/new-order-ga.model';
-import { NewOrderLab } from './models/new-order-lab.model';
+import { NewOrderGA } from '../../listeners/substrate-listener/models/new-order-ga.model';
+import { NewOrderLab } from '../../listeners/substrate-listener/models/new-order-lab.model';
 
 @Injectable()
 export class MailerManager {
