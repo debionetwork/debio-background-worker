@@ -3,11 +3,18 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderPaidCommand } from './order-paid.command';
 import {
   DateTimeProxy,
+  MailerManager,
   NotificationService,
+  ProcessEnvProxy,
+  SubstrateService,
   TransactionLoggingService,
 } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
-import { Order } from '@debionetwork/polkadot-provider';
+import {
+  Order,
+  queryLabById,
+  queryServiceById,
+} from '@debionetwork/polkadot-provider';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
 
 @Injectable()
@@ -19,6 +26,9 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
+    private readonly mailerManager: MailerManager,
+    private readonly substrateService: SubstrateService,
+    private readonly process: ProcessEnvProxy,
   ) {}
 
   async execute(command: OrderPaidCommand) {
@@ -65,6 +75,27 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           block_number: blockNumber,
         };
         await this.notificationService.insert(notificationNewOrder);
+
+        const labDetail = await queryLabById(
+          this.substrateService.api,
+          order.sellerId,
+        );
+        const serviceDetail = await queryServiceById(
+          this.substrateService.api,
+          order.serviceId,
+        );
+
+        const linkOrder = this.process.env.LAB_ORDER_LINK + order.id;
+
+        await this.mailerManager.sendNewOrderToLab(labDetail.info.email, {
+          specimen_number: order.dnaSampleTrackingId,
+          service: serviceDetail.info.name,
+          service_price: serviceDetail.price,
+          qc_price: serviceDetail.qcPrice,
+          order_id: order.id,
+          order_date: order.createdAt.toDateString(),
+          link_order: `${linkOrder}/process`,
+        });
       }
     } catch (error) {
       this.logger.log(error);

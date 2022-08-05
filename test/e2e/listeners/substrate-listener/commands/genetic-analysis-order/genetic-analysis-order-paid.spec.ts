@@ -12,6 +12,7 @@ import { EscrowService } from '../../../../../../src/common/escrow/escrow.servic
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
+  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
@@ -96,6 +97,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         CqrsModule,
         DateTimeModule,
         NotificationModule,
+        MailModule,
       ],
       providers: [
         {

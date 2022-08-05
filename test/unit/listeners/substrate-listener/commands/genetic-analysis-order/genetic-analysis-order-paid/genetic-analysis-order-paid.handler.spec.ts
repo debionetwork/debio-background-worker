@@ -1,5 +1,8 @@
 import {
   DateTimeProxy,
+  MailerManager,
+  ProcessEnvProxy,
+  SubstrateService,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
@@ -8,9 +11,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysisOrder,
   dateTimeProxyMockFactory,
+  mailerManagerMockFactory,
   mockBlockNumber,
   MockType,
   notificationServiceMockFactory,
+  substrateServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisOrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
@@ -21,6 +26,14 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
   let geneticAnalysisOrderPaidHandler: GeneticAnalysisOrderPaidHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let notificationServiceMock: MockType<NotificationService>;
+  let proceccEnvProxy: MockType<ProcessEnvProxy>; // eslint-disable-line
+
+  const GA_ORDER_LINK = 'http://localhost/lab/orders/';
+  class ProcessEnvProxyMock {
+    env = {
+      GA_ORDER_LINK,
+    };
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,6 +49,18 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
         {
           provide: DateTimeProxy,
           useFactory: dateTimeProxyMockFactory,
+        },
+        {
+          provide: MailerManager,
+          useFactory: mailerManagerMockFactory,
+        },
+        {
+          provide: SubstrateService,
+          useFactory: substrateServiceMockFactory,
+        },
+        {
+          provide: ProcessEnvProxy,
+          useClass: ProcessEnvProxyMock,
         },
         GeneticAnalysisOrderPaidHandler,
       ],
