@@ -45,16 +45,6 @@ export class GeneticAnalystVerificationStatusHandler
           21,
         );
       let transactionStatus;
-<<<<<<< HEAD
-=======
-
-      if (geneticAnalyst.verificationStatus === 'Unverified') {
-        transactionStatus = 19;
-        entity = 'Account unverified';
-        notificationDescription =
-          'Your account verification has been rejected.';
-      }
->>>>>>> 69b4940 (fix: error logging GA verification status)
       if (geneticAnalyst.verificationStatus === 'Verified') {
         transactionStatus = 20;
         entity = 'Account verified';
