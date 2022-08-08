@@ -238,9 +238,12 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     expect(notifications[0].entity).toEqual('New Order');
     expect(
       notifications[0].description.includes(
-        `A new order ${geneticAnalysisOrder.geneticAnalysisTrackingId} is awaiting process.`,
+        `A new order [] is awaiting process.`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(
+      geneticAnalysisOrder.geneticAnalysisTrackingId,
+    );
 
     await dbConnection.destroy();
   }, 200000);

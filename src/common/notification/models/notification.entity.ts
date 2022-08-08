@@ -15,6 +15,9 @@ export class Notification {
   entity: string;
 
   @Column()
+  reference_id: string;
+
+  @Column()
   description: string;
 
   @Column()

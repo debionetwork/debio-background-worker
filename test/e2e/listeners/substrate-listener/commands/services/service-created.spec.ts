@@ -194,12 +194,10 @@ describe('Service Created Integration Tests', () => {
     expect(notifications[0].entity).toEqual('Add service');
     expect(
       notifications[0].description.includes(
-        "You've successfully added your new service -",
+        "You've successfully added your new service - []",
       ),
     ).toBeTruthy();
-    expect(
-      notifications[0].description.includes(service.info.name),
-    ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(service.info.name);
 
     await dbConnection.destroy();
   }, 180000);
