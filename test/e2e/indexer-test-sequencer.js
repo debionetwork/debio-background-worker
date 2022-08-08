@@ -55,12 +55,12 @@ class CustomSequencer extends Sequencer {
       return obj.path.includes('indexer/events/genetic-data-events.spec.ts');
     }));
 
-    // genetic analyst qualification
+    // genetic analysis order
     sequence.push(...testsArray.filter(obj => {
       return obj.path.includes('indexer/events/genetic-analysis-order-events.spec.ts');
     }));
 
-    // genetic analyst service
+    // genetic analysis
     sequence.push(...testsArray.filter(obj => {
       return obj.path.includes('indexer/events/genetic-analysis-events.spec.ts');
     }));

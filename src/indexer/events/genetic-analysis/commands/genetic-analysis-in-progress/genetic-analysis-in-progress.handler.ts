@@ -13,8 +13,6 @@ export class GeneticAnalysisInProgressHandler
   async execute(command: GeneticAnalysisInProgressCommandIndexer) {
     const { geneticAnalysisModel, blockMetaData } = command;
 
-    console.log('handler', geneticAnalysisModel, blockMetaData);
-
     await this.elasticsearchService.update({
       index: 'genetic-analysis',
       id: geneticAnalysisModel.genetic_analyst_id,
