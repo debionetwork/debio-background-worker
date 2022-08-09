@@ -14,8 +14,10 @@ export class Notification {
   @Column()
   entity: string;
 
-  @Column()
-  reference_id: string;
+  @Column({
+    nullable: true,
+  })
+  reference_id!: string;
 
   @Column()
   description: string;

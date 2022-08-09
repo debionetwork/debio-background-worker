@@ -35,6 +35,7 @@ export class ServiceRequestClaimedCommandHandler
       role: 'Customer',
       entity_type: 'Request Service Staking',
       entity: 'Requested Service Available',
+      reference_id: null,
       description: `Congrats! Your requested service is available now. Click here to see your order details.`,
       read: false,
       created_at: currDateTime,

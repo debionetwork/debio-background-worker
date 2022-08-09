@@ -243,7 +243,7 @@ describe('Service Request Excess Integration Tests', () => {
     expect(notifications.length).toEqual(1);
     expect(notifications[0].to).toEqual(serviceRequest.requesterAddress);
     expect(notifications[0].entity).toEqual(
-      'ServiceRequestStakingAmountIncreased',
+      'Service Request Staking Amount Increased',
     );
     expect(
       notifications[0].description.includes(

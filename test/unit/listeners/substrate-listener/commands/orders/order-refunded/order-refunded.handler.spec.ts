@@ -153,9 +153,8 @@ describe('Order Refunded Handler Event', () => {
         role: 'Customer',
         entity_type: 'Genetic Testing Order',
         entity: 'Order Refunded',
-        description: `Your service fee from ${
-          ORDER.toHuman().dnaSampleTrackingId
-        } has been refunded, kindly check your account balance.`,
+        reference_id: ORDER.toHuman().dnaSampleTrackingId,
+        description: `Your service fee from [] has been refunded, kindly check your account balance.`,
         read: false,
         deleted_at: null,
         from: 'Debio Network',

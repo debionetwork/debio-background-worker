@@ -53,6 +53,7 @@ export class LabRegisteredHandler
         role: 'Lab',
         entity_type: 'Labs',
         entity: 'Lab Registered',
+        reference_id: null,
         description: `Congrats! You have been submitted your account verification.`,
         read: false,
         created_at: currDateTime,
