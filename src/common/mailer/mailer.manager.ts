@@ -4,6 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CustomerStakingRequestService, LabRegister } from './models';
 import { NewOrderGA } from '../../listeners/substrate-listener/models/new-order-ga.model';
 import { NewOrderLab } from '../../listeners/substrate-listener/models/new-order-lab.model';
+import { join } from 'path';
 
 @Injectable()
 export class MailerManager {
@@ -24,7 +25,10 @@ export class MailerManager {
     this.mailerService.sendMail({
       to: to,
       subject: subject,
-      template: 'new-order-lab',
+      template: join(
+        __dirname,
+        '../../listeners/substrate-listener/templates/new-order-lab',
+      ),
       context: context,
     });
   }
@@ -40,7 +44,10 @@ export class MailerManager {
     this.mailerService.sendMail({
       to: to,
       subject: subject,
-      template: 'new-order-ga',
+      template: join(
+        __dirname,
+        '../../listeners/substrate-listener/templates/new-order-ga',
+      ),
       context: context,
     });
   }
