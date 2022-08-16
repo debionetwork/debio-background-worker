@@ -339,11 +339,10 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
     expect(
       notifications[0].description.includes(
         `You've received ${+geneticAnalysisOrder.prices[0]
-          .value} DBIO for completing the requested analysis for ${
-          geneticAnalysisOrder.id
-        }.`,
+          .value} DBIO for completing the requested analysis for [].`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(geneticAnalysisOrder.id);
 
     // eslint-disable-next-line
     const deleteGa: Promise<number> = new Promise((resolve, reject) => {

@@ -243,9 +243,10 @@ describe('Order Fulfilled Integration Tests', () => {
     expect(notifications[0].entity).toEqual('New Order');
     expect(
       notifications[0].description.includes(
-        `A new order (${order.id}) is awaiting process.`,
+        `A new order ([]) is awaiting process.`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(order.id);
 
     // eslint-disable-next-line
     const deletePromise: Promise<number> = new Promise((resolve, reject) => {

@@ -191,9 +191,10 @@ describe('Service Request Excess Integration Tests', () => {
     expect(notifications[0].entity).toEqual('Requested Service Unstaked');
     expect(
       notifications[0].description.includes(
-        `Your staked amount from staking ID ${serviceRequest.hash} has been refunded, kindly check your balance.`,
+        `Your staked amount from staking ID [] has been refunded, kindly check your balance.`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(serviceRequest.hash);
 
     await dbConnection.destroy();
   }, 180000);

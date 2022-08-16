@@ -57,8 +57,9 @@ export class ServiceRequestStakingAmountIncreasedHandler
       const notificationInput: NotificationDto = {
         role: 'Customer',
         entity_type: 'ServiceRequest',
-        entity: 'ServiceRequestStakingAmountIncreased',
-        description: `Your partial payment staking service request with ID ${requestId} has been increased.`,
+        entity: 'Service Request Staking Amount Increased',
+        reference_id: requestId,
+        description: `Your partial payment staking service request with ID [] has been increased.`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,

@@ -26,6 +26,7 @@ export class GeneticAnalystRegisteredHandler
         role: 'GA',
         entity_type: 'Submit account registration and verification',
         entity: 'registration and verification',
+        reference_id: null,
         description: `You've successfully submitted your account verification.`,
         read: false,
         created_at: currDateTime,
