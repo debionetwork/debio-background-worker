@@ -3,9 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderPaidCommand } from './order-paid.command';
 import {
   DateTimeProxy,
-  MailerManager,
   NotificationService,
-  ProcessEnvProxy,
   SubstrateService,
   TransactionLoggingService,
 } from '../../../../../common';

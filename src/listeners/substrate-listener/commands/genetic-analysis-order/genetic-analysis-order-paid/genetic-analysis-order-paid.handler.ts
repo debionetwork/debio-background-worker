@@ -3,9 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
-  MailerManager,
   NotificationService,
-  ProcessEnvProxy,
   SubstrateService,
   TransactionLoggingService,
 } from '../../../../../common';
