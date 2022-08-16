@@ -15,6 +15,9 @@ import {
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
 } from '@debionetwork/polkadot-provider';
+import { NewOrderGA } from '../../../models/new-order-ga.model';
+import { MailerService } from '@nestjs-modules/mailer';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderPaidCommand)
@@ -29,9 +32,9 @@ export class GeneticAnalysisOrderPaidHandler
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
-    private readonly mailerManager: MailerManager,
     private readonly substrateService: SubstrateService,
-    private readonly process: ProcessEnvProxy,
+    private readonly mailerService: MailerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
   ) {}
 
   async execute(command: GeneticAnalysisOrderPaidCommand) {
@@ -95,21 +98,35 @@ export class GeneticAnalysisOrderPaidHandler
         );
 
       const linkOrder =
-        this.process.env.GA_ORDER_LINK + geneticAnalysisOrder.id;
+        this.gCloudSecretManagerService.getSecret('GA_ORDER_LINK').toString() +
+        geneticAnalysisOrder.id;
 
-      await this.mailerManager.sendNewOrderToGa(
-        geneticAnaystDetail.info.email,
-        {
-          service: geneticAnalystServiceDetail.info.name,
-          price:
-            geneticAnalystServiceDetail.info.pricesByCurrency[0].totalPrice.toString(),
-          order_id: geneticAnalysisOrder.id,
-          order_date: geneticAnalysisOrder.createdAt.toDateString(),
-          link_order: linkOrder,
-        },
-      );
+      await this.sendNewOrderToGa(geneticAnaystDetail.info.email, {
+        service: geneticAnalystServiceDetail.info.name,
+        price:
+          geneticAnalystServiceDetail.info.pricesByCurrency[0].totalPrice.toString(),
+        order_id: geneticAnalysisOrder.id,
+        order_date: geneticAnalysisOrder.createdAt.toDateString(),
+        link_order: linkOrder,
+      });
     } catch (error) {
       await this.logger.log(error);
     }
+  }
+
+  async sendNewOrderToGa(to: string, context: NewOrderGA) {
+    let subject = `New Order #1`;
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST').toString() ===
+      'localhost'
+    ) {
+      subject = `Testing New Service Request Email`;
+    }
+    this.mailerService.sendMail({
+      to: to,
+      subject: subject,
+      template: 'new-order-ga',
+      context: context,
+    });
   }
 }

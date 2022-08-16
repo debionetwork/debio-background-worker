@@ -16,6 +16,9 @@ import {
   queryServiceById,
 } from '@debionetwork/polkadot-provider';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { MailerService } from '@nestjs-modules/mailer';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { NewOrderLab } from '../../../models/new-order-lab.model';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -26,9 +29,9 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
-    private readonly mailerManager: MailerManager,
     private readonly substrateService: SubstrateService,
-    private readonly process: ProcessEnvProxy,
+    private readonly mailerService: MailerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
   ) {}
 
   async execute(command: OrderPaidCommand) {
@@ -86,9 +89,12 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           order.serviceId,
         );
 
-        const linkOrder = this.process.env.LAB_ORDER_LINK + order.id;
+        const linkOrder =
+          this.gCloudSecretManagerService
+            .getSecret('LAB_ORDER_LINK')
+            .toString() + order.id;
 
-        await this.mailerManager.sendNewOrderToLab(labDetail.info.email, {
+        await this.sendNewOrderToLab(labDetail.info.email, {
           specimen_number: order.dnaSampleTrackingId,
           service: serviceDetail.info.name,
           service_price: serviceDetail.price,
@@ -101,5 +107,21 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
     } catch (error) {
       this.logger.log(error);
     }
+  }
+
+  async sendNewOrderToLab(to: string, context: NewOrderLab) {
+    let subject = `New Order #1`;
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST').toString() ===
+      'localhost'
+    ) {
+      subject = `Testing New Service Request Email`;
+    }
+    this.mailerService.sendMail({
+      to: to,
+      subject: subject,
+      template: 'new-order-lab',
+      context: context,
+    });
   }
 }
