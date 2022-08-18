@@ -88,6 +88,7 @@ export class GeneticAnalystVerificationStatusHandler
         role: 'GA',
         entity_type: 'Verification',
         entity: entity,
+        reference_id: null,
         description: notificationDescription,
         read: false,
         created_at: currDate,

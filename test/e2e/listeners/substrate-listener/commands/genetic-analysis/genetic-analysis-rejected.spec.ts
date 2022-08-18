@@ -318,9 +318,12 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     expect(notifications[0].entity).toEqual('Order Rejected');
     expect(
       notifications[0].description.includes(
-        `Your sample from ${geneticAnalysis.geneticAnalysisOrderId} has been rejected. Click here to see your order details.`,
+        `Your sample from [] has been rejected. Click here to see your order details.`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(
+      geneticAnalysis.geneticAnalysisOrderId,
+    );
 
     // eslint-disable-next-line
     const deleteGa: Promise<number> = new Promise((resolve, reject) => {

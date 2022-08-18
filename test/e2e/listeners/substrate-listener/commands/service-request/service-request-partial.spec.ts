@@ -234,7 +234,7 @@ describe('Service Request Excess Integration Tests', () => {
         'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
         {
           to: serviceRequest.requesterAddress,
-          entity: 'ServiceRequestStakingAmountIncreased',
+          entity: 'Service Request Staking Amount Increased',
           role: 'Customer',
         },
       )
@@ -243,13 +243,14 @@ describe('Service Request Excess Integration Tests', () => {
     expect(notifications.length).toEqual(1);
     expect(notifications[0].to).toEqual(serviceRequest.requesterAddress);
     expect(notifications[0].entity).toEqual(
-      'ServiceRequestStakingAmountIncreased',
+      'Service Request Staking Amount Increased',
     );
     expect(
       notifications[0].description.includes(
-        `Your partial payment staking service request with ID ${serviceRequest.hash} has been increased.`,
+        `Your partial payment staking service request with ID [] has been increased.`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(serviceRequest.hash);
     expect(notifications[0].from).toEqual('Debio Network');
 
     // eslint-disable-next-line

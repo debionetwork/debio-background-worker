@@ -168,7 +168,8 @@ describe('Service Request Created Handler Event', () => {
       expect.objectContaining({
         created_at: undefined,
         deleted_at: null,
-        description: `You've successfully submitted your requested service with staking ID ${HASH}.`,
+        reference_id: HASH,
+        description: `You've successfully submitted your requested service with staking ID [].`,
         entity: 'Requested Service Created',
         entity_type: 'Request Service Staking',
         from: 'Debio Network',

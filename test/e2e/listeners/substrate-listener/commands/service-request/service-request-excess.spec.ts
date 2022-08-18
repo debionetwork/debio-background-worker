@@ -302,9 +302,10 @@ describe('Service Request Excess Integration Tests', () => {
     );
     expect(
       notifications[0].description.includes(
-        `Your over payment staking service request with ID ${serviceRequest.hash} has been refunded.`,
+        `Your over payment staking service request with ID [] has been refunded.`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(serviceRequest.hash);
 
     // eslint-disable-next-line
     const deletePromise: Promise<number> = new Promise((resolve, reject) => {

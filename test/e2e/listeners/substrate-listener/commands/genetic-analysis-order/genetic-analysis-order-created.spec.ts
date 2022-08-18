@@ -260,9 +260,10 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     expect(notifications[0].entity).toEqual('Order Created');
     expect(
       notifications[0].description.includes(
-        `You've successfully submitted your requested test for ${geneticAnalysisOrder.id}.`,
+        `You've successfully submitted your requested test for [].`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(geneticAnalysisOrder.id);
 
     await dbConnection.destroy();
   }, 200000);

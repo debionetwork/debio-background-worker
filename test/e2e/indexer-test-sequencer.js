@@ -40,9 +40,29 @@ class CustomSequencer extends Sequencer {
       return obj.path.includes('indexer/events/genetic-analyst-events.spec.ts');
     }));
 
+    // genetic analyst service
+    sequence.push(...testsArray.filter(obj => {
+      return obj.path.includes('indexer/events/genetic-analyst-service-events.spec.ts');
+    }));
+
+    // genetic analyst qualification
+    sequence.push(...testsArray.filter(obj => {
+      return obj.path.includes('indexer/events/genetic-analyst-qualification-events.spec.ts');
+    }));
+
     // genetic data
     sequence.push(...testsArray.filter(obj => {
       return obj.path.includes('indexer/events/genetic-data-events.spec.ts');
+    }));
+
+    // genetic analysis order
+    sequence.push(...testsArray.filter(obj => {
+      return obj.path.includes('indexer/events/genetic-analysis-order-events.spec.ts');
+    }));
+
+    // genetic analysis
+    sequence.push(...testsArray.filter(obj => {
+      return obj.path.includes('indexer/events/genetic-analysis-events.spec.ts');
     }));
 
     return sequence;
