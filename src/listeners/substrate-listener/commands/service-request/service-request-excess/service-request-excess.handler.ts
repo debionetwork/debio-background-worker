@@ -55,9 +55,9 @@ export class ServiceRequestStakingAmountExcessRefunded
 
         const notificationInput: NotificationDto = {
           role: 'Customer',
-          entity_type: 'ServiceRequest',
+          entity_type: 'Service Request',
           entity: 'Service Request Staking Amount Exess Refunded',
-          description: `Your over payment staking service request with ID ${requestId} has been refunded.`,
+          description: `You've received XXX DBIO in compensation of an overpayment of your staking request service with staking ID ${requestId}, kindly check your balance.`,
           read: false,
           created_at: currDateTime,
           updated_at: currDateTime,

@@ -120,7 +120,7 @@ export class OrderFulfilledHandler
             const customerNotificationInput: NotificationDto = {
               role: 'Customer',
               entity_type: 'Order',
-              entity: 'OrderFulfilled',
+              entity: 'Order Fulfilled',
               description: `Congrats! You’ve received ${totalPrice} DBIO as a reward for completing the request test for ${order.dnaSampleTrackingId} from the service requested, kindly check your balance.`,
               read: false,
               created_at: this.dateTimeProxy.new(),
