@@ -52,9 +52,9 @@ export class OrderCreatedHandler
         // insert notification
         const notificationInput: NotificationDto = {
           role: 'Customer',
-          entity_type: 'Genetic Testing Order',
+          entity_type: 'Order',
           entity: 'Order Created',
-          reference_id: order.id,
+          reference_id: order.dnaSampleTrackingId,
           description: `You've successfully submitted your requested test for [].`,
           read: false,
           created_at: currDateTime,
