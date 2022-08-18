@@ -1,6 +1,5 @@
 import {
   DateTimeProxy,
-  MailerManager,
   ProcessEnvProxy,
   SubstrateService,
   TransactionLoggingService,
@@ -11,7 +10,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
   dateTimeProxyMockFactory,
-  mailerManagerMockFactory,
+  mailerServiceMockFactory,
   mockBlockNumber,
   MockType,
   notificationServiceMockFactory,
@@ -23,6 +22,8 @@ import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/transaction-logging/models/transaction-request.entity';
 import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { MailerService } from '@nestjs-modules/mailer';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Order Paid Handler Event', () => {
   let orderPaidHandler: OrderPaidHandler;
@@ -30,10 +31,20 @@ describe('Order Paid Handler Event', () => {
   let proceccEnvProxy: MockType<ProcessEnvProxy>; // eslint-disable-line
 
   const LAB_ORDER_LINK = 'http://localhost/lab/orders/';
-  class ProcessEnvProxyMock {
-    env = {
-      LAB_ORDER_LINK,
-    };
+  const POSTGRES_HOST = 'localhost';
+
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['LAB_ORDER_LINK', LAB_ORDER_LINK],
+      ['POSTGRES_HOST', POSTGRES_HOST],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   beforeEach(async () => {
@@ -55,16 +66,16 @@ describe('Order Paid Handler Event', () => {
           useFactory: dateTimeProxyMockFactory,
         },
         {
-          provide: MailerManager,
-          useFactory: mailerManagerMockFactory,
+          provide: MailerService,
+          useFactory: mailerServiceMockFactory,
         },
         {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
         },
         {
-          provide: ProcessEnvProxy,
-          useClass: ProcessEnvProxyMock,
+          provide: GCloudSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
         },
         OrderPaidHandler,
       ],

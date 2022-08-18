@@ -12,7 +12,6 @@ import { EscrowService } from '../../../../../../src/common/escrow/escrow.servic
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
-  MailModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
@@ -44,6 +43,9 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { GeneticAnalysisOrderPaidHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
 
 describe('Genetic Analysis Order Created Integration Test', () => {
   let app: INestApplication;
@@ -97,7 +99,38 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         CqrsModule,
         DateTimeModule,
         NotificationModule,
-        MailModule,
+        MailerModule.forRootAsync({
+          imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+          inject: [GCloudSecretManagerService],
+          useFactory: async (
+            gCloudSecretManagerService: GCloudSecretManagerService,
+          ) => {
+            return {
+              transport: {
+                host: 'smtp.gmail.com',
+                secure: false,
+                auth: {
+                  user: process.env.EMAIL,
+                  pass: gCloudSecretManagerService
+                    .getSecret('PASS_EMAIL')
+                    .toString(),
+                },
+              },
+              template: {
+                dir: join(
+                  __dirname,
+                  '../../../../../../src/listeners/substrate-listener/templates',
+                ),
+                adapter: new HandlebarsAdapter({
+                  colNum: (value) => parseInt(value) + 1,
+                }), // or new PugAdapter() or new EjsAdapter()
+                options: {
+                  strict: true,
+                },
+              },
+            };
+          },
+        }),
       ],
       providers: [
         {

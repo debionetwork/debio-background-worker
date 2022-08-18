@@ -2,8 +2,6 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { CustomerStakingRequestService, LabRegister } from './models';
-import { NewOrderGA } from '../../listeners/substrate-listener/models/new-order-ga.model';
-import { NewOrderLab } from '../../listeners/substrate-listener/models/new-order-lab.model';
 
 @Injectable()
 export class MailerManager {
@@ -12,38 +10,6 @@ export class MailerManager {
     private readonly gCloudSecretManagerService: GCloudSecretManagerService,
     private readonly mailerService: MailerService,
   ) {}
-
-  async sendNewOrderToLab(to: string, context: NewOrderLab) {
-    let subject = `New Order #1`;
-    if (
-      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST').toString() ===
-      'localhost'
-    ) {
-      subject = `Testing New Service Request Email`;
-    }
-    this.mailerService.sendMail({
-      to: to,
-      subject: subject,
-      template: 'new-order-lab',
-      context: context,
-    });
-  }
-
-  async sendNewOrderToGa(to: string, context: NewOrderGA) {
-    let subject = `New Order #1`;
-    if (
-      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST').toString() ===
-      'localhost'
-    ) {
-      subject = `Testing New Service Request Email`;
-    }
-    this.mailerService.sendMail({
-      to: to,
-      subject: subject,
-      template: 'new-order-ga',
-      context: context,
-    });
-  }
 
   async sendCustomerStakingRequestServiceEmail(
     to: string | string[],

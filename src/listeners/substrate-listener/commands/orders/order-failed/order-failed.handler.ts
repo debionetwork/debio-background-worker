@@ -58,15 +58,10 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         order.id,
       );
 
-      const totalPrice = order.prices.reduce(
-        (acc, price) => acc + +price.value,
-        0,
-      );
       const totalAdditionalPrice = order.additionalPrices.reduce(
         (acc, price) => acc + +price.value,
         0,
       );
-      const amountToForward = totalPrice + totalAdditionalPrice;
 
       const currDateTime = this.dateTimeProxy.new();
 
@@ -79,7 +74,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         entity_type: 'Genetic Testing Order',
         entity: 'Order Failed',
         reference_id: order.dnaSampleTrackingId,
-        description: `${valueMessage} ${amountToForward} DAI as quality control fees for [].`,
+        description: `${valueMessage} ${totalAdditionalPrice} DAI as quality control fees for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
