@@ -7,6 +7,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { SecretKeyList, keyList } from '../../secrets';
 
 @Module({
   imports: [
@@ -17,11 +18,11 @@ import {
           HOST_POSTGRES: 'HOST_POSTGRES',
           DB_POSTGRES: 'debio_escrow_dev',
         }),
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
       ],
       inject: [GCloudSecretManagerService],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           network: gCloudSecretManagerService.getSecret('WEB3_RPC').toString(),
@@ -30,7 +31,7 @@ import {
       },
     }),
     CachesModule,
-    GCloudSecretManagerModule.withConfig(process.env.PARENT),
+    GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
   ],
   providers: [EthereumService],
   exports: [CachesModule, EthersModule, EthereumService],

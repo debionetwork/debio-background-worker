@@ -28,6 +28,7 @@ import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { LabCommandHandlers } from '../../../../src/indexer/events/labs';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { StakeStatus } from '../../../../src/indexer/models/stake-status';
+import { SecretKeyList } from '../../../../src/secrets';
 
 describe('Event Command Service Request Claimed', () => {
   let app: INestApplication;
@@ -69,7 +70,10 @@ describe('Event Command Service Request Claimed', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
+        GCloudSecretManagerModule.withConfig(
+          process.env.GCS_PARENT,
+          SecretKeyList,
+        ),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,

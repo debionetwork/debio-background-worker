@@ -16,6 +16,7 @@ import { u32 } from '@polkadot/types';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { eventRoutes } from './indexer.routes';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../secrets';
 
 @Injectable()
 export class IndexerHandler
@@ -33,7 +34,7 @@ export class IndexerHandler
   constructor(
     private commandBus: CommandBus,
     private queryBus: QueryBus,
-    private gCloudSecretManagerService: GCloudSecretManagerService,
+    private gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly elasticsearchService: ElasticsearchService,
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly process: ProcessEnvProxy,

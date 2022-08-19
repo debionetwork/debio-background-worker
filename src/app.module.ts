@@ -12,6 +12,7 @@ import { IndexerModule } from './indexer/indexer.module';
 import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
 import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
 import { SchedulersModule } from './schedulers/schedulers.module';
+import { keyList, SecretKeyList } from './secrets';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -19,7 +20,7 @@ require('dotenv').config();
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    GCloudSecretManagerModule.withConfig(process.env.PARENT),
+    GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
     TypeOrmModule.forRootAsync({
       imports: [
         ProcessEnvModule.setDefault({
@@ -27,12 +28,12 @@ require('dotenv').config();
           HOST_POSTGRES: 'HOST_POSTGRES',
           DB_POSTGRES: 'debio_escrow_dev',
         }),
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
       ],
       inject: [ProcessEnvProxy, GCloudSecretManagerService],
       useFactory: async (
         processEnvProxy: ProcessEnvProxy,
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           type: 'postgres',
@@ -58,12 +59,12 @@ require('dotenv').config();
           HOST_POSTGRES: 'HOST_POSTGRES',
           DB_LOCATION: 'debio_locations',
         }),
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
       ],
       inject: [ProcessEnvProxy, GCloudSecretManagerService],
       useFactory: async (
         processEnvProxy: ProcessEnvProxy,
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           type: 'postgres',

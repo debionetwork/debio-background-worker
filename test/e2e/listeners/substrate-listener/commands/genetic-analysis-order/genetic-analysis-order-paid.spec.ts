@@ -46,6 +46,7 @@ import { GeneticAnalysisOrderPaidHandler } from '../../../../../../src/listeners
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+import { SecretKeyList, keyList } from '../../../../../../src/secrets';
 
 describe('Genetic Analysis Order Created Integration Test', () => {
   let app: INestApplication;
@@ -85,7 +86,10 @@ describe('Genetic Analysis Order Created Integration Test', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
+        GCloudSecretManagerModule.withConfig(
+          process.env.GCS_PARENT,
+          SecretKeyList,
+        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -100,10 +104,15 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         DateTimeModule,
         NotificationModule,
         MailerModule.forRootAsync({
-          imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+          imports: [
+            GCloudSecretManagerModule.withConfig(
+              process.env.PARENT,
+              SecretKeyList,
+            ),
+          ],
           inject: [GCloudSecretManagerService],
           useFactory: async (
-            gCloudSecretManagerService: GCloudSecretManagerService,
+            gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
           ) => {
             return {
               transport: {

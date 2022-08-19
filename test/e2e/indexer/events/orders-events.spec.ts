@@ -32,6 +32,7 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { OrderCommandHandlers } from '../../../../src/indexer/events/orders';
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
+import { SecretKeyList } from '../../../../src/secrets';
 
 describe('Orders Events', () => {
   let app: INestApplication;
@@ -73,7 +74,7 @@ describe('Orders Events', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,

@@ -16,6 +16,7 @@ import {
 import { NewOrderGA } from '../../../models/new-order-ga.model';
 import { MailerService } from '@nestjs-modules/mailer';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../../../../../secrets';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderPaidCommand)
@@ -32,7 +33,7 @@ export class GeneticAnalysisOrderPaidHandler
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly substrateService: SubstrateService,
     private readonly mailerService: MailerService,
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
   async execute(command: GeneticAnalysisOrderPaidCommand) {

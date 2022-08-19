@@ -43,6 +43,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { SecretKeyList } from '../../../../../../src/secrets';
 
 describe('Genetic Analyst Service Created Event', () => {
   let app: INestApplication;
@@ -82,7 +83,10 @@ describe('Genetic Analyst Service Created Event', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
+        GCloudSecretManagerModule.withConfig(
+          process.env.GCS_PARENT,
+          SecretKeyList,
+        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,

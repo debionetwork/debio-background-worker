@@ -21,6 +21,7 @@ import { GeneticDataCommandHandlers } from '../../../../src/indexer/events/genet
 import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
 import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { initializeApi } from '../../polkadot-init';
+import { SecretKeyList } from '../../../../src/secrets';
 
 describe('Genetic Data Events', () => {
   let app: INestApplication;
@@ -67,7 +68,7 @@ describe('Genetic Data Events', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,

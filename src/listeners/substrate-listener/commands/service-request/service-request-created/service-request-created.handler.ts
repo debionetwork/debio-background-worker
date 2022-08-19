@@ -12,6 +12,7 @@ import { CountryService } from '../../../../../common/location/country.service';
 import { StateService } from '../../../../../common/location/state.service';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../../../../../secrets';
 
 @Injectable()
 @CommandHandler(ServiceRequestCreatedCommand)
@@ -23,7 +24,7 @@ export class ServiceRequestCreatedHandler
   );
 
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly loggingService: TransactionLoggingService,
     private readonly countryService: CountryService,
     private readonly stateService: StateService,

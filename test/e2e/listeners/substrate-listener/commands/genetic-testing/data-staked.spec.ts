@@ -52,6 +52,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { DataStakedHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing/data-staked/data-staked.handler';
+import { SecretKeyList } from '../../../../../../src/secrets';
 
 describe('Data Staked Integration Tests', () => {
   let app: INestApplication;
@@ -94,7 +95,10 @@ describe('Data Staked Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
+        GCloudSecretManagerModule.withConfig(
+          process.env.GCS_PARENT,
+          SecretKeyList,
+        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,

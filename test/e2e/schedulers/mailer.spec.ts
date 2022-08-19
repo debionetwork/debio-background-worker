@@ -22,13 +22,14 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { SecretKeyList, keyList } from '../../../src/secrets';
 
 describe('Mailer Scheduler (e2e)', () => {
   let service: MailerService;
   let mailerManager: MailerManager;
   let substrateService: SubstrateService;
   let emailNotificationService: EmailNotificationService;
-  let gCloudSecretManagerService: GCloudSecretManagerService;
+  let gCloudSecretManagerService: GCloudSecretManagerService<keyList>;
 
   let app: INestApplication;
 
@@ -72,11 +73,14 @@ describe('Mailer Scheduler (e2e)', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ProcessEnvModule,
-        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
+        GCloudSecretManagerModule.withConfig(
+          process.env.GCS_PARENT,
+          SecretKeyList,
+        ),
         ElasticsearchModule.registerAsync({
           inject: [GCloudSecretManagerService],
           useFactory: async (
-            gCloudSecretManagerService: GCloudSecretManagerService,
+            gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
           ) => ({
             node: process.env.ELASTICSEARCH_NODE,
             auth: {
