@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ServiceDeletedCommand } from './service-deleted.command';
+import { ServiceDeletedCommandIndexer } from './service-deleted.command';
 import { Logger } from '@nestjs/common';
 
 @Injectable()
-@CommandHandler(ServiceDeletedCommand)
+@CommandHandler(ServiceDeletedCommandIndexer)
 export class ServiceDeletedHandler
-  implements ICommandHandler<ServiceDeletedCommand>
+  implements ICommandHandler<ServiceDeletedCommandIndexer>
 {
   private readonly logger: Logger = new Logger(ServiceDeletedHandler.name);
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: ServiceDeletedCommand) {
+  async execute(command: ServiceDeletedCommandIndexer) {
     const { services: service } = command;
 
     try {

@@ -7,7 +7,7 @@ import {
   MockLogger,
   schedulerRegistryMockFactory,
 } from '../../mock';
-import { ProcessEnvProxy, SubstrateService } from '../../../../src/common';
+import { SubstrateService } from '../../../../src/common';
 import { Lab } from '@debionetwork/polkadot-provider';
 
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -16,6 +16,7 @@ import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import * as labCommand from '@debionetwork/polkadot-provider/lib/command/labs';
 import { when } from 'jest-when';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 jest.useFakeTimers();
 jest.spyOn(global, 'setInterval');
@@ -33,11 +34,18 @@ describe('LabUnstakedService', () => {
   const INTERVAL = '00:00:00:30';
   const TIMER = '6:00:00:00';
 
-  class ProcessEnvProxyMock {
-    env = {
-      UNSTAKE_INTERVAL: INTERVAL,
-      UNSTAKE_TIMER: TIMER,
-    };
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['UNSTAKE_INTERVAL', INTERVAL],
+      ['UNSTAKE_TIMER', TIMER],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   const createSearchObject = () => {
@@ -71,8 +79,8 @@ describe('LabUnstakedService', () => {
       providers: [
         LabUnstakedService,
         {
-          provide: ProcessEnvProxy,
-          useClass: ProcessEnvProxyMock,
+          provide: GCloudSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
         },
         {
           provide: ElasticsearchService,

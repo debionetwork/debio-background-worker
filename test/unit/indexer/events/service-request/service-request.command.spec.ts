@@ -1,11 +1,11 @@
 import { RequestModel } from '../../../../../src/indexer/models/service-request/request';
 import {
-  ClaimedServiceRequestCommand,
-  CreateServiceRequestCommand,
-  FinalizedServiceRequestCommand,
-  ProcessedServiceRequestCommand,
-  UnstakedServiceRequestCommand,
-  UnstakedWaitingServiceRequestCommand,
+  ClaimedServiceRequestCommandIndexer,
+  CreateServiceRequestCommandIndexer,
+  FinalizedServiceRequestCommandIndexer,
+  ProcessedServiceRequestCommandIndexer,
+  UnstakedServiceRequestCommandIndexer,
+  UnstakedWaitingServiceRequestCommandIndexer,
 } from '../../../../../src/indexer/events/service-request';
 import { RequestStatus } from '../../../../../src/indexer/models/service-request/request-status';
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
@@ -85,8 +85,8 @@ describe('Service Request Substrate Event Handler', () => {
       const MOCK_DATA = createMockRequest(RequestStatus.Open);
 
       /* eslint-disable */
-      const _serviceRequestCreatedCommand: CreateServiceRequestCommand =
-        new CreateServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestCreatedCommand: CreateServiceRequestCommandIndexer =
+        new CreateServiceRequestCommandIndexer(MOCK_DATA, mockBlockNumber());
       /* eslint-enable */
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(RequestModel).toHaveBeenCalled();
@@ -96,8 +96,8 @@ describe('Service Request Substrate Event Handler', () => {
     it('should throw error', () => {
       expect(() => {
         /* eslint-disable */
-        const _serviceRequestCreatedCommand: CreateServiceRequestCommand =
-          new CreateServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestCreatedCommand: CreateServiceRequestCommandIndexer =
+          new CreateServiceRequestCommandIndexer([{}, {}], mockBlockNumber());
         /* eslint-enable */
       }).toThrow();
     });
@@ -108,8 +108,8 @@ describe('Service Request Substrate Event Handler', () => {
       const MOCK_DATA = createMockClaimRequest();
 
       /* eslint-disable */
-      const _serviceRequestClaimedCommand: ClaimedServiceRequestCommand =
-        new ClaimedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestClaimedCommand: ClaimedServiceRequestCommandIndexer =
+        new ClaimedServiceRequestCommandIndexer(MOCK_DATA, mockBlockNumber());
       /* eslint-enable */
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(ClaimRequestModel).toHaveBeenCalled();
@@ -119,8 +119,8 @@ describe('Service Request Substrate Event Handler', () => {
     it('should throw error', () => {
       expect(() => {
         /* eslint-disable */
-        const _serviceRequestClaimedCommand: ClaimedServiceRequestCommand =
-          new ClaimedServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestClaimedCommand: ClaimedServiceRequestCommandIndexer =
+          new ClaimedServiceRequestCommandIndexer([{}, {}], mockBlockNumber());
         /* eslint-enable */
       }).toThrow();
     });
@@ -131,8 +131,8 @@ describe('Service Request Substrate Event Handler', () => {
       const MOCK_DATA = createMockServiceInvoice();
 
       /* eslint-disable */
-      const _serviceRequestFinalizedCommand: FinalizedServiceRequestCommand =
-        new FinalizedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestFinalizedCommand: FinalizedServiceRequestCommandIndexer =
+        new FinalizedServiceRequestCommandIndexer(MOCK_DATA, mockBlockNumber());
       /* eslint-enable */
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(ServiceInvoice).toHaveBeenCalled();
@@ -142,8 +142,11 @@ describe('Service Request Substrate Event Handler', () => {
     it('should throw error', () => {
       expect(() => {
         /* eslint-disable */
-        const _serviceRequestFinalizedCommand: FinalizedServiceRequestCommand =
-          new FinalizedServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestFinalizedCommand: FinalizedServiceRequestCommandIndexer =
+          new FinalizedServiceRequestCommandIndexer(
+            [{}, {}],
+            mockBlockNumber(),
+          );
         /* eslint-enable */
       }).toThrow();
     });
@@ -154,8 +157,8 @@ describe('Service Request Substrate Event Handler', () => {
       const MOCK_DATA = createMockServiceInvoice();
 
       /* eslint-disable */
-      const _serviceRequestProcessedCommand: ProcessedServiceRequestCommand =
-        new ProcessedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestProcessedCommand: ProcessedServiceRequestCommandIndexer =
+        new ProcessedServiceRequestCommandIndexer(MOCK_DATA, mockBlockNumber());
       /* eslint-enable */
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(ServiceInvoice).toHaveBeenCalled();
@@ -165,8 +168,11 @@ describe('Service Request Substrate Event Handler', () => {
     it('should throw error', () => {
       expect(() => {
         /* eslint-disable */
-        const _serviceRequestProcessedCommand: ProcessedServiceRequestCommand =
-          new ProcessedServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestProcessedCommand: ProcessedServiceRequestCommandIndexer =
+          new ProcessedServiceRequestCommandIndexer(
+            [{}, {}],
+            mockBlockNumber(),
+          );
         /* eslint-enable */
       }).toThrow();
     });
@@ -177,8 +183,8 @@ describe('Service Request Substrate Event Handler', () => {
       const MOCK_DATA = createMockRequest(RequestStatus.Unstaked);
 
       /* eslint-disable */
-      const _serviceRequestUnstakedCommand: UnstakedServiceRequestCommand =
-        new UnstakedServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestUnstakedCommand: UnstakedServiceRequestCommandIndexer =
+        new UnstakedServiceRequestCommandIndexer(MOCK_DATA, mockBlockNumber());
       /* eslint-enable */
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(RequestModel).toHaveBeenCalled();
@@ -188,8 +194,8 @@ describe('Service Request Substrate Event Handler', () => {
     it('should throw error', () => {
       expect(() => {
         /* eslint-disable */
-        const _serviceRequestUnstakedCommand: UnstakedServiceRequestCommand =
-          new UnstakedServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestUnstakedCommand: UnstakedServiceRequestCommandIndexer =
+          new UnstakedServiceRequestCommandIndexer([{}, {}], mockBlockNumber());
         /* eslint-enable */
       }).toThrow();
     });
@@ -200,8 +206,11 @@ describe('Service Request Substrate Event Handler', () => {
       const MOCK_DATA = createMockRequest(RequestStatus.Unstaked);
 
       /* eslint-disable */
-      const _serviceRequestWaitingForUnstakedCommand: UnstakedWaitingServiceRequestCommand =
-        new UnstakedWaitingServiceRequestCommand(MOCK_DATA, mockBlockNumber());
+      const _serviceRequestWaitingForUnstakedCommand: UnstakedWaitingServiceRequestCommandIndexer =
+        new UnstakedWaitingServiceRequestCommandIndexer(
+          MOCK_DATA,
+          mockBlockNumber(),
+        );
       /* eslint-enable */
       expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
       expect(RequestModel).toHaveBeenCalled();
@@ -211,8 +220,11 @@ describe('Service Request Substrate Event Handler', () => {
     it('should throw error', () => {
       expect(() => {
         /* eslint-disable */
-        const _serviceRequestWaitingForUnstakedCommand: UnstakedWaitingServiceRequestCommand =
-          new UnstakedWaitingServiceRequestCommand([{}, {}], mockBlockNumber());
+        const _serviceRequestWaitingForUnstakedCommand: UnstakedWaitingServiceRequestCommandIndexer =
+          new UnstakedWaitingServiceRequestCommandIndexer(
+            [{}, {}],
+            mockBlockNumber(),
+          );
         /* eslint-enable */
       }).toThrow();
     });

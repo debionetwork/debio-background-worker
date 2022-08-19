@@ -55,9 +55,10 @@ export class ServiceRequestStakingAmountExcessRefunded
 
         const notificationInput: NotificationDto = {
           role: 'Customer',
-          entity_type: 'ServiceRequest',
+          entity_type: 'Service Request',
           entity: 'Service Request Staking Amount Exess Refunded',
-          description: `Your over payment staking service request with ID ${requestId} has been refunded.`,
+          reference_id: requestId,
+          description: `Your over payment staking service request with ID [] has been refunded.`,
           read: false,
           created_at: currDateTime,
           updated_at: currDateTime,

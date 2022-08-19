@@ -123,6 +123,8 @@ describe('Data Staked Integration Tests', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('genetic testing DNA sample result ready event', async () => {
@@ -228,8 +230,11 @@ describe('Data Staked Integration Tests', () => {
     expect(notifications[0].entity).toEqual('QC Failed');
     expect(
       notifications[0].description.includes(
-        `Your sample from ${dnaSample.trackingId} has been rejected. Click here to see your order details.`,
+        `Your sample from [] has been rejected. Click here to see your order details.`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(dnaSample.trackingId);
+
+    await dbConnection.destroy();
   }, 180000);
 });

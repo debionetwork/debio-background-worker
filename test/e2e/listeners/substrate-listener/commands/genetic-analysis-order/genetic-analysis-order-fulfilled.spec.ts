@@ -126,6 +126,8 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('genetic analysis order fulfilled event', async () => {
@@ -337,11 +339,10 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
     expect(
       notifications[0].description.includes(
         `You've received ${+geneticAnalysisOrder.prices[0]
-          .value} DBIO for completing the requested analysis for ${
-          geneticAnalysisOrder.geneticAnalysisTrackingId
-        }.`,
+          .value} DBIO for completing the requested analysis for [].`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(geneticAnalysisOrder.id);
 
     // eslint-disable-next-line
     const deleteGa: Promise<number> = new Promise((resolve, reject) => {
@@ -359,5 +360,7 @@ describe('Genetic Analysis Order Fulfilled Integration Test', () => {
     });
 
     expect(await deleteGa).toEqual(0);
+
+    await dbConnection.destroy();
   }, 180000);
 });

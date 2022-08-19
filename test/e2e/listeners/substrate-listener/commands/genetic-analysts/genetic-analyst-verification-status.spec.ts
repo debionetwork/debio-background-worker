@@ -110,6 +110,8 @@ describe('Genetic analyst verification status', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('update verification status genetic analyst', async () => {

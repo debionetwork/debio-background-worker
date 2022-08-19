@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { GeneticAnalystVerificationFailedCommand } from './genetic-analysts-verification-failed.command';
+import { GeneticAnalystVerificationFailedCommandIndexer } from './genetic-analysts-verification-failed.command';
 
 @Injectable()
-@CommandHandler(GeneticAnalystVerificationFailedCommand)
+@CommandHandler(GeneticAnalystVerificationFailedCommandIndexer)
 export class GeneticAnalystVerificationFailedHandler
-  implements ICommandHandler<GeneticAnalystVerificationFailedCommand>
+  implements ICommandHandler<GeneticAnalystVerificationFailedCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: GeneticAnalystVerificationFailedCommand) {
+  async execute(command: GeneticAnalystVerificationFailedCommandIndexer) {
     const { geneticAnalystsModel, blockMetaData } = command;
 
     await this.elasticsearchService.update({
@@ -18,9 +18,11 @@ export class GeneticAnalystVerificationFailedHandler
       id: geneticAnalystsModel.account_id,
       refresh: 'wait_for',
       body: {
-        verification_status: geneticAnalystsModel.verification_status,
-        stake_amount: geneticAnalystsModel.stake_amount,
-        blockMetaData: blockMetaData,
+        doc: {
+          verification_status: geneticAnalystsModel.verification_status,
+          stake_amount: geneticAnalystsModel.stake_amount,
+          blockMetaData: blockMetaData,
+        },
       },
     });
   }

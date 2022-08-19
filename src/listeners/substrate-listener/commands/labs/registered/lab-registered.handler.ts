@@ -52,7 +52,8 @@ export class LabRegisteredHandler
       const notificationInput: NotificationDto = {
         role: 'Lab',
         entity_type: 'Labs',
-        entity: 'LabRegistered',
+        entity: 'Lab Registered',
+        reference_id: null,
         description: `Congrats! You have been submitted your account verification.`,
         read: false,
         created_at: currDateTime,

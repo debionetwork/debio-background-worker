@@ -128,6 +128,8 @@ describe('Data Staked Integration Tests', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('genetic testing DNA sample result ready event', async () => {
@@ -232,9 +234,10 @@ describe('Data Staked Integration Tests', () => {
     expect(notifications[0].entity).toEqual('Order Fulfilled');
     expect(
       notifications[0].description.includes(
-        `Your test results for ${dnaSample.orderId} are out. Click here to see your order details.`,
+        `Your test results for [] are out. Click here to see your order details.`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(dnaSample.trackingId);
 
     // eslint-disable-next-line
     const deletePromise: Promise<number> = new Promise((resolve, reject) => {
@@ -248,5 +251,7 @@ describe('Data Staked Integration Tests', () => {
     });
 
     expect(await deletePromise).toEqual(0);
+
+    await dbConnection.destroy();
   }, 180000);
 });

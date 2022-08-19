@@ -24,10 +24,9 @@ export class OrderCreatedHandler
   ) {}
 
   async execute(command: OrderCreatedCommand) {
-    const order: Order = command.orders;
+    const order: Order = command.orders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    order.normalize();
-    await this.logger.log(`OrderCreated With Order ID: ${order.id}!`);
+    this.logger.log(`OrderCreated With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
@@ -54,8 +53,9 @@ export class OrderCreatedHandler
         const notificationInput: NotificationDto = {
           role: 'Customer',
           entity_type: 'Order',
-          entity: 'OrderCreated',
-          description: `Congrats! Your requested test for ${order.id} has been submitted.`,
+          entity: 'Order Created',
+          reference_id: order.dnaSampleTrackingId,
+          description: `You've successfully submitted your requested test for [].`,
           read: false,
           created_at: currDateTime,
           updated_at: currDateTime,
@@ -68,7 +68,7 @@ export class OrderCreatedHandler
         await this.notificationService.insert(notificationInput);
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

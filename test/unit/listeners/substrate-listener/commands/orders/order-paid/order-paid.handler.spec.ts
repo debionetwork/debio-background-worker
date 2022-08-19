@@ -1,5 +1,7 @@
 import {
   DateTimeProxy,
+  ProcessEnvProxy,
+  SubstrateService,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
@@ -8,9 +10,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
   dateTimeProxyMockFactory,
+  mailerServiceMockFactory,
   mockBlockNumber,
   MockType,
   notificationServiceMockFactory,
+  substrateServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { OrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
@@ -18,10 +22,30 @@ import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/transaction-logging/models/transaction-request.entity';
 import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { MailerService } from '@nestjs-modules/mailer';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Order Paid Handler Event', () => {
   let orderPaidHandler: OrderPaidHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
+  let proceccEnvProxy: MockType<ProcessEnvProxy>; // eslint-disable-line
+
+  const LAB_ORDER_LINK = 'http://localhost/lab/orders/';
+  const POSTGRES_HOST = 'localhost';
+
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['LAB_ORDER_LINK', LAB_ORDER_LINK],
+      ['POSTGRES_HOST', POSTGRES_HOST],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
 
   beforeEach(async () => {
     jest
@@ -40,6 +64,18 @@ describe('Order Paid Handler Event', () => {
         {
           provide: DateTimeProxy,
           useFactory: dateTimeProxyMockFactory,
+        },
+        {
+          provide: MailerService,
+          useFactory: mailerServiceMockFactory,
+        },
+        {
+          provide: SubstrateService,
+          useFactory: substrateServiceMockFactory,
+        },
+        {
+          provide: GCloudSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
         },
         OrderPaidHandler,
       ],

@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LabUpdatedCommand } from './lab-updated.command';
+import { LabUpdatedCommandIndexer } from './lab-updated.command';
 
 @Injectable()
-@CommandHandler(LabUpdatedCommand)
-export class LabUpdatedHandler implements ICommandHandler<LabUpdatedCommand> {
+@CommandHandler(LabUpdatedCommandIndexer)
+export class LabUpdatedHandler
+  implements ICommandHandler<LabUpdatedCommandIndexer>
+{
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: LabUpdatedCommand) {
+  async execute(command: LabUpdatedCommandIndexer) {
     const {
       labs: { accountId, info },
       blockMetaData,

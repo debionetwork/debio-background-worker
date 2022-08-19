@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { GeneticAnalystsRetrieveUnstakeAmountCommand } from './genetic-analysts-retrieve-unstake-amount.command';
+import { GeneticAnalystsRetrieveUnstakeAmountCommandIndexer } from './genetic-analysts-retrieve-unstake-amount.command';
 
 @Injectable()
-@CommandHandler(GeneticAnalystsRetrieveUnstakeAmountCommand)
+@CommandHandler(GeneticAnalystsRetrieveUnstakeAmountCommandIndexer)
 export class GeneticAnalystsRetrieveUnstakeAmountHandler
-  implements ICommandHandler<GeneticAnalystsRetrieveUnstakeAmountCommand>
+  implements
+    ICommandHandler<GeneticAnalystsRetrieveUnstakeAmountCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: GeneticAnalystsRetrieveUnstakeAmountCommand) {
+  async execute(command: GeneticAnalystsRetrieveUnstakeAmountCommandIndexer) {
     const { geneticAnalystsModel, blockMetaData } = command;
 
     await this.elasticsearchService.update({
@@ -18,11 +19,13 @@ export class GeneticAnalystsRetrieveUnstakeAmountHandler
       id: geneticAnalystsModel.account_id,
       refresh: 'wait_for',
       body: {
-        stake_amount: geneticAnalystsModel.stake_amount,
-        stake_status: geneticAnalystsModel.stake_status,
-        blockMetaData: blockMetaData,
-        unstake_at: geneticAnalystsModel.unstake_at,
-        retrieve_unstake_at: geneticAnalystsModel.retrieve_unstake_at,
+        doc: {
+          stake_amount: geneticAnalystsModel.stake_amount,
+          stake_status: geneticAnalystsModel.stake_status,
+          blockMetaData: blockMetaData,
+          unstake_at: geneticAnalystsModel.unstake_at,
+          retrieve_unstake_at: geneticAnalystsModel.retrieve_unstake_at,
+        },
       },
     });
   }

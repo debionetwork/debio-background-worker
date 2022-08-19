@@ -4,11 +4,19 @@ import { OrderPaidCommand } from './order-paid.command';
 import {
   DateTimeProxy,
   NotificationService,
+  SubstrateService,
   TransactionLoggingService,
 } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
-import { Order } from '@debionetwork/polkadot-provider';
+import {
+  Order,
+  queryLabById,
+  queryServiceById,
+} from '@debionetwork/polkadot-provider';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { MailerService } from '@nestjs-modules/mailer';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { NewOrderLab } from '../../../models/new-order-lab.model';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -19,13 +27,15 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
+    private readonly substrateService: SubstrateService,
+    private readonly mailerService: MailerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
   ) {}
 
   async execute(command: OrderPaidCommand) {
-    const order: Order = command.orders;
-    order.normalize();
+    const order: Order = command.orders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(`OrderPaid with Order ID: ${order.id}!`);
+    this.logger.log(`OrderPaid with Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
@@ -56,7 +66,8 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           role: 'Lab',
           entity_type: 'Lab',
           entity: 'New Order',
-          description: `A new order (${order.id}) is awaiting process.`,
+          reference_id: order.id,
+          description: `A new order ([]) is awaiting process.`,
           read: false,
           created_at: currDateTime,
           updated_at: currDateTime,
@@ -66,9 +77,49 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           block_number: blockNumber,
         };
         await this.notificationService.insert(notificationNewOrder);
+
+        const labDetail = await queryLabById(
+          this.substrateService.api,
+          order.sellerId,
+        );
+        const serviceDetail = await queryServiceById(
+          this.substrateService.api,
+          order.serviceId,
+        );
+
+        const linkOrder =
+          this.gCloudSecretManagerService
+            .getSecret('LAB_ORDER_LINK')
+            .toString() + order.id;
+
+        await this.sendNewOrderToLab(labDetail.info.email, {
+          specimen_number: order.dnaSampleTrackingId,
+          service: serviceDetail.info.name,
+          service_price: serviceDetail.price,
+          qc_price: serviceDetail.qcPrice,
+          order_id: order.id,
+          order_date: order.createdAt.toDateString(),
+          link_order: `${linkOrder}/process`,
+        });
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
+  }
+
+  async sendNewOrderToLab(to: string, context: NewOrderLab) {
+    let subject = `New Order #1`;
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST').toString() ===
+      'localhost'
+    ) {
+      subject = `Testing New Service Request Email`;
+    }
+    this.mailerService.sendMail({
+      to: to,
+      subject: subject,
+      template: 'new-order-lab',
+      context: context,
+    });
   }
 }

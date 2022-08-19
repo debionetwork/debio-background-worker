@@ -120,6 +120,8 @@ describe('Genetic Analyst Service Created Event', () => {
   afterAll(async () => {
     await api.disconnect();
     await app.close();
+    api = null;
+    pair = null;
   });
 
   it('genetic analyst service created event', async () => {
@@ -206,9 +208,10 @@ describe('Genetic Analyst Service Created Event', () => {
     expect(notifications[0].entity).toEqual('Add service');
     expect(
       notifications[0].description.includes(
-        `You've successfully added your new service - ${gaService.info.name}.`,
+        `You've successfully added your new service - [].`,
       ),
     ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(gaService.info.name);
 
     // eslint-disable-next-line
     const deleteGa: Promise<number> = new Promise((resolve, reject) => {
@@ -226,5 +229,7 @@ describe('Genetic Analyst Service Created Event', () => {
     });
 
     expect(await deleteGa).toEqual(0);
+
+    await dbConnection.destroy();
   }, 180000);
 });

@@ -6,10 +6,10 @@ import {
 } from '../../../mock';
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import {
-  CertificationCreatedCommand,
-  CertificationDeletedCommand,
+  CertificationCreatedCommandIndexer,
+  CertificationDeletedCommandIndexer,
   CertificationsCommandHandlers,
-  CertificationUpdatedCommand,
+  CertificationUpdatedCommandIndexer,
 } from '../../../../../src/indexer/events/certifications';
 import { CertificationCreatedHandler } from '../../../../../src/indexer/events/certifications/commands/certification-created/certification-created.handler';
 import { CertificationUpdatedHandler } from '../../../../../src/indexer/events/certifications/commands/certification-updated/certification-updated.handler';
@@ -76,8 +76,11 @@ describe('Certifications Substrate Event Handler', () => {
     it('Certification Created Handler', async () => {
       const certifications = createMockCertifications();
 
-      const certificationCreatedCommand: CertificationCreatedCommand =
-        new CertificationCreatedCommand([certifications], mockBlockNumber());
+      const certificationCreatedCommand: CertificationCreatedCommandIndexer =
+        new CertificationCreatedCommandIndexer(
+          [certifications],
+          mockBlockNumber(),
+        );
 
       await certificationsCreatedHandler.execute(certificationCreatedCommand);
       expect(elasticsearchService.index).toHaveBeenCalled();
@@ -106,8 +109,8 @@ describe('Certifications Substrate Event Handler', () => {
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
 
-      const certificationUpdatedCommand: CertificationUpdatedCommand =
-        new CertificationUpdatedCommand(
+      const certificationUpdatedCommand: CertificationUpdatedCommandIndexer =
+        new CertificationUpdatedCommandIndexer(
           [CERTIFICATION_OBJECT],
           mockBlockNumber(),
         );
@@ -138,8 +141,8 @@ describe('Certifications Substrate Event Handler', () => {
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
 
-      const certificationDeletedCommand: CertificationDeletedCommand =
-        new CertificationDeletedCommand(
+      const certificationDeletedCommand: CertificationDeletedCommandIndexer =
+        new CertificationDeletedCommandIndexer(
           [CERTIFICATION_OBJECT],
           mockBlockNumber(),
         );

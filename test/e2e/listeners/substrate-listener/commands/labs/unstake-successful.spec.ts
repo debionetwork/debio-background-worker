@@ -155,5 +155,7 @@ describe('Lab unstaking Integration Tests', () => {
     expect(transactionLogs[0].ref_number).toEqual(lab.accountId);
     expect(transactionLogs[0].transaction_type).toEqual(6);
     expect(transactionLogs[0].transaction_status).toEqual(27);
+
+    await dbConnection.destroy();
   }, 180000);
 });

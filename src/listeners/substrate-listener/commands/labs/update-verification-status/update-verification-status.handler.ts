@@ -35,6 +35,7 @@ export class LabUpdateVerificationStatusHandler
       role: 'Lab',
       entity_type: 'Verification',
       entity: `Account ${lab.verificationStatus}`,
+      reference_id: null,
       description: description,
       read: false,
       created_at: await this.dateTimeProxy.new(),

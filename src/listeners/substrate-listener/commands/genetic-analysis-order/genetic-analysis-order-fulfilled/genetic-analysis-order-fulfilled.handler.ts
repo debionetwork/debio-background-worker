@@ -73,10 +73,9 @@ export class GeneticAnalysisOrderFulfilledHandler
         role: 'GA',
         entity_type: 'Genetic Analysis Order',
         entity: 'Order Fulfilled',
+        reference_id: geneticAnalysisOrder.id,
         description: `You've received ${+geneticAnalysisOrder.prices[0]
-          .value} DBIO for completing the requested analysis for ${
-          geneticAnalysisOrder.geneticAnalysisTrackingId
-        }.`,
+          .value} DBIO for completing the requested analysis for [].`,
         read: false,
         created_at: currDate,
         updated_at: currDate,

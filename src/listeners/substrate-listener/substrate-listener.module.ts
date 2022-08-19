@@ -23,7 +23,13 @@ import { LabCommandHandlers } from './commands/labs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-services';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -38,6 +44,7 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
     DateTimeModule,
     NotificationModule,
     ElasticsearchModule.registerAsync({
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,
@@ -53,6 +60,35 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
             password: gCloudSecretManagerService
               .getSecret('ELASTICSEARCH_PASSWORD')
               .toString(),
+          },
+        };
+      },
+    }),
+    MailerModule.forRootAsync({
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+      inject: [GCloudSecretManagerService],
+      useFactory: async (
+        gCloudSecretManagerService: GCloudSecretManagerService,
+      ) => {
+        return {
+          transport: {
+            host: 'smtp.gmail.com',
+            secure: false,
+            auth: {
+              user: process.env.EMAIL,
+              pass: gCloudSecretManagerService
+                .getSecret('PASS_EMAIL')
+                .toString(),
+            },
+          },
+          template: {
+            dir: join(__dirname, 'templates'),
+            adapter: new HandlebarsAdapter({
+              colNum: (value) => parseInt(value) + 1,
+            }), // or new PugAdapter() or new EjsAdapter()
+            options: {
+              strict: true,
+            },
           },
         };
       },

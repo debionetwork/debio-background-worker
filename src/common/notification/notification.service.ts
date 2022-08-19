@@ -30,6 +30,7 @@ export class NotificationService {
     notification.role = data.role;
     notification.entity_type = data.entity_type;
     notification.entity = data.entity;
+    notification.reference_id = data.reference_id;
     notification.description = data.description;
     notification.read = data.read;
     notification.created_at = data.created_at;

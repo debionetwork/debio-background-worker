@@ -8,6 +8,7 @@ import {
 } from '../../../../../common';
 import { GeneticAnalystVerificationStatusCommand } from './genetic-analyst-verification-status.command';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 
 @Injectable()
 @CommandHandler(GeneticAnalystVerificationStatusCommand)
@@ -29,6 +30,10 @@ export class GeneticAnalystVerificationStatusHandler
     const geneticAnalyst = command.geneticAnalyst.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
 
+    if (geneticAnalyst.verificationStatus === VerificationStatus.Unverified) {
+      return;
+    }
+
     await this.logger.log(
       `Genetic Analyst ID: ${geneticAnalyst.accountId} Verify Status ${geneticAnalyst.verificationStatus}!`,
     );
@@ -40,7 +45,6 @@ export class GeneticAnalystVerificationStatusHandler
           21,
         );
       let transactionStatus;
-
       if (geneticAnalyst.verificationStatus === 'Verified') {
         transactionStatus = 20;
         entity = 'Account verified';
@@ -84,6 +88,7 @@ export class GeneticAnalystVerificationStatusHandler
         role: 'GA',
         entity_type: 'Verification',
         entity: entity,
+        reference_id: null,
         description: notificationDescription,
         read: false,
         created_at: currDate,

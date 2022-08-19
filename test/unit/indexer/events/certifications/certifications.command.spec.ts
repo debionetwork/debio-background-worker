@@ -1,8 +1,8 @@
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
 import {
-  CertificationCreatedCommand,
-  CertificationDeletedCommand,
-  CertificationUpdatedCommand,
+  CertificationCreatedCommandIndexer,
+  CertificationDeletedCommandIndexer,
+  CertificationUpdatedCommandIndexer,
 } from '../../../../../src/indexer/events/certifications';
 import { Certification } from '../../../../../src/indexer/models/certification/certification';
 
@@ -39,8 +39,8 @@ describe('Certifications Substrate Event Handler', () => {
       const CERTIFICATION_PARAM = createMockCertifications();
 
       /* eslint-disable */
-      const _certificationCreatedCommand: CertificationCreatedCommand =
-        new CertificationCreatedCommand(
+      const _certificationCreatedCommand: CertificationCreatedCommandIndexer =
+        new CertificationCreatedCommandIndexer(
           [CERTIFICATION_PARAM],
           mockBlockNumber(),
         );
@@ -53,8 +53,8 @@ describe('Certifications Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _certificationCreatedCommand: CertificationCreatedCommand =
-          new CertificationCreatedCommand([{}], mockBlockNumber());
+        const _certificationCreatedCommand: CertificationCreatedCommandIndexer =
+          new CertificationCreatedCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -65,8 +65,8 @@ describe('Certifications Substrate Event Handler', () => {
       const CERTIFICATION_PARAM = createMockCertifications();
 
       /* eslint-disable */
-      const _certificationUpdatedCommand: CertificationUpdatedCommand =
-        new CertificationUpdatedCommand(
+      const _certificationUpdatedCommand: CertificationUpdatedCommandIndexer =
+        new CertificationUpdatedCommandIndexer(
           [CERTIFICATION_PARAM],
           mockBlockNumber(),
         );
@@ -79,8 +79,8 @@ describe('Certifications Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _certificationUpdatedCommand: CertificationUpdatedCommand =
-          new CertificationUpdatedCommand([{}], mockBlockNumber());
+        const _certificationUpdatedCommand: CertificationUpdatedCommandIndexer =
+          new CertificationUpdatedCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });
@@ -91,8 +91,8 @@ describe('Certifications Substrate Event Handler', () => {
       const CERTIFICATION_PARAM = createMockCertifications();
 
       /* eslint-disable */
-      const _certificationDeletedCommand: CertificationDeletedCommand =
-        new CertificationDeletedCommand(
+      const _certificationDeletedCommand: CertificationDeletedCommandIndexer =
+        new CertificationDeletedCommandIndexer(
           [CERTIFICATION_PARAM],
           mockBlockNumber(),
         );
@@ -105,8 +105,8 @@ describe('Certifications Substrate Event Handler', () => {
     it('should throw error if toHuman not defined', () => {
       expect(() => {
         /* eslint-disable */
-        const _certificationDeletedCommand: CertificationDeletedCommand =
-          new CertificationDeletedCommand([{}], mockBlockNumber());
+        const _certificationDeletedCommand: CertificationDeletedCommandIndexer =
+          new CertificationDeletedCommandIndexer([{}], mockBlockNumber());
         /* eslint-enable */
       }).toThrowError();
     });

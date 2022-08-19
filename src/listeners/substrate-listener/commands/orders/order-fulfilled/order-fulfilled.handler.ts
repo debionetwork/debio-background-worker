@@ -39,10 +39,9 @@ export class OrderFulfilledHandler
   ) {}
 
   async execute(command: OrderFulfilledCommand) {
-    const order: Order = command.orders;
-    order.normalize();
+    const order: Order = command.orders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(`Order Fulfilled With Order ID: ${order.id}!`);
+    this.logger.log(`Order Fulfilled With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
@@ -121,8 +120,9 @@ export class OrderFulfilledHandler
             const customerNotificationInput: NotificationDto = {
               role: 'Customer',
               entity_type: 'Order',
-              entity: 'OrderFulfilled',
-              description: `Congrats! You’ve received ${totalPrice} DBIO as a reward for completing the request test for ${order.dnaSampleTrackingId} from the service requested, kindly check your balance.`,
+              entity: 'Order Fulfilled',
+              reference_id: order.dnaSampleTrackingId,
+              description: `Congrats! You’ve received ${totalPrice} DBIO as a reward for completing the request test for [] from the service requested, kindly check your balance.`,
               read: false,
               created_at: this.dateTimeProxy.new(),
               updated_at: this.dateTimeProxy.new(),
@@ -166,11 +166,10 @@ export class OrderFulfilledHandler
               role: 'Lab',
               entity_type: 'Reward',
               entity: 'Request Service Staking',
+              reference_id: order.dnaSampleTrackingId,
               description: `Congrats! You’ve received ${
                 totalPrice / 10
-              } DBIO for completing the request test for ${
-                order.dnaSampleTrackingId
-              } from the service requested.`,
+              } DBIO for completing the request test for [] from the service requested.`,
               read: false,
               created_at: this.dateTimeProxy.new(),
               updated_at: this.dateTimeProxy.new(),
@@ -207,7 +206,8 @@ export class OrderFulfilledHandler
         role: 'Lab',
         entity_type: 'Genetic Testing Order',
         entity: 'Order Fulfilled',
-        description: `You've received ${amountToForward} DAI for completeing the requested test for ${order.id}.`,
+        reference_id: order.dnaSampleTrackingId,
+        description: `You've received ${amountToForward} DAI for completeing the requested test for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
@@ -223,7 +223,7 @@ export class OrderFulfilledHandler
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);
     } catch (err) {
-      await this.logger.log(err);
+      this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
     }
   }

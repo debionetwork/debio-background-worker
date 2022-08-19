@@ -24,8 +24,7 @@ export class OrderRefundedHandler
   ) {}
 
   async execute(command: OrderRefundedCommand) {
-    const order: Order = command.orders;
-    order.normalize();
+    const order: Order = command.orders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
     await this.logger.log(`OrderRefunded With Order ID: ${order.id}!`);
 
@@ -57,7 +56,8 @@ export class OrderRefundedHandler
         role: 'Customer',
         entity_type: 'Genetic Testing Order',
         entity: 'Order Refunded',
-        description: `Your service fee from ${order.dnaSampleTrackingId} has been refunded, kindly check your account balance.`,
+        reference_id: order.dnaSampleTrackingId,
+        description: `Your service fee from [] has been refunded, kindly check your account balance.`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
@@ -68,7 +68,7 @@ export class OrderRefundedHandler
       };
       await this.notificationService.insert(customerOrderRefundedNotification);
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

@@ -13,6 +13,7 @@ import {
   setOrderRefunded,
   finalizeRequest,
   sendRewards,
+  eventTypes,
 } from '@debionetwork/polkadot-provider';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
 
@@ -30,10 +31,9 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   ) {}
 
   async execute(command: OrderFailedCommand) {
-    const order: Order = command.orders;
-    order.normalize();
+    const order: Order = command.orders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(`OrderFailed With Order ID: ${order.id}!`);
+    this.logger.log(`OrderFailed With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
@@ -58,14 +58,23 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         order.id,
       );
 
+      const totalAdditionalPrice = order.additionalPrices.reduce(
+        (acc, price) => acc + +price.value,
+        0,
+      );
+
       const currDateTime = this.dateTimeProxy.new();
+
+      const valueMessage =
+        eventTypes.role.lab.geneticTesting.DnaSampleQualityControlled.value_message.trimEnd();
 
       // QC notification to lab
       const labNotification: NotificationDto = {
         role: 'Lab',
         entity_type: 'Genetic Testing Order',
         entity: 'Order Failed',
-        description: `You've received ${order.additionalPrices[0]} DAI as quality control fees for ${order.dnaSampleTrackingId}.`,
+        reference_id: order.dnaSampleTrackingId,
+        description: `${valueMessage} ${totalAdditionalPrice} DAI as quality control fees for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,

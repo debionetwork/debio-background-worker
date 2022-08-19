@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { GetLastSubstrateBlockQuery } from './get-last-substrate-block.query';
+import { GetLastSubstrateBlockQueryIndexer } from './get-last-substrate-block.query';
 
 @Injectable()
-@QueryHandler(GetLastSubstrateBlockQuery)
+@QueryHandler(GetLastSubstrateBlockQueryIndexer)
 export class GetLastSubstrateBlockHandler
-  implements IQueryHandler<GetLastSubstrateBlockQuery>
+  implements IQueryHandler<GetLastSubstrateBlockQueryIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 

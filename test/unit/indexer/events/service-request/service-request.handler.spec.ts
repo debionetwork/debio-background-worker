@@ -7,13 +7,13 @@ import { ProcessedServiceRequestHandler } from '../../../../../src/indexer/event
 import { UnstakedServiceRequestHandler } from '../../../../../src/indexer/events/service-request/commands/unstaked-service-request/unstaked-service-request.handler';
 import { UnstakedWaitingServiceRequestHandler } from '../../../../../src/indexer/events/service-request/commands/unstakedwaiting-service-request/unstakedwaiting-service-request.handler';
 import {
-  ClaimedServiceRequestCommand,
-  CreateServiceRequestCommand,
-  FinalizedServiceRequestCommand,
-  ProcessedServiceRequestCommand,
+  ClaimedServiceRequestCommandIndexer,
+  CreateServiceRequestCommandIndexer,
+  FinalizedServiceRequestCommandIndexer,
+  ProcessedServiceRequestCommandIndexer,
   RequestServiceCommandHandlers,
-  UnstakedServiceRequestCommand,
-  UnstakedWaitingServiceRequestCommand,
+  UnstakedServiceRequestCommandIndexer,
+  UnstakedWaitingServiceRequestCommandIndexer,
 } from '../../../../../src/indexer/events/service-request';
 import { RequestStatus } from '../../../../../src/indexer/models/service-request/request-status';
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
@@ -163,8 +163,11 @@ describe('Service Request Substrate Event Handler', () => {
     it('Claimed Service Request Handler', async () => {
       const claimRequest = createMockClaimRequest();
 
-      const claimedServiceRequestCommand: ClaimedServiceRequestCommand =
-        new ClaimedServiceRequestCommand(claimRequest, mockBlockNumber());
+      const claimedServiceRequestCommand: ClaimedServiceRequestCommandIndexer =
+        new ClaimedServiceRequestCommandIndexer(
+          claimRequest,
+          mockBlockNumber(),
+        );
 
       const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(
         claimedServiceRequestCommand.claimRequest.requestHash,
@@ -196,8 +199,8 @@ describe('Service Request Substrate Event Handler', () => {
     it('Create Service Request Handler WHEN COUTRY SERVICE REQUEST HITS 0', async () => {
       const requestData = createMockRequest(RequestStatus.Open);
 
-      const createServiceRequestCommand: CreateServiceRequestCommand =
-        new CreateServiceRequestCommand(requestData, mockBlockNumber());
+      const createServiceRequestCommand: CreateServiceRequestCommandIndexer =
+        new CreateServiceRequestCommandIndexer(requestData, mockBlockNumber());
 
       const COUNTRY_CALLED_WITH = createObjectSearchCountryServiceRequest(
         createServiceRequestCommand.request.country,
@@ -205,15 +208,7 @@ describe('Service Request Substrate Event Handler', () => {
       const ES_RESULT_COUNTRY_SERVICE_REQUEST = {
         body: {
           hits: {
-            hits: [
-              {
-                _source: {
-                  request: {
-                    country: 'string',
-                  },
-                },
-              },
-            ],
+            hits: [],
           },
         },
       };
@@ -223,7 +218,7 @@ describe('Service Request Substrate Event Handler', () => {
         .mockReturnValue(ES_RESULT_COUNTRY_SERVICE_REQUEST);
 
       await createServiceRequestHandler.execute(createServiceRequestCommand);
-      expect(elasticsearchService.index).toHaveBeenCalled();
+      expect(elasticsearchService.create).toHaveBeenCalled();
       expect(elasticsearchService.search).toHaveBeenCalled();
       expect(elasticsearchService.index).toHaveBeenCalled();
     });
@@ -254,10 +249,10 @@ describe('Service Request Substrate Event Handler', () => {
         .calledWith(COUNTRY_CALLED_WITH)
         .mockReturnValue(ES_RESULT_COUNTRY_SERVICE_REQUEST);
 
-      const createServiceRequestCommand: CreateServiceRequestCommand =
-        new CreateServiceRequestCommand(requestData, mockBlockNumber());
+      const createServiceRequestCommand: CreateServiceRequestCommandIndexer =
+        new CreateServiceRequestCommandIndexer(requestData, mockBlockNumber());
       await createServiceRequestHandler.execute(createServiceRequestCommand);
-      expect(elasticsearchService.index).toHaveBeenCalled();
+      expect(elasticsearchService.create).toHaveBeenCalled();
       expect(elasticsearchService.search).toHaveBeenCalled();
       expect(elasticsearchService.update).toHaveBeenCalled();
     });
@@ -265,8 +260,11 @@ describe('Service Request Substrate Event Handler', () => {
     it('Finalized Service Request Handler', async () => {
       const serviceInvoice = createMockServiceInvoice();
 
-      const finalizedServiceRequestCommand: FinalizedServiceRequestCommand =
-        new FinalizedServiceRequestCommand(serviceInvoice, mockBlockNumber());
+      const finalizedServiceRequestCommand: FinalizedServiceRequestCommandIndexer =
+        new FinalizedServiceRequestCommandIndexer(
+          serviceInvoice,
+          mockBlockNumber(),
+        );
 
       const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(
         finalizedServiceRequestCommand.serviceInvoice.requestHash,
@@ -300,8 +298,11 @@ describe('Service Request Substrate Event Handler', () => {
     it('Processed Service Request Handler', async () => {
       const serviceInvoice = createMockServiceInvoice();
 
-      const processedServiceRequestCommand: ProcessedServiceRequestCommand =
-        new ProcessedServiceRequestCommand(serviceInvoice, mockBlockNumber());
+      const processedServiceRequestCommand: ProcessedServiceRequestCommandIndexer =
+        new ProcessedServiceRequestCommandIndexer(
+          serviceInvoice,
+          mockBlockNumber(),
+        );
 
       const SERVICE_REQUEST_CALLED_WITH = createObjectSearchServiceRequest(
         processedServiceRequestCommand.serviceInvoice.requestHash,
@@ -335,8 +336,11 @@ describe('Service Request Substrate Event Handler', () => {
     it('Unstaked Service Request Handler', async () => {
       const requestData = createMockRequest(RequestStatus.Unstaked);
 
-      const unstakedServiceRequestCommand: UnstakedServiceRequestCommand =
-        new UnstakedServiceRequestCommand(requestData, mockBlockNumber());
+      const unstakedServiceRequestCommand: UnstakedServiceRequestCommandIndexer =
+        new UnstakedServiceRequestCommandIndexer(
+          requestData,
+          mockBlockNumber(),
+        );
       await unstakedServiceRequestHandler.execute(
         unstakedServiceRequestCommand,
       );
@@ -346,8 +350,8 @@ describe('Service Request Substrate Event Handler', () => {
     it('Unstaked Waiting Service Request Handler', async () => {
       const requestData = createMockRequest(RequestStatus.WaitingForUnstaked);
 
-      const unstakedWaitingServiceRequestCommand: UnstakedWaitingServiceRequestCommand =
-        new UnstakedWaitingServiceRequestCommand(
+      const unstakedWaitingServiceRequestCommand: UnstakedWaitingServiceRequestCommandIndexer =
+        new UnstakedWaitingServiceRequestCommandIndexer(
           requestData,
           mockBlockNumber(),
         );

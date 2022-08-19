@@ -6,9 +6,9 @@ import {
 } from '../../../mock';
 import {
   GeneticAnalystServicesCommandHandlers,
-  GeneticAnalystServicesCreatedCommand,
-  GeneticAnalystServicesDeletedCommand,
-  GeneticAnalystServicesUpdatedCommand,
+  GeneticAnalystServicesCreatedCommandIndexer,
+  GeneticAnalystServicesDeletedCommandIndexer,
+  GeneticAnalystServicesUpdatedCommandIndexer,
 } from '../../../../../src/indexer/events/genetic-analyst-services';
 import { GeneticAnalystServicesCreatedHandler } from '../../../../../src/indexer/events/genetic-analyst-services/commands/genetic-analyst-services-created/genetic-analyst-services-created.handler';
 import { GeneticAnalystServicesDeletedHandler } from '../../../../../src/indexer/events/genetic-analyst-services/commands/genetic-analyst-services-deleted/genetic-analyst-services-deleted.handler';
@@ -76,8 +76,8 @@ describe('Genetic Anlaysts Services Substrate Event Handler', () => {
       const GENETIC_ANALYSTS_SERVICES_PARAM =
         createMockGeneticAnalystsServices();
 
-      const geneticAnalystsServicesCreatedCommand: GeneticAnalystServicesCreatedCommand =
-        new GeneticAnalystServicesCreatedCommand(
+      const geneticAnalystsServicesCreatedCommand: GeneticAnalystServicesCreatedCommandIndexer =
+        new GeneticAnalystServicesCreatedCommandIndexer(
           [GENETIC_ANALYSTS_SERVICES_PARAM],
           mockBlockNumber(),
         );
@@ -117,8 +117,8 @@ describe('Genetic Anlaysts Services Substrate Event Handler', () => {
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
 
-      const geneticAnalystsServicesDeletedCommand: GeneticAnalystServicesDeletedCommand =
-        new GeneticAnalystServicesDeletedCommand(
+      const geneticAnalystsServicesDeletedCommand: GeneticAnalystServicesDeletedCommandIndexer =
+        new GeneticAnalystServicesDeletedCommandIndexer(
           [GENETIC_ANALYSTS_SERVICES_PARAM],
           mockBlockNumber(),
         );
@@ -160,8 +160,8 @@ describe('Genetic Anlaysts Services Substrate Event Handler', () => {
         .calledWith(CALLED_WITH)
         .mockReturnValue(ES_RESULT);
 
-      const geneticAnalystsServicesUpdatedCommand: GeneticAnalystServicesUpdatedCommand =
-        new GeneticAnalystServicesUpdatedCommand(
+      const geneticAnalystsServicesUpdatedCommand: GeneticAnalystServicesUpdatedCommandIndexer =
+        new GeneticAnalystServicesUpdatedCommandIndexer(
           [GENETIC_ANALYSTS_SERVICES_PARAM],
           mockBlockNumber(),
         );

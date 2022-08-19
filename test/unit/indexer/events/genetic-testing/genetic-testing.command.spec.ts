@@ -1,5 +1,5 @@
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
-import { DataStakedCommand } from '../../../../../src/indexer/events/genetic-testing';
+import { DataStakedCommandIndexer } from '../../../../../src/indexer/events/genetic-testing';
 import { DataStaked } from '../../../../../src/indexer/models/genetic-testing/data-staked';
 
 jest.mock('../../../../../src/indexer/models/genetic-testing/data-staked');
@@ -21,10 +21,8 @@ describe('Genetic Testing Substrate Event Handler', () => {
       const DATA_STAKED_PARAM = createMockDataStaked();
 
       /* eslint-disable */
-      const _dataStakedCommand: DataStakedCommand = new DataStakedCommand(
-        DATA_STAKED_PARAM,
-        mockBlockNumber(),
-      );
+      const _dataStakedCommand: DataStakedCommandIndexer =
+        new DataStakedCommandIndexer(DATA_STAKED_PARAM, mockBlockNumber());
       /* eslint-enable */
       expect(DataStaked).toHaveBeenCalled();
       expect(DataStaked).toHaveBeenCalledWith(
