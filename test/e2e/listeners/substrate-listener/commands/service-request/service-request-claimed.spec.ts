@@ -21,11 +21,14 @@ import {
   claimRequest,
   createRequest,
   createService,
+  deleteService,
+  deregisterLab,
   Lab,
   queryLabById,
   queryServiceRequestByAccountId,
   queryServiceRequestById,
   queryServicesByMultipleIds,
+  queryServicesCount,
   registerLab,
   Service,
   ServiceRequest,
@@ -260,6 +263,19 @@ describe('Service Request Excess Integration Tests', () => {
         `Congrats! Your requested service is available now. Click here to see your order details.`,
       ),
     ).toBeTruthy();
+
+    // eslint-disable-next-line
+    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
+      deleteService(api, pair, service.id, () => {
+        queryServicesCount(api).then((res) => {
+          deregisterLab(api, pair, () => {
+            resolve(res);
+          });
+        });
+      });
+    });
+
+    expect(await deletePromise).toEqual(0);
 
     await dbConnection.destroy();
   }, 180000);
