@@ -103,7 +103,7 @@ export class OrderFulfilledHandler
           this.substrateService.api as any,
           this.substrateService.pair,
           order.id,
-          false,
+          true,
           () => this.callbackSendReward(order, totalPrice, blockNumber),
         );
       }

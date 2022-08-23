@@ -309,20 +309,6 @@ describe('Order Fulfilled Handler Event', () => {
       mockBlockNumber(),
     );
 
-    const ORDER_LOGGING_CALLED_WITH: TransactionLoggingDto = {
-      address: orderCancelledCommand.orders.customerId,
-      amount:
-        Number(orderCancelledCommand.orders.additionalPrices[0].value) /
-          10 ** 18 +
-        Number(orderCancelledCommand.orders.prices[0].value) / 10 ** 18,
-      created_at: new Date(),
-      currency: orderCancelledCommand.orders.currency.toUpperCase(),
-      parent_id: BigInt(RESULT_TRANSACTION.id),
-      ref_number: orderCancelledCommand.orders.id,
-      transaction_status: 3,
-      transaction_type: 1,
-    };
-
     await orderFulfilledHandler.execute(orderCancelledCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
@@ -330,10 +316,6 @@ describe('Order Fulfilled Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
-    // expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
-    // expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
-    //   ORDER_LOGGING_CALLED_WITH,
-    // );
     expect(queryEthAdressByAccountIdSpy).toHaveBeenCalled();
     expect(queryEthAdressByAccountIdSpy).toHaveBeenCalledWith(
       substrateServiceMock.api,
@@ -341,8 +323,6 @@ describe('Order Fulfilled Handler Event', () => {
     );
     expect(finalizeRequestSpy).toHaveBeenCalled();
     expect(queryOrderDetailByOrderIDSpy).toHaveBeenCalled();
-    // expect(queryServiceByIdSpy).toHaveBeenCalled();
-    // expect(queryServiceInvoiceByOrderIdSpy).toHaveBeenCalled();
     expect(debioConversionServiceMock.getExchange).toHaveBeenCalled();
     expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
     expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
@@ -629,10 +609,6 @@ describe('Order Fulfilled Handler Event', () => {
 
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
-      .mockImplementation();
-
-    const queryServiceInvoiceByOrderIdSpy = jest
-      .spyOn(serviceRequestQuery, 'queryServiceInvoiceByOrderId')
       .mockImplementation();
 
     const ORDER = createMockOrder(OrderStatus.Cancelled);
