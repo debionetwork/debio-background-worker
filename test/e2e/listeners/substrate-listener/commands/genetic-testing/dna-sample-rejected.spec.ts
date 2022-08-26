@@ -46,7 +46,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { DnaSampleRejectedCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing/dna-sample-rejected/dna-sample-rejected.handler';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Data Staked Integration Tests', () => {
   let app: INestApplication;

@@ -38,7 +38,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList } from '../../../../src/secrets';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Event Command Service Request Claimed', () => {
   let app: INestApplication;

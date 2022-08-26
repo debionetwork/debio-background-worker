@@ -22,7 +22,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { SecretKeyList, keyList } from '../../../src/secrets';
+import { SecretKeyList, keyList } from '../../../src/common/secrets';
 
 describe('Mailer Scheduler (e2e)', () => {
   let service: MailerService;

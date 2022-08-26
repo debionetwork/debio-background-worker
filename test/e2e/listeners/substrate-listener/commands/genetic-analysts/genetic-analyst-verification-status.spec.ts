@@ -32,7 +32,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { GeneticAnalystVerificationStatusHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Genetic analyst verification status', () => {
   let app: INestApplication;

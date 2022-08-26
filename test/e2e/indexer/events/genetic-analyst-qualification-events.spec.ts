@@ -22,7 +22,7 @@ import { CommonModule, ProcessEnvModule } from '../../../../src/common';
 import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
 import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { geneticAnalystQualificationsDataMock } from '../../../mock/models/genetic-analysts/genetic-analyst-qualifications.mock';
-import { SecretKeyList } from '../../../../src/secrets';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Genetic Analyst Qualification Events', () => {
   let app: INestApplication;

@@ -47,7 +47,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { GeneticAnalysisOrderCreatedHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysys-order-created/genetic-analysis-order-created.handler';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Genetic Analysis Order Created Integration Test', () => {
   let app: INestApplication;

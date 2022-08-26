@@ -28,7 +28,7 @@ import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { LabCommandHandlers } from '../../../../src/indexer/events/labs';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { StakeStatus } from '../../../../src/indexer/models/stake-status';
-import { SecretKeyList } from '../../../../src/secrets';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Event Command Service Request Claimed', () => {
   let app: INestApplication;

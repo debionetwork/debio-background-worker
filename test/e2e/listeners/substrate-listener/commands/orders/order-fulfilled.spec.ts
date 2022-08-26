@@ -50,7 +50,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { OrderFulfilledHandler } from '../../../../../../src/listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Order Fulfilled Integration Tests', () => {
   let app: INestApplication;

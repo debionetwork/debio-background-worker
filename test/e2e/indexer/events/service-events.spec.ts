@@ -25,7 +25,7 @@ import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
 import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { serviceDataMock } from '../../../mock/models/labs/services.mock';
-import { SecretKeyList } from '../../../../src/secrets';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Service Event', () => {
   let app: INestApplication;

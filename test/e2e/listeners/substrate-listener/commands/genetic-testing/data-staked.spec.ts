@@ -52,7 +52,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { DataStakedHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing/data-staked/data-staked.handler';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Data Staked Integration Tests', () => {
   let app: INestApplication;

@@ -35,7 +35,7 @@ import {
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { serviceDataMock } from '../../../mock/models/labs/services.mock';
-import { SecretKeyList } from '../../../../src/secrets';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Indexer Genetic Testing Event', () => {
   let app: INestApplication;

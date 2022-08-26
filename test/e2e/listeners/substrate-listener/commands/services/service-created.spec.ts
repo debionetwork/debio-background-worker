@@ -37,7 +37,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Service Created Integration Tests', () => {
   let app: INestApplication;

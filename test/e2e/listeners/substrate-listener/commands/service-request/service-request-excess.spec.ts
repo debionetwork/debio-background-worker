@@ -50,7 +50,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ServiceRequestStakingAmountExcessRefunded } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-excess/service-request-excess.handler';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Service Request Excess Integration Tests', () => {
   let app: INestApplication;

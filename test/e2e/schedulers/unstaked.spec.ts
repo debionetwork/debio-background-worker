@@ -18,7 +18,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList, keyList } from '../../../src/secrets';
+import { SecretKeyList, keyList } from '../../../src/common/secrets';
 
 describe('Unstaked Scheduler (e2e)', () => {
   let schedulerRegistry: SchedulerRegistry;

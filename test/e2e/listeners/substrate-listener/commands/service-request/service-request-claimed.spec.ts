@@ -45,7 +45,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ServiceRequestClaimedCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-claimed/service-request-claimed.handler';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Service Request Excess Integration Tests', () => {
   let app: INestApplication;

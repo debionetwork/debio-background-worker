@@ -27,7 +27,7 @@ import { LabCommandHandlers } from '../../../../src/indexer/events/labs';
 import { initializeApi } from '../../polkadot-init';
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { certificationDataMock } from '../../../mock/models/certifications/certification-mock';
-import { SecretKeyList } from '../../../../src/secrets';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Certification Event', () => {
   let app: INestApplication;

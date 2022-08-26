@@ -57,7 +57,7 @@ import { OrderPaidHandler } from '../../../../../../src/listeners/substrate-list
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
-import { SecretKeyList, keyList } from '../../../../../../src/secrets';
+import { SecretKeyList, keyList } from '../../../../../../src/common/secrets';
 
 describe('Order Fulfilled Integration Tests', () => {
   let app: INestApplication;

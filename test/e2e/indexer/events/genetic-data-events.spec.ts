@@ -21,7 +21,7 @@ import { GeneticDataCommandHandlers } from '../../../../src/indexer/events/genet
 import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
 import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { initializeApi } from '../../polkadot-init';
-import { SecretKeyList } from '../../../../src/secrets';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Genetic Data Events', () => {
   let app: INestApplication;

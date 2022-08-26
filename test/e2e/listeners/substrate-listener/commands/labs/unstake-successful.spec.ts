@@ -27,7 +27,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { labUnstakedHandler } from '../../../../../../src/listeners/substrate-listener/commands/labs/unstake-successfull/unstaked-successful.handler';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Lab unstaking Integration Tests', () => {
   let app: INestApplication;

@@ -46,7 +46,7 @@ import { GeneticAnalysisOrderPaidHandler } from '../../../../../../src/listeners
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
-import { SecretKeyList, keyList } from '../../../../../../src/secrets';
+import { SecretKeyList, keyList } from '../../../../../../src/common/secrets';
 
 describe('Genetic Analysis Order Created Integration Test', () => {
   let app: INestApplication;

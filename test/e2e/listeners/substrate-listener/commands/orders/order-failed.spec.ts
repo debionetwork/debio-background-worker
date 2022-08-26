@@ -48,7 +48,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { OrderFailedHandler } from '../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Order Failed Integration Tests', () => {
   let app: INestApplication;

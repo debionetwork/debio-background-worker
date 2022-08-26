@@ -30,7 +30,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
-import { SecretKeyList } from '../../../../../../src/secrets';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('lab staking Integration Tests', () => {
   let app: INestApplication;

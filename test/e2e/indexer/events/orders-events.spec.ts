@@ -32,7 +32,7 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { OrderCommandHandlers } from '../../../../src/indexer/events/orders';
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
-import { SecretKeyList } from '../../../../src/secrets';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Orders Events', () => {
   let app: INestApplication;
