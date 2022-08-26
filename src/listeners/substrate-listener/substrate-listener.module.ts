@@ -30,7 +30,7 @@ import {
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
-import { SecretKeyList, keyList } from '../../secrets';
+import { SecretKeyList, keyList } from '../../common/secrets';
 
 @Module({
   imports: [

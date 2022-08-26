@@ -4,7 +4,7 @@ import {
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { SecretKeyList, keyList } from '../secrets';
+import { SecretKeyList, keyList } from '../common/secrets';
 import {
   EmailNotificationModule,
   MailModule,

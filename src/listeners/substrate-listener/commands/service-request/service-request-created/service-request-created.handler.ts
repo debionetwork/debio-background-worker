@@ -12,7 +12,7 @@ import { CountryService } from '../../../../../common/location/country.service';
 import { StateService } from '../../../../../common/location/state.service';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../../../../secrets';
+import { keyList } from '../../../../../common/secrets';
 
 @Injectable()
 @CommandHandler(ServiceRequestCreatedCommand)

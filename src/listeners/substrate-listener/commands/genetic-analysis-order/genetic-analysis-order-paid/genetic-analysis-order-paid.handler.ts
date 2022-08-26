@@ -16,7 +16,7 @@ import {
 import { NewOrderGA } from '../../../models/new-order-ga.model';
 import { MailerService } from '@nestjs-modules/mailer';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../../../../secrets';
+import { keyList } from '../../../../../common/secrets';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderPaidCommand)

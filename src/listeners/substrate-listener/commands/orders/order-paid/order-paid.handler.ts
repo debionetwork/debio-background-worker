@@ -17,7 +17,7 @@ import { NotificationDto } from '../../../../../common/notification/dto/notifica
 import { MailerService } from '@nestjs-modules/mailer';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { NewOrderLab } from '../../../models/new-order-lab.model';
-import { keyList } from '../../../../../secrets';
+import { keyList } from '../../../../../common/secrets';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
