@@ -4,6 +4,7 @@ import {
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { SecretKeyList, keyList } from '../common/secrets';
 import {
   EmailNotificationModule,
   MailModule,
@@ -17,10 +18,12 @@ import { UnstakedService } from './unstaked/unstaked.service';
 @Module({
   imports: [
     ElasticsearchModule.registerAsync({
-      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+      imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
+      ],
       inject: [GCloudSecretManagerService],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           node: gCloudSecretManagerService

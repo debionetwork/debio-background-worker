@@ -37,6 +37,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Service Created Integration Tests', () => {
   let app: INestApplication;
@@ -80,7 +81,10 @@ describe('Service Created Integration Tests', () => {
   beforeAll(async () => {
     const modules: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
+        GCloudSecretManagerModule.withConfig(
+          process.env.GCS_PARENT,
+          SecretKeyList,
+        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,

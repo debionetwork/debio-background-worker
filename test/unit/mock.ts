@@ -360,11 +360,12 @@ export const schedulerRegistryMockFactory: () => MockType<SchedulerRegistry> =
     addInterval: jest.fn(),
   }));
 
-export const googleSecretManagerServiceMockFactory: () => MockType<GCloudSecretManagerService> =
-  jest.fn(() => ({
-    loadSecrets: jest.fn((entity) => entity),
-    getSecret: jest.fn((entity) => entity),
-  }));
+export const googleSecretManagerServiceMockFactory: () => MockType<
+  GCloudSecretManagerService<any>
+> = jest.fn(() => ({
+  loadSecrets: jest.fn((entity) => entity),
+  getSecret: jest.fn((entity) => entity),
+}));
 
 export const indexerHandlerProvider = {
   provide: IndexerHandler,

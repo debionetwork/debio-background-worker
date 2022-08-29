@@ -35,6 +35,7 @@ import {
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { serviceDataMock } from '../../../mock/models/labs/services.mock';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Indexer Genetic Testing Event', () => {
   let app: INestApplication;
@@ -78,7 +79,10 @@ describe('Indexer Genetic Testing Event', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
+        GCloudSecretManagerModule.withConfig(
+          process.env.GCS_PARENT,
+          SecretKeyList,
+        ),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,

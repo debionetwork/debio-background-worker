@@ -9,13 +9,14 @@ import {
 } from '../../common';
 import { queryLabById } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../../common/secrets';
 
 @Injectable()
 export class MailerService {
   private logger: Logger = new Logger(MailerService.name);
   private isRunning = false;
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly mailerManager: MailerManager,
     private readonly emailNotificationService: EmailNotificationService,
     private readonly substrateService: SubstrateService,

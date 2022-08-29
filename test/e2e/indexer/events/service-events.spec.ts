@@ -25,6 +25,7 @@ import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
 import { IndexerModule } from '../../../../src/indexer/indexer.module';
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { serviceDataMock } from '../../../mock/models/labs/services.mock';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Service Event', () => {
   let app: INestApplication;
@@ -67,7 +68,7 @@ describe('Service Event', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
