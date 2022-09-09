@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@debionetwork/polkadot-provider": "^0.0.14",
-    "@debionetwork/nestjs-gcloud-secret-manager": "^0.0.2",
+    "@debionetwork/nestjs-gcloud-secret-manager": "^0.0.3",
     "@elastic/elasticsearch": "^7.13.0",
     "@google-cloud/storage": "^6.2.2",
     "@nestjs-modules/mailer": "^1.7.1",
