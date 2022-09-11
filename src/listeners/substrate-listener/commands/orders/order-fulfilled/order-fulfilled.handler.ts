@@ -11,11 +11,10 @@ import {
 } from '../../../../../common';
 import {
   convertToDbioUnitString,
+  finalizeRequest,
   Order,
   queryEthAdressByAccountId,
   queryOrderDetailByOrderID,
-  queryServiceById,
-  queryServiceInvoiceByOrderId,
   sendRewards,
 } from '@debionetwork/polkadot-provider';
 import { EscrowService } from '../../../../../common/escrow/escrow.service';
@@ -82,10 +81,7 @@ export class OrderFulfilledHandler
         this.substrateService.api as any,
         order.id,
       );
-      const serviceByOrderId = await queryServiceById(
-        this.substrateService.api as any,
-        order.serviceId,
-      );
+
       const totalPrice = order.prices.reduce(
         (acc, price) => acc + +price.value,
         0,
@@ -96,106 +92,22 @@ export class OrderFulfilledHandler
       );
       const amountToForward = totalPrice + totalAdditionalPrice;
 
-      if (
-        orderByOrderId['orderFlow'] === 'StakingRequestService' &&
-        serviceByOrderId['serviceFlow'] === 'StakingRequestService'
-      ) {
-        const serviceRequest = await queryServiceInvoiceByOrderId(
+      const debioToDai = Number(
+        (await this.exchangeCacheService.getExchange())['dbioToDai'],
+      );
+
+      const daiPrice = amountToForward * debioToDai;
+
+      if (orderByOrderId['orderFlow'] === 'StakingRequestService') {
+        await finalizeRequest(
           this.substrateService.api as any,
+          this.substrateService.pair,
           order.id,
+          true,
+          () => this.callbackSendReward(order, totalPrice, blockNumber),
         );
-        const debioToDai = Number(
-          (await this.exchangeCacheService.getExchange())['dbioToDai'],
-        );
-        const totalPrice = amountToForward * debioToDai;
-
-        // Send reward to customer
-        await sendRewards(
-          this.substrateService.api as any,
-          this.substrateService.pair,
-          order.customerId,
-          convertToDbioUnitString(totalPrice),
-          () => {
-            // Write Logging Notification Customer Reward From Request Service
-            const customerNotificationInput: NotificationDto = {
-              role: 'Customer',
-              entity_type: 'Order',
-              entity: 'Order Fulfilled',
-              reference_id: order.dnaSampleTrackingId,
-              description: `Congrats! You’ve received ${totalPrice} DBIO as a reward for completing the request test for [] from the service requested, kindly check your balance.`,
-              read: false,
-              created_at: this.dateTimeProxy.new(),
-              updated_at: this.dateTimeProxy.new(),
-              deleted_at: null,
-              from: 'Debio Network',
-              to: order.customerId,
-              block_number: blockNumber,
-            };
-
-            this.callbackInsertNotificationLogging(customerNotificationInput);
-          },
-        );
-
-        await queryServiceInvoiceByOrderId(
-          this.substrateService.api as any,
-          serviceRequest['hash_'],
-        );
-
-        // Write Logging Reward Customer Staking Request Service
-        const dataCustomerLoggingInput: TransactionLoggingDto = {
-          address: order.customerId,
-          amount: totalPrice,
-          created_at: new Date(),
-          currency: 'DBIO',
-          parent_id: BigInt(0),
-          ref_number: order.id,
-          transaction_type: 8,
-          transaction_status: 36,
-        };
-        await this.loggingService.create(dataCustomerLoggingInput);
-
-        // Send reward to lab
-        await sendRewards(
-          this.substrateService.api as any,
-          this.substrateService.pair,
-          order.sellerId,
-          convertToDbioUnitString(totalPrice / 10),
-          () => {
-            // Write Logging Notification Lab Reward From Request Service
-            const labNotificationInput: NotificationDto = {
-              role: 'Lab',
-              entity_type: 'Reward',
-              entity: 'Request Service Staking',
-              reference_id: order.dnaSampleTrackingId,
-              description: `Congrats! You’ve received ${
-                totalPrice / 10
-              } DBIO for completing the request test for [] from the service requested.`,
-              read: false,
-              created_at: this.dateTimeProxy.new(),
-              updated_at: this.dateTimeProxy.new(),
-              deleted_at: null,
-              from: 'Debio Network',
-              to: order.sellerId,
-              block_number: blockNumber,
-            };
-
-            this.callbackInsertNotificationLogging(labNotificationInput);
-          },
-        );
-
-        // Write Logging Reward Lab
-        const dataLabLoggingInput: TransactionLoggingDto = {
-          address: order.customerId,
-          amount: totalPrice / 10,
-          created_at: new Date(),
-          currency: 'DBIO',
-          parent_id: BigInt(0),
-          ref_number: order.id,
-          transaction_type: 8,
-          transaction_status: 37,
-        };
-        await this.loggingService.create(dataLabLoggingInput);
       }
+
       await this.escrowService.orderFulfilled(order);
       await this.loggingService.create(orderLogging);
 
@@ -207,7 +119,7 @@ export class OrderFulfilledHandler
         entity_type: 'Genetic Testing Order',
         entity: 'Order Fulfilled',
         reference_id: order.dnaSampleTrackingId,
-        description: `You've received ${amountToForward} DAI for completeing the requested test for [].`,
+        description: `You've received ${daiPrice} DAI for completeing the requested test for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
@@ -223,6 +135,7 @@ export class OrderFulfilledHandler
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);
     } catch (err) {
+      console.log(err);
       this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
     }
@@ -230,5 +143,93 @@ export class OrderFulfilledHandler
 
   callbackInsertNotificationLogging(data: NotificationDto) {
     this.notificationService.insert(data);
+  }
+
+  async callbackSendReward(
+    order: Order,
+    totalPrice: number,
+    blockNumber: string,
+  ) {
+    const dbioRewardCustomer = convertToDbioUnitString(totalPrice);
+    const dbioRewardLab = convertToDbioUnitString(totalPrice / 10);
+    // Send reward to customer
+    await sendRewards(
+      this.substrateService.api as any,
+      this.substrateService.pair,
+      order.customerId,
+      dbioRewardCustomer,
+      () => {
+        // Write Logging Notification Customer Reward From Request Service
+        const customerNotificationInput: NotificationDto = {
+          role: 'Customer',
+          entity_type: 'Order',
+          entity: 'Order Fulfilled',
+          reference_id: order.dnaSampleTrackingId,
+          description: `Congrats! You’ve received ${dbioRewardCustomer} DBIO as a reward for completing the request test for [] from the service requested, kindly check your balance.`,
+          read: false,
+          created_at: this.dateTimeProxy.new(),
+          updated_at: this.dateTimeProxy.new(),
+          deleted_at: null,
+          from: 'Debio Network',
+          to: order.customerId,
+          block_number: blockNumber,
+        };
+
+        this.callbackInsertNotificationLogging(customerNotificationInput);
+      },
+    );
+
+    // Write Logging Reward Customer Staking Request Service
+    const dataCustomerLoggingInput: TransactionLoggingDto = {
+      address: order.customerId,
+      amount: totalPrice,
+      created_at: new Date(),
+      currency: 'DBIO',
+      parent_id: BigInt(0),
+      ref_number: order.id,
+      transaction_type: 8,
+      transaction_status: 36,
+    };
+    await this.loggingService.create(dataCustomerLoggingInput);
+
+    // Send reward to lab
+    await sendRewards(
+      this.substrateService.api as any,
+      this.substrateService.pair,
+      order.sellerId,
+      dbioRewardLab,
+      () => {
+        // Write Logging Notification Lab Reward From Request Service
+        const labNotificationInput: NotificationDto = {
+          role: 'Lab',
+          entity_type: 'Reward',
+          entity: 'Request Service Staking',
+          reference_id: order.dnaSampleTrackingId,
+          description: `Congrats! You’ve received ${dbioRewardLab} DBIO for completing the request test for [] from the service requested.`,
+          read: false,
+          created_at: this.dateTimeProxy.new(),
+          updated_at: this.dateTimeProxy.new(),
+          deleted_at: null,
+          from: 'Debio Network',
+          to: order.sellerId,
+          block_number: blockNumber,
+        };
+
+        this.callbackInsertNotificationLogging(labNotificationInput);
+      },
+    );
+
+    // Write Logging Reward Lab
+    const dataLabLoggingInput: TransactionLoggingDto = {
+      address: order.customerId,
+      amount: totalPrice / 10,
+      created_at: new Date(),
+      currency: 'DBIO',
+      parent_id: BigInt(0),
+      ref_number: order.id,
+      transaction_type: 8,
+      transaction_status: 37,
+    };
+    await this.loggingService.create(dataLabLoggingInput);
   }
 }
