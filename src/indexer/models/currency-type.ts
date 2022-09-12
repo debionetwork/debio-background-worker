@@ -3,4 +3,6 @@ export enum CurrencyType {
   ETH = 'ETH',
   DBIO = 'DBIO',
   USDO = 'USDO',
+  USN = 'USN',
+  USDT = 'USDT',
 }
