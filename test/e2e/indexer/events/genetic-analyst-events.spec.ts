@@ -30,6 +30,7 @@ import { geneticAnalystsDataMock } from '../../../mock/models/genetic-analysts/g
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { AvailabilityStatus } from '@debionetwork/polkadot-provider/lib/primitives/availability-status';
 import { StakeStatus } from '../../../../src/indexer/models/stake-status';
+import { SecretKeyList } from '../../../../src/common/secrets';
 
 describe('Genetic Analyst Events', () => {
   let app: INestApplication;
@@ -71,7 +72,7 @@ describe('Genetic Analyst Events', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,

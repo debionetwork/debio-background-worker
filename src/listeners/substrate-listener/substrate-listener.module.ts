@@ -30,6 +30,7 @@ import {
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+import { SecretKeyList, keyList } from '../../common/secrets';
 
 @Module({
   imports: [
@@ -44,10 +45,12 @@ import { join } from 'path';
     DateTimeModule,
     NotificationModule,
     ElasticsearchModule.registerAsync({
-      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+      imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
+      ],
       inject: [GCloudSecretManagerService],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           node: gCloudSecretManagerService
@@ -65,10 +68,12 @@ import { join } from 'path';
       },
     }),
     MailerModule.forRootAsync({
-      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+      imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
+      ],
       inject: [GCloudSecretManagerService],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           transport: {

@@ -50,6 +50,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { OrderFulfilledHandler } from '../../../../../../src/listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('Order Fulfilled Integration Tests', () => {
   let app: INestApplication;
@@ -89,7 +90,10 @@ describe('Order Fulfilled Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
+        GCloudSecretManagerModule.withConfig(
+          process.env.GCS_PARENT,
+          SecretKeyList,
+        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,

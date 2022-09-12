@@ -7,15 +7,18 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { MailerManager } from './mailer.manager';
+import { SecretKeyList, keyList } from '../../common/secrets';
 
 @Module({
   imports: [
-    GCloudSecretManagerModule.withConfig(process.env.PARENT),
+    GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
     MailerModule.forRootAsync({
-      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+      imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
+      ],
       inject: [GCloudSecretManagerService],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           transport: {

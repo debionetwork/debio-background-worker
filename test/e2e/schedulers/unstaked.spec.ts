@@ -18,12 +18,13 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { SecretKeyList, keyList } from '../../../src/common/secrets';
 
 describe('Unstaked Scheduler (e2e)', () => {
   let schedulerRegistry: SchedulerRegistry;
   let unstakedService: UnstakedService;
   let substrateService: SubstrateService;
-  let gCloudSecretManagerService: GCloudSecretManagerService;
+  let gCloudSecretManagerService: GCloudSecretManagerService<keyList>;
   let elasticsearchService: ElasticsearchService;
 
   let app: INestApplication;
@@ -58,11 +59,14 @@ describe('Unstaked Scheduler (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
+        GCloudSecretManagerModule.withConfig(
+          process.env.GCS_PARENT,
+          SecretKeyList,
+        ),
         ElasticsearchModule.registerAsync({
           inject: [GCloudSecretManagerService],
           useFactory: async (
-            gCloudSecretManagerService: GCloudSecretManagerService,
+            gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
           ) => ({
             node: process.env.ELASTICSEARCH_NODE,
             auth: {

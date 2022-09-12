@@ -17,6 +17,7 @@ import { NotificationDto } from '../../../../../common/notification/dto/notifica
 import { MailerService } from '@nestjs-modules/mailer';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { NewOrderLab } from '../../../models/new-order-lab.model';
+import { keyList } from '../../../../../common/secrets';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -29,7 +30,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly substrateService: SubstrateService,
     private readonly mailerService: MailerService,
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
   async execute(command: OrderPaidCommand) {

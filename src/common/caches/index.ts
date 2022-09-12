@@ -5,16 +5,19 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList, SecretKeyList } from '../../common/secrets';
 
 require('dotenv').config(); // eslint-disable-line
 
 @Module({
   imports: [
     CacheModule.registerAsync({
-      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+      imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
+      ],
       inject: [GCloudSecretManagerService],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           store: redisStore,

@@ -33,6 +33,7 @@ import {
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { LabUpdateVerificationStatusHandler } from '../../../../../../src/listeners/substrate-listener/commands/labs/update-verification-status/update-verification-status.handler';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('lab staking Integration Tests', () => {
   let app: INestApplication;
@@ -73,7 +74,10 @@ describe('lab staking Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.GCS_PARENT),
+        GCloudSecretManagerModule.withConfig(
+          process.env.GCS_PARENT,
+          SecretKeyList,
+        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,

@@ -4,7 +4,7 @@ import {
   SubstrateService,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
-import { OrderStatus } from '@debionetwork/polkadot-provider';
+import { Order, OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -27,6 +27,7 @@ import { TransactionRequest } from '../../../../../../../src/common/transaction-
 
 import * as globalProviderMethods from '@debionetwork/polkadot-provider/lib/index';
 import * as rewardCommand from '@debionetwork/polkadot-provider/lib/command/rewards';
+import * as serviceRequestCommand from '@debionetwork/polkadot-provider/lib/command/service-request';
 import * as userProfileQuery from '@debionetwork/polkadot-provider/lib/query/user-profile';
 import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
 import * as ordersQuery from '@debionetwork/polkadot-provider/lib/query/labs/orders';
@@ -217,6 +218,9 @@ describe('Order Fulfilled Handler Event', () => {
 
   it('should called logging service create', async () => {
     // Arrange
+    const finalizeRequestSpy = jest
+      .spyOn(serviceRequestCommand, 'finalizeRequest')
+      .mockImplementation();
     const queryEthAdressByAccountIdSpy = jest
       .spyOn(userProfileQuery, 'queryEthAdressByAccountId')
       .mockImplementation();
@@ -305,20 +309,6 @@ describe('Order Fulfilled Handler Event', () => {
       mockBlockNumber(),
     );
 
-    const ORDER_LOGGING_CALLED_WITH: TransactionLoggingDto = {
-      address: orderCancelledCommand.orders.customerId,
-      amount:
-        Number(orderCancelledCommand.orders.additionalPrices[0].value) /
-          10 ** 18 +
-        Number(orderCancelledCommand.orders.prices[0].value) / 10 ** 18,
-      created_at: new Date(),
-      currency: orderCancelledCommand.orders.currency.toUpperCase(),
-      parent_id: BigInt(RESULT_TRANSACTION.id),
-      ref_number: orderCancelledCommand.orders.id,
-      transaction_status: 3,
-      transaction_type: 1,
-    };
-
     await orderFulfilledHandler.execute(orderCancelledCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
@@ -326,26 +316,14 @@ describe('Order Fulfilled Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
-      ORDER_LOGGING_CALLED_WITH,
-    );
     expect(queryEthAdressByAccountIdSpy).toHaveBeenCalled();
     expect(queryEthAdressByAccountIdSpy).toHaveBeenCalledWith(
       substrateServiceMock.api,
       ORDER.toHuman().sellerId,
     );
+    expect(finalizeRequestSpy).toHaveBeenCalled();
     expect(queryOrderDetailByOrderIDSpy).toHaveBeenCalled();
-    expect(queryServiceByIdSpy).toHaveBeenCalled();
-    expect(queryServiceInvoiceByOrderIdSpy).toHaveBeenCalled();
     expect(debioConversionServiceMock.getExchange).toHaveBeenCalled();
-    expect(sendRewardsSpy).toHaveBeenCalled();
-    expect(convertToDbioUnitStringSpy).toHaveBeenCalled();
-    expect(queryServiceInvoiceByOrderIdSpy).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
-    expect(sendRewardsSpy).toHaveBeenCalledTimes(2);
-    expect(convertToDbioUnitStringSpy).toHaveBeenCalledTimes(2);
-    expect(transactionLoggingServiceMock.create).toHaveBeenCalledTimes(3);
     expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
     expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
@@ -622,5 +600,32 @@ describe('Order Fulfilled Handler Event', () => {
     queryServiceInvoiceByOrderIdSpy.mockClear();
     sendRewardsSpy.mockClear();
     convertToDbioUnitStringSpy.mockClear();
+  });
+
+  it('called reward callback', async () => {
+    const sendRewardsSpy = jest
+      .spyOn(rewardCommand, 'sendRewards')
+      .mockImplementation();
+
+    const convertToDbioUnitStringSpy = jest
+      .spyOn(globalProviderMethods, 'convertToDbioUnitString')
+      .mockImplementation();
+
+    const ORDER = createMockOrder(OrderStatus.Cancelled);
+    const PRICE = 1;
+    const BLOCKNUMBER = '1';
+
+    await orderFulfilledHandler.callbackSendReward(
+      new Order(ORDER),
+      PRICE,
+      BLOCKNUMBER,
+    );
+
+    expect(sendRewardsSpy).toHaveBeenCalled();
+    expect(convertToDbioUnitStringSpy).toHaveBeenCalled();
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
+    expect(sendRewardsSpy).toHaveBeenCalledTimes(2);
+    expect(convertToDbioUnitStringSpy).toHaveBeenCalledTimes(2);
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalledTimes(2);
   });
 });
