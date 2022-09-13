@@ -72,13 +72,7 @@ class CustomSequencer extends Sequencer {
 
     // Genetic Analysis Order
     sequence.push(...testsArray.filter(obj => {
-      return obj.path.includes('listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-created.spec.ts');
-    }));
-    sequence.push(...testsArray.filter(obj => {
-      return obj.path.includes('listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid.spec.ts');
-    }));
-    sequence.push(...testsArray.filter(obj => {
-      return obj.path.includes('listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled.spec.ts');
+      return obj.path.includes('listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-test.spec.ts');
     }));
 
     // Genetic Analyst Service

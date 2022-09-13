@@ -145,7 +145,7 @@ export class SubstrateListenerHandler implements OnModuleInit, OnModuleDestroy {
   async handleEvent(blockMetaData: BlockMetaData, event: Event) {
     try {
       // if currenblock equal to lastblock, skip handler
-      if (this.lastBlock == blockMetaData.blockNumber) {
+      if (this.lastBlock >= blockMetaData.blockNumber) {
         return;
       }
       const eventSection = eventRoutes[event.section];

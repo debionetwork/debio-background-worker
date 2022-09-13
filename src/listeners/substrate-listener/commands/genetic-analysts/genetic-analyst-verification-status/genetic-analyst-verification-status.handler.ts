@@ -101,7 +101,6 @@ export class GeneticAnalystVerificationStatusHandler
 
       await this.notificationService.insert(geneticAnalystNotification);
     } catch (error) {
-      console.log(error);
       await this.logger.log(error);
     }
   }

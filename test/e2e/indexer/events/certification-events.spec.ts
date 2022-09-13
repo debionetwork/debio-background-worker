@@ -136,8 +136,6 @@ describe('Certification Event', () => {
 
     const certificationSource = certificationES.body.hits.hits[0]._source;
 
-    console.log('test', certificationSource['info']);
-
     expect(certificationSource['info']['title']).toEqual(
       certificationDataMock.info.title,
     );

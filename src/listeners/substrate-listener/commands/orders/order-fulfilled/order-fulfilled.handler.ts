@@ -92,11 +92,10 @@ export class OrderFulfilledHandler
       );
       const amountToForward = totalPrice + totalAdditionalPrice;
 
-      const debioToDai = Number(
-        (await this.exchangeCacheService.getExchange())['dbioToDai'],
-      );
+      const exchange = await this.exchangeCacheService.getExchange();
+      const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
 
-      const daiPrice = amountToForward * debioToDai;
+      const daiPrice = amountToForward * dbioToDai;
 
       if (orderByOrderId['orderFlow'] === 'StakingRequestService') {
         await finalizeRequest(
@@ -135,7 +134,6 @@ export class OrderFulfilledHandler
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);
     } catch (err) {
-      console.log(err);
       this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
     }

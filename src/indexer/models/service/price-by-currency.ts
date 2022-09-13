@@ -1,3 +1,4 @@
+import { CurrencyType } from '../currency-type';
 import { Price } from './price';
 
 export class PriceByCurrency {
@@ -21,7 +22,7 @@ export class PriceByCurrency {
       this.additional_prices.push(price);
     }
   }
-  currency: string;
+  currency: CurrencyType;
   total_price: string;
   price_components: Price[];
   additional_prices: Price[];
