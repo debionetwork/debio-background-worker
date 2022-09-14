@@ -82,8 +82,6 @@ export class OrderFulfilledHandler
         order.id,
       );
 
-      order.currency;
-
       const totalPrice = order.prices.reduce(
         (acc, price) => acc + +price.value,
         0,
@@ -94,6 +92,11 @@ export class OrderFulfilledHandler
       );
       const amountToForward = totalPrice + totalAdditionalPrice;
 
+      const exchange = await this.exchangeCacheService.getExchange();
+      const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
+
+      const dbioPrice = amountToForward / dbioToDai;
+
       if (orderByOrderId['orderFlow'] === 'StakingRequestService') {
         await finalizeRequest(
           this.substrateService.api as any,
@@ -101,7 +104,7 @@ export class OrderFulfilledHandler
           order.id,
           true,
         );
-        this.callbackSendReward(order, totalPrice, blockNumber);
+        await this.callbackSendReward(order, dbioPrice, blockNumber);
       }
 
       await this.escrowService.orderFulfilled(order);
