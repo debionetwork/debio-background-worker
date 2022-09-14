@@ -2,10 +2,13 @@ import { ApiPromise } from '@polkadot/api';
 import 'regenerator-runtime/runtime';
 import {
   deregisterLab,
+  stakeLab,
+  unstakeLab,
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
+import { registerLab } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { labDataMock } from '../../../../../mock/models/labs/labs.mock';
 import { TestingModule } from '@nestjs/testing/testing-module';
 import { Test } from '@nestjs/testing/test';
@@ -22,18 +25,22 @@ import {
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
+  TransactionLoggingModule,
 } from '../../../../../../src/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
+import { LabStakeSuccessfullHandler } from '../../../../../../src/listeners/substrate-listener/commands/labs/stake-successfull/stake-successful.handler';
 import { createConnection } from 'typeorm';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
+import { SecretKeyList } from '../../../../../../src/common/secrets';
+import { labUnstakedHandler } from '../../../../../../src/listeners/substrate-listener/commands/labs/unstake-successfull/unstaked-successful.handler';
+import { LabUpdateVerificationStatusHandler } from '../../../../../../src/listeners/substrate-listener/commands/labs/update-verification-status/update-verification-status.handler';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
-import { LabUpdateVerificationStatusHandler } from '../../../../../../src/listeners/substrate-listener/commands/labs/update-verification-status/update-verification-status.handler';
-import { SecretKeyList } from '../../../../../../src/common/secrets';
 
 describe('lab staking Integration Tests', () => {
   let app: INestApplication;
@@ -58,10 +65,7 @@ describe('lab staking Integration Tests', () => {
       ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
       ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
     ]);
-
     loadSecrets() {
       return null;
     }
@@ -86,8 +90,9 @@ describe('lab staking Integration Tests', () => {
           autoLoadEntities: true,
         }),
         ProcessEnvModule,
-        CqrsModule,
+        TransactionLoggingModule,
         SubstrateModule,
+        CqrsModule,
         DateTimeModule,
         NotificationModule,
       ],
@@ -97,6 +102,8 @@ describe('lab staking Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
+        LabStakeSuccessfullHandler,
+        labUnstakedHandler,
         LabUpdateVerificationStatusHandler,
       ],
     })
@@ -119,7 +126,109 @@ describe('lab staking Integration Tests', () => {
     app = null;
     api = null;
     lab = null;
-  }, 12000);
+  });
+
+  it('lab staking event', async () => {
+    // eslint-disable-next-line
+    const labRegisterPromise: Promise<Lab> = new Promise((resolve, reject) => {
+      registerLab(api, pair, labDataMock.info, () => {
+        queryLabById(api, pair.address).then((res) => {
+          resolve(res);
+        });
+      });
+    });
+
+    lab = await labRegisterPromise;
+    expect(lab.info).toEqual(labDataMock.info);
+
+    // eslint-disable-next-line
+    const labStakingPromise: Promise<Lab> = new Promise((resolve, reject) => {
+      stakeLab(api, pair, () => {
+        queryLabById(api, pair.address).then((res) => {
+          resolve(res);
+        });
+      });
+    });
+
+    lab = await labStakingPromise;
+    expect(lab.accountId).toEqual(pair.address);
+    expect(lab.stakeStatus).toEqual(StakeStatus.Staked);
+
+    const dbConnection = await createConnection({
+      ...dummyCredentials,
+      database: 'db_postgres',
+      entities: [TransactionRequest],
+      synchronize: true,
+    });
+
+    const labLogging = await dbConnection
+      .getRepository(TransactionRequest)
+      .createQueryBuilder('transaction_logs')
+      .where(
+        'transaction_logs.transaction_type = :transaction_type AND transaction_logs.transaction_status = :transaction_status',
+        {
+          transaction_type: 6,
+          transaction_status: 26,
+        },
+      )
+      .getMany();
+
+    expect(labLogging.length).toBeGreaterThan(0);
+    expect(labLogging[0].ref_number).toEqual(lab.accountId);
+    expect(labLogging[0].transaction_type).toEqual(6);
+    expect(labLogging[0].transaction_status).toEqual(26);
+
+    await dbConnection.destroy();
+  }, 180000);
+
+  it('lab unstaking event', async () => {
+    // eslint-disable-next-line
+    const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
+      queryLabById(api, pair.address).then((res) => {
+        resolve(res);
+      });
+    });
+
+    lab = await labPromise;
+    expect(lab.stakeStatus).toEqual('Staked');
+
+    // eslint-disable-next-line
+    const unstakedLabPromise: Promise<Lab> = new Promise((resolve, reject) => {
+      unstakeLab(api, pair, () => {
+        queryLabById(api, pair.address).then((res) => {
+          resolve(res);
+        });
+      });
+    });
+
+    lab = await unstakedLabPromise;
+    expect(lab.stakeStatus).toEqual('WaitingForUnstaked');
+
+    const dbConnection = await createConnection({
+      ...dummyCredentials,
+      database: 'db_postgres',
+      entities: [TransactionRequest],
+      synchronize: true,
+    });
+
+    const transactionLogs = await dbConnection
+      .getRepository(TransactionRequest)
+      .createQueryBuilder('transaction_logs')
+      .where(
+        'transaction_logs.transaction_type = :transaction_type AND transaction_logs.transaction_status = :transaction_status',
+        {
+          transaction_type: 6,
+          transaction_status: 27,
+        },
+      )
+      .getMany();
+
+    expect(transactionLogs[0].ref_number).toEqual(lab.accountId);
+    expect(transactionLogs[0].transaction_type).toEqual(6);
+    expect(transactionLogs[0].transaction_status).toEqual(27);
+
+    await dbConnection.destroy();
+  }, 180000);
 
   it('change lab status lab event', async () => {
     const registerVerifiedLabPromise: Promise<Lab> = new Promise(

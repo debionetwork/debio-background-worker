@@ -83,6 +83,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           this.substrateService.api,
           order.sellerId,
         );
+
         const serviceDetail = await queryServiceById(
           this.substrateService.api,
           order.serviceId,
@@ -91,7 +92,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
         const linkOrder =
           this.gCloudSecretManagerService
             .getSecret('LAB_ORDER_LINK')
-            .toString() + order.id;
+            .toString() ?? '' + order.id;
 
         await this.sendNewOrderToLab(labDetail.info.email, {
           specimen_number: order.dnaSampleTrackingId,
@@ -109,14 +110,8 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   }
 
   async sendNewOrderToLab(to: string, context: NewOrderLab) {
-    let subject = `New Order #1`;
-    if (
-      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST').toString() ===
-      'localhost'
-    ) {
-      subject = `Testing New Service Request Email`;
-    }
-    this.mailerService.sendMail({
+    const subject = `New Order #1`;
+    await this.mailerService.sendMail({
       to: to,
       subject: subject,
       template: 'new-order-lab',
