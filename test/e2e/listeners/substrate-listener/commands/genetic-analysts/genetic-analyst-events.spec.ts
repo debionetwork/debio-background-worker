@@ -3,6 +3,8 @@ import {
   GeneticAnalyst,
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystCount,
+  registerGeneticAnalyst,
+  stakeGeneticAnalyst,
   updateGeneticAnalystVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { INestApplication } from '@nestjs/common';
@@ -21,18 +23,21 @@ import { EscrowService } from '../../../../../../src/common/escrow/escrow.servic
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import { dummyCredentials } from '../../../../../e2e/config';
+import { dummyCredentials } from '../../../../config';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
-import { initializeApi } from '../../../../../e2e/polkadot-init';
-import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
+import { initializeApi } from '../../../../polkadot-init';
+import { geneticAnalystsDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analysts.mock';
 import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
+import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { GeneticAnalystVerificationStatusHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
+import { GeneticAnalystRegisteredHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-registered/genetic-analyst-registered.handler';
 import { SecretKeyList } from '../../../../../../src/common/secrets';
+import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
+import { GeneticAnalystVerificationStatusHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
 
 describe('Genetic analyst verification status', () => {
   let app: INestApplication;
@@ -84,11 +89,11 @@ describe('Genetic analyst verification status', () => {
           autoLoadEntities: true,
         }),
         ProcessEnvModule,
-        TransactionLoggingModule,
-        SubstrateModule,
         CqrsModule,
+        SubstrateModule,
         DateTimeModule,
         NotificationModule,
+        TransactionLoggingModule,
       ],
       providers: [
         {
@@ -96,6 +101,7 @@ describe('Genetic analyst verification status', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
+        GeneticAnalystRegisteredHandler,
         GeneticAnalystVerificationStatusHandler,
       ],
     })
@@ -117,6 +123,72 @@ describe('Genetic analyst verification status', () => {
     api = null;
     pair = null;
   });
+
+  it('genetic analyst registered event', async () => {
+    const geneticAnalystPromise: Promise<GeneticAnalyst> = new Promise(
+      // eslint-disable-next-line
+      (resolve, reject) => {
+        registerGeneticAnalyst(api, pair, geneticAnalystsDataMock.info, () => {
+          stakeGeneticAnalyst(api, pair, () => {
+            queryGeneticAnalystByAccountId(api, pair.address).then((res) => {
+              resolve(res);
+            });
+          });
+        });
+      },
+    );
+
+    const ga: GeneticAnalyst = await geneticAnalystPromise;
+
+    expect(ga.info).toEqual(
+      expect.objectContaining({
+        boxPublicKey:
+          '0x6d206b37fdbe72caeaf73a50dbe455f146933c26c67e8d279565bfc3076ef90a',
+        firstName: 'string',
+        lastName: 'string',
+        gender: 'string',
+        dateOfBirth: '0',
+        email: 'string',
+        phoneNumber: 'string',
+        specialization: 'string',
+        profileLink: 'string',
+        profileImage: 'string',
+      }),
+    );
+
+    expect(ga.stakeStatus).toEqual(StakeStatus.Staked);
+
+    const dbConnection = await createConnection({
+      ...dummyCredentials,
+      database: 'db_postgres',
+      entities: [Notification],
+      synchronize: true,
+    });
+
+    const notifications = await dbConnection
+      .getRepository(Notification)
+      .createQueryBuilder('notification')
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: ga.accountId,
+          entity: 'registration and verification',
+          role: 'GA',
+        },
+      )
+      .getMany();
+
+    expect(notifications.length).toEqual(1);
+    expect(notifications[0].to).toEqual(ga.accountId);
+    expect(notifications[0].entity).toEqual('registration and verification');
+    expect(
+      notifications[0].description.includes(
+        `You've successfully submitted your account verification.`,
+      ),
+    ).toBeTruthy();
+
+    await dbConnection.destroy();
+  }, 180000);
 
   it('update verification status genetic analyst', async () => {
     let ga: GeneticAnalyst;

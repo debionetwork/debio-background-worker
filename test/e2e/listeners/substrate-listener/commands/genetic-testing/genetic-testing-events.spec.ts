@@ -7,18 +7,27 @@ import {
 import { createOrder } from '@debionetwork/polkadot-provider/lib/command/labs/orders';
 import {
   processDnaSample,
+  rejectDnaSample,
   submitDataBountyDetails,
   submitTestResult,
 } from '@debionetwork/polkadot-provider/lib/command/labs/genetic-testing';
-import { createService } from '@debionetwork/polkadot-provider/lib/command/labs/services';
 import {
+  createService,
+  deleteService,
+} from '@debionetwork/polkadot-provider/lib/command/labs/services';
+import {
+  queryDnaSamples,
   queryLabById,
   queryStakedDataByAccountId,
   queryStakedDataByOrderId,
 } from '@debionetwork/polkadot-provider/lib/query/labs';
-import { queryServicesByMultipleIds } from '@debionetwork/polkadot-provider/lib/query/labs/services';
+import {
+  queryServicesByMultipleIds,
+  queryServicesCount,
+} from '@debionetwork/polkadot-provider/lib/query/labs/services';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
 import {
+  deregisterLab,
   registerLab,
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider/lib/command/labs';
@@ -38,7 +47,9 @@ import { dummyCredentials } from '../../../../config';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
+  DateTimeModule,
   DebioConversionModule,
+  NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
@@ -53,6 +64,10 @@ import {
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { DataStakedHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing/data-staked/data-staked.handler';
 import { SecretKeyList } from '../../../../../../src/common/secrets';
+import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
+import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
+import { DnaSampleRejectedCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing/dna-sample-rejected/dna-sample-rejected.handler';
+import { DnaSampleResultReadyCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing/dna-sample-result-ready/dna-sample-result-ready.handler';
 
 describe('Data Staked Integration Tests', () => {
   let app: INestApplication;
@@ -111,6 +126,8 @@ describe('Data Staked Integration Tests', () => {
         SubstrateModule,
         DebioConversionModule,
         CqrsModule,
+        DateTimeModule,
+        NotificationModule,
       ],
       providers: [
         {
@@ -119,6 +136,8 @@ describe('Data Staked Integration Tests', () => {
         },
         SubstrateListenerHandler,
         DataStakedHandler,
+        DnaSampleRejectedCommandHandler,
+        DnaSampleResultReadyCommandHandler,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -140,7 +159,7 @@ describe('Data Staked Integration Tests', () => {
     pair = null;
   });
 
-  it('data staked event', async () => {
+  it('genetic testing DNA sample result ready event', async () => {
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
@@ -159,6 +178,7 @@ describe('Data Staked Integration Tests', () => {
     });
 
     const lab: Lab = await labPromise;
+    expect(lab.info).toEqual(labDataMock.info);
 
     // eslint-disable-next-line
     const servicePromise: Promise<Service> = new Promise((resolve, reject) => {
@@ -175,6 +195,114 @@ describe('Data Staked Integration Tests', () => {
           });
         },
       );
+    });
+
+    const service: Service = await servicePromise;
+
+    // eslint-disable-next-line
+    const orderPromise: Promise<Order> = new Promise((resolve, reject) => {
+      createOrder(
+        api,
+        pair,
+        service.id,
+        0,
+        lab.info.boxPublicKey,
+        serviceDataMock.serviceFlow,
+        () => {
+          queryLastOrderHashByCustomer(api, pair.address).then((orderId) => {
+            queryOrderDetailByOrderID(api, orderId).then((res) => {
+              resolve(res);
+            });
+          });
+        },
+      );
+    });
+
+    const order: Order = await orderPromise;
+    expect(order.customerId).toEqual(pair.address);
+    expect(order.sellerId).toEqual(pair.address);
+    expect(order.serviceId).toEqual(service.id);
+    expect(order.customerBoxPublicKey).toEqual(lab.info.boxPublicKey);
+    expect(order.orderFlow).toEqual(serviceDataMock.serviceFlow);
+
+    await submitTestResult(api, pair, order.dnaSampleTrackingId, {
+      comments: 'comment',
+      resultLink: 'resultLink',
+      reportLink: 'reportLink',
+    });
+
+    const processDnaSamplePromise: Promise<DnaSample> = new Promise(
+      // eslint-disable-next-line
+      (resolve, reject) => {
+        processDnaSample(
+          api,
+          pair,
+          order.dnaSampleTrackingId,
+          DnaSampleStatus.ResultReady,
+          () => {
+            queryDnaSamples(api, order.dnaSampleTrackingId).then((res) => {
+              resolve(res);
+            });
+          },
+        );
+      },
+    );
+
+    const dnaSample = await processDnaSamplePromise;
+    expect(dnaSample.labId).toEqual(order.sellerId);
+    expect(dnaSample.ownerId).toEqual(order.customerId);
+    expect(dnaSample.trackingId).toEqual(order.dnaSampleTrackingId);
+    expect(dnaSample.status).toEqual(DnaSampleStatus.ResultReady);
+
+    const dbConnection = await createConnection({
+      ...dummyCredentials,
+      database: 'db_postgres',
+      entities: [Notification],
+      synchronize: true,
+    });
+
+    const notifications = await dbConnection
+      .getRepository(Notification)
+      .createQueryBuilder('notification')
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: dnaSample.ownerId,
+          entity: 'Order Fulfilled',
+          role: 'Customer',
+        },
+      )
+      .getMany();
+
+    expect(notifications.length).toEqual(1);
+    expect(notifications[0].to).toEqual(dnaSample.ownerId);
+    expect(notifications[0].entity).toEqual('Order Fulfilled');
+    expect(
+      notifications[0].description.includes(
+        `Your test results for [] are out. Click here to see your order details.`,
+      ),
+    ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(dnaSample.trackingId);
+
+    await dbConnection.destroy();
+  }, 180000);
+
+  it('data staked event', async () => {
+    // eslint-disable-next-line
+    const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
+      queryLabById(api, pair.address).then((res) => {
+        resolve(res);
+      });
+    });
+    const lab: Lab = await labPromise;
+
+    // eslint-disable-next-line
+    const servicePromise: Promise<Service> = new Promise((resolve, reject) => {
+      queryLabById(api, pair.address).then((lab) => {
+        queryServicesByMultipleIds(api, lab.services).then((res) => {
+          resolve(res[0]);
+        });
+      });
     });
 
     const service: Service = await servicePromise;
@@ -265,4 +393,128 @@ describe('Data Staked Integration Tests', () => {
 
     await dbConnection.destroy();
   }, 200000);
+
+  it('genetic testing DNA sample result ready event', async () => {
+    // eslint-disable-next-line
+    const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
+      queryLabById(api, pair.address).then((res) => {
+        resolve(res);
+      });
+    });
+
+    const lab: Lab = await labPromise;
+    expect(lab.info).toEqual(labDataMock.info);
+
+    // eslint-disable-next-line
+    const servicePromise: Promise<Service> = new Promise((resolve, reject) => {
+      queryLabById(api, pair.address).then((lab) => {
+        queryServicesByMultipleIds(api, lab.services).then((res) => {
+          resolve(res[0]);
+        });
+      });
+    });
+
+    const service: Service = await servicePromise;
+
+    // eslint-disable-next-line
+    const orderPromise: Promise<Order> = new Promise((resolve, reject) => {
+      createOrder(
+        api,
+        pair,
+        service.id,
+        0,
+        lab.info.boxPublicKey,
+        serviceDataMock.serviceFlow,
+        () => {
+          queryLastOrderHashByCustomer(api, pair.address).then((orderId) => {
+            queryOrderDetailByOrderID(api, orderId).then((res) => {
+              resolve(res);
+            });
+          });
+        },
+      );
+    });
+
+    const order: Order = await orderPromise;
+    expect(order.customerId).toEqual(pair.address);
+    expect(order.sellerId).toEqual(pair.address);
+    expect(order.serviceId).toEqual(service.id);
+    expect(order.customerBoxPublicKey).toEqual(lab.info.boxPublicKey);
+    expect(order.orderFlow).toEqual(serviceDataMock.serviceFlow);
+
+    await submitTestResult(api, pair, order.dnaSampleTrackingId, {
+      comments: 'comment',
+      resultLink: 'resultLink',
+      reportLink: 'reportLink',
+    });
+
+    const processDnaSamplePromise: Promise<DnaSample> = new Promise(
+      // eslint-disable-next-line
+      (resolve, reject) => {
+        rejectDnaSample(
+          api,
+          pair,
+          order.dnaSampleTrackingId,
+          'string',
+          'string',
+          () => {
+            queryDnaSamples(api, order.dnaSampleTrackingId).then((res) => {
+              resolve(res);
+            });
+          },
+        );
+      },
+    );
+
+    const dnaSample = await processDnaSamplePromise;
+    expect(dnaSample.labId).toEqual(order.sellerId);
+    expect(dnaSample.ownerId).toEqual(order.customerId);
+    expect(dnaSample.trackingId).toEqual(order.dnaSampleTrackingId);
+    expect(dnaSample.status).toEqual(DnaSampleStatus.Rejected);
+
+    const dbConnection = await createConnection({
+      ...dummyCredentials,
+      database: 'db_postgres',
+      entities: [Notification],
+      synchronize: true,
+    });
+
+    const notifications = await dbConnection
+      .getRepository(Notification)
+      .createQueryBuilder('notification')
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: dnaSample.ownerId,
+          entity: 'QC Failed',
+          role: 'Customer',
+        },
+      )
+      .getMany();
+
+    expect(notifications.length).toEqual(1);
+    expect(notifications[0].to).toEqual(dnaSample.ownerId);
+    expect(notifications[0].entity).toEqual('QC Failed');
+    expect(
+      notifications[0].description.includes(
+        `Your sample from [] has been rejected. Click here to see your order details.`,
+      ),
+    ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(dnaSample.trackingId);
+
+    // eslint-disable-next-line
+    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
+      deleteService(api, pair, service.id, () => {
+        queryServicesCount(api).then((res) => {
+          deregisterLab(api, pair, () => {
+            resolve(res);
+          });
+        });
+      });
+    });
+
+    expect(await deletePromise).toEqual(0);
+
+    await dbConnection.destroy();
+  }, 180000);
 });

@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiPromise } from '@polkadot/api';
 import {
   DateTimeModule,
+  DebioConversionModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
@@ -35,8 +36,10 @@ import {
   queryServicesByMultipleIds,
   queryServicesCount,
   registerLab,
+  retrieveUnstakedAmount,
   Service,
   ServiceRequest,
+  unstakeRequest,
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { labDataMock } from '../../../../../mock/models/labs/labs.mock';
@@ -51,6 +54,8 @@ import {
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ServiceRequestStakingAmountExcessRefunded } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-excess/service-request-excess.handler';
 import { SecretKeyList } from '../../../../../../src/common/secrets';
+import { ServiceRequestClaimedCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-claimed/service-request-claimed.handler';
+import { ServiceRequestStakingAmountRefundedHandler } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.handler';
 
 describe('Service Request Excess Integration Tests', () => {
   let app: INestApplication;
@@ -103,6 +108,7 @@ describe('Service Request Excess Integration Tests', () => {
         }),
         ProcessEnvModule,
         TransactionLoggingModule,
+        DebioConversionModule,
         CqrsModule,
         SubstrateModule,
         DateTimeModule,
@@ -115,6 +121,8 @@ describe('Service Request Excess Integration Tests', () => {
         },
         SubstrateListenerHandler,
         ServiceRequestStakingAmountExcessRefunded,
+        ServiceRequestClaimedCommandHandler,
+        ServiceRequestStakingAmountRefundedHandler,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
@@ -136,6 +144,154 @@ describe('Service Request Excess Integration Tests', () => {
     app = null;
     api = null;
   });
+
+  it('service request partial event', async () => {
+    let serviceRequest: ServiceRequest;
+
+    const serviceRequestPromise: Promise<ServiceRequest> = new Promise(
+      // eslint-disable-next-line
+      (resolve, reject) => {
+        createRequest(
+          api,
+          pair,
+          serviceRequestMock.country,
+          serviceRequestMock.region,
+          serviceRequestMock.city,
+          serviceRequestMock.serviceCategory,
+          serviceRequestMock.stakingAmount,
+          () => {
+            queryServiceRequestByAccountId(api, pair.address).then((res) => {
+              resolve(res.at(-1));
+            });
+          },
+        );
+      },
+    );
+
+    serviceRequest = await serviceRequestPromise;
+    serviceRequest = serviceRequest.normalize();
+    expect(serviceRequest).toEqual(
+      expect.objectContaining({
+        country: serviceRequestMock.country,
+        region: serviceRequestMock.region,
+        city: serviceRequestMock.city,
+      }),
+    );
+
+    // eslint-disable-next-line
+    const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
+      registerLab(api, pair, labDataMock.info, () => {
+        updateLabVerificationStatus(
+          api,
+          pair,
+          pair.address,
+          VerificationStatus.Verified,
+          () => {
+            queryLabById(api, pair.address).then((res) => {
+              resolve(res);
+            });
+          },
+        );
+      });
+    });
+
+    const lab: Lab = await labPromise;
+    expect(lab.info).toEqual(labDataMock.info);
+    expect(lab.verificationStatus).toEqual(VerificationStatus.Verified);
+
+    // eslint-disable-next-line
+    const servicePromise: Promise<Service> = new Promise((resolve, reject) => {
+      createService(
+        api,
+        pair,
+        serviceDataMock.info,
+        serviceDataMock.serviceFlow,
+        () => {
+          queryLabById(api, pair.address).then((lab) => {
+            queryServicesByMultipleIds(api, lab.services).then((res) => {
+              resolve(res[0]);
+            });
+          });
+        },
+      );
+    });
+
+    const service: Service = await servicePromise;
+    expect(service.info).toEqual(serviceDataMock.info);
+    expect(service.serviceFlow).toEqual(serviceDataMock.serviceFlow);
+
+    const claimRequestPromise: Promise<ServiceRequest> = new Promise(
+      // eslint-disable-next-line
+      (resolve, reject) => {
+        claimRequest(
+          api,
+          pair,
+          serviceRequest.hash,
+          service.id,
+          '900000000000000000',
+          '100000000000000000',
+          () => {
+            queryServiceRequestById(api, serviceRequest.hash).then((res) => {
+              resolve(res);
+            });
+          },
+        );
+      },
+    );
+
+    serviceRequest = await claimRequestPromise;
+    expect(serviceRequest.requesterAddress).toEqual(pair.address);
+    expect(serviceRequest.serviceCategory).toEqual(
+      serviceRequestMock.serviceCategory,
+    );
+    expect(serviceRequest.region).toEqual(serviceRequestMock.region);
+    expect(serviceRequest.city).toEqual(serviceRequestMock.city);
+    expect(serviceRequest.country).toEqual(serviceRequestMock.country);
+
+    const dbConnection = await createConnection({
+      ...dummyCredentials,
+      database: 'db_postgres',
+      entities: [Notification],
+      synchronize: true,
+    });
+
+    const notifications = await dbConnection
+      .getRepository(Notification)
+      .createQueryBuilder('notification')
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: serviceRequest.requesterAddress,
+          entity: 'Requested Service Available',
+          role: 'Customer',
+        },
+      )
+      .getMany();
+
+    expect(notifications.length).toEqual(1);
+    expect(notifications[0].to).toEqual(serviceRequest.requesterAddress);
+    expect(notifications[0].entity).toEqual('Requested Service Available');
+    expect(
+      notifications[0].description.includes(
+        `Congrats! Your requested service is available now. Click here to see your order details.`,
+      ),
+    ).toBeTruthy();
+
+    // eslint-disable-next-line
+    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
+      deleteService(api, pair, service.id, () => {
+        queryServicesCount(api).then((res) => {
+          deregisterLab(api, pair, () => {
+            resolve(res);
+          });
+        });
+      });
+    });
+
+    expect(await deletePromise).toEqual(0);
+
+    await dbConnection.destroy();
+  }, 180000);
 
   it('service request excess event', async () => {
     let serviceRequest: ServiceRequest;
@@ -326,4 +482,87 @@ describe('Service Request Excess Integration Tests', () => {
 
     await dbConnection.destroy();
   }, 210000);
+
+  it('service request staking amount refunded event', async () => {
+    let serviceRequest: ServiceRequest;
+
+    const serviceRequestPromise: Promise<ServiceRequest> = new Promise(
+      // eslint-disable-next-line
+      (resolve, reject) => {
+        createRequest(
+          api,
+          pair,
+          serviceRequestMock.country,
+          serviceRequestMock.region,
+          serviceRequestMock.city,
+          serviceRequestMock.serviceCategory,
+          serviceRequestMock.stakingAmount,
+          () => {
+            queryServiceRequestByAccountId(api, pair.address).then((res) => {
+              resolve(res.at(-1));
+            });
+          },
+        );
+      },
+    );
+
+    serviceRequest = await serviceRequestPromise;
+
+    const unstakeServiceRequestPromise: Promise<ServiceRequest> = new Promise(
+      // eslint-disable-next-line
+      (resolve, reject) => {
+        unstakeRequest(api, pair, serviceRequest.hash, () => {
+          queryServiceRequestById(api, serviceRequest.hash).then((res) => {
+            resolve(res);
+          });
+        });
+      },
+    );
+
+    serviceRequest = await unstakeServiceRequestPromise;
+
+    const retrieveUnstakeServiceRequestPromise: Promise<ServiceRequest> =
+      // eslint-disable-next-line
+      new Promise((resolve, reject) => {
+        retrieveUnstakedAmount(api, pair, serviceRequest.hash, () => {
+          queryServiceRequestById(api, serviceRequest.hash).then((res) => {
+            resolve(res);
+          });
+        });
+      });
+
+    serviceRequest = await retrieveUnstakeServiceRequestPromise;
+
+    const dbConnection = await createConnection({
+      ...dummyCredentials,
+      database: 'db_postgres',
+      entities: [Notification],
+      synchronize: true,
+    });
+
+    const notifications = await dbConnection
+      .getRepository(Notification)
+      .createQueryBuilder('notification')
+      .where(
+        'notification.to = :to AND notification.entity = :entity AND notification.role = :role',
+        {
+          to: serviceRequest.requesterAddress,
+          entity: 'Requested Service Unstaked',
+          role: 'Customer',
+        },
+      )
+      .getMany();
+
+    expect(notifications.length).toEqual(1);
+    expect(notifications[0].to).toEqual(serviceRequest.requesterAddress);
+    expect(notifications[0].entity).toEqual('Requested Service Unstaked');
+    expect(
+      notifications[0].description.includes(
+        `Your staked amount from staking ID [] has been refunded, kindly check your balance.`,
+      ),
+    ).toBeTruthy();
+    expect(notifications[0].reference_id).toEqual(serviceRequest.hash);
+
+    await dbConnection.destroy();
+  }, 180000);
 });
