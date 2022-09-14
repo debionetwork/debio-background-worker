@@ -97,8 +97,9 @@ export class GeneticAnalysisOrderPaidHandler
         );
 
       const linkOrder =
-        this.gCloudSecretManagerService.getSecret('GA_ORDER_LINK').toString() +
-        geneticAnalysisOrder.id;
+        this.gCloudSecretManagerService
+          .getSecret('GA_ORDER_LINK')
+          ?.toString() ?? '' + geneticAnalysisOrder.id;
 
       await this.sendNewOrderToGa(geneticAnaystDetail.info.email, {
         service: geneticAnalystServiceDetail.info.name,
@@ -109,19 +110,13 @@ export class GeneticAnalysisOrderPaidHandler
         link_order: linkOrder,
       });
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 
   async sendNewOrderToGa(to: string, context: NewOrderGA) {
-    let subject = `New Order #1`;
-    if (
-      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST').toString() ===
-      'localhost'
-    ) {
-      subject = `Testing New Service Request Email`;
-    }
-    this.mailerService.sendMail({
+    const subject = `New Order #1`;
+    await this.mailerService.sendMail({
       to: to,
       subject: subject,
       template: 'new-order-ga',
