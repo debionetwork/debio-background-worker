@@ -26,7 +26,7 @@ export class GeneticAnalysisOrderFulfilledHandler
   async execute(command: GeneticAnalysisOrderFulfilledCommand) {
     const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(
+    this.logger.log(
       `Genetic Analysis Order Fulfilled! With GA Order ID: ${geneticAnalysisOrder.id}`,
     );
 
@@ -87,7 +87,7 @@ export class GeneticAnalysisOrderFulfilledHandler
 
       await this.notificationService.insert(receivePaymentNotification);
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

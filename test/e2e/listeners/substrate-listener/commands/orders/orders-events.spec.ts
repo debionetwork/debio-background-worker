@@ -73,14 +73,14 @@ describe('Order Failed Integration Tests', () => {
   let api: ApiPromise;
   let pair: any;
 
-  // global.console = {
-  //   ...console,
-  //   log: jest.fn(),
-  //   debug: jest.fn(),
-  //   info: jest.fn(),
-  //   warn: jest.fn(),
-  //   error: jest.fn(),
-  // };
+  global.console = {
+    ...console,
+    log: jest.fn(),
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  };
 
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([

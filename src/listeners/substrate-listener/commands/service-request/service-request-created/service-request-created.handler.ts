@@ -36,7 +36,7 @@ export class ServiceRequestCreatedHandler
   async execute(command: ServiceRequestCreatedCommand) {
     const serviceRequest = command.request.normalize();
     const blockNumber = command.blockMetadata.blockNumber.toString();
-    await this.logger.log(
+    this.logger.log(
       `Service Request Created With Hash: ${serviceRequest.hash}!`,
     );
     const stakingLogging: TransactionLoggingDto = {
@@ -80,7 +80,7 @@ export class ServiceRequestCreatedHandler
 
       await this.notificationService.insert(notificationInput);
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 

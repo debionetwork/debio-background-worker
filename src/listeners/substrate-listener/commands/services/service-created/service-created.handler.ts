@@ -31,7 +31,7 @@ export class ServiceCreatedHandler
   async execute(command: ServiceCreatedCommand) {
     const service: Service = command.services;
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(
+    this.logger.log(
       `Lab ID: ${service.ownerId} Service Created With ID: ${service.id}`,
     );
     const lab: Lab = await queryLabById(

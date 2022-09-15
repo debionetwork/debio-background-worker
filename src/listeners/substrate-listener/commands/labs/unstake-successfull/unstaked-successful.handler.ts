@@ -18,7 +18,7 @@ export class labUnstakedHandler implements ICommandHandler<LabUnstakedCommand> {
 
   async execute(command: LabUnstakedCommand) {
     const lab = command.lab.normalize();
-    await this.logger.log(`Lab ID: ${lab.accountId} Unstaked Successful!`);
+    this.logger.log(`Lab ID: ${lab.accountId} Unstaked Successful!`);
 
     try {
       const tenMinuteInMiliSecond = 10 * 60 * 1000;
@@ -53,7 +53,7 @@ export class labUnstakedHandler implements ICommandHandler<LabUnstakedCommand> {
         await this.loggingService.create(labLogging);
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

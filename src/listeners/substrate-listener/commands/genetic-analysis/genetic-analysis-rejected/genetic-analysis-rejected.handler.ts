@@ -26,7 +26,7 @@ export class GeneticAnalysisRejectedHandler
   async execute(command: GeneticAnalysisRejectedCommand) {
     const geneticAnalysis = command.geneticAnalysis.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(
+    this.logger.log(
       `Genetic Analysis Rejected With Tracking ID: ${geneticAnalysis.geneticAnalysisTrackingId}!`,
     );
 
@@ -56,7 +56,7 @@ export class GeneticAnalysisRejectedHandler
 
       await this.notificationService.insert(orderRefundedNotification);
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

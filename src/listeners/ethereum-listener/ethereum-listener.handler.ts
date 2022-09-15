@@ -28,21 +28,21 @@ export class EthereumListenerHandler implements OnModuleInit {
     });
 
     escrowContract.on('OrderPaid', async (order, event) => {
-      await this.logger.log(
+      this.logger.log(
         `Order Paid Contract Event With Order Id: ${order.orderId}`,
       );
       if (event?.transactionHash) {
-        await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+        this.logger.log(`transaction Hash: ${event.transactionHash}`);
       }
       await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
     });
 
     escrowContract.on('OrderFulfilled', async (order, event) => {
-      await this.logger.log(
+      this.logger.log(
         `Order Fulfilled Contract Event With Order Id: ${order.orderId}`,
       );
       if (event?.transactionHash) {
-        await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+        this.logger.log(`transaction Hash: ${event.transactionHash}`);
       }
       //Update transaction_hash to DB
       const loggingFulfilled =
@@ -60,11 +60,11 @@ export class EthereumListenerHandler implements OnModuleInit {
     });
 
     escrowContract.on('OrderRefunded', async (order, event) => {
-      await this.logger.log(
+      this.logger.log(
         `Order Refunded Contract Event With Order Id: ${order.orderId}`,
       );
       if (event?.transactionHash) {
-        await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+        this.logger.log(`transaction Hash: ${event.transactionHash}`);
       }
       //Update transaction_hash to DB
 

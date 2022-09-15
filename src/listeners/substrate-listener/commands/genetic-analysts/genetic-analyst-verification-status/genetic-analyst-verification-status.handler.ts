@@ -34,7 +34,7 @@ export class GeneticAnalystVerificationStatusHandler
       return;
     }
 
-    await this.logger.log(
+    this.logger.log(
       `Genetic Analyst ID: ${geneticAnalyst.accountId} Verify Status ${geneticAnalyst.verificationStatus}!`,
     );
 
@@ -101,7 +101,7 @@ export class GeneticAnalystVerificationStatusHandler
 
       await this.notificationService.insert(geneticAnalystNotification);
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }
