@@ -23,9 +23,7 @@ export class LabRetrieveUnstakeAmountHandler
 
   async execute(command: LabRetrieveUnstakeAmountCommand) {
     const lab = command.lab.normalize();
-    await this.logger.log(
-      `Lab ID : ${lab.accountId} Retrieve Unstraked Amount!`,
-    );
+    this.logger.log(`Lab ID : ${lab.accountId} Retrieve Unstraked Amount!`);
 
     try {
       const labParent = await this.loggingService.getLoggingByOrderId(
@@ -54,7 +52,7 @@ export class LabRetrieveUnstakeAmountHandler
         await this.loggingService.create(stakingLogging);
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

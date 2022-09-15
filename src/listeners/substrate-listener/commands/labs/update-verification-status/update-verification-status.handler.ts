@@ -21,7 +21,7 @@ export class LabUpdateVerificationStatusHandler
   async execute(command: LabUpdateVerificationStatusCommand) {
     const lab = command.labs.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(
+    this.logger.log(
       `Lab ID: ${lab.accountId} Update Verification Status ${lab.verificationStatus}!`,
     );
 
@@ -49,7 +49,7 @@ export class LabUpdateVerificationStatusHandler
     try {
       await this.notificationService.insert(notificationInput);
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 

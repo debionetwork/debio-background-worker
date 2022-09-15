@@ -30,7 +30,7 @@ export class DebioConversionService {
 
       return res.data;
     } catch (error) {
-      await this.logger.log(`API conversion": ${error.message}`);
+      this.logger.log(`API conversion": ${error.message}`);
     }
   }
 }

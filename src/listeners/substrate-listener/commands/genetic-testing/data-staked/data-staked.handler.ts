@@ -27,7 +27,7 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
     try {
       const dataStaked = command.dataStaked;
 
-      await this.logger.log(
+      this.logger.log(
         `Data Staked With Hash Data Bounty: ${dataStaked.hashDataBounty}!`,
       );
       const dataOrder = await queryOrderDetailByOrderID(

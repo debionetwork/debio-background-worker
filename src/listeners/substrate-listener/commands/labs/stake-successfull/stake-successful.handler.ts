@@ -20,7 +20,7 @@ export class LabStakeSuccessfullHandler
 
   async execute(command: LabStakeSuccessfulCommand) {
     const lab = command.labs.normalize();
-    await this.logger.log(`Lab ID: ${lab.accountId} Stake Successful!`);
+    this.logger.log(`Lab ID: ${lab.accountId} Stake Successful!`);
 
     try {
       const tenMinuteInMiliSecond = 10 * 60 * 1000;
@@ -55,7 +55,7 @@ export class LabStakeSuccessfullHandler
         await this.loggingService.create(labLogging);
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

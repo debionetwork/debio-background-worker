@@ -23,7 +23,7 @@ export class ServiceRequestUnstakedHandler
 
   async execute(command: ServiceRequestUnstakedCommand) {
     const serviceRequest = command.request.normalize();
-    await this.logger.log(
+    this.logger.log(
       `Service Request Unstaked With Hash: ${serviceRequest.hash}!`,
     );
 
@@ -49,7 +49,7 @@ export class ServiceRequestUnstakedHandler
         await this.loggingService.create(stakingLogging);
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

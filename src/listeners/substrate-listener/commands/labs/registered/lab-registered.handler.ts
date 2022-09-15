@@ -25,7 +25,7 @@ export class LabRegisteredHandler
   async execute(command: LabRegisteredCommand) {
     const lab = command.lab.normalize();
     const blockNumber = command.blockMetadata.blockNumber.toString();
-    await this.logger.log(`Lab ID: ${lab.accountId} is Registered!`);
+    this.logger.log(`Lab ID: ${lab.accountId} is Registered!`);
     const stakingLogging: TransactionLoggingDto = {
       address: lab.accountId,
       amount: lab.stakeAmount,
@@ -59,14 +59,14 @@ export class LabRegisteredHandler
         created_at: currDateTime,
         updated_at: currDateTime,
         deleted_at: null,
-        from: lab.accountId,
-        to: 'Admin',
+        from: 'Debio Network',
+        to: lab.accountId,
         block_number: blockNumber,
       };
 
       await this.notificationService.insert(notificationInput);
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

@@ -39,7 +39,7 @@ export class GeneticAnalysisOrderPaidHandler
   async execute(command: GeneticAnalysisOrderPaidCommand) {
     const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(
+    this.logger.log(
       `Genetic Analysis Order Paid With GA Order ID: ${geneticAnalysisOrder.id}!`,
     );
 

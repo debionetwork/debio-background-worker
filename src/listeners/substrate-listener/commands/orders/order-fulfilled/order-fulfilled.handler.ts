@@ -71,7 +71,7 @@ export class OrderFulfilledHandler
       );
 
       if ((labEthAddress as Option<any>).isNone) {
-        await this.logger.log(
+        this.logger.log(
           `Eth address by account id: ${order.customerId} is none!`,
         );
         return null;

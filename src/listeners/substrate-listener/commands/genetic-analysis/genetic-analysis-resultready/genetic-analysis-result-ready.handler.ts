@@ -26,7 +26,7 @@ export class GeneticAnalysisResultReadyHandler
   async execute(command: GeneticAnalysisResultReadyCommand) {
     const geneticAnalysis = command.geneticAnalysis.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(
+    this.logger.log(
       `Genetic Analysis Result Ready With Tracking ID: ${geneticAnalysis.geneticAnalysisTrackingId}!`,
     );
     try {
@@ -55,7 +55,7 @@ export class GeneticAnalysisResultReadyHandler
 
       await this.notificationService.insert(notificationInput);
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }

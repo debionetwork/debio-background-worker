@@ -26,7 +26,7 @@ export class OrderRefundedHandler
   async execute(command: OrderRefundedCommand) {
     const order: Order = command.orders.normalize();
     const blockNumber = command.blockMetaData.blockNumber.toString();
-    await this.logger.log(`OrderRefunded With Order ID: ${order.id}!`);
+    this.logger.log(`OrderRefunded With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =

@@ -16,7 +16,7 @@ export class GeneticAnalysisOrderCancelledHandler
 
   async execute(command: GeneticAnalysisOrderCancelledCommand) {
     const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
-    await this.logger.log(
+    this.logger.log(
       `Genetic Analysis Order Cancelled With GA Order ID: ${geneticAnalysisOrder.id}!`,
     );
 
@@ -52,7 +52,7 @@ export class GeneticAnalysisOrderCancelledHandler
         await this.loggingService.create(geneticAnalysisOrderLogging);
       }
     } catch (error) {
-      await this.logger.log(error);
+      this.logger.log(error);
     }
   }
 }
