@@ -9,7 +9,7 @@ export const geneticAnalystsDataMock = {
     lastName: 'string',
     gender: 'string',
     dateOfBirth: 0,
-    email: 'string',
+    email: 'rhyuben.starmoon@gmail.com',
     phoneNumber: 'string',
     specialization: 'string',
     profileLink: 'string',

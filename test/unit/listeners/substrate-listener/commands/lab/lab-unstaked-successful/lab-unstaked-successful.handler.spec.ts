@@ -47,9 +47,7 @@ describe('Lab Untaked Successful Handler Event', () => {
   });
 
   it('should not called logging service create', async () => {
-    jest
-      .useRealTimers()
-      .setSystemTime(new Date('Thu Jan 24 2022 07:02:00 GMT+0700').getTime());
+    jest.useFakeTimers();
 
     // Arrange
     const lab = createMockLab();

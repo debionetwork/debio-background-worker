@@ -125,10 +125,12 @@ describe('Genetic analyst verification status', () => {
   });
 
   it('genetic analyst registered event', async () => {
+    const { info } = geneticAnalystsDataMock;
+
     const geneticAnalystPromise: Promise<GeneticAnalyst> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
-        registerGeneticAnalyst(api, pair, geneticAnalystsDataMock.info, () => {
+        registerGeneticAnalyst(api, pair, info, () => {
           stakeGeneticAnalyst(api, pair, () => {
             queryGeneticAnalystByAccountId(api, pair.address).then((res) => {
               resolve(res);
@@ -144,15 +146,15 @@ describe('Genetic analyst verification status', () => {
       expect.objectContaining({
         boxPublicKey:
           '0x6d206b37fdbe72caeaf73a50dbe455f146933c26c67e8d279565bfc3076ef90a',
-        firstName: 'string',
-        lastName: 'string',
-        gender: 'string',
-        dateOfBirth: '0',
-        email: 'string',
-        phoneNumber: 'string',
-        specialization: 'string',
-        profileLink: 'string',
-        profileImage: 'string',
+        firstName: info.firstName,
+        lastName: info.lastName,
+        gender: info.gender,
+        dateOfBirth: info.dateOfBirth.toString(),
+        email: info.email,
+        phoneNumber: info.phoneNumber,
+        specialization: info.specialization,
+        profileLink: info.profileLink,
+        profileImage: info.profileImage,
       }),
     );
 
@@ -191,6 +193,7 @@ describe('Genetic analyst verification status', () => {
   }, 180000);
 
   it('update verification status genetic analyst', async () => {
+    const { info } = geneticAnalystsDataMock;
     let ga: GeneticAnalyst;
 
     const geneticAnalystPromise: Promise<GeneticAnalyst> = new Promise(
@@ -208,15 +211,15 @@ describe('Genetic analyst verification status', () => {
       expect.objectContaining({
         boxPublicKey:
           '0x6d206b37fdbe72caeaf73a50dbe455f146933c26c67e8d279565bfc3076ef90a',
-        firstName: 'string',
-        lastName: 'string',
-        gender: 'string',
-        dateOfBirth: '0',
-        email: 'string',
-        phoneNumber: 'string',
-        specialization: 'string',
-        profileLink: 'string',
-        profileImage: 'string',
+        firstName: info.firstName,
+        lastName: info.lastName,
+        gender: info.gender,
+        dateOfBirth: info.dateOfBirth.toString(),
+        email: info.email,
+        phoneNumber: info.phoneNumber,
+        specialization: info.specialization,
+        profileLink: info.profileLink,
+        profileImage: info.profileImage,
       }),
     );
 
@@ -244,15 +247,15 @@ describe('Genetic analyst verification status', () => {
       expect.objectContaining({
         boxPublicKey:
           '0x6d206b37fdbe72caeaf73a50dbe455f146933c26c67e8d279565bfc3076ef90a',
-        firstName: 'string',
-        lastName: 'string',
-        gender: 'string',
-        dateOfBirth: '0',
-        email: 'string',
-        phoneNumber: 'string',
-        specialization: 'string',
-        profileLink: 'string',
-        profileImage: 'string',
+        firstName: info.firstName,
+        lastName: info.lastName,
+        gender: info.gender,
+        dateOfBirth: info.dateOfBirth.toString(),
+        email: info.email,
+        phoneNumber: info.phoneNumber,
+        specialization: info.specialization,
+        profileLink: info.profileLink,
+        profileImage: info.profileImage,
       }),
     );
     expect(ga.verificationStatus).toEqual(VerificationStatus.Verified);
@@ -310,15 +313,15 @@ describe('Genetic analyst verification status', () => {
       expect.objectContaining({
         boxPublicKey:
           '0x6d206b37fdbe72caeaf73a50dbe455f146933c26c67e8d279565bfc3076ef90a',
-        firstName: 'string',
-        lastName: 'string',
-        gender: 'string',
-        dateOfBirth: '0',
-        email: 'string',
-        phoneNumber: 'string',
-        specialization: 'string',
-        profileLink: 'string',
-        profileImage: 'string',
+        firstName: info.firstName,
+        lastName: info.lastName,
+        gender: info.gender,
+        dateOfBirth: info.dateOfBirth.toString(),
+        email: info.email,
+        phoneNumber: info.phoneNumber,
+        specialization: info.specialization,
+        profileLink: info.profileLink,
+        profileImage: info.profileImage,
       }),
     );
     expect(ga.verificationStatus).toEqual(VerificationStatus.Revoked);
@@ -369,15 +372,15 @@ describe('Genetic analyst verification status', () => {
       expect.objectContaining({
         boxPublicKey:
           '0x6d206b37fdbe72caeaf73a50dbe455f146933c26c67e8d279565bfc3076ef90a',
-        firstName: 'string',
-        lastName: 'string',
-        gender: 'string',
-        dateOfBirth: '0',
-        email: 'string',
-        phoneNumber: 'string',
-        specialization: 'string',
-        profileLink: 'string',
-        profileImage: 'string',
+        firstName: info.firstName,
+        lastName: info.lastName,
+        gender: info.gender,
+        dateOfBirth: info.dateOfBirth.toString(),
+        email: info.email,
+        phoneNumber: info.phoneNumber,
+        specialization: info.specialization,
+        profileLink: info.profileLink,
+        profileImage: info.profileImage,
       }),
     );
     expect(ga.verificationStatus).toEqual(VerificationStatus.Rejected);

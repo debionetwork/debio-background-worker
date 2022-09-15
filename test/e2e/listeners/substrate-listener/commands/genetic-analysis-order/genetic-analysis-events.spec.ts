@@ -328,7 +328,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     await dbConnection.destroy();
   }, 200000);
 
-  it('genetic analysis order event', async () => {
+  it('genetic analysis order paid event', async () => {
     let ga: GeneticAnalyst;
     let geneticAnalysisOrder: GeneticAnalysisOrder;
 
