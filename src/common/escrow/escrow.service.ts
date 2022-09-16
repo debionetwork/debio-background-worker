@@ -5,6 +5,8 @@ import { setOrderPaid } from '@debionetwork/polkadot-provider';
 import { ethers } from 'ethers';
 import AsyncLock from 'async-lock';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { ErrorLoggingService } from '../error-logging';
+import { ErrorLoggingDto } from '../error-logging/dto/error-logging.dto';
 import { keyList } from '../../common/secrets';
 
 const lock = new AsyncLock();
@@ -17,6 +19,7 @@ export class EscrowService {
     private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly substrateService: SubstrateService,
     private readonly ethereumService: EthereumService,
+    private readonly errorLoggingRepository: ErrorLoggingService,
   ) {}
   private escrowWallet;
   private provider;
@@ -71,6 +74,19 @@ export class EscrowService {
         );
       })
       .catch(function (err) {
+        if (err?.response?.code === 'UNPREDICTABLE_GAS_LIMIT') {
+          let inputErrorLogging: ErrorLoggingDto = {
+            tx_hash: err?.response?.data,
+            block_number: null,
+            description: err?.response.code,
+            resolve: false,
+            created_at: new Date(),
+            updated_at: new Date(),
+            from: err?.response?.from,
+            to: err?.response?.to,
+          };
+          this.errorLoggingRepository.insert(inputErrorLogging);
+        }
         console.log(err);
       });
   }
@@ -114,6 +130,19 @@ export class EscrowService {
         );
       })
       .catch(function (err) {
+        if (err?.response?.code === 'UNPREDICTABLE_GAS_LIMIT') {
+          let inputErrorLogging: ErrorLoggingDto = {
+            tx_hash: err?.response?.data,
+            block_number: null,
+            description: err?.response.code,
+            resolve: false,
+            created_at: new Date(),
+            updated_at: new Date(),
+            from: err?.response?.from,
+            to: err?.response?.to,
+          };
+          this.errorLoggingRepository.insert(inputErrorLogging);
+        }
         console.log(err);
       });
   }
