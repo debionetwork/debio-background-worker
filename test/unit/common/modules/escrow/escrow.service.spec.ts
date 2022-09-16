@@ -1,0 +1,203 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { EthereumService, SubstrateService } from '../../../../../src/common';
+import {
+  errorLoggingServiceMockFactory,
+  ethereumServiceMockFactory,
+  MockType,
+  substrateServiceMockFactory,
+} from '../../../mock';
+import { EscrowService } from '../../../../../src/common/escrow/escrow.service';
+import { ethers } from 'ethers';
+import { setOrderPaid } from '@debionetwork/polkadot-provider';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { ErrorLoggingService } from '../../../../../src/common/error-logging/error-logging.service';
+
+jest.mock('@debionetwork/polkadot-provider', () => ({
+  setOrderPaid: jest.fn(),
+}));
+
+const WALLET_ADDRESS = 'ADDR';
+const ETHERS_PARSE_UNITS_MOCK = {
+  tokenAmount: 'AMOUNT',
+};
+const ETHERS_WALLET_MOCK = {
+  address: WALLET_ADDRESS,
+};
+jest.mock('ethers', () => ({
+  ethers: {
+    utils: {
+      parseUnits: jest.fn(() => {
+        return ETHERS_PARSE_UNITS_MOCK;
+      }),
+    },
+    Wallet: jest.fn(() => {
+      return ETHERS_WALLET_MOCK;
+    }),
+  },
+}));
+
+describe('Escrow Service Unit Tests', () => {
+  let escrowService: EscrowService;
+  let substrateServiceMock: MockType<SubstrateService>;
+  let ethereumServiceMock: MockType<EthereumService>;
+  let errorLoggingServiceMock: MockType<ErrorLoggingService>;
+
+  const DEBIO_ESCROW_PRIVATE_KEY = 'PRIVKEY';
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['DEBIO_ESCROW_PRIVATE_KEY', DEBIO_ESCROW_PRIVATE_KEY],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        EscrowService,
+        { provide: SubstrateService, useFactory: substrateServiceMockFactory },
+        { provide: EthereumService, useFactory: ethereumServiceMockFactory },
+        { provide: ErrorLoggingService, useFactory: errorLoggingServiceMockFactory },
+        {
+          provide: GCloudSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
+      ],
+    }).compile();
+
+    escrowService = module.get<EscrowService>(EscrowService);
+    substrateServiceMock = module.get(SubstrateService);
+    ethereumServiceMock = module.get(EthereumService);
+  });
+
+  it('should be defined', () => {
+    // Assert
+    expect(escrowService).toBeDefined();
+  });
+
+  it('should refund order', async () => {
+    // Arrange
+    const ORDER_ID = 'ID';
+    const CUSTOMER_ID = 'ID';
+    const ORDER = {
+      id: ORDER_ID,
+      customerId: CUSTOMER_ID,
+    };
+    const TOKEN_CONTRACT_SIGNER_MOCK = {
+      refundOrder: jest.fn(),
+    };
+    const SMART_CONTRACT_MOCK = {
+      connect: jest.fn(),
+    };
+    const WALLET_MOCK = 'WALLET';
+    ethereumServiceMock.getEscrowSmartContract.mockReturnValue(
+      SMART_CONTRACT_MOCK,
+    );
+    ethereumServiceMock.createWallet.mockReturnValue(WALLET_MOCK);
+    SMART_CONTRACT_MOCK.connect.mockReturnValue(TOKEN_CONTRACT_SIGNER_MOCK);
+    TOKEN_CONTRACT_SIGNER_MOCK.refundOrder.mockReturnValue('BALANCE');
+
+    // Act
+    await escrowService.refundOrder(ORDER);
+
+    // Assert
+    expect(ethereumServiceMock.getEscrowSmartContract).not.toBeCalled();
+    expect(ethereumServiceMock.createWallet).not.toBeCalled();
+  });
+
+  it('should fulfill order', async () => {
+    // Arrange
+    const ORDER_ID = 'ID';
+    const CUSTOMER_ID = 'ID';
+    const ORDER = {
+      id: ORDER_ID,
+      customerId: CUSTOMER_ID,
+    };
+    const TOKEN_CONTRACT_SIGNER_MOCK = {
+      fulfillOrder: jest.fn(),
+    };
+    const SMART_CONTRACT_MOCK = {
+      connect: jest.fn(),
+    };
+    const WALLET_MOCK = 'WALLET';
+    ethereumServiceMock.getEscrowSmartContract.mockReturnValue(
+      SMART_CONTRACT_MOCK,
+    );
+    ethereumServiceMock.createWallet.mockReturnValue(WALLET_MOCK);
+    SMART_CONTRACT_MOCK.connect.mockReturnValue(TOKEN_CONTRACT_SIGNER_MOCK);
+    TOKEN_CONTRACT_SIGNER_MOCK.fulfillOrder.mockReturnValue('BALANCE');
+
+    // Act
+    await escrowService.orderFulfilled(ORDER);
+
+    // Assert
+    expect(ethereumServiceMock.getEscrowSmartContract).not.toBeCalled();
+    expect(ethereumServiceMock.createWallet).not.toBeCalled();
+  });
+
+  it('should set order paid with substrate', async () => {
+    // Arrange
+    const ORDER_ID = 'ID';
+    const API = 'API';
+    const PAIR = 'PAIR';
+    Reflect.set(substrateServiceMock, 'api', API);
+    Reflect.set(substrateServiceMock, 'pair', PAIR);
+
+    // Act
+    await escrowService.setOrderPaidWithSubstrate(ORDER_ID);
+
+    // Assert
+    expect(setOrderPaid).toHaveBeenCalledTimes(1);
+    expect(setOrderPaid).toHaveBeenCalledWith(API, PAIR, ORDER_ID);
+  });
+
+  it('should forward payment to seller', async () => {
+    // Arrange
+    const SELLER_ADDRESS = 'ADDR';
+    const AMOUNT = 1;
+    const TOKEN_CONTRACT_SIGNER_MOCK = {
+      transferFrom: jest.fn(),
+    };
+    const SMART_CONTRACT_MOCK = {
+      connect: jest.fn(),
+    };
+    ethereumServiceMock.getContract.mockReturnValue(SMART_CONTRACT_MOCK);
+    ethereumServiceMock.createWallet.mockReturnValue(ETHERS_WALLET_MOCK);
+    SMART_CONTRACT_MOCK.connect.mockReturnValue(TOKEN_CONTRACT_SIGNER_MOCK);
+    TOKEN_CONTRACT_SIGNER_MOCK.transferFrom.mockReturnValue('BALANCE');
+    const ethParseUnitsSpy = jest.spyOn(ethers.utils, 'parseUnits');
+    const OPTIONS = {
+      gasLimit: 60000,
+      gasPrice: ETHERS_PARSE_UNITS_MOCK,
+    };
+
+    // Act
+    await escrowService.forwardPaymentToSeller(SELLER_ADDRESS, AMOUNT);
+
+    // Assert
+    expect(ethParseUnitsSpy).toHaveBeenCalledTimes(2);
+    expect(ethParseUnitsSpy).toHaveBeenCalledWith(String(AMOUNT), 18);
+    expect(ethParseUnitsSpy).toHaveBeenCalledWith('100', 'gwei');
+    expect(ethereumServiceMock.getContract).toHaveBeenCalledTimes(1);
+    expect(ethereumServiceMock.createWallet).toHaveBeenCalledTimes(1);
+    expect(ethereumServiceMock.createWallet).toHaveBeenCalledWith(
+      DEBIO_ESCROW_PRIVATE_KEY,
+    );
+    expect(SMART_CONTRACT_MOCK.connect).toHaveBeenCalledTimes(1);
+    expect(SMART_CONTRACT_MOCK.connect).toHaveBeenCalledWith(
+      ETHERS_WALLET_MOCK,
+    );
+    expect(TOKEN_CONTRACT_SIGNER_MOCK.transferFrom).toHaveBeenCalledTimes(1);
+    expect(TOKEN_CONTRACT_SIGNER_MOCK.transferFrom).toHaveBeenCalledWith(
+      ETHERS_WALLET_MOCK.address,
+      SELLER_ADDRESS,
+      ETHERS_PARSE_UNITS_MOCK,
+      OPTIONS,
+    );
+  });
+});

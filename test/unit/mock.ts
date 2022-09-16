@@ -26,6 +26,7 @@ import { StateService } from '../../src/common/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { NotificationService } from '../../src/common/notification/notification.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { ErrorLoggingService } from '../../src/common/error-logging/error-logging.service';
 
 export function mockFunction(args) {} // eslint-disable-line
 
@@ -365,6 +366,15 @@ export const googleSecretManagerServiceMockFactory: () => MockType<
 > = jest.fn(() => ({
   loadSecrets: jest.fn((entity) => entity),
   getSecret: jest.fn((entity) => entity),
+}));
+
+export const errorLoggingServiceMockFactory: () => MockType<
+  ErrorLoggingService
+> = jest.fn(() => ({
+  getAllByToId: jest.fn((entity) => entity),
+  insert: jest.fn((entity) => entity),
+  setErrorLoggingHasBeenResolveById: jest.fn((entity) => entity),
+  setBulkErrorLoggingHasBeenResolve: jest.fn((entity) => entity),
 }));
 
 export const indexerHandlerProvider = {
