@@ -15,7 +15,9 @@ import {
   Order,
   queryEthAdressByAccountId,
   queryOrderDetailByOrderID,
+  queryServiceInvoiceByOrderId,
   sendRewards,
+  ServiceFlow,
 } from '@debionetwork/polkadot-provider';
 import { EscrowService } from '../../../../../common/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
@@ -95,16 +97,18 @@ export class OrderFulfilledHandler
       const exchange = await this.exchangeCacheService.getExchange();
       const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
 
-      const dbioPrice = amountToForward / dbioToDai;
+      const daiPrice = amountToForward * dbioToDai;
 
-      if (orderByOrderId['orderFlow'] === 'StakingRequestService') {
+      if (orderByOrderId.orderFlow === ServiceFlow.StakingRequestService) {
+        const { requestHash: requestId } = await queryServiceInvoiceByOrderId(this.substrateService.api, order.id);
+
         await finalizeRequest(
           this.substrateService.api as any,
           this.substrateService.pair,
-          order.id,
+          requestId,
           true,
         );
-        await this.callbackSendReward(order, dbioPrice, blockNumber);
+        await this.callbackSendReward(order, amountToForward, blockNumber);
       }
 
       await this.escrowService.orderFulfilled(order);
@@ -118,7 +122,7 @@ export class OrderFulfilledHandler
         entity_type: 'Genetic Testing Order',
         entity: 'Order Fulfilled',
         reference_id: order.dnaSampleTrackingId,
-        description: `You've received ${amountToForward} DAI for completeing the requested test for [].`,
+        description: `You've received ${daiPrice} DAI for completeing the requested test for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
