@@ -6,7 +6,12 @@ import { TransactionLoggingModule } from '../../common';
 import { ErrorLoggingModule } from '../../common/error-logging';
 
 @Module({
-  imports: [EthereumModule, EscrowModule, TransactionLoggingModule, ErrorLoggingModule],
+  imports: [
+    EthereumModule,
+    EscrowModule,
+    TransactionLoggingModule,
+    ErrorLoggingModule,
+  ],
   providers: [EthereumListenerHandler],
 })
 export class EthereumListenerModule {}

@@ -75,7 +75,7 @@ export class EscrowService {
       })
       .catch(function (err) {
         if (err?.response?.code === 'UNPREDICTABLE_GAS_LIMIT') {
-          let inputErrorLogging: ErrorLoggingDto = {
+          const inputErrorLogging: ErrorLoggingDto = {
             tx_hash: err?.response?.data,
             block_number: null,
             description: err?.response.code,
@@ -131,7 +131,7 @@ export class EscrowService {
       })
       .catch(function (err) {
         if (err?.response?.code === 'UNPREDICTABLE_GAS_LIMIT') {
-          let inputErrorLogging: ErrorLoggingDto = {
+          const inputErrorLogging: ErrorLoggingDto = {
             tx_hash: err?.response?.data,
             block_number: null,
             description: err?.response.code,

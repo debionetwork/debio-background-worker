@@ -368,14 +368,13 @@ export const googleSecretManagerServiceMockFactory: () => MockType<
   getSecret: jest.fn((entity) => entity),
 }));
 
-export const errorLoggingServiceMockFactory: () => MockType<
-  ErrorLoggingService
-> = jest.fn(() => ({
-  getAllByToId: jest.fn((entity) => entity),
-  insert: jest.fn((entity) => entity),
-  setErrorLoggingHasBeenResolveById: jest.fn((entity) => entity),
-  setBulkErrorLoggingHasBeenResolve: jest.fn((entity) => entity),
-}));
+export const errorLoggingServiceMockFactory: () => MockType<ErrorLoggingService> =
+  jest.fn(() => ({
+    getAllByToId: jest.fn((entity) => entity),
+    insert: jest.fn((entity) => entity),
+    setErrorLoggingHasBeenResolveById: jest.fn((entity) => entity),
+    setBulkErrorLoggingHasBeenResolve: jest.fn((entity) => entity),
+  }));
 
 export const indexerHandlerProvider = {
   provide: IndexerHandler,

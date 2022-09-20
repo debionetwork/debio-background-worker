@@ -40,6 +40,7 @@ describe('Escrow Service Unit Tests', () => {
   let escrowService: EscrowService;
   let substrateServiceMock: MockType<SubstrateService>;
   let ethereumServiceMock: MockType<EthereumService>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let errorLoggingServiceMock: MockType<ErrorLoggingService>;
 
   const DEBIO_ESCROW_PRIVATE_KEY = 'PRIVKEY';
@@ -62,7 +63,10 @@ describe('Escrow Service Unit Tests', () => {
         EscrowService,
         { provide: SubstrateService, useFactory: substrateServiceMockFactory },
         { provide: EthereumService, useFactory: ethereumServiceMockFactory },
-        { provide: ErrorLoggingService, useFactory: errorLoggingServiceMockFactory },
+        {
+          provide: ErrorLoggingService,
+          useFactory: errorLoggingServiceMockFactory,
+        },
         {
           provide: GCloudSecretManagerService,
           useClass: GoogleSecretManagerServiceMock,
