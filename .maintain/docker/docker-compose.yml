@@ -16,7 +16,7 @@ services:
       - 3001:3000
     networks:
       debio:
-        ipv4_address: 172.27.1.3
+        ipv4_address: 172.27.1.11
         aliases:
           - debio-background-worker
 
