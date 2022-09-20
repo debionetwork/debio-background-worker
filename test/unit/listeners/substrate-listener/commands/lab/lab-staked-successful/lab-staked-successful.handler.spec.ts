@@ -16,7 +16,7 @@ import { when } from 'jest-when';
 
 describe('Lab Staked Successful Handler Event', () => {
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
   let labStakeSuccessfullHandler: LabStakeSuccessfullHandler;
 
   beforeEach(async () => {
@@ -36,7 +36,7 @@ describe('Lab Staked Successful Handler Event', () => {
 
     labStakeSuccessfullHandler = module.get(LabStakeSuccessfullHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
+    dateTimeProxyMock = module.get(DateTimeProxy);
 
     await module.init();
   });

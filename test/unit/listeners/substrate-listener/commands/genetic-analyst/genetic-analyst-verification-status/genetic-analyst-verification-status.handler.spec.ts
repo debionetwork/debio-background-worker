@@ -20,7 +20,7 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
   let geneticAnalystVerificationStatusHandler: GeneticAnalystVerificationStatusHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let notificationServiceMock: MockType<NotificationService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -45,7 +45,8 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
       GeneticAnalystVerificationStatusHandler,
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    dateTimeProxyMock = module.get(DateTimeProxy);
     notificationServiceMock = module.get(NotificationService);
 
     await module.init();

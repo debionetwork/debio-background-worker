@@ -24,7 +24,7 @@ describe('Service Request Staking Amount Refunded Command Event', () => {
       new ServiceRequestStakingAmountRefundedCommand(
         MOCK_DATA,
         mockBlockNumber(),
-      ); // eslint-disable-line
+      );
 
     expect(serviceRequestStakingAmountRefunded.requesterId).toEqual(
       REQUESTER_ID,

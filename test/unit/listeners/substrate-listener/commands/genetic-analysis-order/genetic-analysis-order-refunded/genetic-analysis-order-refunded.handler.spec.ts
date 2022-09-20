@@ -21,7 +21,7 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
   let geneticAnalysisOrderRefundedHandler: GeneticAnalysisOrderRefundedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let notificationServiceMock: MockType<NotificationService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

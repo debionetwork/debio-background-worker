@@ -19,7 +19,8 @@ import { when } from 'jest-when';
 describe('Lab Registered Handler Event', () => {
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let notificationServiceMock: MockType<NotificationService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
+  // Uncomment when this needed
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
   let labRegisteredHandler: LabRegisteredHandler;
 
   beforeEach(async () => {

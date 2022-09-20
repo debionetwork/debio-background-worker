@@ -17,7 +17,8 @@ import { TransactionRequest } from '../../../../../../../src/common/transaction-
 
 describe('Lab Untaked Successful Handler Event', () => {
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
+  // Uncomment when this needed
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
   let labUnstakeSuccessfullHandler: labUnstakedHandler;
 
   beforeEach(async () => {

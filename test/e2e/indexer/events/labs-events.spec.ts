@@ -141,7 +141,6 @@ describe('Event Command Service Request Claimed', () => {
   }, 80000);
 
   it('lab update verification status', async () => {
-    // eslint-disable-next-line
     const updateVerificationStatusPromise: Promise<Lab> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {

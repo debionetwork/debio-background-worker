@@ -21,7 +21,7 @@ describe('Genetic Analysis Order Created Handler Event', () => {
   let geneticAnalysisOrderCreatedHandler: GeneticAnalysisOrderCreatedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let notificationServiceMock: MockType<NotificationService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -47,8 +47,8 @@ describe('Genetic Analysis Order Created Handler Event', () => {
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
     notificationServiceMock = module.get(NotificationService);
-    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    dateTimeProxyMock = module.get(DateTimeProxy);
     await module.init();
   });
 
