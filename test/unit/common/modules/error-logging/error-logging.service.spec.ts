@@ -2,7 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ErrorLoggingService } from '../../../../../src/common/error-logging/error-logging.service';
 import { ErrorLogging } from '../../../../../src/common/error-logging/models/error-logging.entity';
-import { dateTimeProxyMockFactory, MockType, repositoryMockFactory } from '../../../mock';
+import {
+  dateTimeProxyMockFactory,
+  MockType,
+  repositoryMockFactory,
+} from '../../../mock';
 import { Repository } from 'typeorm';
 import { ErrorLoggingDto } from '../../../../../src/common/error-logging/dto/error-logging.dto';
 import { DateTimeProxy } from '../../../../../src/common/proxies/date-time/date-time.proxy';
@@ -69,16 +73,16 @@ describe('ErrorLogging Service Unit Tests', () => {
       },
     ];
     const CALLED_WITH: ErrorLoggingDto = {
-        tx_hash: 'string',
-        block_number: 'string',
-        description: 'string',
-        resolve: false,
-        created_at: CURRENT_DATE,
-        updated_at: CURRENT_DATE,
-        from: 'string',
-        to: 'string',
+      tx_hash: 'string',
+      block_number: 'string',
+      description: 'string',
+      resolve: false,
+      created_at: CURRENT_DATE,
+      updated_at: CURRENT_DATE,
+      from: 'string',
+      to: 'string',
     };
-          
+
     repositoryMock.save.mockReturnValue(RESULTS);
 
     // Assert
@@ -102,12 +106,14 @@ describe('ErrorLogging Service Unit Tests', () => {
     };
 
     dateTimeProxyMock.new.mockReturnValue(CURRENT_DATE);
-          
+
     repositoryMock.update.mockReturnValue(RESULTS);
 
     // Assert
-    expect(await errorLoggingService.setErrorLoggingHasBeenResolveById(ID)).toEqual(RESULTS);
-    expect(repositoryMock.update).toHaveBeenCalledWith({ id: ID}, CALLED_WITH);
+    expect(
+      await errorLoggingService.setErrorLoggingHasBeenResolveById(ID),
+    ).toEqual(RESULTS);
+    expect(repositoryMock.update).toHaveBeenCalledWith({ id: ID }, CALLED_WITH);
     expect(repositoryMock.update).toHaveBeenCalled();
   });
 
@@ -126,12 +132,14 @@ describe('ErrorLogging Service Unit Tests', () => {
     };
 
     dateTimeProxyMock.new.mockReturnValue(CURRENT_DATE);
-          
+
     repositoryMock.update.mockReturnValue(RESULTS);
 
     // Assert
-    expect(await errorLoggingService.setErrorLoggingHasBeenResolveById(TO)).toEqual(RESULTS);
-    expect(repositoryMock.update).toHaveBeenCalledWith({ id: TO}, CALLED_WITH);
+    expect(
+      await errorLoggingService.setErrorLoggingHasBeenResolveById(TO),
+    ).toEqual(RESULTS);
+    expect(repositoryMock.update).toHaveBeenCalledWith({ id: TO }, CALLED_WITH);
     expect(repositoryMock.update).toHaveBeenCalled();
   });
 });

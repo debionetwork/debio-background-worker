@@ -17,7 +17,7 @@ import { when } from 'jest-when';
 describe('Genetic Analyst Staked Handler Event', () => {
   let geneticAnalystUnstakedHandler: GeneticAnalystUnstakedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,7 +36,8 @@ describe('Genetic Analyst Staked Handler Event', () => {
 
     geneticAnalystUnstakedHandler = module.get(GeneticAnalystUnstakedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    dateTimeProxyMock = module.get(DateTimeProxy);
 
     await module.init();
   });

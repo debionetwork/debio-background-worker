@@ -48,7 +48,7 @@ describe('Genetic Analyst Service Created Handler Event', () => {
     const geneticAnalystServiceData = geneticAnalystService.toHuman();
 
     const geneticAnaystServiceCreatedCommand =
-      new GeneticAnalystServiceCreatedCommand( // eslint-disable-line
+      new GeneticAnalystServiceCreatedCommand(
         [geneticAnalystService],
         mockBlockNumber(),
       );

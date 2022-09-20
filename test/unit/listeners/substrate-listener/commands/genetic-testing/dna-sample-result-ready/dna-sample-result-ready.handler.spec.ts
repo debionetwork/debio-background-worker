@@ -13,7 +13,7 @@ import { DnaSampleResultReadyCommand } from '../../../../../../../src/listeners/
 
 describe('DNA Sample Result Ready Handler Event', () => {
   let notificationServiceMock: MockType<NotificationService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
   let dnaSampleResultReadyHandler: MockType<DnaSampleResultReadyCommandHandler>;
 
   beforeEach(async () => {
@@ -35,7 +35,8 @@ describe('DNA Sample Result Ready Handler Event', () => {
     dnaSampleResultReadyHandler = module.get(
       DnaSampleResultReadyCommandHandler,
     );
-    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    dateTimeProxyMock = module.get(DateTimeProxy);
 
     await module.init();
   });

@@ -3,7 +3,7 @@
 </div>
 
 <div align="Center">
-<h1> DeBio Network Background Worker</h1>
+<h1> DeBio Network Backgorund Worker </h1>
 <h2> Decentralized Sovereign Biomed </h2>
 The Anonymous-First Platform for Medical and Bioinformatics Data.
 
@@ -13,9 +13,6 @@ The Anonymous-First Platform for Medical and Bioinformatics Data.
 [![Node.js version](https://img.shields.io/badge/Node.js-%5E14.0.0-green?logo=Node.Js)](https://nodejs.org/)
 [![NestJS version](https://img.shields.io/badge/NestJS-%5E8.0.0-red?logo=NestJS)](https://github.com/nestjs/nest)
 [![Medium](https://img.shields.io/badge/Medium-DeBio%20Network-brightgreen?logo=medium)](https://blog.debio.network)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=debionetwork_debio-background-worker&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=debionetwork_debio-background-worker)
-[![Builder](https://github.com/debionetwork/debio-background-worker/actions/workflows/builder.yml/badge.svg)](https://github.com/debionetwork/debio-background-worker/actions/workflows/builder.yml)
-[![Tester](https://github.com/debionetwork/debio-background-worker/actions/workflows/tester.yml/badge.svg)](https://github.com/debionetwork/debio-background-worker/actions/workflows/tester.yml)
 
 </div>
 
@@ -23,7 +20,57 @@ The Anonymous-First Platform for Medical and Bioinformatics Data.
 
 DeBio Network is a decentralized anonymous-first platform for medical and bioinformatics data. It uses blockchain technology as the immutable transaction ledger to support its processes.
 
-Debio Indexer is service to handle event from substrate node and create index of data from event to elasticsearch.
+## Getting Started
+
+Follow these steps to get started with our Backgorund Worker
+
+### Node.js Setup
+
+All <a href="http://nodejs.org" target="_blank">Node.js</a> versions `14.0.0` above are compatible with our Backgorund Worker.
+
+### Installation
+
+```bash
+$ npm install
+```
+
+### Running a Development Server
+
+Start the development server with detailed logging:
+
+```bash
+npm run start:dev
+```
+
+Build for production environments:
+
+```bash
+npm run build
+```
+
+Execute tests:
+
+```bash
+npm run test
+```
+
+### Run in Docker
+
+First, install [Docker](https://docs.docker.com/get-docker/) and
+[Docker Compose](https://docs.docker.com/compose/install/).
+
+Then run the following command to start a Backgorund Worker server using Docker Compose.
+
+```sh
+./.maintain/docker/create-network.sh
+```
+
+```bash
+./.maintain/docker/start-docker-compose.sh
+```
+
+Server running on http://127.0.0.1:3001.
+
 
 # Substrate Handler
 When this application is execute, `SubstrateController` will called and run `onApplicationBootstrap` to start listening event from substrate node.
@@ -277,35 +324,3 @@ Execute `CertificationUpdatedCommand` and called `CertificationUpdatedHandler`.
 
 ### CertificationDeleted
 Execute `CertificationDeletedCommand` and called `CertificationDeletedHandler`.
-
-### Installation
-
-```bash
-$ npm install
-```
-
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```

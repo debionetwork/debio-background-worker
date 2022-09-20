@@ -80,7 +80,7 @@ describe('Substrate Listener Handler Unit Test', () => {
       SubstrateListenerHandler,
     );
     substrateServiceMock = module.get(SubstrateService);
-    queryBusMock = module.get(QueryBus); // eslint-disable-line
+    queryBusMock = module.get(QueryBus);
     commandBusMock = module.get(CommandBus);
   });
 

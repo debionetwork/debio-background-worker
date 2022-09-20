@@ -16,7 +16,7 @@ import { when } from 'jest-when';
 
 describe('Lab Retrieve Untaked Amount Handler Event', () => {
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
   let labRetrieveUntakedAmountlHandler: labUnstakedHandler;
 
   beforeEach(async () => {
@@ -36,7 +36,8 @@ describe('Lab Retrieve Untaked Amount Handler Event', () => {
 
     labRetrieveUntakedAmountlHandler = module.get(labUnstakedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    dateTimeProxyMock = module.get(DateTimeProxy);
 
     await module.init();
   });
