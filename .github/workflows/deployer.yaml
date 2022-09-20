@@ -93,7 +93,6 @@ jobs:
     runs-on: ubuntu-20.04
     environment:
       name: mainnet
-      url: https://${{ secrets.MAINNET_FRONTEND_DNS }}
     permissions:
       id-token: write
       contents: read
