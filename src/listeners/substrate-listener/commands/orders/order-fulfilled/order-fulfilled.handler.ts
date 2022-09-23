@@ -15,7 +15,9 @@ import {
   Order,
   queryEthAdressByAccountId,
   queryOrderDetailByOrderID,
+  queryServiceInvoiceByOrderId,
   sendRewards,
+  ServiceFlow,
 } from '@debionetwork/polkadot-provider';
 import { EscrowService } from '../../../../../common/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
@@ -93,18 +95,23 @@ export class OrderFulfilledHandler
       const amountToForward = totalPrice + totalAdditionalPrice;
 
       const exchange = await this.exchangeCacheService.getExchange();
-      const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
+      const dbioToDai = exchange ? Number(exchange['dbioToDai']) : 1;
 
-      const dbioPrice = amountToForward / dbioToDai;
+      const daiPrice = amountToForward * dbioToDai;
 
-      if (orderByOrderId['orderFlow'] === 'StakingRequestService') {
+      if (orderByOrderId.orderFlow === ServiceFlow.StakingRequestService) {
+        const { requestHash: requestId } = await queryServiceInvoiceByOrderId(
+          this.substrateService.api,
+          order.id,
+        );
+
         await finalizeRequest(
           this.substrateService.api as any,
           this.substrateService.pair,
-          order.id,
+          requestId,
           true,
         );
-        await this.callbackSendReward(order, dbioPrice, blockNumber);
+        await this.callbackSendReward(order, daiPrice, blockNumber);
       }
 
       await this.escrowService.orderFulfilled(order);
