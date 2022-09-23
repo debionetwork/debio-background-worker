@@ -95,7 +95,7 @@ export class OrderFulfilledHandler
       const amountToForward = totalPrice + totalAdditionalPrice;
 
       const exchange = await this.exchangeCacheService.getExchange();
-      const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
+      const dbioToDai = exchange ? Number(exchange['dbioToDai']) : 1;
 
       const daiPrice = amountToForward * dbioToDai;
 
@@ -111,7 +111,7 @@ export class OrderFulfilledHandler
           requestId,
           true,
         );
-        await this.callbackSendReward(order, amountToForward, blockNumber);
+        await this.callbackSendReward(order, daiPrice, blockNumber);
       }
 
       await this.escrowService.orderFulfilled(order);
@@ -125,7 +125,7 @@ export class OrderFulfilledHandler
         entity_type: 'Genetic Testing Order',
         entity: 'Order Fulfilled',
         reference_id: order.dnaSampleTrackingId,
-        description: `You've received ${daiPrice} DAI for completeing the requested test for [].`,
+        description: `You've received ${amountToForward} DAI for completeing the requested test for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
