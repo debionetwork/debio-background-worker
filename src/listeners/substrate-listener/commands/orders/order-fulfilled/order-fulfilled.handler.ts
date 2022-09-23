@@ -100,7 +100,10 @@ export class OrderFulfilledHandler
       const daiPrice = amountToForward * dbioToDai;
 
       if (orderByOrderId.orderFlow === ServiceFlow.StakingRequestService) {
-        const { requestHash: requestId } = await queryServiceInvoiceByOrderId(this.substrateService.api, order.id);
+        const { requestHash: requestId } = await queryServiceInvoiceByOrderId(
+          this.substrateService.api,
+          order.id,
+        );
 
         await finalizeRequest(
           this.substrateService.api as any,
