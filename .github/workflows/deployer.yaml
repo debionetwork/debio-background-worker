@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - releases/**
   release:
     types:
       - published
@@ -89,7 +88,12 @@ jobs:
             --set autoscaling.maxReplicas=1 \
             --set-string nodeSelector.node_pool=general \
             --set-string nodeSelector."iam\.gke\.io/gke-metadata-server-enabled"="true"
-          HTTPS_PROXY=127.0.0.1:8888  kubectl rollout status deployment/${{ github.event.repository.name }}
+          HTTPS_PROXY=127.0.0.1:8888 kubectl rollout status deployment/${{ github.event.repository.name }}
+      - name: Clean Up Tunneling SSH Connections
+        if: always()
+        run: |
+          kill -9 $(lsof -ti:8888)
+          gcloud compute os-login ssh-keys remove --key-file=/home/runner/.ssh/google_compute_engine.pub
 
   deploy-to-mainnet:
     needs: build-and-push-docker-image
@@ -155,4 +159,9 @@ jobs:
             --set autoscaling.maxReplicas=1 \
             --set-string nodeSelector.node_pool=general \
             --set-string nodeSelector."iam\.gke\.io/gke-metadata-server-enabled"="true"
-          HTTPS_PROXY=127.0.0.1:8888  kubectl rollout status deployment/${{ github.event.repository.name }}
+          HTTPS_PROXY=127.0.0.1:8888 kubectl rollout status deployment/${{ github.event.repository.name }}
+      - name: Clean Up Tunneling SSH Connections
+        if: always()
+        run: |
+          kill -9 $(lsof -ti:8888)
+          gcloud compute os-login ssh-keys remove --key-file=/home/runner/.ssh/google_compute_engine.pub
