@@ -1,3 +1,5 @@
+import { ServicePrice } from "./service-price";
+
 export class ServiceInvoice {
   constructor(serviceInvoice: any) {
     this.requestHash = serviceInvoice.requestHash;
@@ -6,9 +8,7 @@ export class ServiceInvoice {
     this.customerAddress = serviceInvoice.customerAddress;
     this.sellerAddress = serviceInvoice.sellerAddress;
     this.dnaSampleTrackingId = serviceInvoice.dnaSampleTrackingId;
-    this.testingPrice = serviceInvoice.testingPrice;
-    this.qcPrice = serviceInvoice.qcPrice;
-    this.payAmount = serviceInvoice.payAmount;
+    this.servicePrice = new ServicePrice(serviceInvoice.servicePrice);
   }
 
   requestHash: string;
@@ -20,4 +20,5 @@ export class ServiceInvoice {
   testingPrice: string;
   qcPrice: string;
   payAmount: string;
+  servicePrice: ServicePrice;
 }
