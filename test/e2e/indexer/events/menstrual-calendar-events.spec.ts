@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { ApiPromise } from '@polkadot/api';
-import { MenstrualCycleLog } from '../../../../src/indexer/models/menstrual-calendar/menstrual-cycle-log';
-import { MenstrualCalendar } from '../../../../src/indexer/models/menstrual-calendar/menstrual-calendar';
+// import { MenstrualCycleLog } from '../../../../src/indexer/models/menstrual-calendar/menstrual-cycle-log';
+// import { MenstrualCalendar } from '../../../../src/indexer/models/menstrual-calendar/menstrual-calendar';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   GCloudSecretManagerModule,
@@ -78,6 +78,7 @@ describe('Menstrual Calendar Test Events', () => {
     app = module.createNestApplication();
     await app.init();
 
+    // eslint-disable-next-line
     const { api: _api, pair: _pair } = await initializeApi();
     api = _api;
     // TODO: update polkadot provider for integration test

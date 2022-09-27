@@ -71,7 +71,7 @@ describe('Service Request Substrate Event Handler', () => {
             assetId: '1',
             testingPrice: 1,
             qcPrice: 1,
-          }
+          },
         })),
       },
     ];
