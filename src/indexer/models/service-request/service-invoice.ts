@@ -1,4 +1,4 @@
-import { ServicePrice } from "./service-price";
+import { ServicePrice } from './service-price';
 
 export class ServiceInvoice {
   constructor(serviceInvoice: any) {

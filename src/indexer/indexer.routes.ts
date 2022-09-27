@@ -74,7 +74,14 @@ import {
   GeneticAnalysisResultReadyCommandIndexer,
   GeneticAnalysisSubmittedCommandIndexer,
 } from './events/genetic-analysis';
-import { MenstrualCalendarAddedCommandIndexer, MenstrualCalendarRemovedCommandIndexer, MenstrualCalendarUpdatedCommandIndexer, MenstrualCycleLogAddedCommandIndexer, MenstrualCycleLogRemovedCommandIndexer, MenstrualCycleLogUpdatedCommandIndexer } from './events/menstrual-calendar';
+import {
+  MenstrualCalendarAddedCommandIndexer,
+  MenstrualCalendarRemovedCommandIndexer,
+  MenstrualCalendarUpdatedCommandIndexer,
+  MenstrualCycleLogAddedCommandIndexer,
+  MenstrualCycleLogRemovedCommandIndexer,
+  MenstrualCycleLogUpdatedCommandIndexer,
+} from './events/menstrual-calendar';
 
 export const eventRoutes = {
   certifications: {
@@ -166,10 +173,10 @@ export const eventRoutes = {
   },
   menstrualCalendar: {
     MenstrualCalendarAdded: MenstrualCalendarAddedCommandIndexer,
-    MenstrualCalendarUpdated  : MenstrualCalendarUpdatedCommandIndexer,
+    MenstrualCalendarUpdated: MenstrualCalendarUpdatedCommandIndexer,
     MenstrualCalendarRemoved: MenstrualCalendarRemovedCommandIndexer,
     MenstrualCycleLogAdded: MenstrualCycleLogAddedCommandIndexer,
     MenstrualCycleLogUpdated: MenstrualCycleLogUpdatedCommandIndexer,
     MenstrualCycleLogRemoved: MenstrualCycleLogRemovedCommandIndexer,
-  }
+  },
 };

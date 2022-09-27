@@ -11,10 +11,7 @@ export class MenstrualCalendarUpdatedHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: MenstrualCalendarUpdatedCommandIndexer) {
-    const {
-      menstrualCalendar,
-      blockMetaData,
-    } = command;
+    const { menstrualCalendar, blockMetaData } = command;
     await this.elasticsearchService.update({
       index: 'menstrual-calendar',
       id: menstrualCalendar.id,

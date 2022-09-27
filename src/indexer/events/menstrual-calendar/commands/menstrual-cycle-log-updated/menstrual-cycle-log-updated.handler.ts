@@ -11,10 +11,7 @@ export class MenstrualCycleLogUpdatedHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: MenstrualCycleLogUpdatedCommandIndexer) {
-    const {
-      menstrualCycleLog,
-      blockMetaData,
-    } = command;
+    const { menstrualCycleLog, blockMetaData } = command;
     await this.elasticsearchService.update({
       index: 'menstrual-cycle-log',
       id: menstrualCycleLog.id,
@@ -27,7 +24,7 @@ export class MenstrualCycleLogUpdatedHandler
           symptoms: menstrualCycleLog.symptoms,
           updated_at: menstrualCycleLog.updatedAt,
           blockMetaData: blockMetaData,
-        }
+        },
       },
     });
   }

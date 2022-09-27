@@ -5,6 +5,8 @@ export class MenstrualCycleLogAddedCommandIndexer {
   menstrualCycleLog: MenstrualCycleLog;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
     const menstrualCycleLogData = data[0];
-    this.menstrualCycleLog = new MenstrualCycleLog(menstrualCycleLogData.toHuman());
+    this.menstrualCycleLog = new MenstrualCycleLog(
+      menstrualCycleLogData.toHuman(),
+    );
   }
 }

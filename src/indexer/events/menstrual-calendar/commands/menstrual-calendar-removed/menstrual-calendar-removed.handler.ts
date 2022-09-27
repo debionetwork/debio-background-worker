@@ -11,13 +11,11 @@ export class MenstrualCalendarRemovedHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: MenstrualCalendarRemovedCommandIndexer) {
-    const {
-      menstrualCalendar,
-    } = command;
+    const { menstrualCalendar } = command;
     await this.elasticsearchService.delete({
       index: 'menstrual-calendar',
       id: menstrualCalendar.id,
       refresh: 'wait_for',
-    })
+    });
   }
 }

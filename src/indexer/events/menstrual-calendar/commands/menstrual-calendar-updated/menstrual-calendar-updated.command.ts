@@ -5,6 +5,8 @@ export class MenstrualCalendarUpdatedCommandIndexer {
   menstrualCalendar: MenstrualCalendar;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
     const menstrualCalendarData = data[0];
-    this.menstrualCalendar = new MenstrualCalendar(menstrualCalendarData.toHuman());
+    this.menstrualCalendar = new MenstrualCalendar(
+      menstrualCalendarData.toHuman(),
+    );
   }
 }
