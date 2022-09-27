@@ -74,6 +74,14 @@ import {
   GeneticAnalysisResultReadyCommandIndexer,
   GeneticAnalysisSubmittedCommandIndexer,
 } from './events/genetic-analysis';
+import {
+  MenstrualCalendarAddedCommandIndexer,
+  MenstrualCalendarRemovedCommandIndexer,
+  MenstrualCalendarUpdatedCommandIndexer,
+  MenstrualCycleLogAddedCommandIndexer,
+  MenstrualCycleLogRemovedCommandIndexer,
+  MenstrualCycleLogUpdatedCommandIndexer,
+} from './events/menstrual-calendar';
 
 export const eventRoutes = {
   certifications: {
@@ -162,5 +170,13 @@ export const eventRoutes = {
     ServiceRequestUnstaked: UnstakedServiceRequestCommandIndexer,
     ServiceRequestWaitingForUnstaked:
       UnstakedWaitingServiceRequestCommandIndexer,
+  },
+  menstrualCalendar: {
+    MenstrualCalendarAdded: MenstrualCalendarAddedCommandIndexer,
+    MenstrualCalendarUpdated: MenstrualCalendarUpdatedCommandIndexer,
+    MenstrualCalendarRemoved: MenstrualCalendarRemovedCommandIndexer,
+    MenstrualCycleLogAdded: MenstrualCycleLogAddedCommandIndexer,
+    MenstrualCycleLogUpdated: MenstrualCycleLogUpdatedCommandIndexer,
+    MenstrualCycleLogRemoved: MenstrualCycleLogRemovedCommandIndexer,
   },
 };

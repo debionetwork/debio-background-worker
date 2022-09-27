@@ -67,9 +67,11 @@ describe('Service Request Substrate Event Handler', () => {
           customerAddress: '',
           sellerAddress: '',
           dnaSampleTrackingId: '',
-          testingPrice: '',
-          qcPrice: '',
-          payAmount: '',
+          servicePrice: {
+            assetId: '1',
+            testingPrice: 1,
+            qcPrice: 1,
+          },
         })),
       },
     ];
