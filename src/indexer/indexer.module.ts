@@ -38,7 +38,7 @@ require('dotenv').config();
     ...GeneticAnalystsCommandHandlers,
     ...GeneticAnalysisCommandHandlers,
     ...GeneticAnalysisOrderCommandHandlers,
-    ...MenstrualCalendarCommandHandlers
+    ...MenstrualCalendarCommandHandlers,
   ],
 })
 export class IndexerModule {}
