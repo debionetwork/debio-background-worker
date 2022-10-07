@@ -38,7 +38,7 @@ export class GeneticAnalystStakedHandler
         created_at: new Date(this.dateTimeProxy.now()),
         currency: 'DBIO',
         parent_id:
-          BigInt(Number(isGeneticAnalystHasBeenInsert?.id ?? 0)) || BigInt(0),
+          BigInt(Number(isGeneticAnalystHasBeenInsert.id)) || BigInt(0),
         ref_number: geneticAnalyst.accountId,
         transaction_status: 23,
         transaction_type: 5,
