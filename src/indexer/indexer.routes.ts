@@ -82,6 +82,12 @@ import {
   MenstrualCycleLogRemovedCommandIndexer,
   MenstrualCycleLogUpdatedCommandIndexer,
 } from './events/menstrual-calendar';
+import {
+  MenstrualSubscriptionAddedCommandIndexer,
+  MenstrualSubscriptionPaidCommandIndexer,
+  MenstrualSubscriptionPriceAddedCommandIndexer,
+  MenstrualSubscriptionUpdatedCommandIndexer,
+} from './events/menstrual-subscription';
 
 export const eventRoutes = {
   certifications: {
@@ -178,5 +184,12 @@ export const eventRoutes = {
     MenstrualCycleLogAdded: MenstrualCycleLogAddedCommandIndexer,
     MenstrualCycleLogUpdated: MenstrualCycleLogUpdatedCommandIndexer,
     MenstrualCycleLogRemoved: MenstrualCycleLogRemovedCommandIndexer,
+  },
+  menstrualSubscription: {
+    MenstrualSubscriptionAdded: MenstrualSubscriptionAddedCommandIndexer,
+    MenstrualSubscriptionUpdated: MenstrualSubscriptionUpdatedCommandIndexer,
+    MenstrualSubscriptionPaid: MenstrualSubscriptionPaidCommandIndexer,
+    MenstrualSubscriptionPriceAdded:
+      MenstrualSubscriptionPriceAddedCommandIndexer,
   },
 };

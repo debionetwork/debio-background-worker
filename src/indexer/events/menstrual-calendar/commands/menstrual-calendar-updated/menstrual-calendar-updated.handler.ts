@@ -17,12 +17,14 @@ export class MenstrualCalendarUpdatedHandler
       id: menstrualCalendar.id,
       refresh: 'wait_for',
       body: {
-        address_id: menstrualCalendar.addressId,
-        average_cycle: menstrualCalendar.averageCycle,
-        cycle_log: menstrualCalendar.cycleLog,
-        created_at: menstrualCalendar.createdAt,
-        updated_at: menstrualCalendar.updatedAt,
-        blockMetaData: blockMetaData,
+        doc: {
+          address_id: menstrualCalendar.addressId,
+          average_cycle: menstrualCalendar.averageCycle,
+          cycle_log: menstrualCalendar.cycleLog,
+          created_at: menstrualCalendar.createdAt,
+          updated_at: menstrualCalendar.updatedAt,
+          blockMetaData: blockMetaData,
+        },
       },
     });
   }
