@@ -6,5 +6,5 @@ import { UpdateServiceRequestHandler } from './commands/update-service-request/u
 
 export const RequestServiceCommandHandlers = [
   CreateServiceRequestHandler,
-  UpdateServiceRequestHandler
+  UpdateServiceRequestHandler,
 ];

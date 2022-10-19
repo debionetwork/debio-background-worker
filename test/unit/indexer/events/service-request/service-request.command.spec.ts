@@ -1,11 +1,7 @@
 import { RequestModel } from '../../../../../src/indexer/models/service-request/request';
-import {
-  CreateServiceRequestCommandIndexer,
-} from '../../../../../src/indexer/events/service-request';
+import { CreateServiceRequestCommandIndexer } from '../../../../../src/indexer/events/service-request';
 import { RequestStatus } from '../../../../../src/indexer/models/service-request/request-status';
 import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
-import { ClaimRequestModel } from '../../../../../src/indexer/models/service-request/claim-request';
-import { ServiceInvoice } from '../../../../../src/indexer/models/service-request/service-invoice';
 
 jest.mock('../../../../../src/indexer/models/service-request/request');
 jest.mock('../../../../../src/indexer/models/service-request/claim-request');
@@ -29,40 +25,6 @@ describe('Service Request Substrate Event Handler', () => {
           createdAt: '1',
           updatedAt: '1',
           unstakedAt: '1',
-        })),
-      },
-    ];
-  };
-
-  const createMockServiceInvoice = () => {
-    return [
-      {},
-      {
-        toHuman: jest.fn(() => ({
-          requestHash: '',
-          orderId: '',
-          serviceId: '',
-          customerAddress: '',
-          sellerAddress: '',
-          dnaSampleTrackingId: '',
-          testingPrice: '',
-          qcPrice: '',
-          payAmount: '',
-        })),
-      },
-    ];
-  };
-
-  const createMockClaimRequest = (): Array<any> => {
-    return [
-      {},
-      {
-        toHuman: jest.fn(() => ({
-          requestHash: '',
-          labAddress: '',
-          serviceId: '',
-          testingPrice: '',
-          qcPrice: '',
         })),
       },
     ];

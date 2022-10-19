@@ -31,7 +31,7 @@ export class CreateServiceRequestHandler
         },
       },
     });
-    
+
     const countHits = body?.hits?.hits?.length || 0;
 
     if (countHits > 0) {

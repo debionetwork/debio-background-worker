@@ -105,7 +105,7 @@ describe('Service Request Substrate Event Handler', () => {
       const COUNTRY_ID = 'XX';
       const COUNTRY_CALLED_WITH =
         createObjectSearchCountryServiceRequest(COUNTRY_ID);
-        
+
       const ES_RESULT_COUNTRY_SERVICE_REQUEST = {
         body: {
           hits: {

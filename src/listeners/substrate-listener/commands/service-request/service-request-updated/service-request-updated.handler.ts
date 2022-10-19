@@ -1,4 +1,9 @@
-import { queryServiceRequestById, RequestStatus, ServiceRequest, setOrderPaid } from '@debionetwork/polkadot-provider';
+import {
+  queryServiceRequestById,
+  RequestStatus,
+  ServiceRequest,
+  setOrderPaid,
+} from '@debionetwork/polkadot-provider';
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { NotificationDto } from 'src/common/notification/dto/notification.dto';
@@ -28,33 +33,31 @@ export class ServiceRequestUpdatedHandler
   ) {}
 
   async execute(command: ServiceRequestUpdatedCommand) {
-    const {requestId, status, blockMetaData} = command;
+    const { requestId, status, blockMetaData } = command;
     this.logger.log(
       `Service Request Waiting For Unstaked With Hash: ${requestId}!`,
     );
 
-    const serviceRequest = (await queryServiceRequestById(this.substrateService.api, requestId)).normalize();
+    const serviceRequest = (
+      await queryServiceRequestById(this.substrateService.api, requestId)
+    ).normalize();
 
-    switch(status) {
+    switch (status) {
       case RequestStatus.Claimed:
         await this.statusClaimed(serviceRequest, blockMetaData.blockNumber);
-      break;
+        break;
       case RequestStatus.Processed:
         await this.statusProcess(serviceRequest);
-      break;
+        break;
       case RequestStatus.Unstaked:
         await this.statusUnstaked(serviceRequest);
-      break;
+        break;
       case RequestStatus.WaitingForUnstaked:
         await this.statusWaitingForUnstaked(serviceRequest);
-      break;
+        break;
       case RequestStatus.Finalized:
-      break;
+        break;
     }
-  }
-
-  async statusFinalized(serviceRequest: ServiceRequest) {
-    
   }
 
   async statusWaitingForUnstaked(serviceRequest: ServiceRequest) {

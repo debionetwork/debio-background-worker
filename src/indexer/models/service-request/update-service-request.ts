@@ -1,4 +1,4 @@
-import { RequestStatus } from "./request-status";
+import { RequestStatus } from './request-status';
 
 export class UpdateServiceRequest {
   constructor(requestId: string, status: RequestStatus) {

@@ -1,4 +1,4 @@
-import { RequestStatus, ServiceRequest } from '@debionetwork/polkadot-provider';
+import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { BlockMetaData } from '../../../models/block-metadata.event-model';
 
 export class ServiceRequestUpdatedCommand {
