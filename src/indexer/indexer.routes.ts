@@ -22,11 +22,7 @@ import {
 } from './events/orders';
 import {
   CreateServiceRequestCommandIndexer,
-  ClaimedServiceRequestCommandIndexer,
-  ProcessedServiceRequestCommandIndexer,
-  FinalizedServiceRequestCommandIndexer,
-  UnstakedServiceRequestCommandIndexer,
-  UnstakedWaitingServiceRequestCommandIndexer,
+  UpdateServiceRequestCommandIndexer,
 } from './events/service-request';
 import {
   CertificationCreatedCommandIndexer,
@@ -82,6 +78,12 @@ import {
   MenstrualCycleLogRemovedCommandIndexer,
   MenstrualCycleLogUpdatedCommandIndexer,
 } from './events/menstrual-calendar';
+import {
+  MenstrualSubscriptionAddedCommandIndexer,
+  MenstrualSubscriptionPaidCommandIndexer,
+  MenstrualSubscriptionPriceAddedCommandIndexer,
+  MenstrualSubscriptionUpdatedCommandIndexer,
+} from './events/menstrual-subscription';
 
 export const eventRoutes = {
   certifications: {
@@ -164,12 +166,7 @@ export const eventRoutes = {
   },
   serviceRequest: {
     ServiceRequestCreated: CreateServiceRequestCommandIndexer,
-    ServiceRequestClaimed: ClaimedServiceRequestCommandIndexer,
-    ServiceRequestProcessed: ProcessedServiceRequestCommandIndexer,
-    ServiceRequestFinalized: FinalizedServiceRequestCommandIndexer,
-    ServiceRequestUnstaked: UnstakedServiceRequestCommandIndexer,
-    ServiceRequestWaitingForUnstaked:
-      UnstakedWaitingServiceRequestCommandIndexer,
+    ServiceRequestUpdated: UpdateServiceRequestCommandIndexer,
   },
   menstrualCalendar: {
     MenstrualCalendarAdded: MenstrualCalendarAddedCommandIndexer,
@@ -178,5 +175,12 @@ export const eventRoutes = {
     MenstrualCycleLogAdded: MenstrualCycleLogAddedCommandIndexer,
     MenstrualCycleLogUpdated: MenstrualCycleLogUpdatedCommandIndexer,
     MenstrualCycleLogRemoved: MenstrualCycleLogRemovedCommandIndexer,
+  },
+  menstrualSubscription: {
+    MenstrualSubscriptionAdded: MenstrualSubscriptionAddedCommandIndexer,
+    MenstrualSubscriptionUpdated: MenstrualSubscriptionUpdatedCommandIndexer,
+    MenstrualSubscriptionPaid: MenstrualSubscriptionPaidCommandIndexer,
+    MenstrualSubscriptionPriceAdded:
+      MenstrualSubscriptionPriceAddedCommandIndexer,
   },
 };
