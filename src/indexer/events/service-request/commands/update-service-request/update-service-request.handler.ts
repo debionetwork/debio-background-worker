@@ -2,32 +2,32 @@ import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { RequestStatus } from '../../../../models/service-request/request-status';
-import { ProcessedServiceRequestCommandIndexer } from './processed-service-request.command';
+import { UpdateServiceRequestCommandIndexer } from './update-service-request.command';
 
 @Injectable()
-@CommandHandler(ProcessedServiceRequestCommandIndexer)
-export class ProcessedServiceRequestHandler
-  implements ICommandHandler<ProcessedServiceRequestCommandIndexer>
+@CommandHandler(UpdateServiceRequestCommandIndexer)
+export class UpdateServiceRequestHandler
+  implements ICommandHandler<UpdateServiceRequestCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: ProcessedServiceRequestCommandIndexer) {
+  async execute(command: UpdateServiceRequestCommandIndexer) {
+    const { requestId, status } = command.updateServiceRequest;
+
     await this.elasticsearchService.update({
       index: 'create-service-request',
-      id: command.serviceInvoice.requestHash,
+      id: requestId,
       refresh: 'wait_for',
       body: {
         script: {
           lang: 'painless',
           source: `
-            ctx._source.request.lab_address = params.lab_address;
-            ctx._source.request.status      = params.status;
+            ctx._source.request.status      =  params.status;
             ctx._source.blockMetadata       = params.blockMetaData;
           `,
           params: {
-            lab_address: command.serviceInvoice.sellerAddress,
-            status: RequestStatus.Processed,
-            blockMetaData: command.blockMetaData,
+            status: status,
+            blockMetaData: command.blockMetadata,
           },
         },
       },
@@ -37,14 +37,14 @@ export class ProcessedServiceRequestHandler
       index: 'create-service-request',
       body: {
         query: {
-          match: { _id: command.serviceInvoice.requestHash },
+          match: { _id: requestId },
         },
       },
     });
 
     const service_request = body.hits?.hits[0]?._source || null;
 
-    if (service_request !== null) {
+    if (service_request !== null && status !== RequestStatus.Unstaked) {
       await this.updateCountryServiceRequest(
         service_request.request.country,
         service_request.request.hash,
