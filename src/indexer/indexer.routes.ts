@@ -22,11 +22,7 @@ import {
 } from './events/orders';
 import {
   CreateServiceRequestCommandIndexer,
-  ClaimedServiceRequestCommandIndexer,
-  ProcessedServiceRequestCommandIndexer,
-  FinalizedServiceRequestCommandIndexer,
-  UnstakedServiceRequestCommandIndexer,
-  UnstakedWaitingServiceRequestCommandIndexer,
+  UpdateServiceRequestCommandIndexer,
 } from './events/service-request';
 import {
   CertificationCreatedCommandIndexer,
@@ -170,12 +166,7 @@ export const eventRoutes = {
   },
   serviceRequest: {
     ServiceRequestCreated: CreateServiceRequestCommandIndexer,
-    ServiceRequestClaimed: ClaimedServiceRequestCommandIndexer,
-    ServiceRequestProcessed: ProcessedServiceRequestCommandIndexer,
-    ServiceRequestFinalized: FinalizedServiceRequestCommandIndexer,
-    ServiceRequestUnstaked: UnstakedServiceRequestCommandIndexer,
-    ServiceRequestWaitingForUnstaked:
-      UnstakedWaitingServiceRequestCommandIndexer,
+    ServiceRequestUpdated: UpdateServiceRequestCommandIndexer,
   },
   menstrualCalendar: {
     MenstrualCalendarAdded: MenstrualCalendarAddedCommandIndexer,
