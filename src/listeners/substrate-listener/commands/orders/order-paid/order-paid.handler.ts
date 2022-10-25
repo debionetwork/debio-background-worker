@@ -3,6 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderPaidCommand } from './order-paid.command';
 import {
   DateTimeProxy,
+  MailerManager,
   NotificationService,
   SubstrateService,
   TransactionLoggingService,
@@ -16,7 +17,6 @@ import {
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { NewOrderLab } from '../../../models/new-order-lab.model';
 import { keyList } from '../../../../../common/secrets';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly substrateService: SubstrateService,
-    private readonly mailerService: MailerService,
+    private readonly mailerManager: MailerManager,
     private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
@@ -94,7 +94,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
             .getSecret('LAB_ORDER_LINK')
             .toString() ?? '' + order.id;
 
-        await this.sendNewOrderToLab(labDetail.info.email, {
+        await this.mailerManager.sendNewOrderToLab(labDetail.info.email, {
           specimen_number: order.dnaSampleTrackingId,
           service: serviceDetail.info.name,
           service_price: serviceDetail.price,
@@ -107,15 +107,5 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
     } catch (error) {
       this.logger.log(error);
     }
-  }
-
-  async sendNewOrderToLab(to: string, context: NewOrderLab) {
-    const subject = `New Order #1`;
-    await this.mailerService.sendMail({
-      to: to,
-      subject: subject,
-      template: 'new-order-lab',
-      context: context,
-    });
   }
 }

@@ -3,6 +3,8 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { keyList } from '../../common/secrets';
 import { CustomerStakingRequestService, LabRegister } from './models';
+import { NewOrderGA } from './models/new-order-ga.model';
+import { NewOrderLab } from './models/new-order-lab.model';
 
 @Injectable()
 export class MailerManager {
@@ -11,6 +13,26 @@ export class MailerManager {
     private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly mailerService: MailerService,
   ) {}
+
+  async sendNewOrderToLab(to: string, context: NewOrderLab) {
+    const subject = `New Order #1`;
+    await this.mailerService.sendMail({
+      to: to,
+      subject: subject,
+      template: 'new-order-lab',
+      context: context,
+    });
+  }
+
+  async sendNewOrderToGa(to: string, context: NewOrderGA) {
+    const subject = `New Order #1`;
+    await this.mailerService.sendMail({
+      to: to,
+      subject: subject,
+      template: 'new-order-ga',
+      context: context,
+    });
+  }
 
   async sendCustomerStakingRequestServiceEmail(
     to: string | string[],

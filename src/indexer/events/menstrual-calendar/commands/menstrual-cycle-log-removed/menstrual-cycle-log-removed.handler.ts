@@ -11,10 +11,12 @@ export class MenstrualCycleLogRemovedHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: MenstrualCycleLogRemovedCommandIndexer) {
-    const { menstrualCycleLog } = command;
+    const {
+      menstrualCycleLog: { id },
+    } = command;
     await this.elasticsearchService.delete({
       index: 'menstrual-cycle-log',
-      id: menstrualCycleLog.id,
+      id: id,
       refresh: 'wait_for',
     });
   }

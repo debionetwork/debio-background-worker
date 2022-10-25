@@ -1,5 +1,6 @@
 import {
   DateTimeProxy,
+  MailerManager,
   ProcessEnvProxy,
   SubstrateService,
   TransactionLoggingService,
@@ -10,7 +11,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysisOrder,
   dateTimeProxyMockFactory,
-  mailerServiceMockFactory,
+  mailerManagerMockFactory,
   mockBlockNumber,
   MockType,
   notificationServiceMockFactory,
@@ -20,7 +21,6 @@ import {
 import { GeneticAnalysisOrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
 import { when } from 'jest-when';
 import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
-import { MailerService } from '@nestjs-modules/mailer';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Genetic Analysis Order Paid Handler Event', () => {
@@ -62,8 +62,8 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
           useFactory: dateTimeProxyMockFactory,
         },
         {
-          provide: MailerService,
-          useFactory: mailerServiceMockFactory,
+          provide: MailerManager,
+          useFactory: mailerManagerMockFactory,
         },
         {
           provide: SubstrateService,

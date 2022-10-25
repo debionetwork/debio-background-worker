@@ -377,6 +377,8 @@ export class IndexerHandler
         'services',
         'orders',
         'last-block-number-substrate',
+        'menstrual-calendar',
+        'menstrual-cycle-log',
       ];
 
       for (const i of indices) {
