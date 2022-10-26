@@ -20,6 +20,7 @@ export class MenstrualCycleLogAddedHandler
         symptoms,
         createdAt,
       },
+      accountId,
       blockMetaData,
     } = command;
     await this.elasticsearchService.create({
@@ -27,6 +28,8 @@ export class MenstrualCycleLogAddedHandler
       id: id,
       refresh: 'wait_for',
       body: {
+        menstrual_calendar_cycle_log_id: id,
+        account_id: accountId,
         menstrual_calendar_id: menstrualCalendarId,
         date: date,
         menstruation: menstruation,

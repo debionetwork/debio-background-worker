@@ -20,6 +20,7 @@ export class MenstrualCalendarAddedHandler
       id: id,
       refresh: 'wait_for',
       body: {
+        menstrual_calendar_id: id,
         address_id: addressId,
         average_cycle: averageCycle,
         cycle_log: cycleLog,
