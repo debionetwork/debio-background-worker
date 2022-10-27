@@ -4,8 +4,12 @@ export class MenstrualCalendar {
     this.addressId = menstrualCalendar.addressId;
     this.averageCycle = menstrualCalendar.averageCycle;
     this.cycleLog = menstrualCalendar.cycleLog;
-    this.createdAt = menstrualCalendar.createdAt;
-    this.updatedAt = menstrualCalendar.updatedAt;
+    this.createdAt = new Date(
+      String(menstrualCalendar.createdAt).split(',').join(''),
+    );
+    this.updatedAt = menstrualCalendar?.updatedAt
+      ? new Date(String(menstrualCalendar.updatedAt).split(',').join(''))
+      : null;
   }
 
   id: string;
@@ -13,5 +17,5 @@ export class MenstrualCalendar {
   averageCycle: number;
   cycleLog: Array<string>;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }

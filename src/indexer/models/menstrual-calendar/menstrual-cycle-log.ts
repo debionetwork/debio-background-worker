@@ -2,10 +2,15 @@ export class MenstrualCycleLog {
   constructor(menstrualCycleLog: any) {
     this.id = menstrualCycleLog.id;
     this.menstrualCalendarId = menstrualCycleLog.menstrualCalendarId;
-    this.date = menstrualCycleLog.date;
+    this.date = new Date(String(menstrualCycleLog.date).split(',').join(''));
     this.menstruation = menstrualCycleLog.menstruation;
     this.symptoms = menstrualCycleLog.symptoms;
-    this.createdAt = menstrualCycleLog.createdAt;
+    this.createdAt = new Date(
+      String(menstrualCycleLog.createdAt).split(',').join(''),
+    );
+    this.updatedAt = menstrualCycleLog?.updatedAt
+      ? new Date(String(menstrualCycleLog.updatedAt).split(',').join())
+      : null;
   }
 
   id: string;
@@ -14,7 +19,7 @@ export class MenstrualCycleLog {
   menstruation: boolean;
   symptoms: Array<Symptom>;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }
 
 export class Symptom {

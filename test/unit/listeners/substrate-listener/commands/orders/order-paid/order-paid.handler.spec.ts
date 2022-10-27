@@ -1,5 +1,6 @@
 import {
   DateTimeProxy,
+  MailerManager,
   ProcessEnvProxy,
   SubstrateService,
   TransactionLoggingService,
@@ -10,7 +11,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
   dateTimeProxyMockFactory,
-  mailerServiceMockFactory,
+  mailerManagerMockFactory,
   mockBlockNumber,
   MockType,
   notificationServiceMockFactory,
@@ -22,7 +23,6 @@ import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/transaction-logging/models/transaction-request.entity';
 import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
-import { MailerService } from '@nestjs-modules/mailer';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Order Paid Handler Event', () => {
@@ -66,8 +66,8 @@ describe('Order Paid Handler Event', () => {
           useFactory: dateTimeProxyMockFactory,
         },
         {
-          provide: MailerService,
-          useFactory: mailerServiceMockFactory,
+          provide: MailerManager,
+          useFactory: mailerManagerMockFactory,
         },
         {
           provide: SubstrateService,

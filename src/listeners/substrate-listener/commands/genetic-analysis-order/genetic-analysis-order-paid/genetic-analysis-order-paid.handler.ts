@@ -3,6 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
+  MailerManager,
   NotificationService,
   SubstrateService,
   TransactionLoggingService,
@@ -13,8 +14,7 @@ import {
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
 } from '@debionetwork/polkadot-provider';
-import { NewOrderGA } from '../../../models/new-order-ga.model';
-import { MailerService } from '@nestjs-modules/mailer';
+import { NewOrderGA } from '../../../../../common/mailer/models/new-order-ga.model';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../../../../common/secrets';
 
@@ -32,7 +32,7 @@ export class GeneticAnalysisOrderPaidHandler
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly substrateService: SubstrateService,
-    private readonly mailerService: MailerService,
+    private readonly mailerManager: MailerManager,
     private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
@@ -101,26 +101,19 @@ export class GeneticAnalysisOrderPaidHandler
           .getSecret('GA_ORDER_LINK')
           ?.toString() ?? '' + geneticAnalysisOrder.id;
 
-      await this.sendNewOrderToGa(geneticAnaystDetail.info.email, {
-        service: geneticAnalystServiceDetail.info.name,
-        price:
-          geneticAnalystServiceDetail.info.pricesByCurrency[0].totalPrice.toString(),
-        order_id: geneticAnalysisOrder.id,
-        order_date: geneticAnalysisOrder.createdAt.toDateString(),
-        link_order: linkOrder,
-      });
+      await this.mailerManager.sendNewOrderToGa(
+        geneticAnaystDetail.info.email,
+        {
+          service: geneticAnalystServiceDetail.info.name,
+          price:
+            geneticAnalystServiceDetail.info.pricesByCurrency[0].totalPrice.toString(),
+          order_id: geneticAnalysisOrder.id,
+          order_date: geneticAnalysisOrder.createdAt.toDateString(),
+          link_order: linkOrder,
+        },
+      );
     } catch (error) {
       this.logger.log(error);
     }
-  }
-
-  async sendNewOrderToGa(to: string, context: NewOrderGA) {
-    const subject = `New Order #1`;
-    await this.mailerService.sendMail({
-      to: to,
-      subject: subject,
-      template: 'new-order-ga',
-      context: context,
-    });
   }
 }
