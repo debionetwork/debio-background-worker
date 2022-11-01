@@ -53,7 +53,7 @@ export class GeneticAnalysisOrderCreatedHandler
         entity_type: 'Genetic Analysis Orders',
         entity: 'Order Created',
         reference_id: geneticAnalysisOrder.id,
-        description: `You've successfully submitted your requested test for [].`,
+        description: `You've successfully submitted your requested test for ${geneticAnalysisOrder.geneticAnalysisTrackingId}.`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,

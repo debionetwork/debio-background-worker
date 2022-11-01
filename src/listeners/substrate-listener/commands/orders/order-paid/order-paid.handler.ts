@@ -68,7 +68,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           entity_type: 'Lab',
           entity: 'New Order',
           reference_id: order.id,
-          description: `A new order ([]) is awaiting process.`,
+          description: `A new order (${order.dnaSampleTrackingId}) is awaiting process.`,
           read: false,
           created_at: currDateTime,
           updated_at: currDateTime,
