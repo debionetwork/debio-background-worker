@@ -44,9 +44,8 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
           this.substrateService.api as any,
           this.substrateService.pair,
           order.id,
-          false,
-          () => this.callbackSendReward(order),
         );
+        await this.callbackSendReward(order)
       }
       if (isOrderHasBeenInsert) {
         return;

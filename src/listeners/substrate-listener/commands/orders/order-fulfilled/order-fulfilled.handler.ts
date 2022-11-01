@@ -15,7 +15,7 @@ import {
   Order,
   queryEthAdressByAccountId,
   queryOrderDetailByOrderID,
-  queryServiceInvoiceByOrderId,
+  queryServiceRequestById,
   sendRewards,
   ServiceFlow,
 } from '@debionetwork/polkadot-provider';
@@ -100,7 +100,7 @@ export class OrderFulfilledHandler
       const daiPrice = amountToForward * dbioToDai;
 
       if (orderByOrderId.orderFlow === ServiceFlow.StakingRequestService) {
-        const { requestHash: requestId } = await queryServiceInvoiceByOrderId(
+        const { hash: requestId } = await queryServiceRequestById(
           this.substrateService.api,
           order.id,
         );
@@ -109,7 +109,6 @@ export class OrderFulfilledHandler
           this.substrateService.api as any,
           this.substrateService.pair,
           requestId,
-          true,
         );
         await this.callbackSendReward(order, daiPrice, blockNumber);
       }

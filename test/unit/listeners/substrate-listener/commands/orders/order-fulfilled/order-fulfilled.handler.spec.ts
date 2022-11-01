@@ -102,8 +102,8 @@ describe('Order Fulfilled Handler Event', () => {
     const queryServiceByIdSpy = jest
       .spyOn(servicesQuery, 'queryServiceById')
       .mockImplementation();
-    const queryServiceInvoiceByOrderIdSpy = jest
-      .spyOn(serviceRequestQuery, 'queryServiceInvoiceByOrderId')
+    const queryServiceRequestById = jest
+      .spyOn(serviceRequestQuery, 'queryServiceRequestById')
       .mockImplementation();
     const sendRewardsSpy = jest
       .spyOn(rewardCommand, 'sendRewards')
@@ -166,7 +166,7 @@ describe('Order Fulfilled Handler Event', () => {
       .calledWith(substrateServiceMock.api, ORDER.toHuman().serviceId)
       .mockReturnValue(SERVICE_RETURN);
 
-    when(queryServiceInvoiceByOrderIdSpy)
+    when(queryServiceRequestById)
       .calledWith(substrateServiceMock.api, ORDER.toHuman().id)
       .mockReturnValue(SERVICE_INVOICE_RETURN);
 
@@ -196,11 +196,11 @@ describe('Order Fulfilled Handler Event', () => {
     );
     expect(queryOrderDetailByOrderIDSpy).not.toHaveBeenCalled();
     expect(queryServiceByIdSpy).not.toHaveBeenCalled();
-    expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
+    expect(queryServiceRequestById).not.toHaveBeenCalled();
     expect(debioConversionServiceMock.getExchange).not.toHaveBeenCalled();
     expect(sendRewardsSpy).not.toHaveBeenCalled();
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalled();
-    expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
+    expect(queryServiceRequestById).not.toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
     expect(sendRewardsSpy).not.toHaveBeenCalled();
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalled();
@@ -211,7 +211,7 @@ describe('Order Fulfilled Handler Event', () => {
     queryEthAdressByAccountIdSpy.mockClear();
     queryOrderDetailByOrderIDSpy.mockClear();
     queryServiceByIdSpy.mockClear();
-    queryServiceInvoiceByOrderIdSpy.mockClear();
+    queryServiceRequestById.mockClear();
     sendRewardsSpy.mockClear();
     convertToDbioUnitStringSpy.mockClear();
   });
@@ -231,7 +231,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(servicesQuery, 'queryServiceById')
       .mockImplementation();
     const queryServiceInvoiceByOrderIdSpy = jest
-      .spyOn(serviceRequestQuery, 'queryServiceInvoiceByOrderId')
+      .spyOn(serviceRequestQuery, 'queryServiceRequestById')
       .mockImplementation();
     const sendRewardsSpy = jest
       .spyOn(rewardCommand, 'sendRewards')
@@ -347,7 +347,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(servicesQuery, 'queryServiceById')
       .mockImplementation();
     const queryServiceInvoiceByOrderIdSpy = jest
-      .spyOn(serviceRequestQuery, 'queryServiceInvoiceByOrderId')
+      .spyOn(serviceRequestQuery, 'queryServiceRequestById')
       .mockImplementation();
     const sendRewardsSpy = jest
       .spyOn(rewardCommand, 'sendRewards')
@@ -489,7 +489,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(servicesQuery, 'queryServiceById')
       .mockImplementation();
     const queryServiceInvoiceByOrderIdSpy = jest
-      .spyOn(serviceRequestQuery, 'queryServiceInvoiceByOrderId')
+      .spyOn(serviceRequestQuery, 'queryServiceRequestById')
       .mockImplementation();
     const sendRewardsSpy = jest
       .spyOn(rewardCommand, 'sendRewards')

@@ -14,12 +14,8 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { BlockMetaData } from './models/block-metadata.event-model';
 import { ServiceCreatedCommand } from './commands/services/service-created/service-created.command';
 import {
-  ServiceRequestClaimedCommand,
   ServiceRequestCreatedCommand,
-  ServiceRequestProcessedCommand,
   ServiceRequestStakingAmountRefundedCommand,
-  ServiceRequestUnstakedCommand,
-  ServiceRequestWaitingForUnstakedCommand,
   ServiceRequestStakingAmountExcessRefundedCommand,
   ServiceRequestUpdatedCommand,
 } from './commands/service-request';
@@ -68,11 +64,7 @@ const eventRoutes = {
     ServiceCreated: ServiceCreatedCommand,
   },
   serviceRequest: {
-    ServiceRequestClaimed: ServiceRequestClaimedCommand,
     ServiceRequestCreated: ServiceRequestCreatedCommand,
-    ServiceRequestProcessed: ServiceRequestProcessedCommand,
-    ServiceRequestUnstaked: ServiceRequestUnstakedCommand,
-    ServiceRequestWaitingForUnstaked: ServiceRequestWaitingForUnstakedCommand,
     StakingAmountExcessRefunded:
       ServiceRequestStakingAmountExcessRefundedCommand,
     StakingAmountRefunded: ServiceRequestStakingAmountRefundedCommand,
