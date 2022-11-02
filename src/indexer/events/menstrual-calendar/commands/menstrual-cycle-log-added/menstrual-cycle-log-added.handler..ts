@@ -31,7 +31,7 @@ export class MenstrualCycleLogAddedHandler
         menstrual_calendar_cycle_log_id: id,
         account_id: accountId,
         menstrual_calendar_id: menstrualCalendarId,
-        date: date,
+        date: date.getTime(),
         menstruation: menstruation,
         symptoms: symptoms,
         created_at: createdAt.getTime(),

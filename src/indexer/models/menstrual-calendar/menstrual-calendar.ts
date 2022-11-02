@@ -5,10 +5,12 @@ export class MenstrualCalendar {
     this.averageCycle = menstrualCalendar.averageCycle;
     this.cycleLog = menstrualCalendar.cycleLog;
     this.createdAt = new Date(
-      String(menstrualCalendar.createdAt).split(',').join(''),
+      Number(String(menstrualCalendar.createdAt).split(',').join('')),
     );
     this.updatedAt = menstrualCalendar?.updatedAt
-      ? new Date(String(menstrualCalendar.updatedAt).split(',').join(''))
+      ? new Date(
+          Number(String(menstrualCalendar.updatedAt).split(',').join('')),
+        )
       : null;
   }
 

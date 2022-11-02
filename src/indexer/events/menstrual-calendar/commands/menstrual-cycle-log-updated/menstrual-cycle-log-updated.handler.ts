@@ -29,7 +29,7 @@ export class MenstrualCycleLogUpdatedHandler
       body: {
         doc: {
           menstrual_calendar_id: menstrualCalendarId,
-          date: date,
+          date: date.getTime(),
           menstruation: menstruation,
           symptoms: symptoms,
           updated_at: updatedAt.getTime(),
