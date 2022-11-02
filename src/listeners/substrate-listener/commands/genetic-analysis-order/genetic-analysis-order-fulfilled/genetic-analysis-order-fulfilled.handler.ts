@@ -67,6 +67,16 @@ export class GeneticAnalysisOrderFulfilledHandler
         await this.loggingService.create(serviceChargeLogging);
       }
 
+      const totalPrice = geneticAnalysisOrder.prices.reduce(
+        (acc, price) => acc + +price.value,
+        0,
+      );
+      const totalAdditionalPrice = geneticAnalysisOrder.additionalPrices.reduce(
+        (acc, price) => acc + +price.value,
+        0,
+      );
+      const amountToForward = totalPrice + totalAdditionalPrice;
+
       const currDate = this.dateTimeProxy.new();
 
       const receivePaymentNotification: NotificationDto = {
@@ -74,10 +84,7 @@ export class GeneticAnalysisOrderFulfilledHandler
         entity_type: 'Genetic Analysis Order',
         entity: 'Order Fulfilled',
         reference_id: geneticAnalysisOrder.id,
-        description: `You've received ${+geneticAnalysisOrder.prices[0]
-          .value} ${
-          geneticAnalysisOrder.currency
-        } for completing the requested analysis for [].`,
+        description: `You've received ${amountToForward} ${geneticAnalysisOrder.currency} for completing the requested analysis for [].`,
         read: false,
         created_at: currDate,
         updated_at: currDate,
