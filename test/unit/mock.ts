@@ -178,11 +178,11 @@ export function createMockGeneticAnalysisOrder(
 ) {
   const first_price = {
     component: 'string',
-    value: "1",
+    value: '1',
   };
   const second_price = {
     component: 'string',
-    value: "1",
+    value: '1',
   };
 
   return {

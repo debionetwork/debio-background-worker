@@ -14,7 +14,6 @@ import {
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
 } from '@debionetwork/polkadot-provider';
-import { NewOrderGA } from '../../../../../common/mailer/models/new-order-ga.model';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../../../../common/secrets';
 

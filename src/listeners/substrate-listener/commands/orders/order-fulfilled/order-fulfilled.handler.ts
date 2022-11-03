@@ -31,8 +31,8 @@ export class OrderFulfilledHandler
   private readonly logger: Logger = new Logger(OrderFulfilledCommand.name);
 
   private readonly currencyUnit: Map<string, number> = new Map<string, number>([
-    ["USDT", Math.pow(10, 6)],
-    ["DBIO", Math.pow(10, 18)]
+    ['USDT', Math.pow(10, 6)],
+    ['DBIO', Math.pow(10, 18)],
   ]);
 
   constructor(
@@ -90,11 +90,11 @@ export class OrderFulfilledHandler
       );
 
       const totalPrice = orderByOrderId.prices.reduce(
-        (acc, price) => acc + Number(price.value.split(",").join("")),
+        (acc, price) => acc + Number(price.value.split(',').join('')),
         0,
       );
       const totalAdditionalPrice = orderByOrderId.additionalPrices.reduce(
-        (acc, price) => acc + Number(price.value.split(",").join("")),
+        (acc, price) => acc + Number(price.value.split(',').join('')),
         0,
       );
 
@@ -130,7 +130,9 @@ export class OrderFulfilledHandler
         entity_type: 'Genetic Testing Order',
         entity: 'Order Fulfilled',
         reference_id: order.dnaSampleTrackingId,
-        description: `You've received ${amountToForward / this.currencyUnit.get(order.currency)} ${order.currency} for completeing the requested test for [].`,
+        description: `You've received ${
+          amountToForward / this.currencyUnit.get(order.currency)
+        } ${order.currency} for completeing the requested test for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
