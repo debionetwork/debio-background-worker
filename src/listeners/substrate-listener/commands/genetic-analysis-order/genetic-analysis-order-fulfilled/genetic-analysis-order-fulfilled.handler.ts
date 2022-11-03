@@ -17,6 +17,10 @@ export class GeneticAnalysisOrderFulfilledHandler
   private readonly logger: Logger = new Logger(
     GeneticAnalysisOrderFulfilledCommand.name,
   );
+  private readonly currencyUnit: Map<string, number> = new Map<string, number>([
+    ["USDT", Math.pow(10, 6)],
+    ["DBIO", Math.pow(10, 18)]
+  ]);
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
@@ -24,7 +28,7 @@ export class GeneticAnalysisOrderFulfilledHandler
   ) {}
 
   async execute(command: GeneticAnalysisOrderFulfilledCommand) {
-    const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
+    const geneticAnalysisOrder = command.geneticAnalysisOrders;
     const blockNumber = command.blockMetaData.blockNumber.toString();
     this.logger.log(
       `Genetic Analysis Order Fulfilled! With GA Order ID: ${geneticAnalysisOrder.id}`,
@@ -68,13 +72,14 @@ export class GeneticAnalysisOrderFulfilledHandler
       }
 
       const totalPrice = geneticAnalysisOrder.prices.reduce(
-        (acc, price) => acc + +price.value,
+        (acc, price) => acc + Number(price.value.split(",").join("")),
         0,
       );
       const totalAdditionalPrice = geneticAnalysisOrder.additionalPrices.reduce(
-        (acc, price) => acc + +price.value,
+        (acc, price) => acc + Number(price.value.split(",").join("")),
         0,
       );
+
       const amountToForward = totalPrice + totalAdditionalPrice;
 
       const currDate = this.dateTimeProxy.new();
@@ -84,7 +89,7 @@ export class GeneticAnalysisOrderFulfilledHandler
         entity_type: 'Genetic Analysis Order',
         entity: 'Order Fulfilled',
         reference_id: geneticAnalysisOrder.id,
-        description: `You've received ${amountToForward} ${geneticAnalysisOrder.currency} for completing the requested analysis for [].`,
+        description: `You've received ${amountToForward / this.currencyUnit.get(geneticAnalysisOrder.currency)} ${geneticAnalysisOrder.currency} for completing the requested analysis for [].`,
         read: false,
         created_at: currDate,
         updated_at: currDate,

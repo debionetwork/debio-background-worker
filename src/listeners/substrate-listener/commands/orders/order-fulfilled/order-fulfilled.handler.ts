@@ -30,6 +30,11 @@ export class OrderFulfilledHandler
 {
   private readonly logger: Logger = new Logger(OrderFulfilledCommand.name);
 
+  private readonly currencyUnit: Map<string, number> = new Map<string, number>([
+    ["USDT", Math.pow(10, 6)],
+    ["DBIO", Math.pow(10, 18)]
+  ]);
+
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly exchangeCacheService: DebioConversionService,
@@ -84,14 +89,15 @@ export class OrderFulfilledHandler
         order.id,
       );
 
-      const totalPrice = order.prices.reduce(
-        (acc, price) => acc + +price.value,
+      const totalPrice = orderByOrderId.prices.reduce(
+        (acc, price) => acc + Number(price.value.split(",").join("")),
         0,
       );
-      const totalAdditionalPrice = order.additionalPrices.reduce(
-        (acc, price) => acc + +price.value,
+      const totalAdditionalPrice = orderByOrderId.additionalPrices.reduce(
+        (acc, price) => acc + Number(price.value.split(",").join("")),
         0,
       );
+
       const amountToForward = totalPrice + totalAdditionalPrice;
 
       const exchange = await this.exchangeCacheService.getExchange();
@@ -124,7 +130,7 @@ export class OrderFulfilledHandler
         entity_type: 'Genetic Testing Order',
         entity: 'Order Fulfilled',
         reference_id: order.dnaSampleTrackingId,
-        description: `You've received ${amountToForward} ${order.currency} for completeing the requested test for [].`,
+        description: `You've received ${amountToForward / this.currencyUnit.get(order.currency)} ${order.currency} for completeing the requested test for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
