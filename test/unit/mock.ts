@@ -147,7 +147,7 @@ export const notificationServiceMockFactory: () => MockType<NotificationService>
 export function createMockOrder(
   status: OrderStatus,
   date: Date,
-  flow: string = 'StakingRequestService',
+  flow = 'StakingRequestService',
 ) {
   const first_price = {
     component: 'string',

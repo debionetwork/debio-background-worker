@@ -14,7 +14,6 @@ import {
   finalizeRequest,
   Order,
   queryEthAdressByAccountId,
-  queryOrderDetailByOrderID,
   queryServiceRequestById,
   sendRewards,
   ServiceFlow,
