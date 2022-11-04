@@ -17,6 +17,7 @@ import {
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../../../../common/secrets';
+import currencyUnit from '../../../models/currencyUnit';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -33,7 +34,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   ) {}
 
   async execute(command: OrderPaidCommand) {
-    const order: Order = command.orders.normalize();
+    const order: Order = command.orders;
     const blockNumber = command.blockMetaData.blockNumber.toString();
     this.logger.log(`OrderPaid with Order ID: ${order.id}!`);
 
@@ -45,10 +46,19 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
       );
 
       if (!isOrderHasBeenInsert) {
+        const totalPrice = order.prices.reduce(
+          (acc, price) => acc + Number(price.value.split(',').join('')),
+          0,
+        );
+        const totalAdditionalPrice = order.additionalPrices.reduce(
+          (acc, price) => acc + Number(price.value.split(',').join('')),
+          0,
+        );
+
         //insert logging to DB
         const orderLogging: TransactionLoggingDto = {
           address: order.customerId,
-          amount: +order.additionalPrices[0].value + +order.prices[0].value,
+          amount: (totalPrice + totalAdditionalPrice) / currencyUnit[order.currency],
           created_at: order.updatedAt,
           currency: order.currency.toUpperCase(),
           parent_id: orderHistory?.id ? BigInt(orderHistory.id) : BigInt(0),

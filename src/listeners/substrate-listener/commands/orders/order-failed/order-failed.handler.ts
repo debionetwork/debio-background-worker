@@ -40,13 +40,15 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         await this.loggingService.getLoggingByHashAndStatus(order.id, 4);
 
       if (order.orderFlow === 'StakingRequestService') {
-        await finalizeRequest(
+        console.log(finalizeRequest)
+        finalizeRequest(
           this.substrateService.api as any,
           this.substrateService.pair,
           order.id,
         );
         await this.callbackSendReward(order);
       }
+      
       if (isOrderHasBeenInsert) {
         return;
       }
@@ -58,7 +60,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       );
 
       const totalAdditionalPrice = order.additionalPrices.reduce(
-        (acc, price) => acc + +price.value,
+        (acc, price) => acc + Number(price.value.split(",").join("")),
         0,
       );
 
@@ -73,7 +75,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         entity_type: 'Genetic Testing Order',
         entity: 'Order Failed',
         reference_id: order.dnaSampleTrackingId,
-        description: `${valueMessage} ${totalAdditionalPrice} DAI as quality control fees for [].`,
+        description: `${valueMessage} ${totalAdditionalPrice / Math.pow(10, 18)} DAI as quality control fees for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
@@ -84,14 +86,17 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       };
 
       await this.notificationService.insert(labNotification);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+      this.logger.log(error);
+    }
   }
 
-  callbackSendReward(order: Order): void {
-    const rewardCustomer = +order.additionalPrices[0].value * 10 ** 18;
+  async callbackSendReward(order: Order) {
+    const rewardCustomer = Number(order.additionalPrices[0].value.split(",").join("")) * 10 ** 18;
     const rewardLab = rewardCustomer / 10;
     //send reward for customer
-    sendRewards(
+    await sendRewards(
       this.substrateService.api as any,
       this.substrateService.pair,
       order.customerId,
@@ -99,7 +104,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
     );
 
     //send reward for customer
-    sendRewards(
+    await sendRewards(
       this.substrateService.api as any,
       this.substrateService.pair,
       order.sellerId,

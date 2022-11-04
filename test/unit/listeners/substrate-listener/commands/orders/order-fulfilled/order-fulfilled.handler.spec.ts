@@ -111,7 +111,8 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
-    const ORDER = createMockOrder(OrderStatus.Cancelled);
+    const DATE = new Date();
+    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
 
     const RESULT_STATUS = true;
 
@@ -119,7 +120,7 @@ describe('Order Fulfilled Handler Event', () => {
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
     RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
+    RESULT_TRANSACTION.created_at = DATE;
     RESULT_TRANSACTION.currency = 'string';
     RESULT_TRANSACTION.parent_id = BigInt(0).toString();
     RESULT_TRANSACTION.ref_number = 'string';
@@ -239,7 +240,8 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
-    const ORDER = createMockOrder(OrderStatus.Cancelled);
+    const DATE = new Date();
+    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
 
     const RESULT_STATUS = false;
 
@@ -247,7 +249,7 @@ describe('Order Fulfilled Handler Event', () => {
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
     RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
+    RESULT_TRANSACTION.created_at = DATE;
     RESULT_TRANSACTION.currency = 'string';
     RESULT_TRANSACTION.parent_id = BigInt(0).toString();
     RESULT_TRANSACTION.ref_number = 'string';
@@ -322,13 +324,11 @@ describe('Order Fulfilled Handler Event', () => {
       ORDER.toHuman().sellerId,
     );
     expect(finalizeRequestSpy).toHaveBeenCalled();
-    expect(queryOrderDetailByOrderIDSpy).toHaveBeenCalled();
     expect(debioConversionServiceMock.getExchange).toHaveBeenCalled();
     expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
     expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
-    queryOrderDetailByOrderIDSpy.mockClear();
     queryServiceByIdSpy.mockClear();
     queryServiceInvoiceByOrderIdSpy.mockClear();
     sendRewardsSpy.mockClear();
@@ -355,7 +355,8 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
-    const ORDER = createMockOrder(OrderStatus.Cancelled);
+    const DATE = new Date();
+    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
 
     const RESULT_STATUS = false;
 
@@ -363,7 +364,7 @@ describe('Order Fulfilled Handler Event', () => {
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
     RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
+    RESULT_TRANSACTION.created_at = DATE;
     RESULT_TRANSACTION.currency = 'string';
     RESULT_TRANSACTION.parent_id = BigInt(0).toString();
     RESULT_TRANSACTION.ref_number = 'string';
@@ -497,7 +498,8 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
-    const ORDER = createMockOrder(OrderStatus.Cancelled);
+    const DATE = new Date();
+    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
 
     const RESULT_STATUS = true;
 
@@ -505,7 +507,7 @@ describe('Order Fulfilled Handler Event', () => {
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
     RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
+    RESULT_TRANSACTION.created_at = DATE;
     RESULT_TRANSACTION.currency = 'string';
     RESULT_TRANSACTION.parent_id = BigInt(0).toString();
     RESULT_TRANSACTION.ref_number = 'string';
@@ -611,7 +613,8 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
 
-    const ORDER = createMockOrder(OrderStatus.Cancelled);
+    const DATE = new Date();
+    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
     const PRICE = 1;
     const BLOCKNUMBER = '1';
 

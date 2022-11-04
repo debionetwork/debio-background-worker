@@ -144,14 +144,14 @@ export const notificationServiceMockFactory: () => MockType<NotificationService>
     setBulkNotificationHasBeenRead: jest.fn(),
   }));
 
-export function createMockOrder(status: OrderStatus) {
+export function createMockOrder(status: OrderStatus, date: Date, flow: string = "StakingRequestService") {
   const first_price = {
     component: 'string',
-    value: 1,
+    value: "1,000,000",
   };
   const second_price = {
     component: 'string',
-    value: 1,
+    value: "1,000,000",
   };
 
   return {
@@ -162,13 +162,13 @@ export function createMockOrder(status: OrderStatus) {
       customerBoxPublicKey: 'string',
       sellerId: 'string',
       dnaSampleTrackingId: 'string',
-      currency: 'XX',
+      currency: 'USDT',
       prices: [first_price],
       additionalPrices: [second_price],
       status: status,
-      orderFlow: '1',
-      createdAt: '1',
-      updatedAt: '1',
+      orderFlow: flow,
+      createdAt: date,
+      updatedAt: date,
     })),
   };
 }
@@ -178,11 +178,11 @@ export function createMockGeneticAnalysisOrder(
 ) {
   const first_price = {
     component: 'string',
-    value: '1',
+    value: '1,000,000',
   };
   const second_price = {
     component: 'string',
-    value: '1',
+    value: '1,000,000',
   };
 
   return {
@@ -194,7 +194,7 @@ export function createMockGeneticAnalysisOrder(
       sellerId: 'string',
       geneticDataId: 'string',
       geneticAnalysisTrackingId: 'string',
-      currency: 'DBIO',
+      currency: 'USDT',
       prices: [first_price],
       additionalPrices: [second_price],
       status: status,

@@ -59,7 +59,8 @@ describe('Order Refunded Handler Event', () => {
 
   it('should not called logging service create', async () => {
     // Arrange
-    const ORDER = createMockOrder(OrderStatus.Refunded);
+    const DATE = new Date();
+    const ORDER = createMockOrder(OrderStatus.Refunded, DATE);
     const RESULT_STATUS = true;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
@@ -98,7 +99,8 @@ describe('Order Refunded Handler Event', () => {
 
   it('should called logging service create', async () => {
     // Arrange
-    const ORDER = createMockOrder(OrderStatus.Refunded);
+    const DATE = new Date();
+    const ORDER = createMockOrder(OrderStatus.Refunded, DATE);
     const RESULT_STATUS = false;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
@@ -127,8 +129,8 @@ describe('Order Refunded Handler Event', () => {
 
     const orderLogging: TransactionLoggingDto = {
       address: orderRefundedCommand.orders.customerId,
-      amount: Number(orderRefundedCommand.orders.prices[0].value) / 10 ** 18,
-      created_at: new Date(),
+      amount: 1,
+      created_at: DATE,
       currency: orderRefundedCommand.orders.currency.toUpperCase(),
       parent_id: BigInt(RESULT_TRANSACTION.id),
       ref_number: orderRefundedCommand.orders.id,

@@ -8,6 +8,7 @@ import {
 } from '../../../../../common';
 import { GeneticAnalysisOrderFulfilledCommand } from './genetic-analysis-order-fulfilled.command';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import currencyUnit from '../../../models/currencyUnit';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderFulfilledCommand)
@@ -17,10 +18,7 @@ export class GeneticAnalysisOrderFulfilledHandler
   private readonly logger: Logger = new Logger(
     GeneticAnalysisOrderFulfilledCommand.name,
   );
-  private readonly currencyUnit: Map<string, number> = new Map<string, number>([
-    ['USDT', Math.pow(10, 6)],
-    ['DBIO', Math.pow(10, 18)],
-  ]);
+  
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
@@ -90,7 +88,7 @@ export class GeneticAnalysisOrderFulfilledHandler
         entity: 'Order Fulfilled',
         reference_id: geneticAnalysisOrder.id,
         description: `You've received ${
-          amountToForward / this.currencyUnit.get(geneticAnalysisOrder.currency)
+          amountToForward / currencyUnit[geneticAnalysisOrder.currency]
         } ${
           geneticAnalysisOrder.currency
         } for completing the requested analysis for [].`,

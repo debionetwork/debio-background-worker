@@ -22,6 +22,7 @@ import {
 import { EscrowService } from '../../../../../common/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import currencyUnit from '../../../models/currencyUnit';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)
@@ -29,11 +30,6 @@ export class OrderFulfilledHandler
   implements ICommandHandler<OrderFulfilledCommand>
 {
   private readonly logger: Logger = new Logger(OrderFulfilledCommand.name);
-
-  private readonly currencyUnit: Map<string, number> = new Map<string, number>([
-    ['USDT', Math.pow(10, 6)],
-    ['DBIO', Math.pow(10, 18)],
-  ]);
 
   constructor(
     private readonly loggingService: TransactionLoggingService,
@@ -45,7 +41,7 @@ export class OrderFulfilledHandler
   ) {}
 
   async execute(command: OrderFulfilledCommand) {
-    const order: Order = command.orders.normalize();
+    const order: Order = command.orders;
     const blockNumber = command.blockMetaData.blockNumber.toString();
     this.logger.log(`Order Fulfilled With Order ID: ${order.id}!`);
 
@@ -83,17 +79,12 @@ export class OrderFulfilledHandler
         );
         return null;
       }
-
-      const orderByOrderId = await queryOrderDetailByOrderID(
-        this.substrateService.api as any,
-        order.id,
-      );
-
-      const totalPrice = orderByOrderId.prices.reduce(
+      
+      const totalPrice = order.prices.reduce(
         (acc, price) => acc + Number(price.value.split(',').join('')),
         0,
       );
-      const totalAdditionalPrice = orderByOrderId.additionalPrices.reduce(
+      const totalAdditionalPrice = order.additionalPrices.reduce(
         (acc, price) => acc + Number(price.value.split(',').join('')),
         0,
       );
@@ -105,7 +96,7 @@ export class OrderFulfilledHandler
 
       const daiPrice = amountToForward * dbioToDai;
 
-      if (orderByOrderId.orderFlow === ServiceFlow.StakingRequestService) {
+      if (order.orderFlow === ServiceFlow.StakingRequestService) {
         const { hash: requestId } = await queryServiceRequestById(
           this.substrateService.api,
           order.id,
@@ -131,7 +122,7 @@ export class OrderFulfilledHandler
         entity: 'Order Fulfilled',
         reference_id: order.dnaSampleTrackingId,
         description: `You've received ${
-          amountToForward / this.currencyUnit.get(order.currency)
+          amountToForward / currencyUnit[order.currency]
         } ${order.currency} for completeing the requested test for [].`,
         read: false,
         created_at: currDateTime,

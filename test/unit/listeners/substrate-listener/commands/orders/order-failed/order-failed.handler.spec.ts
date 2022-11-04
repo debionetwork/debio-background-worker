@@ -71,24 +71,25 @@ describe('Order Failed Handler Event', () => {
     const refundedOrderSpy = jest
       .spyOn(ordersCommand, 'setOrderRefunded')
       .mockImplementation();
-    const ORDER = createMockOrder(OrderStatus.Cancelled);
+    const DATE = new Date();
+    const ORDER = createMockOrder(OrderStatus.Failed, DATE, "XX");
 
-    const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
+    const orderFailedCommand: OrderCreatedCommand = new OrderCreatedCommand(
       [ORDER],
       mockBlockNumber(),
     );
 
-    await orderFailedHandler.execute(orderCancelledCommand);
+    await orderFailedHandler.execute(orderFailedCommand);
     expect(transactionLoggingService.getLoggingByHashAndStatus).toBeCalled();
     expect(escrowServiceMock.refundOrder).toHaveBeenCalled();
     expect(escrowServiceMock.refundOrder).toHaveBeenCalledWith(
-      orderCancelledCommand.orders,
+      orderFailedCommand.orders,
     );
     expect(refundedOrderSpy).toHaveBeenCalled();
     expect(refundedOrderSpy).toHaveBeenCalledWith(
       substrateServiceMock.api,
       substrateServiceMock.pair,
-      orderCancelledCommand.orders.id,
+      orderFailedCommand.orders.id,
     );
   });
 });

@@ -6,7 +6,8 @@ jest.mock('@debionetwork/polkadot-provider');
 
 describe('Order Cancelled Command Event', () => {
   it('should called model data and toHuman', () => {
-    const ORDER_RESPONSE = createMockOrder(OrderStatus.Cancelled);
+    const DATE = new Date();
+    const ORDER_RESPONSE = createMockOrder(OrderStatus.Cancelled, DATE);
 
     const _ = new OrderCancelledCommand([ORDER_RESPONSE], mockBlockNumber()); // eslint-disable-line
     expect(Order).toHaveBeenCalled();

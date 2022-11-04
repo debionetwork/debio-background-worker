@@ -9,6 +9,7 @@ import {
 import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
 import { Order } from '@debionetwork/polkadot-provider';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import currencyUnit from '../../../models/currencyUnit';
 
 @Injectable()
 @CommandHandler(OrderRefundedCommand)
@@ -24,7 +25,7 @@ export class OrderRefundedHandler
   ) {}
 
   async execute(command: OrderRefundedCommand) {
-    const order: Order = command.orders.normalize();
+    const order: Order = command.orders;
     const blockNumber = command.blockMetaData.blockNumber.toString();
     this.logger.log(`OrderRefunded With Order ID: ${order.id}!`);
 
@@ -38,7 +39,7 @@ export class OrderRefundedHandler
       //insert logging to DB
       const orderLogging: TransactionLoggingDto = {
         address: order.customerId,
-        amount: +order.prices[0].value,
+        amount: Number(order.prices[0].value.split(",").join("")) / currencyUnit[order.currency],
         created_at: order.updatedAt,
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(orderHistory.id),
