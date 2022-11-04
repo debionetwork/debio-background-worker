@@ -72,7 +72,7 @@ describe('Order Failed Handler Event', () => {
       .spyOn(ordersCommand, 'setOrderRefunded')
       .mockImplementation();
     const DATE = new Date();
-    const ORDER = createMockOrder(OrderStatus.Failed, DATE, "XX");
+    const ORDER = createMockOrder(OrderStatus.Failed, DATE, 'XX');
 
     const orderFailedCommand: OrderCreatedCommand = new OrderCreatedCommand(
       [ORDER],

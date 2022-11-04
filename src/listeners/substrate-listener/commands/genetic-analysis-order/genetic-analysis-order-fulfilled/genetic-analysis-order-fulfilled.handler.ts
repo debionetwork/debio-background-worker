@@ -18,7 +18,7 @@ export class GeneticAnalysisOrderFulfilledHandler
   private readonly logger: Logger = new Logger(
     GeneticAnalysisOrderFulfilledCommand.name,
   );
-  
+
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,

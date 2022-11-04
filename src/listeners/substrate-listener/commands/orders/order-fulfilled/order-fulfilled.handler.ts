@@ -79,7 +79,7 @@ export class OrderFulfilledHandler
         );
         return null;
       }
-      
+
       const totalPrice = order.prices.reduce(
         (acc, price) => acc + Number(price.value.split(',').join('')),
         0,

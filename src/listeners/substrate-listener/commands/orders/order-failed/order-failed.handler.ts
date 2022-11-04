@@ -40,7 +40,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         await this.loggingService.getLoggingByHashAndStatus(order.id, 4);
 
       if (order.orderFlow === 'StakingRequestService') {
-        console.log(finalizeRequest)
+        console.log(finalizeRequest);
         finalizeRequest(
           this.substrateService.api as any,
           this.substrateService.pair,
@@ -48,7 +48,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         );
         await this.callbackSendReward(order);
       }
-      
+
       if (isOrderHasBeenInsert) {
         return;
       }
@@ -60,7 +60,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       );
 
       const totalAdditionalPrice = order.additionalPrices.reduce(
-        (acc, price) => acc + Number(price.value.split(",").join("")),
+        (acc, price) => acc + Number(price.value.split(',').join('')),
         0,
       );
 
@@ -75,7 +75,9 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         entity_type: 'Genetic Testing Order',
         entity: 'Order Failed',
         reference_id: order.dnaSampleTrackingId,
-        description: `${valueMessage} ${totalAdditionalPrice / Math.pow(10, 18)} DAI as quality control fees for [].`,
+        description: `${valueMessage} ${
+          totalAdditionalPrice / Math.pow(10, 18)
+        } DAI as quality control fees for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
@@ -87,13 +89,14 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
 
       await this.notificationService.insert(labNotification);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       this.logger.log(error);
     }
   }
 
   async callbackSendReward(order: Order) {
-    const rewardCustomer = Number(order.additionalPrices[0].value.split(",").join("")) * 10 ** 18;
+    const rewardCustomer =
+      Number(order.additionalPrices[0].value.split(',').join('')) * 10 ** 18;
     const rewardLab = rewardCustomer / 10;
     //send reward for customer
     await sendRewards(

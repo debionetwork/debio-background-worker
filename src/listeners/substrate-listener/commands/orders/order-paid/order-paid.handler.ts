@@ -58,7 +58,8 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
         //insert logging to DB
         const orderLogging: TransactionLoggingDto = {
           address: order.customerId,
-          amount: (totalPrice + totalAdditionalPrice) / currencyUnit[order.currency],
+          amount:
+            (totalPrice + totalAdditionalPrice) / currencyUnit[order.currency],
           created_at: order.updatedAt,
           currency: order.currency.toUpperCase(),
           parent_id: orderHistory?.id ? BigInt(orderHistory.id) : BigInt(0),
