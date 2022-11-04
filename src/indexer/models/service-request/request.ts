@@ -7,6 +7,8 @@ export class RequestModel {
     this.requester_address = request.requesterAddress;
     this.lab_address = request.labAddress;
     this.country = request.country;
+    this.service_id = request.serviceId;
+    this.order_id = request.orderId;
 
     const city = request.city;
     this.city = isHex(city) ? hexToUtf8(city) : city;
@@ -25,6 +27,8 @@ export class RequestModel {
   hash: string;
   requester_address: string;
   lab_address: string;
+  service_id: string;
+  order_id: string;
   country: string;
   region: string;
   city: string;

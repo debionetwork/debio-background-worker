@@ -14,14 +14,14 @@ import {
   finalizeRequest,
   Order,
   queryEthAdressByAccountId,
-  queryOrderDetailByOrderID,
-  queryServiceInvoiceByOrderId,
+  queryServiceRequestById,
   sendRewards,
   ServiceFlow,
 } from '@debionetwork/polkadot-provider';
 import { EscrowService } from '../../../../../common/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import currencyUnit from '../../../models/currencyUnit';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)
@@ -40,7 +40,7 @@ export class OrderFulfilledHandler
   ) {}
 
   async execute(command: OrderFulfilledCommand) {
-    const order: Order = command.orders.normalize();
+    const order: Order = command.orders;
     const blockNumber = command.blockMetaData.blockNumber.toString();
     this.logger.log(`Order Fulfilled With Order ID: ${order.id}!`);
 
@@ -79,19 +79,15 @@ export class OrderFulfilledHandler
         return null;
       }
 
-      const orderByOrderId = await queryOrderDetailByOrderID(
-        this.substrateService.api as any,
-        order.id,
-      );
-
       const totalPrice = order.prices.reduce(
-        (acc, price) => acc + +price.value,
+        (acc, price) => acc + Number(price.value.split(',').join('')),
         0,
       );
       const totalAdditionalPrice = order.additionalPrices.reduce(
-        (acc, price) => acc + +price.value,
+        (acc, price) => acc + Number(price.value.split(',').join('')),
         0,
       );
+
       const amountToForward = totalPrice + totalAdditionalPrice;
 
       const exchange = await this.exchangeCacheService.getExchange();
@@ -99,8 +95,8 @@ export class OrderFulfilledHandler
 
       const daiPrice = amountToForward * dbioToDai;
 
-      if (orderByOrderId.orderFlow === ServiceFlow.StakingRequestService) {
-        const { requestHash: requestId } = await queryServiceInvoiceByOrderId(
+      if (order.orderFlow === ServiceFlow.StakingRequestService) {
+        const { hash: requestId } = await queryServiceRequestById(
           this.substrateService.api,
           order.id,
         );
@@ -109,7 +105,6 @@ export class OrderFulfilledHandler
           this.substrateService.api as any,
           this.substrateService.pair,
           requestId,
-          true,
         );
         await this.callbackSendReward(order, daiPrice, blockNumber);
       }
@@ -125,7 +120,9 @@ export class OrderFulfilledHandler
         entity_type: 'Genetic Testing Order',
         entity: 'Order Fulfilled',
         reference_id: order.dnaSampleTrackingId,
-        description: `You've received ${amountToForward} ${order.currency} for completeing the requested test for [].`,
+        description: `You've received ${
+          amountToForward / currencyUnit[order.currency]
+        } ${order.currency} for completeing the requested test for [].`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,

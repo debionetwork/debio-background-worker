@@ -8,6 +8,7 @@ import {
 } from '../../../../../common';
 import { GeneticAnalysisOrderFulfilledCommand } from './genetic-analysis-order-fulfilled.command';
 import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import currencyUnit from '../../../models/currencyUnit';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderFulfilledCommand)
@@ -17,6 +18,7 @@ export class GeneticAnalysisOrderFulfilledHandler
   private readonly logger: Logger = new Logger(
     GeneticAnalysisOrderFulfilledCommand.name,
   );
+
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
@@ -24,7 +26,7 @@ export class GeneticAnalysisOrderFulfilledHandler
   ) {}
 
   async execute(command: GeneticAnalysisOrderFulfilledCommand) {
-    const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
+    const geneticAnalysisOrder = command.geneticAnalysisOrders;
     const blockNumber = command.blockMetaData.blockNumber.toString();
     this.logger.log(
       `Genetic Analysis Order Fulfilled! With GA Order ID: ${geneticAnalysisOrder.id}`,
@@ -67,6 +69,17 @@ export class GeneticAnalysisOrderFulfilledHandler
         await this.loggingService.create(serviceChargeLogging);
       }
 
+      const totalPrice = geneticAnalysisOrder.prices.reduce(
+        (acc, price) => acc + Number(price.value.split(',').join('')),
+        0,
+      );
+      const totalAdditionalPrice = geneticAnalysisOrder.additionalPrices.reduce(
+        (acc, price) => acc + Number(price.value.split(',').join('')),
+        0,
+      );
+
+      const amountToForward = totalPrice + totalAdditionalPrice;
+
       const currDate = this.dateTimeProxy.new();
 
       const receivePaymentNotification: NotificationDto = {
@@ -74,8 +87,9 @@ export class GeneticAnalysisOrderFulfilledHandler
         entity_type: 'Genetic Analysis Order',
         entity: 'Order Fulfilled',
         reference_id: geneticAnalysisOrder.id,
-        description: `You've received ${+geneticAnalysisOrder.prices[0]
-          .value} ${
+        description: `You've received ${
+          amountToForward / currencyUnit[geneticAnalysisOrder.currency]
+        } ${
           geneticAnalysisOrder.currency
         } for completing the requested analysis for [].`,
         read: false,

@@ -47,14 +47,15 @@ describe('Order Cancelled Handler Event', () => {
 
   it('should not called logging service create', async () => {
     // Arrange
-    const ORDER = createMockOrder(OrderStatus.Cancelled);
+    const DATE = new Date();
+    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
 
     const RESULT_STATUS = true;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
     RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
+    RESULT_TRANSACTION.created_at = DATE;
     RESULT_TRANSACTION.currency = 'string';
     RESULT_TRANSACTION.parent_id = BigInt(0).toString();
     RESULT_TRANSACTION.ref_number = 'string';
@@ -86,14 +87,15 @@ describe('Order Cancelled Handler Event', () => {
 
   it('should called logging service create', async () => {
     // Arrange
-    const ORDER = createMockOrder(OrderStatus.Cancelled);
+    const DATE = new Date();
+    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
 
     const RESULT_STATUS = false;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
     RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
+    RESULT_TRANSACTION.created_at = DATE;
     RESULT_TRANSACTION.currency = 'string';
     RESULT_TRANSACTION.parent_id = BigInt(0).toString();
     RESULT_TRANSACTION.ref_number = 'string';
