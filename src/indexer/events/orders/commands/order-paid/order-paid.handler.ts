@@ -32,6 +32,7 @@ export class OrderPaidHandler
           created_at: order.createdAt,
           updated_at: order.updatedAt,
           order_flow: order.orderFlow,
+          transaction_hash: command.blockMetaData.blockHash,
           blockMetaData: command.blockMetaData,
         },
       },
