@@ -153,12 +153,15 @@ export class OrderFulfilledHandler
     totalPrice: number,
     blockNumber: string,
   ) {
-    const exchangeFromTo = await this.exchangeCacheService.getExchangeFromTo(order.currency.toUpperCase(), "DAI");
+    const exchangeFromTo = await this.exchangeCacheService.getExchangeFromTo(
+      order.currency.toUpperCase(),
+      'DAI',
+    );
     const exchange = await this.exchangeCacheService.getExchange();
     const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
     const daiToDbio = 1 / dbioToDai;
 
-    const dbioCurrency = (totalPrice * exchangeFromTo.conversion) * daiToDbio;
+    const dbioCurrency = totalPrice * exchangeFromTo.conversion * daiToDbio;
 
     const dbioRewardCustomer = dbioCurrency.toFixed(4);
     const dbioRewardLab = (dbioCurrency / 10).toFixed(4);

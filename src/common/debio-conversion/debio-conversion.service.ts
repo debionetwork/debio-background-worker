@@ -43,7 +43,7 @@ export class DebioConversionService {
         {
           params: {
             from,
-            to
+            to,
           },
           auth: {
             username: this.gCloudSecretManagerService
