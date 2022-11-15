@@ -92,8 +92,10 @@ export class OrderFulfilledHandler
       }
 
       if (order.orderFlow === ServiceFlow.StakingRequestService) {
-        const { hash: requestId, stakingAmount } =
-          await queryServiceRequestById(this.substrateService.api, order.id);
+        const { hash: requestId } = await queryServiceRequestById(
+          this.substrateService.api,
+          order.id,
+        );
 
         await finalizeRequest(
           this.substrateService.api as any,
@@ -101,7 +103,11 @@ export class OrderFulfilledHandler
           requestId,
         );
 
-        await this.callbackSendReward(order, stakingAmount, blockNumber);
+        await this.callbackSendReward(
+          order,
+          amountToForward * 100,
+          blockNumber,
+        );
       }
 
       await this.escrowService.orderFulfilled(order);
