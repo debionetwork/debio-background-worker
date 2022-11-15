@@ -105,7 +105,7 @@ export class OrderFulfilledHandler
 
         await this.callbackSendReward(
           order,
-          amountToForward * 100,
+          amountToForward / currencyUnit[order.currency],
           blockNumber,
         );
       }
@@ -153,8 +153,15 @@ export class OrderFulfilledHandler
     totalPrice: number,
     blockNumber: string,
   ) {
-    const dbioRewardCustomer = convertToDbioUnitString(totalPrice);
-    const dbioRewardLab = convertToDbioUnitString(totalPrice / 10);
+    const exchangeFromTo = await this.exchangeCacheService.getExchangeFromTo(order.currency.toUpperCase(), "DAI");
+    const exchange = await this.exchangeCacheService.getExchange();
+    const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
+    const daiToDbio = 1 / dbioToDai;
+
+    const dbioCurrency = (totalPrice * exchangeFromTo.conversion) * daiToDbio;
+
+    const dbioRewardCustomer = dbioCurrency.toFixed(4);
+    const dbioRewardLab = (dbioCurrency / 10).toFixed(4);
     // Send reward to customer
     await sendRewards(
       this.substrateService.api as any,
