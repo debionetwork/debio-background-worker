@@ -54,7 +54,6 @@ import {
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ServiceRequestStakingAmountExcessRefunded } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-excess/service-request-excess.handler';
 import { SecretKeyList } from '../../../../../../src/common/secrets';
-import { ServiceRequestClaimedCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-claimed/service-request-claimed.handler';
 import { ServiceRequestStakingAmountRefundedHandler } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.handler';
 
 describe('Service Request Excess Integration Tests', () => {
@@ -121,7 +120,6 @@ describe('Service Request Excess Integration Tests', () => {
         },
         SubstrateListenerHandler,
         ServiceRequestStakingAmountExcessRefunded,
-        ServiceRequestClaimedCommandHandler,
         ServiceRequestStakingAmountRefundedHandler,
       ],
     })
@@ -223,19 +221,11 @@ describe('Service Request Excess Integration Tests', () => {
     const claimRequestPromise: Promise<ServiceRequest> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
-        claimRequest(
-          api,
-          pair,
-          serviceRequest.hash,
-          service.id,
-          '900000000000000000',
-          '100000000000000000',
-          () => {
-            queryServiceRequestById(api, serviceRequest.hash).then((res) => {
-              resolve(res);
-            });
-          },
-        );
+        claimRequest(api, pair, serviceRequest.hash, service.id, () => {
+          queryServiceRequestById(api, serviceRequest.hash).then((res) => {
+            resolve(res);
+          });
+        });
       },
     );
 
@@ -369,19 +359,11 @@ describe('Service Request Excess Integration Tests', () => {
     const claimRequestPromise: Promise<ServiceRequest> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
-        claimRequest(
-          api,
-          pair,
-          serviceRequest.hash,
-          service.id,
-          '800000000000000000',
-          '100000000000000000',
-          () => {
-            queryServiceRequestById(api, serviceRequest.hash).then((res) => {
-              resolve(res);
-            });
-          },
-        );
+        claimRequest(api, pair, serviceRequest.hash, service.id, () => {
+          queryServiceRequestById(api, serviceRequest.hash).then((res) => {
+            resolve(res);
+          });
+        });
       },
     );
 
@@ -396,6 +378,7 @@ describe('Service Request Excess Integration Tests', () => {
         0,
         lab.info.boxPublicKey,
         serviceDataMock.serviceFlow,
+        0,
         () => {
           queryLastOrderHashByCustomer(api, pair.address).then((orderId) => {
             queryOrderDetailByOrderID(api, orderId).then((res) => {
@@ -416,20 +399,11 @@ describe('Service Request Excess Integration Tests', () => {
     const processRequestPromise: Promise<ServiceRequest> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
-        processRequest(
-          api,
-          pair,
-          lab.accountId,
-          serviceRequest.hash,
-          order.id,
-          order.dnaSampleTrackingId,
-          '0',
-          () => {
-            queryServiceRequestById(api, serviceRequest.hash).then((res) => {
-              resolve(res);
-            });
-          },
-        );
+        processRequest(api, pair, serviceRequest.hash, order.id, () => {
+          queryServiceRequestById(api, serviceRequest.hash).then((res) => {
+            resolve(res);
+          });
+        });
       },
     );
 

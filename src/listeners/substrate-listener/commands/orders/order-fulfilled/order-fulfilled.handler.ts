@@ -51,10 +51,22 @@ export class OrderFulfilledHandler
       const orderHistory = await this.loggingService.getLoggingByOrderId(
         order.id,
       );
+
+      const totalPrice = order.prices.reduce(
+        (acc, price) => acc + Number(price.value.split(',').join('')),
+        0,
+      );
+      const totalAdditionalPrice = order.additionalPrices.reduce(
+        (acc, price) => acc + Number(price.value.split(',').join('')),
+        0,
+      );
+
+      const amountToForward = totalPrice + totalAdditionalPrice;
+
       // Logging data input
       const orderLogging: TransactionLoggingDto = {
         address: order.customerId,
-        amount: +order.additionalPrices[0].value + +order.prices[0].value,
+        amount: amountToForward / currencyUnit[order.currency],
         created_at: order.updatedAt,
         currency: order.currency.toUpperCase(),
         parent_id: orderHistory?.id ? BigInt(orderHistory.id) : BigInt(0),
@@ -79,34 +91,17 @@ export class OrderFulfilledHandler
         return null;
       }
 
-      const totalPrice = order.prices.reduce(
-        (acc, price) => acc + Number(price.value.split(',').join('')),
-        0,
-      );
-      const totalAdditionalPrice = order.additionalPrices.reduce(
-        (acc, price) => acc + Number(price.value.split(',').join('')),
-        0,
-      );
-
-      const amountToForward = totalPrice + totalAdditionalPrice;
-
-      const exchange = await this.exchangeCacheService.getExchange();
-      const dbioToDai = exchange ? Number(exchange['dbioToDai']) : 1;
-
-      const daiPrice = amountToForward * dbioToDai;
-
       if (order.orderFlow === ServiceFlow.StakingRequestService) {
-        const { hash: requestId } = await queryServiceRequestById(
-          this.substrateService.api,
-          order.id,
-        );
+        const { hash: requestId, stakingAmount } =
+          await queryServiceRequestById(this.substrateService.api, order.id);
 
         await finalizeRequest(
           this.substrateService.api as any,
           this.substrateService.pair,
           requestId,
         );
-        await this.callbackSendReward(order, daiPrice, blockNumber);
+
+        await this.callbackSendReward(order, stakingAmount, blockNumber);
       }
 
       await this.escrowService.orderFulfilled(order);

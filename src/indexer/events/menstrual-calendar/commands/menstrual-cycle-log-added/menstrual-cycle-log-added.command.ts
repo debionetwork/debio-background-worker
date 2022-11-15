@@ -2,13 +2,16 @@ import { MenstrualCycleLog } from '../../../../models/menstrual-calendar/menstru
 import { BlockMetaData } from '../../../../models/block-meta-data';
 
 export class MenstrualCycleLogAddedCommandIndexer {
-  menstrualCycleLog: MenstrualCycleLog;
+  menstrualCycleLog: Array<MenstrualCycleLog>;
   accountId: string;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
     const menstrualCycleLogData = data[0];
     this.accountId = data[1].toString();
-    this.menstrualCycleLog = new MenstrualCycleLog(
-      menstrualCycleLogData.toHuman(),
-    );
+
+    const arrayMenstrualCycleLogData = menstrualCycleLogData.toHuman();
+
+    this.menstrualCycleLog = arrayMenstrualCycleLogData.map((cycleLog: any) => {
+      return new MenstrualCycleLog(cycleLog);
+    });
   }
 }

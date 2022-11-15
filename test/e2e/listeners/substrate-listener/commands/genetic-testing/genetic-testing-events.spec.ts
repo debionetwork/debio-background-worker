@@ -208,6 +208,7 @@ describe('Data Staked Integration Tests', () => {
         0,
         lab.info.boxPublicKey,
         serviceDataMock.serviceFlow,
+        0,
         () => {
           queryLastOrderHashByCustomer(api, pair.address).then((orderId) => {
             queryOrderDetailByOrderID(api, orderId).then((res) => {
@@ -316,6 +317,7 @@ describe('Data Staked Integration Tests', () => {
         0,
         lab.info.boxPublicKey,
         serviceDataMock.serviceFlow,
+        0,
         () => {
           queryLastOrderHashByCustomer(api, pair.address).then((orderId) => {
             queryOrderDetailByOrderID(api, orderId).then((res) => {
@@ -425,6 +427,7 @@ describe('Data Staked Integration Tests', () => {
         0,
         lab.info.boxPublicKey,
         serviceDataMock.serviceFlow,
+        0,
         () => {
           queryLastOrderHashByCustomer(api, pair.address).then((orderId) => {
             queryOrderDetailByOrderID(api, orderId).then((res) => {

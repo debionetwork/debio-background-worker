@@ -324,7 +324,6 @@ describe('Order Fulfilled Handler Event', () => {
       ORDER.toHuman().sellerId,
     );
     expect(finalizeRequestSpy).toHaveBeenCalled();
-    expect(debioConversionServiceMock.getExchange).toHaveBeenCalled();
     expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
     expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
@@ -459,7 +458,6 @@ describe('Order Fulfilled Handler Event', () => {
     expect(queryOrderDetailByOrderIDSpy).not.toHaveBeenCalled();
     expect(queryServiceByIdSpy).not.toHaveBeenCalled();
     expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
-    expect(debioConversionServiceMock.getExchange).not.toHaveBeenCalled();
     expect(sendRewardsSpy).not.toHaveBeenCalled();
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalled();
     expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
