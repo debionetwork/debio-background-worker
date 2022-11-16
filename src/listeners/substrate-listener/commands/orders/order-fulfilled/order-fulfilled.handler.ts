@@ -139,6 +139,7 @@ export class OrderFulfilledHandler
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);
     } catch (err) {
+      console.log(err);
       this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
     }
