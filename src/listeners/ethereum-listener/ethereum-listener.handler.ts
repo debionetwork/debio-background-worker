@@ -45,18 +45,18 @@ export class EthereumListenerHandler implements OnModuleInit {
         this.logger.log(`transaction Hash: ${event.transactionHash}`);
       }
       //Update transaction_hash to DB
-      const loggingFulfilled =
-        await this.transactioLoggingService.getLoggingByHashAndStatus(
-          order.orderId,
-          3,
-        );
+      // const loggingFulfilled =
+      //   await this.transactioLoggingService.getLoggingByHashAndStatus(
+      //     order.orderId,
+      //     3,
+      //   );
 
-      if (loggingFulfilled) {
-        await this.transactioLoggingService.updateHash(
-          loggingFulfilled,
-          event.transactionHash,
-        );
-      }
+      // if (loggingFulfilled) {
+      //   await this.transactioLoggingService.updateHash(
+      //     loggingFulfilled,
+      //     event.transactionHash,
+      //   );
+      // }
     });
 
     escrowContract.on('OrderRefunded', async (order, event) => {

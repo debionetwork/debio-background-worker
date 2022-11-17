@@ -77,6 +77,10 @@ export class OrderFulfilledHandler
 
       // Logging transaction
       if (isOrderHasBeenInsert) {
+        await this.loggingService.updateHash(
+          isOrderHasBeenInsert,
+          command.blockMetaData.blockHash,
+        );
         return;
       }
       const labEthAddress: any = await queryEthAdressByAccountId(

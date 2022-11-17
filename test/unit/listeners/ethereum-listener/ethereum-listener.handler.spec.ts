@@ -135,10 +135,10 @@ describe('Ethereum Listener Handler Unit Test', () => {
     expect(smartContractOnEventType).toEqual('OrderRefunded');
     expect(
       transactionLoggingService.getLoggingByHashAndStatus,
-    ).toHaveBeenCalledTimes(2);
+    ).toHaveBeenCalledTimes(1);
     expect(
       transactionLoggingService.getLoggingByHashAndStatus,
-    ).toHaveBeenCalledWith(ORDER_ID, 3);
+    ).toHaveBeenCalledWith(ORDER_ID, 4);
     expect(
       transactionLoggingService.getLoggingByHashAndStatus,
     ).toHaveBeenCalledWith(ORDER_ID, 4);
