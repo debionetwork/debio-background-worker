@@ -11,33 +11,30 @@ export class MenstrualCycleLogAddedHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: MenstrualCycleLogAddedCommandIndexer) {
-    const {
-      menstrualCycleLog: {
-        id,
-        menstrualCalendarId,
-        date,
-        menstruation,
-        symptoms,
-        createdAt,
-      },
-      accountId,
-      blockMetaData,
-    } = command;
-    await this.elasticsearchService.create({
-      index: 'menstrual-cycle-log',
-      id: id,
+    const { menstrualCycleLog, accountId, blockMetaData } = command;
+
+    const bulk_data = [];
+
+    for (const cycleLog of menstrualCycleLog) {
+      bulk_data.push(
+        { index: { _index: 'menstrual-cycle-log', _id: cycleLog.id } },
+        {
+          menstrual_calendar_cycle_log_id: cycleLog.id,
+          account_id: accountId,
+          menstrual_calendar_id: cycleLog.menstrualCalendarId,
+          date: cycleLog.date.getTime(),
+          menstruation: cycleLog.menstruation,
+          symptoms: cycleLog.symptoms,
+          created_at: cycleLog.createdAt.getTime(),
+          updated_at: null,
+          blockMetaData: blockMetaData,
+        },
+      );
+    }
+
+    await this.elasticsearchService.bulk({
       refresh: 'wait_for',
-      body: {
-        menstrual_calendar_cycle_log_id: id,
-        account_id: accountId,
-        menstrual_calendar_id: menstrualCalendarId,
-        date: date.getTime(),
-        menstruation: menstruation,
-        symptoms: symptoms,
-        created_at: createdAt.getTime(),
-        updated_at: null,
-        blockMetaData: blockMetaData,
-      },
+      body: bulk_data,
     });
   }
 }

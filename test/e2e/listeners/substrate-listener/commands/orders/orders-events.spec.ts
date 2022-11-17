@@ -40,10 +40,14 @@ import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../../../../config';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
-import { escrowServiceMockFactory } from '../../../../../unit/mock';
+import {
+  escrowServiceMockFactory,
+  mailerManagerMockFactory,
+} from '../../../../../unit/mock';
 import {
   DateTimeModule,
   DebioConversionModule,
+  MailerManager,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
@@ -175,6 +179,10 @@ describe('Order Failed Integration Tests', () => {
           provide: EscrowService,
           useFactory: escrowServiceMockFactory,
         },
+        {
+          provide: MailerManager,
+          useFactory: mailerManagerMockFactory,
+        },
         SubstrateListenerHandler,
         OrderFailedHandler,
         OrderFulfilledHandler,
@@ -232,6 +240,7 @@ describe('Order Failed Integration Tests', () => {
         0,
         lab.info.boxPublicKey,
         serviceDataMock.serviceFlow,
+        0,
         () => {
           queryLastOrderHashByCustomer(api, pair.address).then((orderId) => {
             queryOrderDetailByOrderID(api, orderId).then((res) => {
@@ -356,6 +365,7 @@ describe('Order Failed Integration Tests', () => {
         0,
         lab.info.boxPublicKey,
         serviceDataMock.serviceFlow,
+        0,
         () => {
           queryLastOrderHashByCustomer(api, pair.address).then((orderId) => {
             queryOrderDetailByOrderID(api, orderId).then((res) => {
@@ -460,6 +470,7 @@ describe('Order Failed Integration Tests', () => {
         0,
         lab.info.boxPublicKey,
         serviceDataMock.serviceFlow,
+        0,
         () => {
           queryLastOrderHashByCustomer(api, pair.address).then((orderId) => {
             queryOrderDetailByOrderID(api, orderId).then((res) => {

@@ -115,6 +115,7 @@ export const ethereumServiceMockFactory: () => MockType<EthereumService> =
 export const debioConversionServiceMockFactory: () => MockType<DebioConversionService> =
   jest.fn(() => ({
     getExchange: jest.fn(),
+    getExchangeFromTo: jest.fn(),
   }));
 
 export const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> =

@@ -42,9 +42,20 @@ export class GeneticAnalysisOrderFulfilledHandler
       const geneticAnalysisOrderHistory =
         await this.loggingService.getLoggingByOrderId(geneticAnalysisOrder.id);
 
+      const totalPrice = geneticAnalysisOrder.prices.reduce(
+        (acc, price) => acc + Number(price.value.split(',').join('')),
+        0,
+      );
+      const totalAdditionalPrice = geneticAnalysisOrder.additionalPrices.reduce(
+        (acc, price) => acc + Number(price.value.split(',').join('')),
+        0,
+      );
+
+      const amountToForward = totalPrice + totalAdditionalPrice;
+
       const geneticAnalysisOrderLogging: TransactionLoggingDto = {
         address: geneticAnalysisOrder.customerId,
-        amount: +geneticAnalysisOrder.prices[0].value,
+        amount: amountToForward / currencyUnit[geneticAnalysisOrder.currency],
         created_at: geneticAnalysisOrder.updatedAt,
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
@@ -55,7 +66,10 @@ export class GeneticAnalysisOrderFulfilledHandler
 
       const serviceChargeLogging: TransactionLoggingDto = {
         address: geneticAnalysisOrder.customerId,
-        amount: (+geneticAnalysisOrder.prices[0].value * 5) / 100, //5% prices
+        amount:
+          ((amountToForward / currencyUnit[geneticAnalysisOrder.currency]) *
+            5) /
+          100, //5% prices
         created_at: geneticAnalysisOrder.updatedAt,
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
@@ -68,17 +82,6 @@ export class GeneticAnalysisOrderFulfilledHandler
         await this.loggingService.create(geneticAnalysisOrderLogging);
         await this.loggingService.create(serviceChargeLogging);
       }
-
-      const totalPrice = geneticAnalysisOrder.prices.reduce(
-        (acc, price) => acc + Number(price.value.split(',').join('')),
-        0,
-      );
-      const totalAdditionalPrice = geneticAnalysisOrder.additionalPrices.reduce(
-        (acc, price) => acc + Number(price.value.split(',').join('')),
-        0,
-      );
-
-      const amountToForward = totalPrice + totalAdditionalPrice;
 
       const currDate = this.dateTimeProxy.new();
 

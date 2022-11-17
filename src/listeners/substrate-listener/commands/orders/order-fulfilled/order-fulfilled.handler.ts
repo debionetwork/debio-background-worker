@@ -51,10 +51,22 @@ export class OrderFulfilledHandler
       const orderHistory = await this.loggingService.getLoggingByOrderId(
         order.id,
       );
+
+      const totalPrice = order.prices.reduce(
+        (acc, price) => acc + Number(price.value.split(',').join('')),
+        0,
+      );
+      const totalAdditionalPrice = order.additionalPrices.reduce(
+        (acc, price) => acc + Number(price.value.split(',').join('')),
+        0,
+      );
+
+      const amountToForward = totalPrice + totalAdditionalPrice;
+
       // Logging data input
       const orderLogging: TransactionLoggingDto = {
         address: order.customerId,
-        amount: +order.additionalPrices[0].value + +order.prices[0].value,
+        amount: amountToForward / currencyUnit[order.currency],
         created_at: order.updatedAt,
         currency: order.currency.toUpperCase(),
         parent_id: orderHistory?.id ? BigInt(orderHistory.id) : BigInt(0),
@@ -79,22 +91,6 @@ export class OrderFulfilledHandler
         return null;
       }
 
-      const totalPrice = order.prices.reduce(
-        (acc, price) => acc + Number(price.value.split(',').join('')),
-        0,
-      );
-      const totalAdditionalPrice = order.additionalPrices.reduce(
-        (acc, price) => acc + Number(price.value.split(',').join('')),
-        0,
-      );
-
-      const amountToForward = totalPrice + totalAdditionalPrice;
-
-      const exchange = await this.exchangeCacheService.getExchange();
-      const dbioToDai = exchange ? Number(exchange['dbioToDai']) : 1;
-
-      const daiPrice = amountToForward * dbioToDai;
-
       if (order.orderFlow === ServiceFlow.StakingRequestService) {
         const { hash: requestId } = await queryServiceRequestById(
           this.substrateService.api,
@@ -106,7 +102,12 @@ export class OrderFulfilledHandler
           this.substrateService.pair,
           requestId,
         );
-        await this.callbackSendReward(order, daiPrice, blockNumber);
+
+        await this.callbackSendReward(
+          order,
+          amountToForward / currencyUnit[order.currency],
+          blockNumber,
+        );
       }
 
       await this.escrowService.orderFulfilled(order);
@@ -138,6 +139,7 @@ export class OrderFulfilledHandler
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);
     } catch (err) {
+      console.log(err);
       this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
     }
@@ -152,8 +154,18 @@ export class OrderFulfilledHandler
     totalPrice: number,
     blockNumber: string,
   ) {
-    const dbioRewardCustomer = convertToDbioUnitString(totalPrice);
-    const dbioRewardLab = convertToDbioUnitString(totalPrice / 10);
+    const exchangeFromTo = await this.exchangeCacheService.getExchangeFromTo(
+      order.currency.toUpperCase(),
+      'DAI',
+    );
+    const exchange = await this.exchangeCacheService.getExchange();
+    const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
+    const daiToDbio = 1 / dbioToDai;
+
+    const dbioCurrency = totalPrice * exchangeFromTo.conversion * daiToDbio;
+
+    const dbioRewardCustomer = dbioCurrency.toFixed(4);
+    const dbioRewardLab = (dbioCurrency / 10).toFixed(4);
     // Send reward to customer
     await sendRewards(
       this.substrateService.api as any,

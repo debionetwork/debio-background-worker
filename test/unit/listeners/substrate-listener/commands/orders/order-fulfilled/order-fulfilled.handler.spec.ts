@@ -240,6 +240,9 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
+    const conversionFromTo = jest
+      .spyOn(debioConversionServiceMock, 'getExchangeFromTo')
+      .mockReturnValue({ conversion: 1 });
     const DATE = new Date();
     const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
 
@@ -324,7 +327,6 @@ describe('Order Fulfilled Handler Event', () => {
       ORDER.toHuman().sellerId,
     );
     expect(finalizeRequestSpy).toHaveBeenCalled();
-    expect(debioConversionServiceMock.getExchange).toHaveBeenCalled();
     expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
     expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
@@ -459,7 +461,6 @@ describe('Order Fulfilled Handler Event', () => {
     expect(queryOrderDetailByOrderIDSpy).not.toHaveBeenCalled();
     expect(queryServiceByIdSpy).not.toHaveBeenCalled();
     expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
-    expect(debioConversionServiceMock.getExchange).not.toHaveBeenCalled();
     expect(sendRewardsSpy).not.toHaveBeenCalled();
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalled();
     expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
@@ -609,9 +610,9 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(rewardCommand, 'sendRewards')
       .mockImplementation();
 
-    const convertToDbioUnitStringSpy = jest
-      .spyOn(globalProviderMethods, 'convertToDbioUnitString')
-      .mockImplementation();
+    debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
+      conversion: 1,
+    });
 
     const DATE = new Date();
     const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
@@ -619,16 +620,14 @@ describe('Order Fulfilled Handler Event', () => {
     const BLOCKNUMBER = '1';
 
     await orderFulfilledHandler.callbackSendReward(
-      new Order(ORDER),
+      new Order(ORDER.toHuman()),
       PRICE,
       BLOCKNUMBER,
     );
 
     expect(sendRewardsSpy).toHaveBeenCalled();
-    expect(convertToDbioUnitStringSpy).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
     expect(sendRewardsSpy).toHaveBeenCalledTimes(2);
-    expect(convertToDbioUnitStringSpy).toHaveBeenCalledTimes(2);
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledTimes(2);
   });
 });

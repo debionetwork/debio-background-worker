@@ -33,4 +33,32 @@ export class DebioConversionService {
       this.logger.log(`API conversion": ${error.message}`);
     }
   }
+
+  async getExchangeFromTo(from: string, to: string) {
+    try {
+      const res = await axios.get(
+        `${this.gCloudSecretManagerService
+          .getSecret('REDIS_STORE_URL')
+          .toString()}/cache`,
+        {
+          params: {
+            from,
+            to,
+          },
+          auth: {
+            username: this.gCloudSecretManagerService
+              .getSecret('REDIS_STORE_USERNAME')
+              .toString(),
+            password: this.gCloudSecretManagerService
+              .getSecret('REDIS_STORE_PASSWORD')
+              .toString(),
+          },
+        },
+      );
+
+      return res.data;
+    } catch (error) {
+      this.logger.log(`API conversion": ${error.message}`);
+    }
+  }
 }
