@@ -9,7 +9,10 @@ import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../../../../config';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
-import { escrowServiceMockFactory, mailerManagerMockFactory } from '../../../../../unit/mock';
+import {
+  escrowServiceMockFactory,
+  mailerManagerMockFactory,
+} from '../../../../../unit/mock';
 import {
   DateTimeModule,
   MailerManager,

@@ -240,9 +240,6 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
-    const conversionFromTo = jest
-      .spyOn(debioConversionServiceMock, 'getExchangeFromTo')
-      .mockReturnValue({ conversion: 1 });
     const DATE = new Date();
     const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
 

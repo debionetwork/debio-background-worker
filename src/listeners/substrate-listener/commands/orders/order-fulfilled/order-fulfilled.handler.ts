@@ -10,7 +10,6 @@ import {
   TransactionLoggingService,
 } from '../../../../../common';
 import {
-  convertToDbioUnitString,
   finalizeRequest,
   Order,
   queryEthAdressByAccountId,
@@ -250,6 +249,6 @@ export class OrderFulfilledHandler
   }
 
   private convertToDate(date: Date) {
-    return new Date(Number(date.toString().split(",").join("")));
+    return new Date(Number(date.toString().split(',').join('')));
   }
 }
