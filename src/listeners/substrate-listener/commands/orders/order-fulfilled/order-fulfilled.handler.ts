@@ -67,7 +67,7 @@ export class OrderFulfilledHandler
       const orderLogging: TransactionLoggingDto = {
         address: order.customerId,
         amount: amountToForward / currencyUnit[order.currency],
-        created_at: order.updatedAt,
+        created_at: this.convertToDate(order.updatedAt),
         currency: order.currency.toUpperCase(),
         parent_id: orderHistory?.id ? BigInt(orderHistory.id) : BigInt(0),
         ref_number: order.id,
@@ -247,5 +247,9 @@ export class OrderFulfilledHandler
       transaction_status: 37,
     };
     await this.loggingService.create(dataLabLoggingInput);
+  }
+
+  private convertToDate(date: Date) {
+    return new Date(Number(date.toString().split(",").join("")));
   }
 }
