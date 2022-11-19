@@ -177,6 +177,10 @@ describe('Order Fulfilled Handler Event', () => {
       dbioToDai: '1',
     });
 
+    debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
+      conversion: 1,
+    });
+
     const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
       [ORDER],
       mockBlockNumber(),
@@ -306,6 +310,10 @@ describe('Order Fulfilled Handler Event', () => {
       dbioToDai: '1',
     });
 
+    debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
+      conversion: 1,
+    });
+
     const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
       [ORDER],
       mockBlockNumber(),
@@ -418,6 +426,10 @@ describe('Order Fulfilled Handler Event', () => {
 
     debioConversionServiceMock.getExchange.mockReturnValue({
       dbioToDai: '1',
+    });
+
+    debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
+      conversion: 1,
     });
 
     const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
@@ -560,6 +572,10 @@ describe('Order Fulfilled Handler Event', () => {
 
     debioConversionServiceMock.getExchange.mockReturnValue({
       dbioToDai: '1',
+    });
+
+    debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
+      conversion: 1,
     });
 
     const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
