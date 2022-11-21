@@ -5,18 +5,18 @@ export const geneticAnalystServiceDataMock = {
     name: 'string',
     pricesByCurrency: [
       {
-        currency: 'DAI',
-        totalPrice: BigInt('1000000000000000000'),
+        currency: 'USDT',
+        totalPrice: BigInt('10000000'),
         priceComponents: [
           {
             component: 'string',
-            value: BigInt('900000000000000000'),
+            value: BigInt('9000000'),
           },
         ],
         additionalPrices: [
           {
             component: 'string',
-            value: BigInt('100000000000000000'),
+            value: BigInt('1000000'),
           },
         ],
       },

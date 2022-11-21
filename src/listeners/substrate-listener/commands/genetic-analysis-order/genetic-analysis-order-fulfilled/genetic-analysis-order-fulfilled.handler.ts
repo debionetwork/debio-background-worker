@@ -26,8 +26,9 @@ export class GeneticAnalysisOrderFulfilledHandler
   ) {}
 
   async execute(command: GeneticAnalysisOrderFulfilledCommand) {
-    const geneticAnalysisOrder = command.geneticAnalysisOrders;
-    const blockNumber = command.blockMetaData.blockNumber.toString();
+    const { geneticAnalysisOrders, blockMetaData } = command;
+    const geneticAnalysisOrder = { ...geneticAnalysisOrders };
+    const blockNumber = blockMetaData.blockNumber.toString();
     this.logger.log(
       `Genetic Analysis Order Fulfilled! With GA Order ID: ${geneticAnalysisOrder.id}`,
     );
@@ -51,12 +52,14 @@ export class GeneticAnalysisOrderFulfilledHandler
         0,
       );
 
-      const amountToForward = totalPrice + totalAdditionalPrice;
+      const amountToForward =
+        (totalPrice + totalAdditionalPrice) /
+        currencyUnit[geneticAnalysisOrder.currency];
 
       const geneticAnalysisOrderLogging: TransactionLoggingDto = {
         address: geneticAnalysisOrder.customerId,
-        amount: amountToForward / currencyUnit[geneticAnalysisOrder.currency],
-        created_at: geneticAnalysisOrder.updatedAt,
+        amount: amountToForward,
+        created_at: this.convertToDate(geneticAnalysisOrder.updatedAt),
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
         ref_number: geneticAnalysisOrder.id,
@@ -66,11 +69,8 @@ export class GeneticAnalysisOrderFulfilledHandler
 
       const serviceChargeLogging: TransactionLoggingDto = {
         address: geneticAnalysisOrder.customerId,
-        amount:
-          ((amountToForward / currencyUnit[geneticAnalysisOrder.currency]) *
-            5) /
-          100, //5% prices
-        created_at: geneticAnalysisOrder.updatedAt,
+        amount: (amountToForward * 5) / 100, //5% prices
+        created_at: this.convertToDate(geneticAnalysisOrder.updatedAt),
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
         ref_number: geneticAnalysisOrder.id,
@@ -90,11 +90,7 @@ export class GeneticAnalysisOrderFulfilledHandler
         entity_type: 'Genetic Analysis Order',
         entity: 'Order Fulfilled',
         reference_id: geneticAnalysisOrder.id,
-        description: `You've received ${
-          amountToForward / currencyUnit[geneticAnalysisOrder.currency]
-        } ${
-          geneticAnalysisOrder.currency
-        } for completing the requested analysis for [].`,
+        description: `You've received ${amountToForward} ${geneticAnalysisOrder.currency} for completing the requested analysis for [].`,
         read: false,
         created_at: currDate,
         updated_at: currDate,
@@ -108,5 +104,9 @@ export class GeneticAnalysisOrderFulfilledHandler
     } catch (error) {
       this.logger.log(error);
     }
+  }
+
+  private convertToDate(date: Date) {
+    return new Date(Number(date.toString().split(',').join('')));
   }
 }

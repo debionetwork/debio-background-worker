@@ -9,9 +9,13 @@ import { LabRating } from '../../../../../mock/models/rating/rating.entity';
 import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../../../../config';
 import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
-import { escrowServiceMockFactory } from '../../../../../unit/mock';
+import {
+  escrowServiceMockFactory,
+  mailerManagerMockFactory,
+} from '../../../../../unit/mock';
 import {
   DateTimeModule,
+  MailerManager,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
@@ -163,6 +167,10 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         {
           provide: EscrowService,
           useFactory: escrowServiceMockFactory,
+        },
+        {
+          provide: MailerManager,
+          useFactory: mailerManagerMockFactory,
         },
         SubstrateListenerHandler,
         GeneticAnalysisOrderCreatedHandler,
@@ -320,7 +328,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     expect(notifications[0].entity).toEqual('Order Created');
     expect(
       notifications[0].description.includes(
-        `You've successfully submitted your requested test for [].`,
+        `You've successfully submitted your requested test for ${geneticAnalysisOrder.geneticAnalysisTrackingId}.`,
       ),
     ).toBeTruthy();
     expect(notifications[0].reference_id).toEqual(geneticAnalysisOrder.id);

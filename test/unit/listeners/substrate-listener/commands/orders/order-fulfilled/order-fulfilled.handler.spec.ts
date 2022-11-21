@@ -177,6 +177,10 @@ describe('Order Fulfilled Handler Event', () => {
       dbioToDai: '1',
     });
 
+    debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
+      conversion: 1,
+    });
+
     const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
       [ORDER],
       mockBlockNumber(),
@@ -240,9 +244,6 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
-    const conversionFromTo = jest
-      .spyOn(debioConversionServiceMock, 'getExchangeFromTo')
-      .mockReturnValue({ conversion: 1 });
     const DATE = new Date();
     const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
 
@@ -307,6 +308,10 @@ describe('Order Fulfilled Handler Event', () => {
 
     debioConversionServiceMock.getExchange.mockReturnValue({
       dbioToDai: '1',
+    });
+
+    debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
+      conversion: 1,
     });
 
     const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
@@ -421,6 +426,10 @@ describe('Order Fulfilled Handler Event', () => {
 
     debioConversionServiceMock.getExchange.mockReturnValue({
       dbioToDai: '1',
+    });
+
+    debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
+      conversion: 1,
     });
 
     const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
@@ -563,6 +572,10 @@ describe('Order Fulfilled Handler Event', () => {
 
     debioConversionServiceMock.getExchange.mockReturnValue({
       dbioToDai: '1',
+    });
+
+    debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
+      conversion: 1,
     });
 
     const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
