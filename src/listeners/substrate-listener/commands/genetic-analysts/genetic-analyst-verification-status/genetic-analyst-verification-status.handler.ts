@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
   NotificationService,
   TransactionLoggingService,
-} from '../../../../../common';
+} from '@common/index';
 import { GeneticAnalystVerificationStatusCommand } from './genetic-analyst-verification-status.command';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 
 @Injectable()

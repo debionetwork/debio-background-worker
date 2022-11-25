@@ -5,20 +5,20 @@ import {
   ProcessEnvModule,
   SubstrateModule,
   SubstrateService,
-} from '../../../src/common';
+} from '@common/index';
 import {
   ElasticsearchModule,
   ElasticsearchService,
 } from '@nestjs/elasticsearch';
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule';
-import { UnstakedService } from '../../../src/schedulers/unstaked/unstaked.service';
+import { UnstakedService } from '@schedulers/unstaked/unstaked.service';
 import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
 import { ServiceRequest } from '@debionetwork/polkadot-provider';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList, keyList } from '../../../src/common/secrets';
+import { SecretKeyList, keyList } from '@common/secrets';
 
 describe('Unstaked Scheduler (e2e)', () => {
   let schedulerRegistry: SchedulerRegistry;

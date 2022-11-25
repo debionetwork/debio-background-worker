@@ -6,13 +6,17 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LocationEntities, ProcessEnvModule, ProcessEnvProxy } from './common';
-import { EscrowAccounts } from './common/escrow/models/deposit.entity';
-import { IndexerModule } from './indexer/indexer.module';
-import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
-import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
-import { SchedulersModule } from './schedulers/schedulers.module';
-import { keyList, SecretKeyList } from './common/secrets';
+import {
+  LocationEntities,
+  ProcessEnvModule,
+  ProcessEnvProxy,
+} from '@common/index';
+import { EscrowAccounts } from '@common/escrow/models/deposit.entity';
+import { IndexerModule } from '@indexer/indexer.module';
+import { EthereumListenerModule } from '@listeners/ethereum-listener/ethereum-listener.module';
+import { SubstrateListenerModule } from '@listeners/substrate-listener/substrate-listener.module';
+import { SchedulersModule } from '@schedulers/schedulers.module';
+import { keyList, SecretKeyList } from '@common/secrets';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();

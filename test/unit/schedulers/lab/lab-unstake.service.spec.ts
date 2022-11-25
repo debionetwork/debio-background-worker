@@ -7,11 +7,11 @@ import {
   MockLogger,
   schedulerRegistryMockFactory,
 } from '../../mock';
-import { SubstrateService } from '../../../../src/common';
+import { SubstrateService } from '@common/index';
 import { Lab } from '@debionetwork/polkadot-provider';
 
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { LabUnstakedService } from '../../../../src/schedulers/lab-unstake/lab-unstake.service';
+import { LabUnstakedService } from '@schedulers/lab-unstake/lab-unstake.service';
 import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import * as labCommand from '@debionetwork/polkadot-provider/lib/command/labs';
 import { when } from 'jest-when';

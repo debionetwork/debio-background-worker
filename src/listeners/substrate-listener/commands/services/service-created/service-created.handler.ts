@@ -7,12 +7,12 @@ import {
   MailerManager,
   NotificationService,
   SubstrateService,
-} from '../../../../../common';
+} from '@common/index';
 import { Lab, queryLabById, Service } from '@debionetwork/polkadot-provider';
 import { ServiceCreatedCommand } from './service-created.command';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../../../../common/secrets';
+import { keyList } from '@common/secrets';
 
 @Injectable()
 @CommandHandler(ServiceCreatedCommand)

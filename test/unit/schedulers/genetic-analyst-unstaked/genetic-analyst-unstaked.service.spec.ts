@@ -7,14 +7,14 @@ import {
   MockLogger,
   schedulerRegistryMockFactory,
 } from '../../mock';
-import { ProcessEnvProxy, SubstrateService } from '../../../../src/common';
+import { ProcessEnvProxy, SubstrateService } from '@common/index';
 import { GeneticAnalyst } from '@debionetwork/polkadot-provider';
 
 import * as geneticAnalystQuery from '@debionetwork/polkadot-provider/lib/query/genetic-analysts';
 import * as geneticAnalystCommand from '@debionetwork/polkadot-provider/lib/command/genetic-analyst';
 import { when } from 'jest-when';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { GeneticAnalystUnstakedService } from '../../../../src/schedulers/genetic-analyst-unstaked/unstaked.service';
+import { GeneticAnalystUnstakedService } from '@schedulers/genetic-analyst-unstaked/unstaked.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 jest.useFakeTimers();

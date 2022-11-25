@@ -5,10 +5,10 @@ import {
   DateTimeProxy,
   NotificationService,
   TransactionLoggingService,
-} from '../../../../../common';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+} from '@common/index';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { Order } from '@debionetwork/polkadot-provider';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(OrderCreatedCommand)

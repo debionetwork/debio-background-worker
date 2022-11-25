@@ -1,13 +1,13 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { SubstrateService } from '../../common';
+import { SubstrateService } from '@common/index';
 import {
   queryGeneticAnalystByAccountId,
   retrieveGeneticAnalystUnstakeAmount,
 } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../common/secrets';
+import { keyList } from '@common/secrets';
 
 @Injectable()
 export class GeneticAnalystUnstakedService implements OnModuleInit {

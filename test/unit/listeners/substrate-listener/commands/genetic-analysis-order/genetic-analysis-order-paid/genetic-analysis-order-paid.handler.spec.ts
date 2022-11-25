@@ -4,9 +4,9 @@ import {
   ProcessEnvProxy,
   SubstrateService,
   TransactionLoggingService,
-} from '../../../../../../../src/common';
+} from '@common/index';
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
-import { GeneticAnalysisOrderPaidCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
+import { GeneticAnalysisOrderPaidCommand } from '@listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysisOrder,
@@ -18,9 +18,9 @@ import {
   substrateServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
-import { GeneticAnalysisOrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
+import { GeneticAnalysisOrderPaidHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
 import { when } from 'jest-when';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { NotificationService } from '@common/notification/notification.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Genetic Analysis Order Paid Handler Event', () => {

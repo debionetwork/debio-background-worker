@@ -1,8 +1,5 @@
-import {
-  DateTimeProxy,
-  TransactionLoggingService,
-} from '../../../../../../../src/common';
-import { LabStakeSuccessfulCommand } from '../../../../../../../src/listeners/substrate-listener/commands/labs';
+import { DateTimeProxy, TransactionLoggingService } from '@common/index';
+import { LabStakeSuccessfulCommand } from '@listeners/substrate-listener/commands/labs';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockLab,
@@ -11,7 +8,7 @@ import {
   transactionLoggingServiceMockFactory,
   dateTimeProxyMockFactory,
 } from '../../../../../mock';
-import { LabStakeSuccessfullHandler } from '../../../../../../../src/listeners/substrate-listener/commands/labs/stake-successfull/stake-successful.handler';
+import { LabStakeSuccessfullHandler } from '@listeners/substrate-listener/commands/labs/stake-successfull/stake-successful.handler';
 import { when } from 'jest-when';
 
 describe('Lab Staked Successful Handler Event', () => {

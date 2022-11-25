@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SubstrateListenerHandler } from '../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import { ProcessEnvProxy, SubstrateService } from '../../../../src/common';
+import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
+import { ProcessEnvProxy, SubstrateService } from '@common/index';
 import { MockType, substrateServiceMockFactory } from '../../mock';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
@@ -17,7 +17,7 @@ import {
   TO_HUMAN_MOCK,
 } from './substrate-listener.mock.data';
 import { Logger } from '@nestjs/common';
-import { BlockMetaData } from '../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
+import { BlockMetaData } from '@listeners/substrate-listener/models/block-metadata.event-model';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 const eventsSpy = jest.spyOn(API_MOCK.query.system, 'events');

@@ -1,5 +1,5 @@
 import { GeneticAnalystService } from '@debionetwork/polkadot-provider';
-import { GeneticAnalystServiceCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analyst-services/genetic-analyst-service-created/genetic-analyst-service-created.command';
+import { GeneticAnalystServiceCreatedCommand } from '@listeners/substrate-listener/commands/genetic-analyst-services/genetic-analyst-service-created/genetic-analyst-service-created.command';
 import {
   createMockGeneticAnalystService,
   mockBlockNumber,

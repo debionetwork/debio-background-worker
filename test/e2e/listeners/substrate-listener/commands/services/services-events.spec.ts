@@ -18,26 +18,26 @@ import {
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
-} from '../../../../../../src/common';
-import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
-import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
+} from '@common/index';
+import { EscrowService } from '@common/escrow/escrow.service';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
-import { ServiceCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/services';
-import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
+import { ServiceCommandHandlers } from '@listeners/substrate-listener/commands/services';
+import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
 import { dummyCredentials } from '../../../../config';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import { ApiPromise } from '@polkadot/api';
 import { initializeApi } from '../../../../polkadot-init';
 import { labDataMock } from '../../../../../mock/models/labs/labs.mock';
 import { serviceDataMock } from '../../../../../mock/models/labs/services.mock';
-import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
+import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { SecretKeyList } from '../../../../../../src/common/secrets';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Service Created Integration Tests', () => {
   let app: INestApplication;

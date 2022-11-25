@@ -1,10 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EscrowService } from '../../../../src/common/escrow/escrow.service';
-import { EthereumListenerHandler } from '../../../../src/listeners/ethereum-listener/ethereum-listener.handler';
-import {
-  EthereumService,
-  TransactionLoggingService,
-} from '../../../../src/common';
+import { EscrowService } from '@common/escrow/escrow.service';
+import { EthereumListenerHandler } from '@listeners/ethereum-listener/ethereum-listener.handler';
+import { EthereumService, TransactionLoggingService } from '@common/index';
 import { transactionLoggingServiceMockFactory } from '../../../../test/unit/mock';
 
 describe('Ethereum Listener Handler Unit Test', () => {

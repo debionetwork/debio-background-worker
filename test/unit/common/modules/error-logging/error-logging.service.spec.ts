@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ErrorLoggingService } from '../../../../../src/common/error-logging/error-logging.service';
-import { ErrorLogging } from '../../../../../src/common/error-logging/models/error-logging.entity';
+import { ErrorLoggingService } from '@common/error-logging/error-logging.service';
+import { ErrorLogging } from '@common/error-logging/models/error-logging.entity';
 import {
   dateTimeProxyMockFactory,
   MockType,
   repositoryMockFactory,
 } from '../../../mock';
 import { Repository } from 'typeorm';
-import { ErrorLoggingDto } from '../../../../../src/common/error-logging/dto/error-logging.dto';
-import { DateTimeProxy } from '../../../../../src/common/proxies/date-time/date-time.proxy';
+import { ErrorLoggingDto } from '@common/error-logging/dto/error-logging.dto';
+import { DateTimeProxy } from '@common/proxies/date-time/date-time.proxy';
 
 describe('ErrorLogging Service Unit Tests', () => {
   let errorLoggingService: ErrorLoggingService;

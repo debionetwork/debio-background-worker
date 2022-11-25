@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DateTimeProxy, NotificationService } from '../../../../../common';
+import { DateTimeProxy, NotificationService } from '@common/index';
 import { ServiceRequestStakingAmountRefundedCommand } from './service-request-staking-amount-refunded.command';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestStakingAmountRefundedCommand)

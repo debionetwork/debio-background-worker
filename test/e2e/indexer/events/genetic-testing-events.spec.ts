@@ -8,10 +8,10 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiPromise } from '@polkadot/api';
-import { GeneticTestingCommandHandlers } from '../../../../src/indexer/events/genetic-testing';
-import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
-import { CommonModule, ProcessEnvModule } from '../../../../src/common';
-import { IndexerModule } from '../../../../src/indexer/indexer.module';
+import { GeneticTestingCommandHandlers } from '@indexer/events/genetic-testing';
+import { IndexerHandler } from '@indexer/indexer.handler';
+import { CommonModule, ProcessEnvModule } from '@common/index';
+import { IndexerModule } from '@indexer/indexer.module';
 import { initializeApi } from '../../polkadot-init';
 import {
   createOrder,
@@ -35,7 +35,7 @@ import {
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { serviceDataMock } from '../../../mock/models/labs/services.mock';
-import { SecretKeyList } from '../../../../src/common/secrets';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Indexer Genetic Testing Event', () => {
   let app: INestApplication;

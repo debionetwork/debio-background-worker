@@ -1,11 +1,8 @@
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
-import {
-  TransactionLoggingService,
-  DateTimeProxy,
-} from '../../../../../../../src/common';
-import { GeneticAnalysisOrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
+import { TransactionLoggingService, DateTimeProxy } from '@common/index';
+import { GeneticAnalysisOrderCreatedCommand } from '@listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { NotificationService } from '@common/notification/notification.service';
 import {
   createMockGeneticAnalysisOrder,
   dateTimeProxyMockFactory,
@@ -14,7 +11,7 @@ import {
   notificationServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
-import { GeneticAnalysisOrderCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysys-order-created/genetic-analysis-order-created.handler';
+import { GeneticAnalysisOrderCreatedHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysys-order-created/genetic-analysis-order-created.handler';
 import { when } from 'jest-when';
 
 describe('Genetic Analysis Order Created Handler Event', () => {

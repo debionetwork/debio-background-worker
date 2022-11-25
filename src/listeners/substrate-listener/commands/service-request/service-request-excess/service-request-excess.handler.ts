@@ -1,13 +1,13 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ServiceRequestStakingAmountExcessRefundedCommand } from './service-request-excess.command';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
   NotificationService,
   TransactionLoggingService,
-} from '../../../../../common';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+} from '@common/index';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestStakingAmountExcessRefundedCommand)

@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderFailedCommand } from './order-failed.command';
-import { EscrowService } from '../../../../../common/escrow/escrow.service';
+import { EscrowService } from '@common/escrow/escrow.service';
 import {
   DateTimeProxy,
   NotificationService,
   SubstrateService,
   TransactionLoggingService,
-} from '../../../../../common';
+} from '@common/index';
 import {
   Order,
   setOrderRefunded,
@@ -15,7 +15,7 @@ import {
   sendRewards,
   eventTypes,
 } from '@debionetwork/polkadot-provider';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(OrderFailedCommand)

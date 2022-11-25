@@ -8,7 +8,7 @@ import {
   NotificationService,
   SubstrateService,
   TransactionLoggingService,
-} from '../../../../../common';
+} from '@common/index';
 import {
   finalizeRequest,
   Order,
@@ -17,9 +17,9 @@ import {
   sendRewards,
   ServiceFlow,
 } from '@debionetwork/polkadot-provider';
-import { EscrowService } from '../../../../../common/escrow/escrow.service';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { EscrowService } from '@common/escrow/escrow.service';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 import currencyUnit from '../../../models/currencyUnit';
 
 @Injectable()

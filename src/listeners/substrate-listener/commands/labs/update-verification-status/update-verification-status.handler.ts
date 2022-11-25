@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DateTimeProxy } from '../../../../../common';
+import { DateTimeProxy } from '@common/index';
 import { LabUpdateVerificationStatusCommand } from './update-verification-status.command';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../common/notification/notification.service';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
+import { NotificationService } from '@common/notification/notification.service';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 @Injectable()
 @CommandHandler(LabUpdateVerificationStatusCommand)

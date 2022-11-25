@@ -1,4 +1,4 @@
-import { LabUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/labs';
+import { LabUnstakedCommand } from '@listeners/substrate-listener/commands/labs';
 import { createMockLab, mockBlockNumber } from '../../../../../mock';
 import { Lab } from '@debionetwork/polkadot-provider';
 jest.mock('@debionetwork/polkadot-provider');

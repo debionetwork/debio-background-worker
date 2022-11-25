@@ -1,5 +1,5 @@
-import { ServiceRequestStakingAmountRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
-import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
+import { ServiceRequestStakingAmountRefundedCommand } from '@listeners/substrate-listener/commands/service-request';
+import { BlockMetaData } from '@listeners/substrate-listener/models/block-metadata.event-model';
 
 jest.mock('@debionetwork/polkadot-provider');
 

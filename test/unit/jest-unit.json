@@ -12,7 +12,11 @@
     "coverageDirectory": "../coverage",
     "moduleNameMapper": {
       "@polkadot/api(.*)$": "<rootDir>../../src/indexer/indexer.handler.ts",
-      "@polkadot/rpc-provider/ws(.*)$": "<rootDir>../../src/indexer/indexer.handler.ts"
+      "@polkadot/rpc-provider/ws(.*)$": "<rootDir>../../src/indexer/indexer.handler.ts",
+      "@common/(.*)$": "<rootDir>../../src/common/$1",
+      "@indexer/(.*)$": "<rootDir>../../src/indexer/$1",
+      "@listeners/(.*)$": "<rootDir>../../src/listeners/$1",
+      "@schedulers/(.*)$": "<rootDir>../../src/schedulers/$1"
     },
     "setupFiles": ["dotenv/config"]
   }

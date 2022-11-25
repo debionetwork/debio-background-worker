@@ -6,18 +6,18 @@ import { INestApplication } from '@nestjs/common/interfaces/nest-application.int
 import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
-import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../../../../config';
-import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
+import { EscrowService } from '@common/escrow/escrow.service';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
-} from '../../../../../../src/common';
+} from '@common/index';
 import { CqrsModule } from '@nestjs/cqrs';
-import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
+import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
 import {
   GeneticAnalyst,
   GeneticAnalystService,
@@ -36,14 +36,14 @@ import {
 import { geneticAnalystsDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analysts.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { geneticAnalystServiceDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
-import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
+import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
-import { GeneticAnalystServiceCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analyst-services';
+import { GeneticAnalystServiceCommandHandler } from '@listeners/substrate-listener/commands/genetic-analyst-services';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList } from '../../../../../../src/common/secrets';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Genetic Analyst Service Created Event', () => {
   let app: INestApplication;

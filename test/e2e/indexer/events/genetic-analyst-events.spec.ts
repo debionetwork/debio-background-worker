@@ -22,15 +22,15 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiPromise } from '@polkadot/api';
 import { initializeApi } from '../../polkadot-init';
-import { CommonModule, ProcessEnvModule } from '../../../../src/common';
-import { GeneticAnalystsCommandHandlers } from '../../../../src/indexer/events/genetic-analysts';
-import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
-import { IndexerModule } from '../../../../src/indexer/indexer.module';
+import { CommonModule, ProcessEnvModule } from '@common/index';
+import { GeneticAnalystsCommandHandlers } from '@indexer/events/genetic-analysts';
+import { IndexerHandler } from '@indexer/indexer.handler';
+import { IndexerModule } from '@indexer/indexer.module';
 import { geneticAnalystsDataMock } from '../../../mock/models/genetic-analysts/genetic-analysts.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { AvailabilityStatus } from '@debionetwork/polkadot-provider/lib/primitives/availability-status';
-import { StakeStatus } from '../../../../src/indexer/models/stake-status';
-import { SecretKeyList } from '../../../../src/common/secrets';
+import { StakeStatus } from '@indexer/models/stake-status';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Genetic Analyst Events', () => {
   let app: INestApplication;

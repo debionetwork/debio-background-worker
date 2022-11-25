@@ -30,11 +30,11 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiPromise } from '@polkadot/api';
 import { initializeApi } from '../../../e2e/polkadot-init';
-import { CommonModule, ProcessEnvModule } from '../../../../src/common';
-import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
-import { IndexerModule } from '../../../../src/indexer/indexer.module';
+import { CommonModule, ProcessEnvModule } from '@common/index';
+import { IndexerHandler } from '@indexer/indexer.handler';
+import { IndexerModule } from '@indexer/indexer.module';
 import { geneticAnalystServiceDataMock } from '../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
-import { SecretKeyList } from '../../../../src/common/secrets';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Genetic Analysis Events', () => {
   let app: INestApplication;

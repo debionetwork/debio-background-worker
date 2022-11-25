@@ -4,9 +4,9 @@ import {
   MailerManager,
   ProcessEnvProxy,
   SubstrateService,
-} from '../../../../../../../src/common';
+} from '@common/index';
 import { ServiceFlow, ServiceInfo } from '@debionetwork/polkadot-provider';
-import { ServiceCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/services/service-created/service-created.handler';
+import { ServiceCreatedHandler } from '@listeners/substrate-listener/commands/services/service-created/service-created.handler';
 import {
   dateTimeProxyMockFactory,
   googleSecretManagerServiceMockFactory,
@@ -18,8 +18,8 @@ import {
 } from '../../../../../mock';
 import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { when } from 'jest-when';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
-import { ServiceCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/services';
+import { NotificationService } from '@common/notification/notification.service';
+import { ServiceCreatedCommand } from '@listeners/substrate-listener/commands/services';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Service Created Handler Event', () => {

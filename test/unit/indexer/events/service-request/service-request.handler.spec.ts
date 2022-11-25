@@ -1,12 +1,12 @@
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateServiceRequestHandler } from '../../../../../src/indexer/events/service-request/commands/create-service-request/create-service-request.handler';
+import { CreateServiceRequestHandler } from '@indexer/events/service-request/commands/create-service-request/create-service-request.handler';
 import {
   CreateServiceRequestCommandIndexer,
   RequestServiceCommandHandlers,
-} from '../../../../../src/indexer/events/service-request';
-import { RequestStatus } from '../../../../../src/indexer/models/service-request/request-status';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
+} from '@indexer/events/service-request';
+import { RequestStatus } from '@indexer/models/service-request/request-status';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
 import {
   createObjectSearchCountryServiceRequest,
   ElasticSearchServiceProvider,

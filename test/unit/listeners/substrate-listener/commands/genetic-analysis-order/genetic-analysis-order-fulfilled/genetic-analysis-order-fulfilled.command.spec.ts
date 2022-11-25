@@ -1,4 +1,4 @@
-import { GeneticAnalysisOrderFulfilledCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
+import { GeneticAnalysisOrderFulfilledCommand } from '@listeners/substrate-listener/commands/genetic-analysis-order';
 import {
   createMockGeneticAnalysisOrder,
   mockBlockNumber,

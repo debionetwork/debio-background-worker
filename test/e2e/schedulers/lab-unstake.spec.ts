@@ -5,13 +5,13 @@ import {
   ProcessEnvModule,
   SubstrateModule,
   SubstrateService,
-} from '../../../src/common';
+} from '@common/index';
 import {
   ElasticsearchModule,
   ElasticsearchService,
 } from '@nestjs/elasticsearch';
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule';
-import { LabUnstakedService } from '../../../src/schedulers/lab-unstake/lab-unstake.service';
+import { LabUnstakedService } from '@schedulers/lab-unstake/lab-unstake.service';
 import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { Lab } from '@debionetwork/polkadot-provider';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
@@ -19,7 +19,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList, keyList } from '../../../src/common/secrets';
+import { SecretKeyList, keyList } from '@common/secrets';
 
 describe('Lab Unstaked Scheduler (e2e)', () => {
   let schedulerRegistry: SchedulerRegistry;

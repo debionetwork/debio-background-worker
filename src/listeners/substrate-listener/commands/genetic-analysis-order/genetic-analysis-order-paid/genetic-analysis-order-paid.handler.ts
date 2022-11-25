@@ -1,21 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
   MailerManager,
   NotificationService,
   SubstrateService,
   TransactionLoggingService,
-} from '../../../../../common';
+} from '@common/index';
 import { GeneticAnalysisOrderPaidCommand } from './genetic-analysis-order-paid.command';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 import {
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
 } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../../../../common/secrets';
+import { keyList } from '@common/secrets';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderPaidCommand)

@@ -1,4 +1,4 @@
-import { LabRetrieveUnstakeAmountCommand } from '../../../../../../../src/listeners/substrate-listener/commands/labs';
+import { LabRetrieveUnstakeAmountCommand } from '@listeners/substrate-listener/commands/labs';
 import { createMockLab, mockBlockNumber } from '../../../../../mock';
 import { Lab } from '@debionetwork/polkadot-provider';
 jest.mock('@debionetwork/polkadot-provider');

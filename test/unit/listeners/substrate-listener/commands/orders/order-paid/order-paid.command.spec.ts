@@ -1,4 +1,4 @@
-import { OrderPaidCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+import { OrderPaidCommand } from '@listeners/substrate-listener/commands/orders';
 import { createMockOrder, mockBlockNumber } from '../../../../../mock';
 import { Order, OrderStatus } from '@debionetwork/polkadot-provider';
 

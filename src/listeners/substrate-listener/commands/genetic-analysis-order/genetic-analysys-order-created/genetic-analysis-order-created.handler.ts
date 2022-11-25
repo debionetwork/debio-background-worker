@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import {
   TransactionLoggingService,
   DateTimeProxy,
   NotificationService,
-} from '../../../../../common';
+} from '@common/index';
 import { GeneticAnalysisOrderCreatedCommand } from './genetic-analysis-order-created.command';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderCreatedCommand)

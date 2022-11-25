@@ -8,13 +8,11 @@ import {
   GeneticAnalystsRetrieveUnstakeAmountCommandIndexer,
   GeneticAnalystVerificationFailedCommandIndexer,
   GeneticAnalystUnstakeSuccessfulCommandIndexer,
-} from '../../../../../src/indexer/events/genetic-analysts';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
-import { GeneticAnalystsModel } from '../../../../../src/indexer/models/genetic-analysts/genetic-analysts.model';
+} from '@indexer/events/genetic-analysts';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
+import { GeneticAnalystsModel } from '@indexer/models/genetic-analysts/genetic-analysts.model';
 
-jest.mock(
-  '../../../../../src/indexer/models/genetic-analysts/genetic-analysts.model',
-);
+jest.mock('@indexer/models/genetic-analysts/genetic-analysts.model');
 
 describe('Genetic Analysts Substrate Event Handler', () => {
   const createMockGeneticAnalysts = () => {

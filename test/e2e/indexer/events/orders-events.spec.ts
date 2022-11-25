@@ -9,9 +9,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiPromise } from '@polkadot/api';
 import { initializeApi } from '../../polkadot-init';
-import { CommonModule, ProcessEnvModule } from '../../../../src/common';
-import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
-import { IndexerModule } from '../../../../src/indexer/indexer.module';
+import { CommonModule, ProcessEnvModule } from '@common/index';
+import { IndexerHandler } from '@indexer/indexer.handler';
+import { IndexerModule } from '@indexer/indexer.module';
 import {
   cancelOrder,
   createOrder,
@@ -30,9 +30,9 @@ import {
   setOrderRefunded,
   submitTestResult,
 } from '@debionetwork/polkadot-provider';
-import { OrderCommandHandlers } from '../../../../src/indexer/events/orders';
+import { OrderCommandHandlers } from '@indexer/events/orders';
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
-import { SecretKeyList } from '../../../../src/common/secrets';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Orders Events', () => {
   let app: INestApplication;

@@ -7,7 +7,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList, keyList } from '../../common/secrets';
+import { SecretKeyList, keyList } from '@common/secrets';
 
 @Module({
   imports: [

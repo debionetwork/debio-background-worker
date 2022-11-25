@@ -1,11 +1,11 @@
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
-import { DataStakedHandler } from '../../../../../src/indexer/events/genetic-testing/commands/data-staked/data-staked.handler';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
+import { DataStakedHandler } from '@indexer/events/genetic-testing/commands/data-staked/data-staked.handler';
 import {
   DataStakedCommandIndexer,
   GeneticTestingCommandHandlers,
-} from '../../../../../src/indexer/events/genetic-testing';
+} from '@indexer/events/genetic-testing';
 import { ElasticSearchServiceProvider } from '../../../mock';
 
 let dataStakedHandler: DataStakedHandler;

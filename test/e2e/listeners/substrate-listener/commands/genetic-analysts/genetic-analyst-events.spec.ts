@@ -18,26 +18,26 @@ import {
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
-} from '../../../../../../src/common';
-import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
-import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
+} from '@common/index';
+import { EscrowService } from '@common/escrow/escrow.service';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
-import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
+import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
 import { dummyCredentials } from '../../../../config';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import { initializeApi } from '../../../../polkadot-init';
 import { geneticAnalystsDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analysts.mock';
-import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
+import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { GeneticAnalystRegisteredHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-registered/genetic-analyst-registered.handler';
-import { SecretKeyList } from '../../../../../../src/common/secrets';
+import { GeneticAnalystRegisteredHandler } from '@listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-registered/genetic-analyst-registered.handler';
+import { SecretKeyList } from '@common/secrets';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { GeneticAnalystVerificationStatusHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
+import { GeneticAnalystVerificationStatusHandler } from '@listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
 
 describe('Genetic analyst verification status', () => {
   let app: INestApplication;

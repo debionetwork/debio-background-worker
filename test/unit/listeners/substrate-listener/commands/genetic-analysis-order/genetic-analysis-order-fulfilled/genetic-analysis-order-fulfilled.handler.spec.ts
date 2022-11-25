@@ -1,9 +1,6 @@
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
-import {
-  DateTimeProxy,
-  TransactionLoggingService,
-} from '../../../../../../../src/common';
-import { GeneticAnalysisOrderFulfilledCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
+import { DateTimeProxy, TransactionLoggingService } from '@common/index';
+import { GeneticAnalysisOrderFulfilledCommand } from '@listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysisOrder,
@@ -13,9 +10,9 @@ import {
   notificationServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
-import { GeneticAnalysisOrderFulfilledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
+import { GeneticAnalysisOrderFulfilledHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
 import { when } from 'jest-when';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { NotificationService } from '@common/notification/notification.service';
 
 describe('Genetic Analysis Order Fulfilled Handler Event', () => {
   let notificationServiceMock: MockType<NotificationService>;

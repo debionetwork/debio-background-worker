@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
-import { CommonModule } from '../../../../src/common/common.module';
-import { ProcessEnvModule } from '../../../../src/common/proxies/process-env/process-env.module';
-import { ServiceCommandHandlers } from '../../../../src/indexer/events/services';
+import { IndexerHandler } from '@indexer/indexer.handler';
+import { CommonModule } from '@common/common.module';
+import { ProcessEnvModule } from '@common/proxies/process-env/process-env.module';
+import { ServiceCommandHandlers } from '@indexer/events/services';
 import { INestApplication } from '@nestjs/common';
 import { initializeApi } from '../../polkadot-init';
 import { ApiPromise } from '@polkadot/api';
@@ -29,16 +29,16 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { serviceDataMock } from '../../../mock/models/labs/services.mock';
-import { LabCommandHandlers } from '../../../../src/indexer/events/labs';
-import { RequestServiceCommandHandlers } from '../../../../src/indexer/events/service-request';
+import { LabCommandHandlers } from '@indexer/events/labs';
+import { RequestServiceCommandHandlers } from '@indexer/events/service-request';
 import { ScheduleModule } from '@nestjs/schedule';
-import { IndexerModule } from '../../../../src/indexer/indexer.module';
+import { IndexerModule } from '@indexer/indexer.module';
 import { serviceRequestMock } from '../../../mock/models/service-request/service-request.mock';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList } from '../../../../src/common/secrets';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Event Command Service Request Claimed', () => {
   let app: INestApplication;

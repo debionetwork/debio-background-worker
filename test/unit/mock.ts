@@ -1,6 +1,6 @@
 import { CommandBus } from '@nestjs/cqrs';
-import { BlockMetaData } from '../../src/listeners/substrate-listener/models/block-metadata.event-model';
-import { IndexerHandler } from '../../src/indexer/indexer.handler';
+import { BlockMetaData } from '@listeners/substrate-listener/models/block-metadata.event-model';
+import { IndexerHandler } from '@indexer/indexer.handler';
 import {
   DateTimeProxy,
   EthereumService,
@@ -9,7 +9,7 @@ import {
   DebioConversionService,
   MailerManager,
   EmailNotificationService,
-} from '../../src/common';
+} from '@common/index';
 import {
   OrderStatus,
   GeneticAnalysisStatus,
@@ -20,13 +20,13 @@ import { Cache as CacheManager } from 'cache-manager';
 import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
-import { EscrowService } from '../../src/common/escrow/escrow.service';
-import { CountryService } from '../../src/common/location/country.service';
-import { StateService } from '../../src/common/location/state.service';
+import { EscrowService } from '@common/escrow/escrow.service';
+import { CountryService } from '@common/location/country.service';
+import { StateService } from '@common/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { NotificationService } from '../../src/common/notification/notification.service';
+import { NotificationService } from '@common/notification/notification.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { ErrorLoggingService } from '../../src/common/error-logging/error-logging.service';
+import { ErrorLoggingService } from '@common/error-logging/error-logging.service';
 
 export function mockFunction(args) {} // eslint-disable-line
 

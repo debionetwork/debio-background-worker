@@ -1,8 +1,5 @@
-import {
-  DateTimeProxy,
-  TransactionLoggingService,
-} from '../../../../../../../src/common';
-import { GeneticAnalystUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts';
+import { DateTimeProxy, TransactionLoggingService } from '@common/index';
+import { GeneticAnalystUnstakedCommand } from '@listeners/substrate-listener/commands/genetic-analysts';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalyst,
@@ -11,7 +8,7 @@ import {
   transactionLoggingServiceMockFactory,
   dateTimeProxyMockFactory,
 } from '../../../../../mock';
-import { GeneticAnalystUnstakedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-unstake/genetic-analyst-unstaked.handler';
+import { GeneticAnalystUnstakedHandler } from '@listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-unstake/genetic-analyst-unstaked.handler';
 import { when } from 'jest-when';
 
 describe('Genetic Analyst Staked Handler Event', () => {

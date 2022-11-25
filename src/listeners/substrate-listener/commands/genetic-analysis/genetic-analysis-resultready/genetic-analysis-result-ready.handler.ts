@@ -4,10 +4,10 @@ import {
   DateTimeProxy,
   NotificationService,
   SubstrateService,
-} from '../../../../../common';
+} from '@common/index';
 import { setGeneticAnalysisOrderFulfilled } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisResultReadyCommand } from './genetic-analysis-result-ready.command';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisResultReadyCommand)

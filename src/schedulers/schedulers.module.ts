@@ -4,16 +4,17 @@ import {
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { SecretKeyList, keyList } from '../common/secrets';
+import { SecretKeyList, keyList } from '@common/secrets';
 import {
   EmailNotificationModule,
   MailModule,
   ProcessEnvModule,
   SubstrateModule,
   SubstrateService,
-} from '../common';
+} from '@common/index';
 import { MailerService } from './mailer/mailer.service';
 import { UnstakedService } from './unstaked/unstaked.service';
+import { MenstrualSubscriptionService } from './menstrual-subscription/menstrual-subscription.service';
 
 @Module({
   imports: [
@@ -46,6 +47,11 @@ import { UnstakedService } from './unstaked/unstaked.service';
     EmailNotificationModule,
   ],
   exports: [ElasticsearchModule],
-  providers: [UnstakedService, SubstrateService, MailerService],
+  providers: [
+    UnstakedService,
+    SubstrateService,
+    MailerService,
+    MenstrualSubscriptionService,
+  ],
 })
 export class SchedulersModule {}

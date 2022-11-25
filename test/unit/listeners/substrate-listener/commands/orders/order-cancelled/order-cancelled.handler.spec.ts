@@ -1,6 +1,6 @@
-import { TransactionLoggingService } from '../../../../../../../src/common';
+import { TransactionLoggingService } from '@common/index';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
-import { OrderCancelledCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+import { OrderCancelledCommand } from '@listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
@@ -9,10 +9,10 @@ import {
   MockType,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
-import { OrderCancelledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-cancelled/order-cancelled.handler';
-import { EscrowService } from '../../../../../../../src/common/escrow/escrow.service';
+import { OrderCancelledHandler } from '@listeners/substrate-listener/commands/orders/order-cancelled/order-cancelled.handler';
+import { EscrowService } from '@common/escrow/escrow.service';
 import { when } from 'jest-when';
-import { TransactionRequest } from '../../../../../../../src/common/transaction-logging/models/transaction-request.entity';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 
 describe('Order Cancelled Handler Event', () => {
   let orderCancelledHandler: OrderCancelledHandler;

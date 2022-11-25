@@ -1,11 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import {
-  TransactionLoggingService,
-  DateTimeProxy,
-} from '../../../../../common';
+import { TransactionLoggingService, DateTimeProxy } from '@common/index';
 import { LabStakeSuccessfulCommand } from './stake-successful.command';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 
 @Injectable()
 @CommandHandler(LabStakeSuccessfulCommand)
