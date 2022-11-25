@@ -1,10 +1,10 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { IndexerHandler } from '../../../src/indexer/indexer.handler';
+import { IndexerHandler } from '@indexer/indexer.handler';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { ServiceCommandHandlers } from '../../../src/indexer/events/services';
-import { LabCommandHandlers } from '../../../src/indexer/events/labs';
-import { OrderCommandHandlers } from '../../../src/indexer/events/orders';
+import { ServiceCommandHandlers } from '@indexer/events/services';
+import { LabCommandHandlers } from '@indexer/events/labs';
+import { OrderCommandHandlers } from '@indexer/events/orders';
 import {
   CommandBusProvider,
   ElasticSearchServiceProvider,

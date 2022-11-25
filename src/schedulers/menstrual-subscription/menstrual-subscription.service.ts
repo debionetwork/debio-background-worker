@@ -1,17 +1,13 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { SubstrateService } from '@common/index';
-import {
-  queryServiceRequestById,
-  retrieveUnstakedAmount,
-} from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '@common/secrets';
 
 @Injectable()
-export class UnstakedService implements OnModuleInit {
-  private logger: Logger = new Logger(UnstakedService.name);
+export class MenstrualSubscriptionService {
+  private logger: Logger = new Logger(MenstrualSubscriptionService.name);
   private isRunning = false;
   private timer: number;
   constructor(
@@ -40,20 +36,20 @@ export class UnstakedService implements OnModuleInit {
       if (this.isRunning) return;
 
       this.isRunning = true;
-      const createRequestService = await this.elasticsearchService.search({
-        index: 'create-service-request',
+      const menstrualSubscription = await this.elasticsearchService.search({
+        index: 'menstrual-subscription',
         allow_no_indices: true,
         body: {
           query: {
             match: {
-              'request.status': {
-                query: 'WaitingForUnstaked',
+              status: {
+                query: 'Active',
               },
             },
           },
           sort: [
             {
-              'request.unstaked_at.keyword': {
+              'created_at.keyword': {
                 unmapped_type: 'keyword',
                 order: 'asc',
               },
@@ -64,58 +60,42 @@ export class UnstakedService implements OnModuleInit {
         size: 10,
       });
 
-      const listRequestService = createRequestService.body.hits.hits;
-      for (const requestService of listRequestService) {
-        const requestId = requestService['_source']['request']['hash'];
-        const serviceRequestDetail = await queryServiceRequestById(
-          this.subtrateService.api as any,
-          requestId,
-        );
+      const currtime = new Date().getTime();
 
-        if (serviceRequestDetail.status === 'Unstaked') {
-          await this.elasticsearchService.update({
-            index: 'create-service-request',
-            id: requestId,
-            refresh: 'wait_for',
-            body: {
-              doc: {
-                request: {
-                  status: serviceRequestDetail.status,
-                  unstaked_at: serviceRequestDetail.unstakedAt,
-                },
-              },
-            },
-          });
-        } else {
-          const timeWaitingUnstaked: string =
-            requestService['_source']['request']['unstaked_at'];
+      const listMenstrualSubscription = menstrualSubscription.body.hits.hits;
+      for (const menstrualSubscription of listMenstrualSubscription) {
+        const menstrualSubscriptionId = menstrualSubscription['_source']['id'];
+        const duration = menstrualSubscription['_source']['duration'];
+        const date = menstrualSubscription['_source']['updated_at'];
 
-          if (!timeWaitingUnstaked) {
-            continue;
-          }
-
-          const numberTimeWaitingUnstaked = Number(
-            timeWaitingUnstaked.replace(/,/gi, ''),
-          );
-
-          const timeNext6Days = numberTimeWaitingUnstaked + this.timer;
-          const timeNow = new Date().getTime();
-          const diffTime = timeNext6Days - timeNow;
-
-          if (diffTime <= 0) {
-            await retrieveUnstakedAmount(
-              this.subtrateService.api as any,
-              this.subtrateService.pair,
-              requestId,
-            );
-          }
+        if (this.checkTimeDurationEnd(currtime, date, duration)) {
+          await this.subtrateService.api.tx.menstrualSubscription
+            .changeMenstrualSubscriptionStatus(
+              menstrualSubscriptionId,
+              'Inactive',
+            )
+            .signAndSend(this.subtrateService.pair, { nonce: -1 });
         }
       }
     } catch (err) {
-      this.logger.error(`unstaked error ${err}`);
+      this.logger.error(`inactive menstrual subscription error ${err}`);
     } finally {
       this.isRunning = false;
     }
+  }
+
+  private milisecondsConverter = {
+    Monthly: 30 * 24 * 60 * 60 * 1000,
+    Quarterly: 3 * 30 * 24 * 60 * 60 * 1000,
+    Yearly: 12 * 30 * 24 * 60 * 60 * 1000,
+  };
+
+  checkTimeDurationEnd(
+    currtime: number,
+    date: number,
+    duration: string,
+  ): boolean {
+    return currtime <= date + this.milisecondsConverter[duration];
   }
 
   strToMilisecond(timeFormat: string): number {

@@ -6,9 +6,9 @@ import { INestApplication } from '@nestjs/common/interfaces/nest-application.int
 import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
-import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../../../../config';
-import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
+import { EscrowService } from '@common/escrow/escrow.service';
 import {
   escrowServiceMockFactory,
   mailerManagerMockFactory,
@@ -20,9 +20,9 @@ import {
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
-} from '../../../../../../src/common';
+} from '@common/index';
 import { CqrsModule } from '@nestjs/cqrs';
-import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
+import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
 import {
   GeneticAnalysis,
   GeneticAnalysisOrder,
@@ -56,16 +56,16 @@ import {
 import { geneticAnalystsDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analysts.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { geneticAnalystServiceDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
-import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
+import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { GeneticAnalysisOrderCreatedHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysys-order-created/genetic-analysis-order-created.handler';
-import { GeneticAnalysisOrderFulfilledHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
-import { GeneticAnalysisOrderPaidHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
-import { keyList, SecretKeyList } from '../../../../../../src/common/secrets';
+import { GeneticAnalysisOrderCreatedHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysys-order-created/genetic-analysis-order-created.handler';
+import { GeneticAnalysisOrderFulfilledHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
+import { GeneticAnalysisOrderPaidHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
+import { keyList, SecretKeyList } from '@common/secrets';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
@@ -148,10 +148,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
                 },
               },
               template: {
-                dir: join(
-                  __dirname,
-                  '../../../../../../src/listeners/substrate-listener/templates',
-                ),
+                dir: join(__dirname, '@listeners/substrate-listener/templates'),
                 adapter: new HandlebarsAdapter({
                   colNum: (value) => parseInt(value) + 1,
                 }), // or new PugAdapter() or new EjsAdapter()

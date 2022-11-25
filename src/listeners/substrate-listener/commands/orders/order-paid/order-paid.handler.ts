@@ -7,16 +7,16 @@ import {
   NotificationService,
   SubstrateService,
   TransactionLoggingService,
-} from '../../../../../common';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+} from '@common/index';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import {
   Order,
   queryLabById,
   queryServiceById,
 } from '@debionetwork/polkadot-provider';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../../../../common/secrets';
+import { keyList } from '@common/secrets';
 import currencyUnit from '../../../models/currencyUnit';
 
 @Injectable()

@@ -5,24 +5,24 @@ import {
   EmailNotification,
   EmailNotificationModule,
   EmailNotificationService,
-} from '../../../src/common/database';
+} from '@common/database';
 import {
   SubstrateModule,
   MailModule,
   MailerManager,
   ProcessEnvModule,
-} from '../../../src/common';
-import { MailerService } from '../../../src/schedulers/mailer/mailer.service';
+} from '@common/index';
+import { MailerService } from '@schedulers/mailer/mailer.service';
 import { Keyring } from '@polkadot/api';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dummyCredentials } from '../config';
-import { SubstrateService } from '../../../src/common/substrate/substrate.service';
+import { SubstrateService } from '@common/substrate/substrate.service';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { SecretKeyList, keyList } from '../../../src/common/secrets';
+import { SecretKeyList, keyList } from '@common/secrets';
 
 describe('Mailer Scheduler (e2e)', () => {
   let service: MailerService;

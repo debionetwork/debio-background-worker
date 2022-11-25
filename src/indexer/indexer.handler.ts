@@ -10,13 +10,13 @@ import {
   DeleteAllIndexesCommand,
   GetLastSubstrateBlockQueryIndexer,
 } from './blocks';
-import { ProcessEnvProxy } from '../common/proxies/process-env/process-env.proxy';
+import { ProcessEnvProxy } from '@common/proxies/process-env/process-env.proxy';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { u32 } from '@polkadot/types';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { eventRoutes } from './indexer.routes';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../common/secrets';
+import { keyList } from '@common/secrets';
 
 @Injectable()
 export class IndexerHandler

@@ -9,13 +9,13 @@ import {
   GeneticAnalystServicesCreatedCommandIndexer,
   GeneticAnalystServicesDeletedCommandIndexer,
   GeneticAnalystServicesUpdatedCommandIndexer,
-} from '../../../../../src/indexer/events/genetic-analyst-services';
-import { GeneticAnalystServicesCreatedHandler } from '../../../../../src/indexer/events/genetic-analyst-services/commands/genetic-analyst-services-created/genetic-analyst-services-created.handler';
-import { GeneticAnalystServicesDeletedHandler } from '../../../../../src/indexer/events/genetic-analyst-services/commands/genetic-analyst-services-deleted/genetic-analyst-services-deleted.handler';
-import { GeneticAnalystServicesUpdatedHandler } from '../../../../../src/indexer/events/genetic-analyst-services/commands/genetic-analyst-services-updated/genetic-analyst-services-updated.handler';
+} from '@indexer/events/genetic-analyst-services';
+import { GeneticAnalystServicesCreatedHandler } from '@indexer/events/genetic-analyst-services/commands/genetic-analyst-services-created/genetic-analyst-services-created.handler';
+import { GeneticAnalystServicesDeletedHandler } from '@indexer/events/genetic-analyst-services/commands/genetic-analyst-services-deleted/genetic-analyst-services-deleted.handler';
+import { GeneticAnalystServicesUpdatedHandler } from '@indexer/events/genetic-analyst-services/commands/genetic-analyst-services-updated/genetic-analyst-services-updated.handler';
 import { when } from 'jest-when';
 
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
 
 describe('Genetic Anlaysts Services Substrate Event Handler', () => {
   let elasticsearchService: ElasticsearchService;

@@ -16,12 +16,12 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiPromise } from '@polkadot/api';
-import { CommonModule, ProcessEnvModule } from '../../../../src/common';
-import { GeneticDataCommandHandlers } from '../../../../src/indexer/events/genetic-data';
-import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
-import { IndexerModule } from '../../../../src/indexer/indexer.module';
+import { CommonModule, ProcessEnvModule } from '@common/index';
+import { GeneticDataCommandHandlers } from '@indexer/events/genetic-data';
+import { IndexerHandler } from '@indexer/indexer.handler';
+import { IndexerModule } from '@indexer/indexer.module';
 import { initializeApi } from '../../polkadot-init';
-import { SecretKeyList } from '../../../../src/common/secrets';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Genetic Data Events', () => {
   let app: INestApplication;

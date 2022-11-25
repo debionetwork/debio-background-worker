@@ -1,9 +1,6 @@
-import {
-  DateTimeProxy,
-  TransactionLoggingService,
-} from '../../../../../../../src/common';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
-import { LabRegisteredCommand } from '../../../../../../../src/listeners/substrate-listener/commands/labs';
+import { DateTimeProxy, TransactionLoggingService } from '@common/index';
+import { NotificationService } from '@common/notification/notification.service';
+import { LabRegisteredCommand } from '@listeners/substrate-listener/commands/labs';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockLab,
@@ -13,7 +10,7 @@ import {
   notificationServiceMockFactory,
   dateTimeProxyMockFactory,
 } from '../../../../../mock';
-import { LabRegisteredHandler } from '../../../../../../../src/listeners/substrate-listener/commands/labs/registered/lab-registered.handler';
+import { LabRegisteredHandler } from '@listeners/substrate-listener/commands/labs/registered/lab-registered.handler';
 import { when } from 'jest-when';
 
 describe('Lab Registered Handler Event', () => {

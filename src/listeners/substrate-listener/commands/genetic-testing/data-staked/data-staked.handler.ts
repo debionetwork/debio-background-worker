@@ -4,14 +4,14 @@ import {
   DebioConversionService,
   TransactionLoggingService,
   SubstrateService,
-} from '../../../../../common';
+} from '@common/index';
 import {
   convertToDbioUnitString,
   queryOrderDetailByOrderID,
   sendRewards,
 } from '@debionetwork/polkadot-provider';
 import { DataStakedCommand } from './data-staked.command';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 
 @Injectable()
 @CommandHandler(DataStakedCommand)

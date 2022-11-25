@@ -7,8 +7,8 @@ import {
   MockLogger,
   schedulerRegistryMockFactory,
 } from '../../mock';
-import { UnstakedService } from '../../../../src/schedulers/unstaked/unstaked.service';
-import { SubstrateService } from '../../../../src/common';
+import { UnstakedService } from '@schedulers/unstaked/unstaked.service';
+import { SubstrateService } from '@common/index';
 import { ServiceRequest } from '@debionetwork/polkadot-provider';
 
 import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';

@@ -1,10 +1,7 @@
-import {
-  TransactionLoggingService,
-  DateTimeProxy,
-} from '../../../../../../../src/common';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { TransactionLoggingService, DateTimeProxy } from '@common/index';
+import { NotificationService } from '@common/notification/notification.service';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
-import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+import { OrderCreatedCommand } from '@listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
@@ -14,9 +11,9 @@ import {
   notificationServiceMockFactory,
   dateTimeProxyMockFactory,
 } from '../../../../../mock';
-import { OrderCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-created/order-created.handler';
+import { OrderCreatedHandler } from '@listeners/substrate-listener/commands/orders/order-created/order-created.handler';
 import { when } from 'jest-when';
-import { TransactionRequest } from '../../../../../../../src/common/transaction-logging/models/transaction-request.entity';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 
 describe('Order Created Handler Event', () => {
   let orderCreatedHandler: OrderCreatedHandler;

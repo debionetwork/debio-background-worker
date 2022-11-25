@@ -1,9 +1,6 @@
-import {
-  DateTimeProxy,
-  TransactionLoggingService,
-} from '../../../../../../../src/common';
+import { DateTimeProxy, TransactionLoggingService } from '@common/index';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
-import { OrderRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+import { OrderRefundedCommand } from '@listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
@@ -13,11 +10,11 @@ import {
   notificationServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
-import { OrderRefundedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-refunded/order-refunded.handler';
+import { OrderRefundedHandler } from '@listeners/substrate-listener/commands/orders/order-refunded/order-refunded.handler';
 import { when } from 'jest-when';
-import { TransactionLoggingDto } from '../../../../../../../src/common/transaction-logging/dto/transaction-logging.dto';
-import { TransactionRequest } from '../../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
+import { NotificationService } from '@common/notification/notification.service';
 
 describe('Order Refunded Handler Event', () => {
   let orderRefundedHandler: OrderRefundedHandler;

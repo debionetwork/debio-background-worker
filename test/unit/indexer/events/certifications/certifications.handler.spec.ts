@@ -4,16 +4,16 @@ import {
   createObjectSearchLab,
   ElasticSearchServiceProvider,
 } from '../../../mock';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
 import {
   CertificationCreatedCommandIndexer,
   CertificationDeletedCommandIndexer,
   CertificationsCommandHandlers,
   CertificationUpdatedCommandIndexer,
-} from '../../../../../src/indexer/events/certifications';
-import { CertificationCreatedHandler } from '../../../../../src/indexer/events/certifications/commands/certification-created/certification-created.handler';
-import { CertificationUpdatedHandler } from '../../../../../src/indexer/events/certifications/commands/certification-updated/certification-updated.handler';
-import { CertificationDeletedHandler } from '../../../../../src/indexer/events/certifications/commands/certification-deleted/certification-deleted.handler';
+} from '@indexer/events/certifications';
+import { CertificationCreatedHandler } from '@indexer/events/certifications/commands/certification-created/certification-created.handler';
+import { CertificationUpdatedHandler } from '@indexer/events/certifications/commands/certification-updated/certification-updated.handler';
+import { CertificationDeletedHandler } from '@indexer/events/certifications/commands/certification-deleted/certification-deleted.handler';
 import { when } from 'jest-when';
 
 let certificationsCreatedHandler: CertificationCreatedHandler;

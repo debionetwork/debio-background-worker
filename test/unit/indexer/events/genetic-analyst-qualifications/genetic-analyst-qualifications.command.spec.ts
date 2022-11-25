@@ -2,12 +2,12 @@ import {
   GeneticAnalystsQualificationCreatedCommandIndexer,
   GeneticAnalystsQualificationDeletedCommandIndexer,
   GeneticAnalystsQualificationUpdatedCommandIndexer,
-} from '../../../../../src/indexer/events/genetic-analyst-qualifications';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
-import { GeneticAnalystsQualificationModel } from '../../../../../src/indexer/models/genetic-analysts-qualifications/genetic-analysts-qualifications.model';
+} from '@indexer/events/genetic-analyst-qualifications';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
+import { GeneticAnalystsQualificationModel } from '@indexer/models/genetic-analysts-qualifications/genetic-analysts-qualifications.model';
 
 jest.mock(
-  '../../../../../src/indexer/models/genetic-analysts-qualifications/genetic-analysts-qualifications.model',
+  '@indexer/models/genetic-analysts-qualifications/genetic-analysts-qualifications.model',
 );
 
 describe('Genetic Analysts Qualifications Substrate Event Handler', () => {

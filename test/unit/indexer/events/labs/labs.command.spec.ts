@@ -3,15 +3,15 @@ import {
   LabRegisteredCommandIndexer,
   LabUpdatedCommandIndexer,
   LabUpdateVerificationStatusCommandIndexer,
-} from '../../../../../src/indexer/events/labs';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
-import { Lab } from '../../../../../src/indexer/models/lab/lab';
-import { StakeStatus } from '../../../../../src/indexer/models/stake-status';
-import { LabRetrieveUnstakeAmountCommandIndexer } from '../../../../../src/indexer/events/labs/commands/lab-retrieve-unstake-amount/lab-retrieve-unstake-amount.command';
-import { LabStakeSuccessfulCommandIndexer } from '../../../../../src/indexer/events/labs/commands/lab-stake-successful/lab-stake-successful.command';
-import { LabUnstakeSuccessfulCommandIndexer } from '../../../../../src/indexer/events/labs/commands/lab-unstake-successful/lab-unstake-successful.command';
+} from '@indexer/events/labs';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
+import { Lab } from '@indexer/models/lab/lab';
+import { StakeStatus } from '@indexer/models/stake-status';
+import { LabRetrieveUnstakeAmountCommandIndexer } from '@indexer/events/labs/commands/lab-retrieve-unstake-amount/lab-retrieve-unstake-amount.command';
+import { LabStakeSuccessfulCommandIndexer } from '@indexer/events/labs/commands/lab-stake-successful/lab-stake-successful.command';
+import { LabUnstakeSuccessfulCommandIndexer } from '@indexer/events/labs/commands/lab-unstake-successful/lab-unstake-successful.command';
 
-jest.mock('../../../../../src/indexer/models/lab/lab');
+jest.mock('@indexer/models/lab/lab');
 
 describe('Labs Substrate Event Handler', () => {
   const createMockLab = () => {

@@ -1,12 +1,12 @@
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
 import {
   CertificationCreatedCommandIndexer,
   CertificationDeletedCommandIndexer,
   CertificationUpdatedCommandIndexer,
-} from '../../../../../src/indexer/events/certifications';
-import { Certification } from '../../../../../src/indexer/models/certification/certification';
+} from '@indexer/events/certifications';
+import { Certification } from '@indexer/models/certification/certification';
 
-jest.mock('../../../../../src/indexer/models/certification/certification');
+jest.mock('@indexer/models/certification/certification');
 
 describe('Certifications Substrate Event Handler', () => {
   const createMockCertifications = () => {

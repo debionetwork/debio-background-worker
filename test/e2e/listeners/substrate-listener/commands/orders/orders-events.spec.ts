@@ -37,9 +37,9 @@ import { INestApplication } from '@nestjs/common/interfaces/nest-application.int
 import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
-import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../../../../config';
-import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
+import { EscrowService } from '@common/escrow/escrow.service';
 import {
   escrowServiceMockFactory,
   mailerManagerMockFactory,
@@ -52,21 +52,21 @@ import {
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
-} from '../../../../../../src/common';
+} from '@common/index';
 import { CqrsModule } from '@nestjs/cqrs';
-import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
+import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
+import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { OrderFailedHandler } from '../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
-import { keyList, SecretKeyList } from '../../../../../../src/common/secrets';
+import { OrderFailedHandler } from '@listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
+import { keyList, SecretKeyList } from '@common/secrets';
 import { deleteService, deregisterLab } from '@debionetwork/polkadot-provider';
-import { OrderFulfilledHandler } from '../../../../../../src/listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
-import { OrderPaidHandler } from '../../../../../../src/listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
+import { OrderFulfilledHandler } from '@listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
+import { OrderPaidHandler } from '@listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
@@ -159,10 +159,7 @@ describe('Order Failed Integration Tests', () => {
                 },
               },
               template: {
-                dir: join(
-                  __dirname,
-                  '../../../../../../src/listeners/substrate-listener/templates',
-                ),
+                dir: join(__dirname, '@listeners/substrate-listener/templates'),
                 adapter: new HandlebarsAdapter({
                   colNum: (value) => parseInt(value) + 1,
                 }), // or new PugAdapter() or new EjsAdapter()

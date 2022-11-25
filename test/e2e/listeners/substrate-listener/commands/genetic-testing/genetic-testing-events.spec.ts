@@ -42,9 +42,9 @@ import { INestApplication } from '@nestjs/common/interfaces/nest-application.int
 import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
-import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../../../../config';
-import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
+import { EscrowService } from '@common/escrow/escrow.service';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
@@ -53,21 +53,21 @@ import {
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
-} from '../../../../../../src/common';
+} from '@common/index';
 import { CqrsModule } from '@nestjs/cqrs';
-import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
+import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
 import { createConnection } from 'typeorm';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { DataStakedHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing/data-staked/data-staked.handler';
-import { SecretKeyList } from '../../../../../../src/common/secrets';
+import { DataStakedHandler } from '@listeners/substrate-listener/commands/genetic-testing/data-staked/data-staked.handler';
+import { SecretKeyList } from '@common/secrets';
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
-import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
-import { DnaSampleRejectedCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing/dna-sample-rejected/dna-sample-rejected.handler';
-import { DnaSampleResultReadyCommandHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing/dna-sample-result-ready/dna-sample-result-ready.handler';
+import { Notification } from '@common/notification/models/notification.entity';
+import { DnaSampleRejectedCommandHandler } from '@listeners/substrate-listener/commands/genetic-testing/dna-sample-rejected/dna-sample-rejected.handler';
+import { DnaSampleResultReadyCommandHandler } from '@listeners/substrate-listener/commands/genetic-testing/dna-sample-result-ready/dna-sample-result-ready.handler';
 
 describe('Data Staked Integration Tests', () => {
   let app: INestApplication;

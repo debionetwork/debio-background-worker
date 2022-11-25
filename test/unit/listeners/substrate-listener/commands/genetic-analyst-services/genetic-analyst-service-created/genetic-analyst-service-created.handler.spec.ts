@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DateTimeProxy } from '../../../../../../../src/common';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
-import { GeneticAnalystServiceCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analyst-services/genetic-analyst-service-created/genetic-analyst-service-created.command';
-import { GeneticAnalystServiceCreatedCommandHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analyst-services/genetic-analyst-service-created/genetic-analyst-service-created.handler';
+import { DateTimeProxy } from '@common/index';
+import { NotificationService } from '@common/notification/notification.service';
+import { GeneticAnalystServiceCreatedCommand } from '@listeners/substrate-listener/commands/genetic-analyst-services/genetic-analyst-service-created/genetic-analyst-service-created.command';
+import { GeneticAnalystServiceCreatedCommandHandler } from '@listeners/substrate-listener/commands/genetic-analyst-services/genetic-analyst-service-created/genetic-analyst-service-created.handler';
 import {
   createMockGeneticAnalystService,
   dateTimeProxyMockFactory,

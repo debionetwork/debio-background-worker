@@ -6,14 +6,14 @@ import {
   GeneticAnalysisRejectedCommandIndexer,
   GeneticAnalysisResultReadyCommandIndexer,
   GeneticAnalysisSubmittedCommandIndexer,
-} from '../../../../../src/indexer/events/genetic-analysis';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
+} from '@indexer/events/genetic-analysis';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
 import { ElasticSearchServiceProvider } from '../../../mock';
 
-import { GeneticAnalysisInProgressHandler } from '../../../../../src/indexer/events/genetic-analysis/commands/genetic-analysis-in-progress/genetic-analysis-in-progress.handler';
-import { GeneticAnalysisRejectedHandler } from '../../../../../src/indexer/events/genetic-analysis/commands/genetic-analysis-rejected/genetic-analysis-rejected.handler';
-import { GeneticAnalysisResultReadyHandler } from '../../../../../src/indexer/events/genetic-analysis/commands/genetic-analysis-result-ready/genetic-analysis-result-ready.handler';
-import { GeneticAnalysisSubmittedHandler } from '../../../../../src/indexer/events/genetic-analysis/commands/genetic-analysis-submitted/genetic-analysis-submitted.handler';
+import { GeneticAnalysisInProgressHandler } from '@indexer/events/genetic-analysis/commands/genetic-analysis-in-progress/genetic-analysis-in-progress.handler';
+import { GeneticAnalysisRejectedHandler } from '@indexer/events/genetic-analysis/commands/genetic-analysis-rejected/genetic-analysis-rejected.handler';
+import { GeneticAnalysisResultReadyHandler } from '@indexer/events/genetic-analysis/commands/genetic-analysis-result-ready/genetic-analysis-result-ready.handler';
+import { GeneticAnalysisSubmittedHandler } from '@indexer/events/genetic-analysis/commands/genetic-analysis-submitted/genetic-analysis-submitted.handler';
 
 describe('Genetic Analysis Substrate Event Handler', () => {
   let elasticsearchService: ElasticsearchService;

@@ -1,15 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
-import { EmailNotificationService } from '../../common/database';
+import { EmailNotificationService } from '@common/database';
 import {
   MailerManager,
   SubstrateService,
   labToLabRegister,
   LabRegister,
-} from '../../common';
+} from '@common/index';
 import { queryLabById } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../common/secrets';
+import { keyList } from '@common/secrets';
 
 @Injectable()
 export class MailerService {

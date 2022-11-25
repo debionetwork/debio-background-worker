@@ -1,5 +1,5 @@
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
-import { DnaSampleResultReadyCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
+import { DnaSampleResultReadyCommand } from '@listeners/substrate-listener/commands/genetic-testing';
 import { createMockDnaSample, mockBlockNumber } from '../../../../../mock';
 jest.mock(
   '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample',

@@ -2,8 +2,8 @@ import {
   DateTimeProxy,
   NotificationService,
   TransactionLoggingService,
-} from '../../../../../../../src/common';
-import { GeneticAnalystVerificationStatusCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts';
+} from '@common/index';
+import { GeneticAnalystVerificationStatusCommand } from '@listeners/substrate-listener/commands/genetic-analysts';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalyst,
@@ -13,7 +13,7 @@ import {
   transactionLoggingServiceMockFactory,
   notificationServiceMockFactory,
 } from '../../../../../mock';
-import { GeneticAnalystVerificationStatusHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
+import { GeneticAnalystVerificationStatusHandler } from '@listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
 import { when } from 'jest-when';
 
 describe('Genetic Analyst Verification Status Handler Event', () => {

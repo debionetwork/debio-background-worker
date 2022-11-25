@@ -1,4 +1,4 @@
-import { GeneticAnalystVerificationStatusCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts';
+import { GeneticAnalystVerificationStatusCommand } from '@listeners/substrate-listener/commands/genetic-analysts';
 import { createMockGeneticAnalyst, mockBlockNumber } from '../../../../../mock';
 import { GeneticAnalyst } from '@debionetwork/polkadot-provider';
 

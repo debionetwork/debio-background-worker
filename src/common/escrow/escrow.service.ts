@@ -7,7 +7,7 @@ import AsyncLock from 'async-lock';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ErrorLoggingService } from '../error-logging';
 import { ErrorLoggingDto } from '../error-logging/dto/error-logging.dto';
-import { keyList } from '../../common/secrets';
+import { keyList } from '@common/secrets';
 
 const lock = new AsyncLock();
 const ESCROW_WALLET_LOCK_KEY = 'escrow-wallet-lock';

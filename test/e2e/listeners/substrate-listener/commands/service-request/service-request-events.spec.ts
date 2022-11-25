@@ -10,11 +10,11 @@ import {
   ProcessEnvModule,
   SubstrateModule,
   TransactionLoggingModule,
-} from '../../../../../../src/common';
-import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
-import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
+} from '@common/index';
+import { EscrowService } from '@common/escrow/escrow.service';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
-import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
+import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
 import { dummyCredentials } from '../../../../config';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import { initializeApi } from '../../../../polkadot-init';
@@ -46,15 +46,15 @@ import { labDataMock } from '../../../../../mock/models/labs/labs.mock';
 import { serviceDataMock } from '../../../../../mock/models/labs/services.mock';
 import { serviceRequestMock } from '../../../../../mock/models/labs/service-request.mock';
 import { createConnection } from 'typeorm';
-import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
+import { Notification } from '@common/notification/models/notification.entity';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { ServiceRequestStakingAmountExcessRefunded } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-excess/service-request-excess.handler';
-import { SecretKeyList } from '../../../../../../src/common/secrets';
-import { ServiceRequestStakingAmountRefundedHandler } from '../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.handler';
+import { ServiceRequestStakingAmountExcessRefunded } from '@listeners/substrate-listener/commands/service-request/service-request-excess/service-request-excess.handler';
+import { SecretKeyList } from '@common/secrets';
+import { ServiceRequestStakingAmountRefundedHandler } from '@listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.handler';
 
 describe('Service Request Excess Integration Tests', () => {
   let app: INestApplication;

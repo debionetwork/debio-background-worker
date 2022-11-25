@@ -5,12 +5,12 @@ import {
   GeneticDataCommandHandlers,
   RemoveGeneticDataCommandIndexer,
   UpdateGeneticDataCommandIndexer,
-} from '../../../../../src/indexer/events/genetic-data';
+} from '@indexer/events/genetic-data';
 import { ElasticSearchServiceProvider } from '../../../mock';
-import { AddGeneticDataHandler } from '../../../../../src/indexer/events/genetic-data/commands/add-genetic-data/add-genetic-data.handler';
-import { RemoveGeneticDataHandler } from '../../../../../src/indexer/events/genetic-data/commands/remove-genetic-data/remove-genetic-data.handler';
-import { UpdateGeneticDataHandler } from '../../../../../src/indexer/events/genetic-data/commands/update-genetic-data/update-genetic-data.handler';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
+import { AddGeneticDataHandler } from '@indexer/events/genetic-data/commands/add-genetic-data/add-genetic-data.handler';
+import { RemoveGeneticDataHandler } from '@indexer/events/genetic-data/commands/remove-genetic-data/remove-genetic-data.handler';
+import { UpdateGeneticDataHandler } from '@indexer/events/genetic-data/commands/update-genetic-data/update-genetic-data.handler';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
 
 describe('Genetic Data Substate Event Handler', () => {
   let elasticsearchService: ElasticsearchService;

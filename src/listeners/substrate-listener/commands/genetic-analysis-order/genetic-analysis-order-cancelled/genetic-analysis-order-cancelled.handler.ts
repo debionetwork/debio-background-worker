@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
-import { TransactionLoggingService } from '../../../../../common';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingService } from '@common/index';
 import { GeneticAnalysisOrderCancelledCommand } from './genetic-analysis-order-cancelled.command';
 
 @Injectable()

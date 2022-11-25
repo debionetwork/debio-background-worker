@@ -1,19 +1,19 @@
 import { INestApplication } from '@nestjs/common';
 import { ApiPromise } from '@polkadot/api';
-// import { MenstrualCycleLog } from '../../../../src/indexer/models/menstrual-calendar/menstrual-cycle-log';
-// import { MenstrualCalendar } from '../../../../src/indexer/models/menstrual-calendar/menstrual-calendar';
+// import { MenstrualCycleLog } from '@indexer/models/menstrual-calendar/menstrual-cycle-log';
+// import { MenstrualCalendar } from '@indexer/models/menstrual-calendar/menstrual-calendar';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList } from '../../../../src/common/secrets';
-import { CommonModule, ProcessEnvModule } from '../../../../src/common';
+import { SecretKeyList } from '@common/secrets';
+import { CommonModule, ProcessEnvModule } from '@common/index';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ScheduleModule } from '@nestjs/schedule';
-import { IndexerModule } from '../../../../src/indexer/indexer.module';
-import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
-import { MenstrualCalendarCommandHandlers } from '../../../../src/indexer/events/menstrual-calendar';
+import { IndexerModule } from '@indexer/indexer.module';
+import { IndexerHandler } from '@indexer/indexer.handler';
+import { MenstrualCalendarCommandHandlers } from '@indexer/events/menstrual-calendar';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { initializeApi } from '../../polkadot-init';
 

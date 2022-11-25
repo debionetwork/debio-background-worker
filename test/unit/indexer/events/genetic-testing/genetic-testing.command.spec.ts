@@ -1,8 +1,8 @@
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
-import { DataStakedCommandIndexer } from '../../../../../src/indexer/events/genetic-testing';
-import { DataStaked } from '../../../../../src/indexer/models/genetic-testing/data-staked';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
+import { DataStakedCommandIndexer } from '@indexer/events/genetic-testing';
+import { DataStaked } from '@indexer/models/genetic-testing/data-staked';
 
-jest.mock('../../../../../src/indexer/models/genetic-testing/data-staked');
+jest.mock('@indexer/models/genetic-testing/data-staked');
 
 describe('Genetic Testing Substrate Event Handler', () => {
   const createMockDataStaked = () => {

@@ -18,16 +18,16 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiPromise } from '@polkadot/api';
-import { CommonModule } from '../../../../src/common/common.module';
-import { ProcessEnvModule } from '../../../../src/common/proxies/process-env/process-env.module';
-import { IndexerModule } from '../../../../src/indexer/indexer.module';
-import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
-import { CertificationsCommandHandlers } from '../../../../src/indexer/events/certifications';
-import { LabCommandHandlers } from '../../../../src/indexer/events/labs';
+import { CommonModule } from '@common/common.module';
+import { ProcessEnvModule } from '@common/proxies/process-env/process-env.module';
+import { IndexerModule } from '@indexer/indexer.module';
+import { IndexerHandler } from '@indexer/indexer.handler';
+import { CertificationsCommandHandlers } from '@indexer/events/certifications';
+import { LabCommandHandlers } from '@indexer/events/labs';
 import { initializeApi } from '../../polkadot-init';
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { certificationDataMock } from '../../../mock/models/certifications/certification-mock';
-import { SecretKeyList } from '../../../../src/common/secrets';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Certification Event', () => {
   let app: INestApplication;

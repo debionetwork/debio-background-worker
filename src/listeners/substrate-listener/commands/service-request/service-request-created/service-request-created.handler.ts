@@ -1,18 +1,18 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ServiceRequestCreatedCommand } from './service-request-created.command';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
   MailerManager,
   NotificationService,
   TransactionLoggingService,
-} from '../../../../../common';
-import { CountryService } from '../../../../../common/location/country.service';
-import { StateService } from '../../../../../common/location/state.service';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+} from '@common/index';
+import { CountryService } from '@common/location/country.service';
+import { StateService } from '@common/location/state.service';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../../../../common/secrets';
+import { keyList } from '@common/secrets';
 
 @Injectable()
 @CommandHandler(ServiceRequestCreatedCommand)

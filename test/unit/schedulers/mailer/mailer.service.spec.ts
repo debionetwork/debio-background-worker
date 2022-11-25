@@ -7,12 +7,12 @@ import {
   substrateServiceMockFactory,
   googleSecretManagerServiceMockFactory,
 } from '../../mock';
-import { MailerService } from '../../../../src/schedulers/mailer/mailer.service';
+import { MailerService } from '@schedulers/mailer/mailer.service';
 import {
   EmailNotificationService,
   MailerManager,
   SubstrateService,
-} from '../../../../src/common';
+} from '@common/index';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('MailerService', () => {

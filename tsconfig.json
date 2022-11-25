@@ -13,6 +13,12 @@
     "incremental": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@common/*": ["src/common/*"],
+      "@indexer/*": ["src/indexer/*"],
+      "@listeners/*": ["src/listeners/*"],
+      "@schedulers/*": ["src/schedulers/*"]
+    }
   }
 }

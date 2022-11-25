@@ -4,7 +4,7 @@ import {
   Logger,
   OnModuleDestroy,
 } from '@nestjs/common';
-import { SubstrateService } from '../../common';
+import { SubstrateService } from '@common/index';
 import { Header, Event } from '@polkadot/types/interfaces';
 import {
   SetLastSubstrateBlockCommand,
@@ -57,7 +57,7 @@ import {
   DnaSampleRejectedCommand,
   DnaSampleResultReadyCommand,
 } from './commands/genetic-testing';
-import { ProcessEnvProxy } from '../../common/proxies/process-env/process-env.proxy';
+import { ProcessEnvProxy } from '@common/proxies/process-env/process-env.proxy';
 
 const eventRoutes = {
   services: {

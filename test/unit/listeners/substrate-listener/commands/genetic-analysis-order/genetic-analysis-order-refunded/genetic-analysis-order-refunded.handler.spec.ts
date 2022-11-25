@@ -1,11 +1,8 @@
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
-import {
-  DateTimeProxy,
-  TransactionLoggingService,
-} from '../../../../../../../src/common';
-import { GeneticAnalysisOrderRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
+import { DateTimeProxy, TransactionLoggingService } from '@common/index';
+import { GeneticAnalysisOrderRefundedCommand } from '@listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { NotificationService } from '@common/notification/notification.service';
 import {
   createMockGeneticAnalysisOrder,
   dateTimeProxyMockFactory,
@@ -14,7 +11,7 @@ import {
   notificationServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
-import { GeneticAnalysisOrderRefundedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-refunded/genetic-analysis-order-refunded.handler';
+import { GeneticAnalysisOrderRefundedHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-refunded/genetic-analysis-order-refunded.handler';
 import { when } from 'jest-when';
 
 describe('Genetic Analysis Order Refunded Handler Event', () => {

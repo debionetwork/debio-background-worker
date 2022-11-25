@@ -1,11 +1,11 @@
-import { RequestModel } from '../../../../../src/indexer/models/service-request/request';
-import { CreateServiceRequestCommandIndexer } from '../../../../../src/indexer/events/service-request';
-import { RequestStatus } from '../../../../../src/indexer/models/service-request/request-status';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
+import { RequestModel } from '@indexer/models/service-request/request';
+import { CreateServiceRequestCommandIndexer } from '@indexer/events/service-request';
+import { RequestStatus } from '@indexer/models/service-request/request-status';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
 
-jest.mock('../../../../../src/indexer/models/service-request/request');
-jest.mock('../../../../../src/indexer/models/service-request/claim-request');
-jest.mock('../../../../../src/indexer/models/service-request/service-invoice');
+jest.mock('@indexer/models/service-request/request');
+jest.mock('@indexer/models/service-request/claim-request');
+jest.mock('@indexer/models/service-request/service-invoice');
 
 describe('Service Request Substrate Event Handler', () => {
   const createMockRequest = (requestStatus: RequestStatus) => {

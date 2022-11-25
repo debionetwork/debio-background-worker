@@ -3,9 +3,9 @@ import {
   DebioConversionService,
   SubstrateService,
   TransactionLoggingService,
-} from '../../../../../../../src/common';
+} from '@common/index';
 import { Order, OrderStatus } from '@debionetwork/polkadot-provider';
-import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+import { OrderCreatedCommand } from '@listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
@@ -18,12 +18,12 @@ import {
   substrateServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
-import { OrderFulfilledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
-import { EscrowService } from '../../../../../../../src/common/escrow/escrow.service';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { OrderFulfilledHandler } from '@listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
+import { EscrowService } from '@common/escrow/escrow.service';
+import { NotificationService } from '@common/notification/notification.service';
 import { when } from 'jest-when';
-import { TransactionLoggingDto } from '../../../../../../../src/common/transaction-logging/dto/transaction-logging.dto';
-import { TransactionRequest } from '../../../../../../../src/common/transaction-logging/models/transaction-request.entity';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 
 import * as globalProviderMethods from '@debionetwork/polkadot-provider/lib/index';
 import * as rewardCommand from '@debionetwork/polkadot-provider/lib/command/rewards';

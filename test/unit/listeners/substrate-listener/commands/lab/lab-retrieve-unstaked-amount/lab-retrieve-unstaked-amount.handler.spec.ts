@@ -1,8 +1,5 @@
-import {
-  DateTimeProxy,
-  TransactionLoggingService,
-} from '../../../../../../../src/common';
-import { LabRetrieveUnstakeAmountCommand } from '../../../../../../../src/listeners/substrate-listener/commands/labs';
+import { DateTimeProxy, TransactionLoggingService } from '@common/index';
+import { LabRetrieveUnstakeAmountCommand } from '@listeners/substrate-listener/commands/labs';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockLab,
@@ -11,7 +8,7 @@ import {
   transactionLoggingServiceMockFactory,
   dateTimeProxyMockFactory,
 } from '../../../../../mock';
-import { labUnstakedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/labs/unstake-successfull/unstaked-successful.handler';
+import { labUnstakedHandler } from '@listeners/substrate-listener/commands/labs/unstake-successfull/unstaked-successful.handler';
 import { when } from 'jest-when';
 
 describe('Lab Retrieve Untaked Amount Handler Event', () => {

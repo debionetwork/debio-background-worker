@@ -2,12 +2,12 @@ import {
   ServiceCreatedCommandIndexer,
   ServiceDeletedCommandIndexer,
   ServiceUpdatedCommandIndexer,
-} from '../../../../../src/indexer/events/services';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
-import { ServiceFlow } from '../../../../../src/indexer/models/service-flow';
-import { Service } from '../../../../../src/indexer/models/service/service';
+} from '@indexer/events/services';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
+import { ServiceFlow } from '@indexer/models/service-flow';
+import { Service } from '@indexer/models/service/service';
 
-jest.mock('../../../../../src/indexer/models/service/service');
+jest.mock('@indexer/models/service/service');
 
 describe('Services Substrate Event Handler', () => {
   function createMockService() {

@@ -2,11 +2,11 @@ import {
   AddGeneticDataCommandIndexer,
   RemoveGeneticDataCommandIndexer,
   UpdateGeneticDataCommandIndexer,
-} from '../../../../../src/indexer/events/genetic-data';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
-import { GeneticDataModel } from '../../../../../src/indexer/models/genetic-data/genetic-data.model';
+} from '@indexer/events/genetic-data';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
+import { GeneticDataModel } from '@indexer/models/genetic-data/genetic-data.model';
 
-jest.mock('../../../../../src/indexer/models/genetic-data/genetic-data.model');
+jest.mock('@indexer/models/genetic-data/genetic-data.model');
 
 describe('Genetic Data Substrate Event Handler', () => {
   const createMockGeneticData = () => {

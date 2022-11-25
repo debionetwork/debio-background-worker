@@ -1,4 +1,4 @@
-import { OrderCancelledCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+import { OrderCancelledCommand } from '@listeners/substrate-listener/commands/orders';
 import { createMockOrder, mockBlockNumber } from '../../../../../mock';
 import { Order, OrderStatus } from '@debionetwork/polkadot-provider';
 

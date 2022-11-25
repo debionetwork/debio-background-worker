@@ -1,9 +1,6 @@
-import {
-  DateTimeProxy,
-  SubstrateService,
-} from '../../../../../../../src/common';
+import { DateTimeProxy, SubstrateService } from '@common/index';
 import { GeneticAnalysisStatus } from '@debionetwork/polkadot-provider';
-import { GeneticAnalysisResultReadyCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis';
+import { GeneticAnalysisResultReadyCommand } from '@listeners/substrate-listener/commands/genetic-analysis';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysis,
@@ -13,8 +10,8 @@ import {
   notificationServiceMockFactory,
   substrateServiceMockFactory,
 } from '../../../../../mock';
-import { GeneticAnalysisResultReadyHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-resultready/genetic-analysis-result-ready.handler';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { GeneticAnalysisResultReadyHandler } from '@listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-resultready/genetic-analysis-result-ready.handler';
+import { NotificationService } from '@common/notification/notification.service';
 import * as geneticAnalysisOrderCommand from '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders';
 import { when } from 'jest-when';
 

@@ -18,14 +18,14 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiPromise } from '@polkadot/api';
 import { initializeApi } from '../../polkadot-init';
-import { CommonModule, ProcessEnvModule } from '../../../../src/common';
-import { LabCommandHandlers } from '../../../../src/indexer/events/labs';
-import { ServiceCommandHandlers } from '../../../../src/indexer/events/services';
-import { IndexerHandler } from '../../../../src/indexer/indexer.handler';
-import { IndexerModule } from '../../../../src/indexer/indexer.module';
+import { CommonModule, ProcessEnvModule } from '@common/index';
+import { LabCommandHandlers } from '@indexer/events/labs';
+import { ServiceCommandHandlers } from '@indexer/events/services';
+import { IndexerHandler } from '@indexer/indexer.handler';
+import { IndexerModule } from '@indexer/indexer.module';
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { serviceDataMock } from '../../../mock/models/labs/services.mock';
-import { SecretKeyList } from '../../../../src/common/secrets';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Service Event', () => {
   let app: INestApplication;

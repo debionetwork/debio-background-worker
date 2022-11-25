@@ -5,12 +5,12 @@ import {
   ServiceCreatedCommandIndexer,
   ServiceDeletedCommandIndexer,
   ServiceUpdatedCommandIndexer,
-} from '../../../../../src/indexer/events/services';
-import { BlockMetaData } from '../../../../../src/indexer/models/block-meta-data';
-import { ServiceFlow } from '../../../../../src/indexer/models/service-flow';
-import { ServiceCreatedHandler } from '../../../../../src/indexer/events/services/commands/service-created/service-created.handler';
-import { ServiceDeletedHandler } from '../../../../../src/indexer/events/services/commands/service-deleted/service-deleted.handler';
-import { ServiceUpdatedHandler } from '../../../../../src/indexer/events/services/commands/service-updated/service-updated.handler';
+} from '@indexer/events/services';
+import { BlockMetaData } from '@indexer/models/block-meta-data';
+import { ServiceFlow } from '@indexer/models/service-flow';
+import { ServiceCreatedHandler } from '@indexer/events/services/commands/service-created/service-created.handler';
+import { ServiceDeletedHandler } from '@indexer/events/services/commands/service-deleted/service-deleted.handler';
+import { ServiceUpdatedHandler } from '@indexer/events/services/commands/service-updated/service-updated.handler';
 import {
   createObjectSearchLab,
   ElasticSearchServiceProvider,

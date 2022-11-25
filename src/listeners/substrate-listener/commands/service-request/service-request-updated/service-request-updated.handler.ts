@@ -6,14 +6,14 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { NotificationDto } from 'src/common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 import {
   DateTimeProxy,
   NotificationService,
   SubstrateService,
   TransactionLoggingService,
-} from '../../../../../common';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+} from '@common/index';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { ServiceRequestUpdatedCommand } from './service-request-updated.command';
 
 @Injectable()

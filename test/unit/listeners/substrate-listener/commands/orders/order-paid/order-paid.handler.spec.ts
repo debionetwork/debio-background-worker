@@ -4,9 +4,9 @@ import {
   ProcessEnvProxy,
   SubstrateService,
   TransactionLoggingService,
-} from '../../../../../../../src/common';
+} from '@common/index';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
-import { OrderPaidCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+import { OrderPaidCommand } from '@listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
@@ -18,11 +18,11 @@ import {
   substrateServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
-import { OrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
+import { OrderPaidHandler } from '@listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
 import { when } from 'jest-when';
-import { TransactionLoggingDto } from '../../../../../../../src/common/transaction-logging/dto/transaction-logging.dto';
-import { TransactionRequest } from '../../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
+import { NotificationService } from '@common/notification/notification.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Order Paid Handler Event', () => {

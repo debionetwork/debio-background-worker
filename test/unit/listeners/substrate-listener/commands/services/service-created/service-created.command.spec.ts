@@ -1,5 +1,5 @@
-import { ServiceCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/services';
-import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
+import { ServiceCreatedCommand } from '@listeners/substrate-listener/commands/services';
+import { BlockMetaData } from '@listeners/substrate-listener/models/block-metadata.event-model';
 import {
   Service,
   ServiceFlow,

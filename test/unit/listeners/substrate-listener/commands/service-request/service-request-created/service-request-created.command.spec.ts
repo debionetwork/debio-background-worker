@@ -1,5 +1,5 @@
-import { ServiceRequestCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
-import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
+import { ServiceRequestCreatedCommand } from '@listeners/substrate-listener/commands/service-request';
+import { BlockMetaData } from '@listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequest, RequestStatus } from '@debionetwork/polkadot-provider';
 
 jest.mock('@debionetwork/polkadot-provider');

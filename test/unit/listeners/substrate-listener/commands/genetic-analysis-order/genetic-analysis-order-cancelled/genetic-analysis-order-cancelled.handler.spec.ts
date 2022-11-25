@@ -1,6 +1,6 @@
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
-import { TransactionLoggingService } from '../../../../../../../src/common';
-import { GeneticAnalysisOrderCancelledCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.command';
+import { TransactionLoggingService } from '@common/index';
+import { GeneticAnalysisOrderCancelledCommand } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.command';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysisOrder,
@@ -8,7 +8,7 @@ import {
   MockType,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
-import { GeneticAnalysisOrderCancelledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.handler';
+import { GeneticAnalysisOrderCancelledHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.handler';
 import { when } from 'jest-when';
 
 describe('Genetic Analysis Order Cancelled Handler Event', () => {

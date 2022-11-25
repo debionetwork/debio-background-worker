@@ -1,9 +1,9 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderCancelledCommand } from './order-cancelled.command';
-import { TransactionLoggingService } from '../../../../../common';
-import { EscrowService } from '../../../../../common/escrow/escrow.service';
-import { TransactionLoggingDto } from '../../../../../common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingService } from '@common/index';
+import { EscrowService } from '@common/escrow/escrow.service';
+import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { Order } from '@debionetwork/polkadot-provider';
 
 @Injectable()

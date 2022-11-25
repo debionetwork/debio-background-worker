@@ -14,14 +14,14 @@ import {
   ProcessEnvProxy,
   TransactionLoggingService,
   DateTimeProxy,
-} from '../../../../../../../src/common';
+} from '@common/index';
 import { RequestStatus } from '@debionetwork/polkadot-provider';
-import { ServiceRequestCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-created/service-request-created.handler';
-import { CountryService } from '../../../../../../../src/common/location/country.service';
-import { StateService } from '../../../../../../../src/common/location/state.service';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
-import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
-import { ServiceRequestCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
+import { ServiceRequestCreatedHandler } from '@listeners/substrate-listener/commands/service-request/service-request-created/service-request-created.handler';
+import { CountryService } from '@common/location/country.service';
+import { StateService } from '@common/location/state.service';
+import { NotificationService } from '@common/notification/notification.service';
+import { BlockMetaData } from '@listeners/substrate-listener/models/block-metadata.event-model';
+import { ServiceRequestCreatedCommand } from '@listeners/substrate-listener/commands/service-request';
 import { when } from 'jest-when';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 

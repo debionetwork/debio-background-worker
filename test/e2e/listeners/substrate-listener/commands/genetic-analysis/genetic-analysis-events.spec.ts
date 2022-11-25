@@ -6,19 +6,19 @@ import { INestApplication } from '@nestjs/common/interfaces/nest-application.int
 import { initializeApi } from '../../../../polkadot-init';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { LabRating } from '../../../../../mock/models/rating/rating.entity';
-import { TransactionRequest } from '../../../../../../src/common/transaction-logging/models/transaction-request.entity';
-import { LocationEntities } from '../../../../../../src/common/location/models';
+import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
+import { LocationEntities } from '@common/location/models';
 import { dummyCredentials } from '../../../../config';
-import { EscrowService } from '../../../../../../src/common/escrow/escrow.service';
+import { EscrowService } from '@common/escrow/escrow.service';
 import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
   NotificationModule,
   ProcessEnvModule,
   SubstrateModule,
-} from '../../../../../../src/common';
+} from '@common/index';
 import { CqrsModule } from '@nestjs/cqrs';
-import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
+import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
 import {
   GeneticAnalysis,
   GeneticAnalysisOrder,
@@ -49,14 +49,14 @@ import {
 import { geneticAnalystsDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analysts.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { geneticAnalystServiceDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
-import { Notification } from '../../../../../../src/common/notification/models/notification.entity';
+import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { GeneticAnalysisRejectedHandler } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-rejected/genetic-analysis-rejected.handler';
-import { SecretKeyList } from '../../../../../../src/common/secrets';
+import { GeneticAnalysisRejectedHandler } from '@listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-rejected/genetic-analysis-rejected.handler';
+import { SecretKeyList } from '@common/secrets';
 
 describe('Genetic Analysis Order Created Integration Test', () => {
   let app: INestApplication;

@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DateTimeProxy, NotificationService } from '../../../../../common';
+import { DateTimeProxy, NotificationService } from '@common/index';
 import { GeneticAnalystServiceCreatedCommand } from './genetic-analyst-service-created.command';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalystServiceCreatedCommand)

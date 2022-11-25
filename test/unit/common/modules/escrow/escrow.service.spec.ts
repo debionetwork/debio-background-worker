@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EthereumService, SubstrateService } from '../../../../../src/common';
+import { EthereumService, SubstrateService } from '@common/index';
 import {
   errorLoggingServiceMockFactory,
   ethereumServiceMockFactory,
   MockType,
   substrateServiceMockFactory,
 } from '../../../mock';
-import { EscrowService } from '../../../../../src/common/escrow/escrow.service';
+import { EscrowService } from '@common/escrow/escrow.service';
 import { ethers } from 'ethers';
 import { setOrderPaid } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { ErrorLoggingService } from '../../../../../src/common/error-logging/error-logging.service';
+import { ErrorLoggingService } from '@common/error-logging/error-logging.service';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   setOrderPaid: jest.fn(),

@@ -1,5 +1,5 @@
-import { DateTimeProxy } from '../../../../../../../src/common';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { DateTimeProxy } from '@common/index';
+import { NotificationService } from '@common/notification/notification.service';
 import {
   createMockDnaSample,
   dateTimeProxyMockFactory,
@@ -7,9 +7,9 @@ import {
   MockType,
   notificationServiceMockFactory,
 } from '../../../../../mock';
-import { DnaSampleRejectedCommandHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-testing/dna-sample-rejected/dna-sample-rejected.handler';
+import { DnaSampleRejectedCommandHandler } from '@listeners/substrate-listener/commands/genetic-testing/dna-sample-rejected/dna-sample-rejected.handler';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DnaSampleRejectedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
+import { DnaSampleRejectedCommand } from '@listeners/substrate-listener/commands/genetic-testing';
 
 describe('DNA Sample Rejected Handler Event', () => {
   let notificationServiceMock: MockType<NotificationService>;

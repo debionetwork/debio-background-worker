@@ -4,11 +4,11 @@ import {
   MockType,
   notificationServiceMockFactory,
 } from '../../../../../mock';
-import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
-import { ServiceRequestStakingAmountRefundedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.handler';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
-import { ServiceRequestStakingAmountRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.command';
-import { DateTimeProxy } from '../../../../../../../src/common';
+import { BlockMetaData } from '@listeners/substrate-listener/models/block-metadata.event-model';
+import { ServiceRequestStakingAmountRefundedHandler } from '@listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.handler';
+import { NotificationService } from '@common/notification/notification.service';
+import { ServiceRequestStakingAmountRefundedCommand } from '@listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.command';
+import { DateTimeProxy } from '@common/index';
 
 describe('Service Request Staking Amount Refunded Handler Event', () => {
   let serviceRequesStakingAmountRefundedHandler: ServiceRequestStakingAmountRefundedHandler;

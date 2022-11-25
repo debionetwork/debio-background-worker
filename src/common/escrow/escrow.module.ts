@@ -5,7 +5,7 @@ import { EscrowService } from './escrow.service';
 import { EthereumModule, SubstrateModule } from '../index';
 import { ErrorLoggingModule } from '../error-logging';
 import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList } from '../../common/secrets';
+import { SecretKeyList } from '@common/secrets';
 
 require('dotenv').config(); // eslint-disable-line
 @Module({

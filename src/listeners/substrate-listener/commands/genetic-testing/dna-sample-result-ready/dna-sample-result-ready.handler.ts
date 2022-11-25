@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DnaSampleResultReadyCommand } from './dna-sample-result-ready.command';
-import { NotificationDto } from '../../../../../common/notification/dto/notification.dto';
-import { DateTimeProxy, NotificationService } from '../../../../../common';
+import { NotificationDto } from '@common/notification/dto/notification.dto';
+import { DateTimeProxy, NotificationService } from '@common/index';
 import { Injectable } from '@nestjs/common';
 import { eventTypes } from '@debionetwork/polkadot-provider';
 

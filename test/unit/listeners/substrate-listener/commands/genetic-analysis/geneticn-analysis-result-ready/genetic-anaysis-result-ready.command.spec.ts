@@ -1,4 +1,4 @@
-import { GeneticAnalysisResultReadyCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis';
+import { GeneticAnalysisResultReadyCommand } from '@listeners/substrate-listener/commands/genetic-analysis';
 import {
   createMockGeneticAnalysis,
   mockBlockNumber,

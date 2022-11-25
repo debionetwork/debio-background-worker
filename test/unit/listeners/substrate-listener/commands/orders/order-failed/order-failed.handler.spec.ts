@@ -2,8 +2,8 @@ import {
   DateTimeProxy,
   SubstrateService,
   TransactionLoggingService,
-} from '../../../../../../../src/common';
-import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+} from '@common/index';
+import { OrderCreatedCommand } from '@listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
@@ -16,10 +16,10 @@ import {
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
-import { OrderFailedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
-import { EscrowService } from '../../../../../../../src/common/escrow/escrow.service';
+import { OrderFailedHandler } from '@listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
+import { EscrowService } from '@common/escrow/escrow.service';
 import * as ordersCommand from '@debionetwork/polkadot-provider/lib/command/labs/orders';
-import { NotificationService } from '../../../../../../../src/common/notification/notification.service';
+import { NotificationService } from '@common/notification/notification.service';
 
 describe('Order Failed Handler Event', () => {
   let orderFailedHandler: OrderFailedHandler;
