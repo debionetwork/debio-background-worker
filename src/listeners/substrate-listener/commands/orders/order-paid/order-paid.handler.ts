@@ -60,7 +60,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           address: order.customerId,
           amount:
             (totalPrice + totalAdditionalPrice) / currencyUnit[order.currency],
-          created_at: order.updatedAt,
+          created_at: this.convertToDate(order.updatedAt),
           currency: order.currency.toUpperCase(),
           parent_id: orderHistory?.id ? BigInt(orderHistory.id) : BigInt(0),
           ref_number: order.id,
@@ -117,5 +117,9 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
     } catch (error) {
       this.logger.log(error);
     }
+  }
+
+  private convertToDate(date: Date) {
+    return new Date(Number(date.toString().split(',').join('')));
   }
 }
