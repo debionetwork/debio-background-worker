@@ -42,7 +42,7 @@ export class OrderRefundedHandler
         amount:
           Number(order.prices[0].value.split(',').join('')) /
           currencyUnit[order.currency],
-        created_at: order.updatedAt,
+        created_at: this.convertToDate(order.updatedAt),
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(orderHistory.id),
         ref_number: order.id,
@@ -73,5 +73,9 @@ export class OrderRefundedHandler
     } catch (error) {
       this.logger.log(error);
     }
+  }
+
+  private convertToDate(date: Date) {
+    return new Date(Number(date.toString().split(',').join('')));
   }
 }

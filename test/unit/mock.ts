@@ -147,7 +147,6 @@ export const notificationServiceMockFactory: () => MockType<NotificationService>
 
 export function createMockOrder(
   status: OrderStatus,
-  date: Date,
   flow = 'StakingRequestService',
 ) {
   const first_price = {
@@ -172,8 +171,8 @@ export function createMockOrder(
       additionalPrices: [second_price],
       status: status,
       orderFlow: flow,
-      createdAt: date,
-      updatedAt: date,
+      createdAt: "1669649548467",
+      updatedAt: "1669649548467",
     })),
   };
 }

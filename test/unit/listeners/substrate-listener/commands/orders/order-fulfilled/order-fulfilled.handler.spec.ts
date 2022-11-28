@@ -111,8 +111,8 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
-    const DATE = new Date();
-    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
+    const DATE = new Date(1669649548467);
+    const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const RESULT_STATUS = true;
 
@@ -244,8 +244,8 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
-    const DATE = new Date();
-    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
+    const DATE = new Date(1669649548467);
+    const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const RESULT_STATUS = false;
 
@@ -362,8 +362,8 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
-    const DATE = new Date();
-    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
+    const DATE = new Date(1669649548467);
+    const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const RESULT_STATUS = false;
 
@@ -508,8 +508,8 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
-    const DATE = new Date();
-    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
+    const DATE = new Date(1669649548467);
+    const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const RESULT_STATUS = true;
 
@@ -627,8 +627,7 @@ describe('Order Fulfilled Handler Event', () => {
       conversion: 1,
     });
 
-    const DATE = new Date();
-    const ORDER = createMockOrder(OrderStatus.Cancelled, DATE);
+    const ORDER = createMockOrder(OrderStatus.Cancelled);
     const PRICE = 1;
     const BLOCKNUMBER = '1';
 
