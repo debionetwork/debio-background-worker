@@ -4,7 +4,9 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { SubstrateService } from '@common/index';
 import { keyList } from '@common/secrets';
-import { queryMenstrualSubscriptionById } from '@debionetwork/polkadot-provider/lib/query/menstrual-subscription';
+import {
+  queryMenstrualSubscriptionById
+} from '@debionetwork/polkadot-provider/lib/query/menstrual-subscription';
 
 @Injectable()
 export class MenstrualSubscriptionService {
@@ -29,10 +31,7 @@ export class MenstrualSubscriptionService {
     const menstrualSubscription = setInterval(async () => {
       await this.handleWaitingUnstaked();
     }, unstakeInterval);
-    this.schedulerRegistry.addInterval(
-      'menstrual-subscription',
-      menstrualSubscription,
-    );
+    this.schedulerRegistry.addInterval('menstrual-subscription', menstrualSubscription);
   }
 
   async handleWaitingUnstaked() {
@@ -86,14 +85,11 @@ export class MenstrualSubscriptionService {
             refresh: 'wait_for',
             body: {
               doc: {
-                status: 'Inactive',
+                status: "Inactive",
               },
             },
           });
-        } else if (
-          menstrualSubscriptionData.status === 'Active' &&
-          this.checkTimeDurationEnd(currtime, date, duration)
-        ) {
+        } else if (menstrualSubscriptionData.status === "Active" && this.checkTimeDurationEnd(currtime, date, duration)) {
           await this.subtrateService.api.tx.menstrualSubscription
             .changeMenstrualSubscriptionStatus(
               menstrualSubscriptionId,
