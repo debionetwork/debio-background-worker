@@ -37,7 +37,7 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
 
   async handleWaitingUnstakedGA() {
     try {
-      if (this.isRunning) return;
+      if (this.isRunning || this.subtrateService.api === undefined) return;
 
       this.isRunning = true;
       const geneticAnalystsWaitingUnstaked =
@@ -67,6 +67,8 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
 
       const listGeneticAnalyst = geneticAnalystsWaitingUnstaked.body.hits.hits;
       for (const geneticAnalystData of listGeneticAnalyst) {
+        if (this.subtrateService.api === undefined) break;
+        
         const requestId = geneticAnalystData['_source']['account_id'];
         const geneticAnalystDetail = await queryGeneticAnalystByAccountId(
           this.subtrateService.api as any,
@@ -111,7 +113,7 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
         }
       }
     } catch (err) {
-      this.logger.error(`unstaked error ${err}`);
+      this.logger.error(`ga unstaked error ${err}`);
     } finally {
       this.isRunning = false;
     }
