@@ -171,8 +171,8 @@ export function createMockOrder(
       additionalPrices: [second_price],
       status: status,
       orderFlow: flow,
-      createdAt: "1669649548467",
-      updatedAt: "1669649548467",
+      createdAt: '1669649548467',
+      updatedAt: '1669649548467',
     })),
   };
 }
