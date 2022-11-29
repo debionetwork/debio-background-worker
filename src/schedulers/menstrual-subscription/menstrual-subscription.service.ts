@@ -4,9 +4,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { SubstrateService } from '@common/index';
 import { keyList } from '@common/secrets';
-import {
-  queryMenstrualSubscriptionById
-} from '@debionetwork/polkadot-provider/lib/query/menstrual-subscription';
+import { queryMenstrualSubscriptionById } from '@debionetwork/polkadot-provider/lib/query/menstrual-subscription';
 
 @Injectable()
 export class MenstrualSubscriptionService {
@@ -31,7 +29,10 @@ export class MenstrualSubscriptionService {
     const menstrualSubscription = setInterval(async () => {
       await this.handleWaitingUnstaked();
     }, unstakeInterval);
-    this.schedulerRegistry.addInterval('menstrual-subscription', menstrualSubscription);
+    this.schedulerRegistry.addInterval(
+      'menstrual-subscription',
+      menstrualSubscription,
+    );
   }
 
   async handleWaitingUnstaked() {
@@ -73,20 +74,26 @@ export class MenstrualSubscriptionService {
         const duration = menstrualSubscription['_source']['duration'];
         const date = menstrualSubscription['_source']['updated_at'];
 
-        const menstrualSubscriptionData = await queryMenstrualSubscriptionById(this.subtrateService.api, menstrualSubscriptionId);
+        const menstrualSubscriptionData = await queryMenstrualSubscriptionById(
+          this.subtrateService.api,
+          menstrualSubscriptionId,
+        );
 
-        if (menstrualSubscriptionData.status === "Inactive") {
+        if (menstrualSubscriptionData.status === 'Inactive') {
           await this.elasticsearchService.update({
             index: 'menstrual-subscription',
             id: menstrualSubscriptionId,
             refresh: 'wait_for',
             body: {
               doc: {
-                status: "Inactive",
+                status: 'Inactive',
               },
             },
           });
-        } else if (menstrualSubscriptionData.status === "Active" && this.checkTimeDurationEnd(currtime, date, duration)) {
+        } else if (
+          menstrualSubscriptionData.status === 'Active' &&
+          this.checkTimeDurationEnd(currtime, date, duration)
+        ) {
           await this.subtrateService.api.tx.menstrualSubscription
             .changeMenstrualSubscriptionStatus(
               menstrualSubscriptionId,

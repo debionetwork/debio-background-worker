@@ -97,6 +97,7 @@ export const cacheMockFactory: () => MockType<CacheManager> = jest.fn(() => ({
 
 export const substrateServiceMockFactory: () => MockType<SubstrateService> =
   jest.fn(() => ({
+    api: jest.fn(),
     onModuleInit: jest.fn(),
     startListen: jest.fn(),
     stopListen: jest.fn(),
