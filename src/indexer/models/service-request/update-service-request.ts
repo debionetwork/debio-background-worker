@@ -1,11 +1,11 @@
 import { RequestStatus } from './request-status';
 
 export class UpdateServiceRequest {
-  constructor(requestId: string, status: RequestStatus) {
-    this.requestId = requestId;
+  constructor(hash: string, status: RequestStatus) {
+    this.hash = hash;
     this.status = status;
   }
 
-  requestId: string;
+  hash: string;
   status: RequestStatus;
 }
