@@ -12,21 +12,26 @@ export class UpdateServiceRequestHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: UpdateServiceRequestCommandIndexer) {
-    const { requestId, status } = command.updateServiceRequest;
+    const { updateServiceRequest, request } = command;
+    const { hash, status } = updateServiceRequest;
 
     await this.elasticsearchService.update({
       index: 'create-service-request',
-      id: requestId,
+      id: hash,
       refresh: 'wait_for',
       body: {
         script: {
           lang: 'painless',
           source: `
-            ctx._source.request.status      =  params.status;
+            ctx._source.request.status      = params.status;
             ctx._source.blockMetadata       = params.blockMetaData;
+            ctx._source.updated_at          = params.updatedAt;
+            ctx._source.unstaked_at         = params.unstakedAt;
           `,
           params: {
             status: status,
+            updatedAt: request.updated_at,
+            unstakedAt: request.unstaked_at,
             blockMetaData: command.blockMetadata,
           },
         },
@@ -37,7 +42,7 @@ export class UpdateServiceRequestHandler
       index: 'create-service-request',
       body: {
         query: {
-          match: { _id: requestId },
+          match: { _id: hash },
         },
       },
     });

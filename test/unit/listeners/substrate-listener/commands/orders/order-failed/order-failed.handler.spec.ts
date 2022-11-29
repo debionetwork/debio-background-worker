@@ -71,8 +71,7 @@ describe('Order Failed Handler Event', () => {
     const refundedOrderSpy = jest
       .spyOn(ordersCommand, 'setOrderRefunded')
       .mockImplementation();
-    const DATE = new Date();
-    const ORDER = createMockOrder(OrderStatus.Failed, DATE, 'XX');
+    const ORDER = createMockOrder(OrderStatus.Failed, 'XX');
 
     const orderFailedCommand: OrderCreatedCommand = new OrderCreatedCommand(
       [ORDER],

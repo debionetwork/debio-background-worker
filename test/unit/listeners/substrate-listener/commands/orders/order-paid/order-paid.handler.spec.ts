@@ -93,8 +93,8 @@ describe('Order Paid Handler Event', () => {
 
   it('should not called logging service create', async () => {
     // Arrange
-    const DATE = new Date();
-    const ORDER = createMockOrder(OrderStatus.Paid, DATE);
+    const DATE = new Date(1669649548467);
+    const ORDER = createMockOrder(OrderStatus.Paid);
 
     const RESULT_STATUS = true;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
@@ -134,8 +134,8 @@ describe('Order Paid Handler Event', () => {
 
   it('should called logging service create', async () => {
     // Arrange
-    const DATE = new Date();
-    const ORDER = createMockOrder(OrderStatus.Paid, DATE);
+    const DATE = new Date(1669649548467);
+    const ORDER = createMockOrder(OrderStatus.Paid);
 
     const RESULT_STATUS = false;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();

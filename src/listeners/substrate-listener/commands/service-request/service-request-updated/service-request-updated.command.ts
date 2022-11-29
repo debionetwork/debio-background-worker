@@ -5,7 +5,7 @@ export class ServiceRequestUpdatedCommand {
   requestId: string;
   status: RequestStatus;
   constructor(args: Array<any>, public readonly blockMetaData: BlockMetaData) {
-    this.requestId = args[1].toString();
-    this.status = args[2].toString();
+    this.requestId = args[0].toString();
+    this.status = args[1].toString();
   }
 }

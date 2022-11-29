@@ -11,31 +11,23 @@ export class MenstrualCycleLogUpdatedHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: MenstrualCycleLogUpdatedCommandIndexer) {
-    const {
-      menstrualCycleLog: {
-        id,
-        menstrualCalendarId,
-        date,
-        menstruation,
-        symptoms,
-        updatedAt,
-      },
-      blockMetaData,
-    } = command;
-    await this.elasticsearchService.update({
-      index: 'menstrual-cycle-log',
-      id: id,
-      refresh: 'wait_for',
-      body: {
-        doc: {
-          menstrual_calendar_id: menstrualCalendarId,
-          date: date.getTime(),
-          menstruation: menstruation,
-          symptoms: symptoms,
-          updated_at: updatedAt.getTime(),
-          blockMetaData: blockMetaData,
+    const { menstrualCycleLog, blockMetaData } = command;
+
+    for (let key = 0; key < menstrualCycleLog.length; key++) {
+      await this.elasticsearchService.update({
+        index: 'menstrual-cycle-log',
+        id: menstrualCycleLog[key].id,
+        refresh: 'wait_for',
+        body: {
+          doc: {
+            menstrual_calendar_id: menstrualCycleLog[key].menstrualCalendarId,
+            menstruation: menstrualCycleLog[key].menstruation,
+            symptoms: menstrualCycleLog[key].symptoms,
+            updated_at: menstrualCycleLog[key].updatedAt.getTime(),
+            blockMetaData: blockMetaData,
+          },
         },
-      },
-    });
+      });
+    }
   }
 }
