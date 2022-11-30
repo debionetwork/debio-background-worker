@@ -37,7 +37,7 @@ export class UnstakedService implements OnModuleInit {
 
   async handleWaitingUnstaked() {
     try {
-      if (this.isRunning) return;
+      if (this.isRunning || this.subtrateService.api === undefined) return;
 
       this.isRunning = true;
       const createRequestService = await this.elasticsearchService.search({
@@ -66,6 +66,8 @@ export class UnstakedService implements OnModuleInit {
 
       const listRequestService = createRequestService.body.hits.hits;
       for (const requestService of listRequestService) {
+        if (this.subtrateService.api === undefined) break;
+
         const requestId = requestService['_source']['request']['hash'];
         const serviceRequestDetail = await queryServiceRequestById(
           this.subtrateService.api as any,

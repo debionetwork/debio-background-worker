@@ -4,6 +4,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { SubstrateService } from '@common/index';
 import { keyList } from '@common/secrets';
+import { queryMenstrualSubscriptionById } from '@debionetwork/polkadot-provider/lib/query/menstrual-subscription';
 
 @Injectable()
 export class MenstrualSubscriptionService {
@@ -25,15 +26,18 @@ export class MenstrualSubscriptionService {
       this.gCloudSecretManagerService.getSecret('UNSTAKE_INTERVAL').toString(),
     );
 
-    const unstaked = setInterval(async () => {
+    const menstrualSubscription = setInterval(async () => {
       await this.handleWaitingUnstaked();
     }, unstakeInterval);
-    this.schedulerRegistry.addInterval('unstaked-interval', unstaked);
+    this.schedulerRegistry.addInterval(
+      'menstrual-subscription',
+      menstrualSubscription,
+    );
   }
 
   async handleWaitingUnstaked() {
     try {
-      if (this.isRunning) return;
+      if (this.isRunning || this.subtrateService.api === undefined) return;
 
       this.isRunning = true;
       const menstrualSubscription = await this.elasticsearchService.search({
@@ -64,11 +68,32 @@ export class MenstrualSubscriptionService {
 
       const listMenstrualSubscription = menstrualSubscription.body.hits.hits;
       for (const menstrualSubscription of listMenstrualSubscription) {
+        if (this.subtrateService.api === undefined) break;
+
         const menstrualSubscriptionId = menstrualSubscription['_source']['id'];
         const duration = menstrualSubscription['_source']['duration'];
         const date = menstrualSubscription['_source']['updated_at'];
 
-        if (this.checkTimeDurationEnd(currtime, date, duration)) {
+        const menstrualSubscriptionData = await queryMenstrualSubscriptionById(
+          this.subtrateService.api,
+          menstrualSubscriptionId,
+        );
+
+        if (menstrualSubscriptionData.status === 'Inactive') {
+          await this.elasticsearchService.update({
+            index: 'menstrual-subscription',
+            id: menstrualSubscriptionId,
+            refresh: 'wait_for',
+            body: {
+              doc: {
+                status: 'Inactive',
+              },
+            },
+          });
+        } else if (
+          menstrualSubscriptionData.status === 'Active' &&
+          this.checkTimeDurationEnd(currtime, date, duration)
+        ) {
           await this.subtrateService.api.tx.menstrualSubscription
             .changeMenstrualSubscriptionStatus(
               menstrualSubscriptionId,
@@ -95,7 +120,7 @@ export class MenstrualSubscriptionService {
     date: number,
     duration: string,
   ): boolean {
-    return currtime <= date + this.milisecondsConverter[duration];
+    return currtime >= date + this.milisecondsConverter[duration];
   }
 
   strToMilisecond(timeFormat: string): number {
