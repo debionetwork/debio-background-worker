@@ -379,7 +379,7 @@ export class IndexerHandler
         'last-block-number-substrate',
         'menstrual-calendar',
         'menstrual-cycle-log',
-        'menstrual-subscription'
+        'menstrual-subscription',
       ];
 
       for (const i of indices) {
