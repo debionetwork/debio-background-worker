@@ -58,7 +58,10 @@ import {
   DnaSampleResultReadyCommand,
 } from './commands/genetic-testing';
 import { ProcessEnvProxy } from '@common/proxies/process-env/process-env.proxy';
-import { MenstrualSubscriptionAddedCommand, MenstrualSubscriptionPaidCommand } from './commands/menstrual-subscription';
+import {
+  MenstrualSubscriptionAddedCommand,
+  MenstrualSubscriptionPaidCommand,
+} from './commands/menstrual-subscription';
 
 const eventRoutes = {
   services: {

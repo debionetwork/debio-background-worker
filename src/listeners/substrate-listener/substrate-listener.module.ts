@@ -113,7 +113,7 @@ import { MenstrualSubscriptionCommandHandler } from './commands/menstrual-subscr
     ...BlockCommandHandlers,
     ...BlockQueryHandlers,
     ...GeneticAnalystServiceCommandHandler,
-    ...MenstrualSubscriptionCommandHandler
+    ...MenstrualSubscriptionCommandHandler,
   ],
 })
 export class SubstrateListenerModule {}
