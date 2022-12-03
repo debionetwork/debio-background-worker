@@ -74,7 +74,7 @@ import {
   MenstrualCalendarAddedCommandIndexer,
   MenstrualCalendarRemovedCommandIndexer,
   MenstrualCalendarUpdatedCommandIndexer,
-  MenstrualCycleLogAddedCommandIndexer,
+  MenstrualCycleLogsAddedCommandIndexer,
   MenstrualCycleLogRemovedCommandIndexer,
   MenstrualCycleLogUpdatedCommandIndexer,
 } from './events/menstrual-calendar';
@@ -172,7 +172,7 @@ export const eventRoutes = {
     MenstrualCalendarAdded: MenstrualCalendarAddedCommandIndexer,
     MenstrualCalendarUpdated: MenstrualCalendarUpdatedCommandIndexer,
     MenstrualCalendarRemoved: MenstrualCalendarRemovedCommandIndexer,
-    MenstrualCycleLogAdded: MenstrualCycleLogAddedCommandIndexer,
+    MenstrualCycleLogsAdded: MenstrualCycleLogsAddedCommandIndexer,
     MenstrualCycleLogUpdated: MenstrualCycleLogUpdatedCommandIndexer,
     MenstrualCycleLogRemoved: MenstrualCycleLogRemovedCommandIndexer,
   },

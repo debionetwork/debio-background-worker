@@ -58,6 +58,7 @@ import {
   DnaSampleResultReadyCommand,
 } from './commands/genetic-testing';
 import { ProcessEnvProxy } from '@common/proxies/process-env/process-env.proxy';
+import { MenstrualSubscriptionAddedCommand, MenstrualSubscriptionPaidCommand } from './commands/menstrual-subscription';
 
 const eventRoutes = {
   services: {
@@ -110,6 +111,10 @@ const eventRoutes = {
     LabUnstakeSuccessful: LabUnstakedCommand,
     LabRetrieveUnstakeAmount: LabRetrieveUnstakeAmountCommand,
     LabUpdateVerificationStatus: LabUpdateVerificationStatusCommand,
+  },
+  menstrualSubscription: {
+    MenstrualSubscriptionAdded: MenstrualSubscriptionAddedCommand,
+    MenstrualSubscriptionPaid: MenstrualSubscriptionPaidCommand,
   },
 };
 

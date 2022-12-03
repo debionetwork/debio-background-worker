@@ -17,4 +17,6 @@ export class TransactionLoggingDto {
   transaction_status: number;
 
   transaction_type: number;
+
+  transaction_hash?: string;
 }

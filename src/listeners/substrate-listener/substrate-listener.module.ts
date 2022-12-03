@@ -31,6 +31,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { SecretKeyList, keyList } from '@common/secrets';
+import { MenstrualSubscriptionCommandHandler } from './commands/menstrual-subscription';
 
 @Module({
   imports: [
@@ -112,6 +113,7 @@ import { SecretKeyList, keyList } from '@common/secrets';
     ...BlockCommandHandlers,
     ...BlockQueryHandlers,
     ...GeneticAnalystServiceCommandHandler,
+    ...MenstrualSubscriptionCommandHandler
   ],
 })
 export class SubstrateListenerModule {}
