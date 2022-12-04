@@ -95,10 +95,9 @@ export class OrderFulfilledHandler
       }
 
       if (order.orderFlow === ServiceFlow.StakingRequestService) {
-        const { hash: requestId } = await queryServiceRequestById(
-          this.substrateService.api,
+        const requestId = (await this.substrateService.api.query.serviceRequest.requestByOrderId(
           order.id,
-        );
+        )).toString();
 
         await finalizeRequest(
           this.substrateService.api as any,
