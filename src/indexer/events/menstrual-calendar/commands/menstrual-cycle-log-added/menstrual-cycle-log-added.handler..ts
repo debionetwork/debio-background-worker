@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { MenstrualCycleLogAddedCommandIndexer } from './menstrual-cycle-log-added.command';
+import { MenstrualCycleLogsAddedCommandIndexer } from './menstrual-cycle-log-added.command';
 
 @Injectable()
-@CommandHandler(MenstrualCycleLogAddedCommandIndexer)
-export class MenstrualCycleLogAddedHandler
-  implements ICommandHandler<MenstrualCycleLogAddedCommandIndexer>
+@CommandHandler(MenstrualCycleLogsAddedCommandIndexer)
+export class MenstrualCycleLogsAddedHandler
+  implements ICommandHandler<MenstrualCycleLogsAddedCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async execute(command: MenstrualCycleLogAddedCommandIndexer) {
+  async execute(command: MenstrualCycleLogsAddedCommandIndexer) {
     const { menstrualCycleLog, accountId, blockMetaData } = command;
 
     for (let key = 0; key < menstrualCycleLog.length; key++) {

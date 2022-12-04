@@ -1,7 +1,7 @@
 import { MenstrualCycleLog } from '../../../../models/menstrual-calendar/menstrual-cycle-log';
 import { BlockMetaData } from '../../../../models/block-meta-data';
 
-export class MenstrualCycleLogAddedCommandIndexer {
+export class MenstrualCycleLogsAddedCommandIndexer {
   menstrualCycleLog: Array<MenstrualCycleLog>;
   accountId: string;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {

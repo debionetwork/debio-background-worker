@@ -8,7 +8,7 @@ export * from './commands/menstrual-cycle-log-removed/menstrual-cycle-log-remove
 import { MenstrualCalendarAddedHandler } from './commands/menstrual-calendar-added/menstrual-calendar-added.handler';
 import { MenstrualCalendarUpdatedHandler } from './commands/menstrual-calendar-updated/menstrual-calendar-updated.handler';
 import { MenstrualCalendarRemovedHandler } from './commands/menstrual-calendar-removed/menstrual-calendar-removed.handler';
-import { MenstrualCycleLogAddedHandler } from './commands/menstrual-cycle-log-added/menstrual-cycle-log-added.handler.';
+import { MenstrualCycleLogsAddedHandler } from './commands/menstrual-cycle-log-added/menstrual-cycle-log-added.handler.';
 import { MenstrualCycleLogUpdatedHandler } from './commands/menstrual-cycle-log-updated/menstrual-cycle-log-updated.handler';
 import { MenstrualCycleLogRemovedHandler } from './commands/menstrual-cycle-log-removed/menstrual-cycle-log-removed.handler';
 
@@ -16,7 +16,7 @@ export const MenstrualCalendarCommandHandlers = [
   MenstrualCalendarAddedHandler,
   MenstrualCalendarUpdatedHandler,
   MenstrualCalendarRemovedHandler,
-  MenstrualCycleLogAddedHandler,
+  MenstrualCycleLogsAddedHandler,
   MenstrualCycleLogUpdatedHandler,
   MenstrualCycleLogRemovedHandler,
 ];
