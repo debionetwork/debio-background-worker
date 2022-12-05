@@ -1,3 +1,7 @@
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
+import { TransactionStatusService } from '@common/transaction-status/transaction-status.service';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionTypeService } from '@common/transaction-type/transaction-type.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,9 +13,36 @@ export class TransactionLoggingService {
   constructor(
     @InjectRepository(TransactionRequest)
     private readonly transactionRequestRepository: Repository<TransactionRequest>,
+    private readonly transactionStatusService: TransactionStatusService,
+    private readonly transactionTypeService: TransactionTypeService,
   ) {}
 
-  create(data: TransactionLoggingDto) {
+  private async getTransactionStatus(
+    status: TransactionStatusList,
+    type: number,
+  ) {
+    const transactionStatusDb =
+      await this.transactionStatusService.getTransactionStatus(type, status);
+
+    return transactionStatusDb.id;
+  }
+
+  private async getTransactionType(type: TransactionTypeList) {
+    const transactionTypeDb =
+      await this.transactionTypeService.getTransactionType(type);
+
+    return transactionTypeDb.id;
+  }
+
+  async create(data: TransactionLoggingDto) {
+    const transactionType = await this.getTransactionType(
+      data.transaction_type,
+    );
+    const transactionStatus = await this.getTransactionStatus(
+      data.transaction_status,
+      transactionType,
+    );
+
     const logging = new TransactionRequest();
     logging.address = data.address;
     logging.amount = +data.amount;
@@ -19,8 +50,8 @@ export class TransactionLoggingService {
     logging.currency = data.currency;
     logging.parent_id = data.parent_id.toString();
     logging.ref_number = data.ref_number;
-    logging.transaction_type = data.transaction_type;
-    logging.transaction_status = data.transaction_status;
+    logging.transaction_type = transactionType;
+    logging.transaction_status = transactionStatus;
     return this.transactionRequestRepository.save(logging);
   }
 

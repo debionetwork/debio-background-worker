@@ -12,6 +12,8 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { DataStakedCommand } from './data-staked.command';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(DataStakedCommand)
@@ -67,8 +69,8 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
         currency: 'DBIO',
         parent_id: BigInt(0),
         ref_number: dataOrder.id,
-        transaction_type: 8,
-        transaction_status: 34,
+        transaction_type: TransactionTypeList.Reward,
+        transaction_status: TransactionStatusList.CustomerAddDataAsBounty,
       };
       await this.transactionLoggingService.create(dataCustomerLoggingInput);
     } catch (err) {

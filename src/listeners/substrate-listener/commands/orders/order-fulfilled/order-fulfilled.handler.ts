@@ -21,6 +21,8 @@ import { EscrowService } from '@common/escrow/escrow.service';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
 import currencyUnit from '../../../models/currencyUnit';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)
@@ -70,8 +72,8 @@ export class OrderFulfilledHandler
         currency: order.currency.toUpperCase(),
         parent_id: orderHistory?.id ? BigInt(orderHistory.id) : BigInt(0),
         ref_number: order.id,
-        transaction_status: 3,
-        transaction_type: 1,
+        transaction_type: TransactionTypeList.Order,
+        transaction_status: TransactionStatusList.Fulfilled,
       };
 
       // Logging transaction
@@ -203,8 +205,8 @@ export class OrderFulfilledHandler
       currency: 'DBIO',
       parent_id: BigInt(0),
       ref_number: order.id,
-      transaction_type: 8,
-      transaction_status: 36,
+      transaction_type: TransactionTypeList.Reward,
+      transaction_status: TransactionStatusList.CustomerStakeRequestService,
     };
     await this.loggingService.create(dataCustomerLoggingInput);
 
@@ -242,8 +244,8 @@ export class OrderFulfilledHandler
       currency: 'DBIO',
       parent_id: BigInt(0),
       ref_number: order.id,
-      transaction_type: 8,
-      transaction_status: 37,
+      transaction_type: TransactionTypeList.Reward,
+      transaction_status: TransactionStatusList.LabProvideRequestedService,
     };
     await this.loggingService.create(dataLabLoggingInput);
   }

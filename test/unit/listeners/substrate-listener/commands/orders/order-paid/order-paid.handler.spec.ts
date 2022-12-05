@@ -24,6 +24,8 @@ import { TransactionLoggingDto } from '@common/transaction-logging/dto/transacti
 import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { NotificationService } from '@common/notification/notification.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 describe('Order Paid Handler Event', () => {
   let orderPaidHandler: OrderPaidHandler;
@@ -170,8 +172,8 @@ describe('Order Paid Handler Event', () => {
       currency: orderPaidCommand.orders.currency.toUpperCase(),
       parent_id: BigInt(RESULT_TRANSACTION.id),
       ref_number: orderPaidCommand.orders.id,
-      transaction_status: 2,
-      transaction_type: 1,
+      transaction_type: TransactionTypeList.Order,
+      transaction_status: TransactionStatusList.Paid,
     };
 
     await orderPaidHandler.execute(orderPaidCommand);

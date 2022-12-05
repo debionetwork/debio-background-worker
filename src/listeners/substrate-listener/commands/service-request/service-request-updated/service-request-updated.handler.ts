@@ -15,6 +15,8 @@ import {
 } from '@common/index';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { ServiceRequestUpdatedCommand } from './service-request-updated.command';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(ServiceRequestUpdatedCommand)
@@ -76,8 +78,8 @@ export class ServiceRequestUpdatedHandler
         currency: 'DBIO',
         parent_id: BigInt(serviceRequestParent.id),
         ref_number: serviceRequest.hash,
-        transaction_status: 11,
-        transaction_type: 2,
+        transaction_type: TransactionTypeList.StakingRequestService,
+        transaction_status: TransactionStatusList.WaitingForUnstake,
       };
 
       if (!isServiceRequestHasBeenInsert) {
@@ -104,8 +106,8 @@ export class ServiceRequestUpdatedHandler
         currency: 'DBIO',
         parent_id: BigInt(serviceRequestParent.id),
         ref_number: serviceRequest.hash,
-        transaction_status: 8,
-        transaction_type: 2,
+        transaction_type: TransactionTypeList.StakingRequestService,
+        transaction_status: TransactionStatusList.Unstake,
       };
       if (!isServiceRequestHasBeenInsert) {
         await this.loggingService.create(stakingLogging);

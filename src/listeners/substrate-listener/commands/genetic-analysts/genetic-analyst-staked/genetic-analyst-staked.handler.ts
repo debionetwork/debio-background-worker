@@ -3,6 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { DateTimeProxy, TransactionLoggingService } from '@common/index';
 import { GeneticAnalystStakedCommand } from './genetic-analyst-staked.command';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(GeneticAnalystStakedCommand)
@@ -37,8 +39,8 @@ export class GeneticAnalystStakedHandler
         parent_id:
           BigInt(Number(isGeneticAnalystHasBeenInsert.id)) || BigInt(0),
         ref_number: geneticAnalyst.accountId,
-        transaction_status: 23,
-        transaction_type: 5,
+        transaction_type: TransactionTypeList.StakingGeneticAnalyst,
+        transaction_status: TransactionStatusList.Staked,
       };
       await this.loggingService.create(geneticAnalystLogging);
     } catch (error) {

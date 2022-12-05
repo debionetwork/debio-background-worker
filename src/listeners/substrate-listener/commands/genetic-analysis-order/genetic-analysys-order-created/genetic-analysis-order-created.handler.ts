@@ -8,6 +8,8 @@ import {
 } from '@common/index';
 import { GeneticAnalysisOrderCreatedCommand } from './genetic-analysis-order-created.command';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderCreatedCommand)
@@ -44,8 +46,8 @@ export class GeneticAnalysisOrderCreatedHandler
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(0),
         ref_number: geneticAnalysisOrder.id,
-        transaction_status: 13,
-        transaction_type: 3,
+        transaction_type: TransactionTypeList.GeneticAnalysisOrder,
+        transaction_status: TransactionStatusList.Unpaid,
       };
       const currDateTime = this.dateTimeProxy.new();
       const notificationInput: NotificationDto = {

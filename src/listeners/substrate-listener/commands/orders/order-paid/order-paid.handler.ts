@@ -18,6 +18,8 @@ import { NotificationDto } from '@common/notification/dto/notification.dto';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '@common/secrets';
 import currencyUnit from '../../../models/currencyUnit';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -64,8 +66,8 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           currency: order.currency.toUpperCase(),
           parent_id: orderHistory?.id ? BigInt(orderHistory.id) : BigInt(0),
           ref_number: order.id,
-          transaction_status: 2,
-          transaction_type: 1,
+          transaction_type: TransactionTypeList.Order,
+          transaction_status: TransactionStatusList.Paid,
         };
 
         await this.loggingService.create(orderLogging);

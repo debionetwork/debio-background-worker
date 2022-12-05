@@ -8,6 +8,8 @@ import {
   TransactionLoggingService,
 } from '@common/index';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(LabRegisteredCommand)
@@ -33,8 +35,8 @@ export class LabRegisteredHandler
       currency: 'DBIO',
       parent_id: BigInt(0),
       ref_number: lab.accountId,
-      transaction_status: 28, // Lab Unverified
-      transaction_type: 7, // Lab
+      transaction_type: TransactionTypeList.Lab, // Lab
+      transaction_status: TransactionStatusList.Unverified, // Lab Unverified
     };
 
     try {

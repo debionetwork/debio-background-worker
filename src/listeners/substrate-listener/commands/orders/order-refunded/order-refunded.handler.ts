@@ -10,6 +10,8 @@ import { TransactionLoggingDto } from '@common/transaction-logging/dto/transacti
 import { Order } from '@debionetwork/polkadot-provider';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
 import currencyUnit from '../../../models/currencyUnit';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(OrderRefundedCommand)
@@ -46,8 +48,8 @@ export class OrderRefundedHandler
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(orderHistory.id),
         ref_number: order.id,
-        transaction_status: 4,
-        transaction_type: 1,
+        transaction_type: TransactionTypeList.Order,
+        transaction_status: TransactionStatusList.Refunded,
       };
       if (!isOrderHasBeenInsert) {
         await this.loggingService.create(orderLogging);

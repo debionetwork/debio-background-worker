@@ -16,6 +16,8 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '@common/secrets';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderPaidCommand)
@@ -59,8 +61,8 @@ export class GeneticAnalysisOrderPaidHandler
           currency: geneticAnalysisOrder.currency.toUpperCase(),
           parent_id: BigInt(geneticAnalysisOrderHistory.id ?? 0),
           ref_number: geneticAnalysisOrder.id,
-          transaction_status: 14,
-          transaction_type: 3,
+          transaction_type: TransactionTypeList.GeneticAnalysisOrder,
+          transaction_status: TransactionStatusList.Paid,
         };
 
         await this.loggingService.create(geneticAnalysisOrderLogging);

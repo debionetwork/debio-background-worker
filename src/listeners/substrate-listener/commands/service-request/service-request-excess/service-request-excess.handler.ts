@@ -8,6 +8,8 @@ import {
   TransactionLoggingService,
 } from '@common/index';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(ServiceRequestStakingAmountExcessRefundedCommand)
@@ -41,8 +43,8 @@ export class ServiceRequestStakingAmountExcessRefunded
         ? loggingServiceRequest.id
         : BigInt(0),
       ref_number: requestId.toString(),
-      transaction_status: 9,
-      transaction_type: 2,
+      transaction_type: TransactionTypeList.StakingRequestService,
+      transaction_status: TransactionStatusList.Excess,
     };
 
     try {

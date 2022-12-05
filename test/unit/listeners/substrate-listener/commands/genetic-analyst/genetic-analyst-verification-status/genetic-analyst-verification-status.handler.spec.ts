@@ -15,6 +15,8 @@ import {
 } from '../../../../../mock';
 import { GeneticAnalystVerificationStatusHandler } from '@listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
 import { when } from 'jest-when';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 describe('Genetic Analyst Verification Status Handler Event', () => {
   let geneticAnalystVerificationStatusHandler: GeneticAnalystVerificationStatusHandler;
@@ -109,8 +111,8 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
       expect.objectContaining({
         address: ACCOUNT_ID,
-        transaction_type: 4,
-        transaction_status: 21,
+        transaction_type: TransactionTypeList.GeneticAnalyst,
+        transaction_status: TransactionStatusList.Rejected,
         currency: 'DBIO',
       }),
     );
@@ -144,8 +146,8 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
       expect.objectContaining({
         address: ACCOUNT_ID,
-        transaction_type: 4,
-        transaction_status: 20,
+        transaction_type: TransactionTypeList.GeneticAnalyst,
+        transaction_status: TransactionStatusList.Verified,
         currency: 'DBIO',
       }),
     );
@@ -179,8 +181,8 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
       expect.objectContaining({
         address: ACCOUNT_ID,
-        transaction_type: 4,
-        transaction_status: 22,
+        transaction_type: TransactionTypeList.GeneticAnalyst,
+        transaction_status: TransactionStatusList.Revoked,
         currency: 'DBIO',
       }),
     );

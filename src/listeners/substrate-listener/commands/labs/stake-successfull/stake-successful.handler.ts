@@ -3,6 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingService, DateTimeProxy } from '@common/index';
 import { LabStakeSuccessfulCommand } from './stake-successful.command';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(LabStakeSuccessfulCommand)
@@ -36,8 +38,8 @@ export class LabStakeSuccessfullHandler
         currency: 'DBIO',
         parent_id: labParent?.id ? BigInt(Number(labParent?.id)) : BigInt(0),
         ref_number: lab.accountId,
-        transaction_status: 26, // Lab Staked
-        transaction_type: 6, // Staking Lab
+        transaction_type: TransactionTypeList.StakingLab, // Staking Lab
+        transaction_status: TransactionStatusList.Staked, // Lab Staked
       };
       let isLabHasBeenInsertTenMinuteAgo = false;
 
