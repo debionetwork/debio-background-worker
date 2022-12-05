@@ -4,7 +4,9 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { SubstrateService } from '@common/index';
 import { keyList } from '@common/secrets';
+import { changeMenstrualSubscriptionStatus } from '@debionetwork/polkadot-provider/lib/command/menstrual-subscription';
 import { queryMenstrualSubscriptionById } from '@debionetwork/polkadot-provider/lib/query/menstrual-subscription';
+import { SubscriptionStatus } from '@debionetwork/polkadot-provider/lib/primitives/subscription-status';
 
 @Injectable()
 export class MenstrualSubscriptionService {
@@ -94,12 +96,12 @@ export class MenstrualSubscriptionService {
           menstrualSubscriptionData.status === 'Active' &&
           this.checkTimeDurationEnd(currtime, date, duration)
         ) {
-          await this.subtrateService.api.tx.menstrualSubscription
-            .changeMenstrualSubscriptionStatus(
-              menstrualSubscriptionId,
-              'Inactive',
-            )
-            .signAndSend(this.subtrateService.pair, { nonce: -1 });
+          await changeMenstrualSubscriptionStatus(
+            this.subtrateService.api, 
+            this.subtrateService.pair, 
+            menstrualSubscriptionId, 
+            SubscriptionStatus.Inactive
+          );
         }
       }
     } catch (err) {

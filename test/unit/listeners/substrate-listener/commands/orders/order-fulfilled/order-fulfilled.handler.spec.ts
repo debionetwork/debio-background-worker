@@ -244,6 +244,10 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
+    const queryServiceByOrderIdSpy = jest
+      .spyOn(serviceRequestQuery, 'queryServiceRequestByOrderId')
+      .mockImplementation();
+    
     const DATE = new Date(1669649548467);
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
@@ -334,6 +338,7 @@ describe('Order Fulfilled Handler Event', () => {
     expect(finalizeRequestSpy).toHaveBeenCalled();
     expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
     expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
+    expect(queryServiceByOrderIdSpy).toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
     queryServiceByIdSpy.mockClear();
