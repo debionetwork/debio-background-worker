@@ -1,6 +1,9 @@
 import { SubstrateService } from '@common/substrate';
 import { TransactionLoggingService } from '@common/transaction-logging';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import currencyUnit from '@listeners/substrate-listener/models/currencyUnit';
 import { MenstrualSubscriptionPrice } from '@listeners/substrate-listener/models/menstrual-subscription-price';
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -40,13 +43,15 @@ export class MenstrualSubscriptionAddedHandler
 
     const menstrualSubscriptionLogging: TransactionLoggingDto = {
       address: menstrualSubscription.addressId,
-      amount: menstrualSubscriptionPrice.amount,
+      amount:
+        menstrualSubscriptionPrice.amount /
+        currencyUnit[menstrualSubscription.currency],
       created_at: menstrualSubscription.createdAt,
       currency: menstrualSubscription.currency,
       parent_id: BigInt(0),
       ref_number: menstrualSubscription.id,
-      transaction_status: 38,
-      transaction_type: 9,
+      transaction_type: TransactionTypeList.MenstrualCalendar,
+      transaction_status: TransactionStatusList.Unpaid,
       transaction_hash: blockMetaData.blockHash,
     };
 

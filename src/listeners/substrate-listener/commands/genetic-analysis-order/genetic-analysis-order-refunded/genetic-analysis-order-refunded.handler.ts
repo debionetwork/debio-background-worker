@@ -8,6 +8,8 @@ import {
 } from '@common/index';
 import { GeneticAnalysisOrderRefundedCommand } from './genetic-analysis-order-refunded.command';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderRefundedCommand)
 export class GeneticAnalysisOrderRefundedHandler
@@ -44,8 +46,8 @@ export class GeneticAnalysisOrderRefundedHandler
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
         ref_number: geneticAnalysisOrder.id,
-        transaction_status: 16,
-        transaction_type: 3,
+        transaction_type: TransactionTypeList.GeneticAnalysisOrder,
+        transaction_status: TransactionStatusList.Refunded,
       };
 
       if (!isGeneticAnalysisOrderHasBeenInsert) {

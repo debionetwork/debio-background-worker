@@ -1,3 +1,5 @@
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
 import { Transform } from 'class-transformer';
 
 export class TransactionLoggingDto {
@@ -14,9 +16,9 @@ export class TransactionLoggingDto {
 
   ref_number: string;
 
-  transaction_status: number;
+  transaction_status: TransactionStatusList;
 
-  transaction_type: number;
+  transaction_type: TransactionTypeList;
 
   transaction_hash?: string;
 }

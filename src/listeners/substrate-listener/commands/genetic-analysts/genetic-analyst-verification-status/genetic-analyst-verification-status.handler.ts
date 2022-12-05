@@ -9,6 +9,8 @@ import {
 import { GeneticAnalystVerificationStatusCommand } from './genetic-analyst-verification-status.command';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(GeneticAnalystVerificationStatusCommand)
@@ -44,20 +46,20 @@ export class GeneticAnalystVerificationStatusHandler
           geneticAnalyst.accountId,
           21,
         );
-      let transactionStatus;
+      let transactionStatus: TransactionStatusList;
       if (geneticAnalyst.verificationStatus === 'Verified') {
-        transactionStatus = 20;
+        transactionStatus = TransactionStatusList.Verified;
         entity = 'Account verified';
         notificationDescription = 'Congrats! Your account has been verified.';
       }
       if (geneticAnalyst.verificationStatus === 'Rejected') {
-        transactionStatus = 21;
+        transactionStatus = TransactionStatusList.Rejected;
         entity = 'Account rejected';
         notificationDescription =
           'Your account verification has been rejected.';
       }
       if (geneticAnalyst.verificationStatus === 'Revoked') {
-        transactionStatus = 22;
+        transactionStatus = TransactionStatusList.Revoked;
         entity = 'Account revoked';
         notificationDescription = 'Your account has been revoked.';
       }
@@ -75,8 +77,8 @@ export class GeneticAnalystVerificationStatusHandler
           currency: 'DBIO',
           parent_id: BigInt(geneticAnalystHistory?.id ?? 0),
           ref_number: geneticAnalyst.accountId,
+          transaction_type: TransactionTypeList.GeneticAnalyst,
           transaction_status: transactionStatus,
-          transaction_type: 4,
         };
 
         await this.loggingService.create(geneticAnalystLogging);

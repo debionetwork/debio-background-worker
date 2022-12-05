@@ -3,6 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { TransactionLoggingService } from '@common/index';
 import { GeneticAnalysisOrderCancelledCommand } from './genetic-analysis-order-cancelled.command';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderCancelledCommand)
@@ -41,8 +43,8 @@ export class GeneticAnalysisOrderCancelledHandler
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
         ref_number: geneticAnalysisOrder.id,
-        transaction_status: 17,
-        transaction_type: 3,
+        transaction_type: TransactionTypeList.GeneticAnalysisOrder,
+        transaction_status: TransactionStatusList.Cancelled,
       };
 
       if (

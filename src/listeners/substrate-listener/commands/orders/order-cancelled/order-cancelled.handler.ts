@@ -5,6 +5,8 @@ import { TransactionLoggingService } from '@common/index';
 import { EscrowService } from '@common/escrow/escrow.service';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { Order } from '@debionetwork/polkadot-provider';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(OrderCancelledCommand)
@@ -37,8 +39,8 @@ export class OrderCancelledHandler
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(orderHistory.id),
         ref_number: order.id,
-        transaction_status: 5,
-        transaction_type: 1,
+        transaction_type: TransactionTypeList.Order,
+        transaction_status: TransactionStatusList.Cancelled,
       };
       await this.escrowService.cancelOrder(order);
       if (!isOrderHasBeenInsert) {

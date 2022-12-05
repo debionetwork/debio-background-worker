@@ -3,6 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { DateTimeProxy, TransactionLoggingService } from '@common/index';
 import { GeneticAnalystUnstakedCommand } from './genetic-analyst-unstaked.command';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(GeneticAnalystUnstakedCommand)
@@ -37,8 +39,8 @@ export class GeneticAnalystUnstakedHandler
         currency: 'DBIO',
         parent_id: BigInt(Number(isGeneticAnalystHasBeenInsert.id)),
         ref_number: geneticAnalyst.accountId,
-        transaction_status: 24,
-        transaction_type: 5,
+        transaction_type: TransactionTypeList.StakingGeneticAnalyst,
+        transaction_status: TransactionStatusList.Unstaked,
       };
 
       await this.loggingService.create(geneticAnalystLogging);

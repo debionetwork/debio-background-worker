@@ -32,6 +32,8 @@ import * as userProfileQuery from '@debionetwork/polkadot-provider/lib/query/use
 import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
 import * as ordersQuery from '@debionetwork/polkadot-provider/lib/query/labs/orders';
 import * as servicesQuery from '@debionetwork/polkadot-provider/lib/query/labs/services';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 describe('Order Fulfilled Handler Event', () => {
   let orderFulfilledHandler: OrderFulfilledHandler;
@@ -452,8 +454,8 @@ describe('Order Fulfilled Handler Event', () => {
       currency: orderCancelledCommand.orders.currency.toUpperCase(),
       parent_id: BigInt(RESULT_TRANSACTION.id),
       ref_number: orderCancelledCommand.orders.id,
-      transaction_status: 3,
-      transaction_type: 1,
+      transaction_type: TransactionTypeList.Order,
+      transaction_status: TransactionStatusList.Fulfilled,
     };
 
     await orderFulfilledHandler.execute(orderCancelledCommand);

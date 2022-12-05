@@ -15,6 +15,8 @@ import { when } from 'jest-when';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { NotificationService } from '@common/notification/notification.service';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 describe('Order Refunded Handler Event', () => {
   let orderRefundedHandler: OrderRefundedHandler;
@@ -131,8 +133,8 @@ describe('Order Refunded Handler Event', () => {
       currency: orderRefundedCommand.orders.currency.toUpperCase(),
       parent_id: BigInt(RESULT_TRANSACTION.id),
       ref_number: orderRefundedCommand.orders.id,
-      transaction_status: 4,
-      transaction_type: 1,
+      transaction_type: TransactionTypeList.Order,
+      transaction_status: TransactionStatusList.Refunded,
     };
 
     await orderRefundedHandler.execute(orderRefundedCommand);

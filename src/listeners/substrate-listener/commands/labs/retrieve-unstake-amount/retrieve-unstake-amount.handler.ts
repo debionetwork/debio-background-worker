@@ -3,6 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DateTimeProxy, TransactionLoggingService } from '@common/index';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { LabRetrieveUnstakeAmountCommand } from './retrieve-unstake-amount.command';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(LabRetrieveUnstakeAmountCommand)
@@ -42,8 +44,8 @@ export class LabRetrieveUnstakeAmountHandler
         currency: 'DBIO',
         parent_id: BigInt(labParent.id),
         ref_number: labParent.address,
-        transaction_status: 25, // Lab Unstaked
-        transaction_type: 6, // Staking Lab
+        transaction_type: TransactionTypeList.StakingLab, // Staking Lab
+        transaction_status: TransactionStatusList.Unstaked, // Lab Unstaked
       };
       if (!islabHasBeenInsert) {
         await this.loggingService.create(stakingLogging);

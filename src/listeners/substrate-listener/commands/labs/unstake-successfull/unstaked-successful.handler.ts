@@ -3,6 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { DateTimeProxy, TransactionLoggingService } from '@common/index';
 import { LabUnstakedCommand } from './unstaked-successful.command';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(LabUnstakedCommand)
@@ -34,8 +36,8 @@ export class labUnstakedHandler implements ICommandHandler<LabUnstakedCommand> {
         currency: 'DBIO',
         parent_id: BigInt(Number(labParent.id)),
         ref_number: lab.accountId,
-        transaction_status: 27, // Lab Waiting For Unstaked
-        transaction_type: 6, // Staking Lab
+        transaction_type: TransactionTypeList.StakingLab, // Staking Lab
+        transaction_status: TransactionStatusList.WaitingForUnstaked, // Lab Waiting For Unstaked
       };
 
       let isLabHasBeenInsertTenMinuteAgo = false;

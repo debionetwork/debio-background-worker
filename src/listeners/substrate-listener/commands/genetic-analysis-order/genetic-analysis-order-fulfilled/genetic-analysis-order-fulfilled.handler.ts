@@ -9,6 +9,8 @@ import {
 import { GeneticAnalysisOrderFulfilledCommand } from './genetic-analysis-order-fulfilled.command';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
 import currencyUnit from '../../../models/currencyUnit';
+import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderFulfilledCommand)
@@ -63,8 +65,8 @@ export class GeneticAnalysisOrderFulfilledHandler
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
         ref_number: geneticAnalysisOrder.id,
-        transaction_status: 15,
-        transaction_type: 3,
+        transaction_type: TransactionTypeList.GeneticAnalysisOrder,
+        transaction_status: TransactionStatusList.Fulfilled,
       };
 
       const serviceChargeLogging: TransactionLoggingDto = {
@@ -74,8 +76,8 @@ export class GeneticAnalysisOrderFulfilledHandler
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
         ref_number: geneticAnalysisOrder.id,
-        transaction_status: 32,
-        transaction_type: 3,
+        transaction_type: TransactionTypeList.GeneticAnalysisOrder,
+        transaction_status: TransactionStatusList.Fulfilled,
       };
 
       if (!isGeneticAnalysisOrderHasBeenInsert) {
