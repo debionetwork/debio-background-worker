@@ -13,7 +13,7 @@ import {
   finalizeRequest,
   Order,
   queryEthAdressByAccountId,
-  queryServiceRequestById,
+  queryServiceRequestByOrderId,
   sendRewards,
   ServiceFlow,
 } from '@debionetwork/polkadot-provider';
@@ -95,7 +95,7 @@ export class OrderFulfilledHandler
       }
 
       if (order.orderFlow === ServiceFlow.StakingRequestService) {
-        const { hash: requestId } = await queryServiceRequestById(
+        const requestId = await queryServiceRequestByOrderId(
           this.substrateService.api,
           order.id,
         );
