@@ -97,10 +97,10 @@ export class MenstrualSubscriptionService {
           this.checkTimeDurationEnd(currtime, date, duration)
         ) {
           await changeMenstrualSubscriptionStatus(
-            this.subtrateService.api, 
-            this.subtrateService.pair, 
-            menstrualSubscriptionId, 
-            SubscriptionStatus.Inactive
+            this.subtrateService.api,
+            this.subtrateService.pair,
+            menstrualSubscriptionId,
+            SubscriptionStatus.Inactive,
           );
         }
       }

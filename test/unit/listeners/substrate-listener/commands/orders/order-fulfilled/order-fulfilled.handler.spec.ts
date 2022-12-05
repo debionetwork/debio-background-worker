@@ -247,7 +247,7 @@ describe('Order Fulfilled Handler Event', () => {
     const queryServiceByOrderIdSpy = jest
       .spyOn(serviceRequestQuery, 'queryServiceRequestByOrderId')
       .mockImplementation();
-    
+
     const DATE = new Date(1669649548467);
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
