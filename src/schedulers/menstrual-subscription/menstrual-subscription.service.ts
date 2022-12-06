@@ -45,13 +45,14 @@ export class MenstrualSubscriptionService {
     );
     this.schedulerRegistry.addInterval(
       'menstrual-subscription-inqueue',
-      menstrualSubscriptionInQueue
+      menstrualSubscriptionInQueue,
     );
   }
 
   async handleInQueueMenstrualSubscription() {
     try {
-      if (this.isRunningInQueue || this.subtrateService.api === undefined) return;
+      if (this.isRunningInQueue || this.subtrateService.api === undefined)
+        return;
 
       this.isRunningInQueue = true;
       const menstrualSubscription = await this.elasticsearchService.search({
@@ -89,7 +90,7 @@ export class MenstrualSubscriptionService {
           menstrualSubscriptionId,
         );
 
-        if (menstrualSubscriptionData.status as any === 'InQueue') {
+        if ((menstrualSubscriptionData.status as any) === 'InQueue') {
           await this.subtrateService.api.tx.menstrualSubscription
             .changeMenstrualSubscriptionStatus(
               menstrualSubscriptionId,
@@ -118,7 +119,8 @@ export class MenstrualSubscriptionService {
 
   async handleInActiveMenstrualSubscription() {
     try {
-      if (this.isRunningInActive || this.subtrateService.api === undefined) return;
+      if (this.isRunningInActive || this.subtrateService.api === undefined)
+        return;
 
       this.isRunningInActive = true;
       const menstrualSubscription = await this.elasticsearchService.search({
