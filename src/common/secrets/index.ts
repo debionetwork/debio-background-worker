@@ -42,7 +42,8 @@ export const SecretKeyList = {
   LAB_ORDER_LINK: process.env.LAB_ORDER_LINK || null,
   UNSTAKE_TIMER: process.env.UNSTAKE_TIMER || null,
   UNSTAKE_INTERVAL: process.env.UNSTAKE_INTERVAL || null,
-  MENSTRUAL_SUBSCRIPTION_DURATION: process.env.MENSTRUAL_SUBSCRIPTION_DURATION || null,
+  MENSTRUAL_SUBSCRIPTION_DURATION:
+    process.env.MENSTRUAL_SUBSCRIPTION_DURATION || null,
 } as const;
 
 export type keyList = keyof typeof SecretKeyList;

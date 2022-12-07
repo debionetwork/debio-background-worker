@@ -29,7 +29,8 @@ export class MenstrualSubscriptionService {
       this.gCloudSecretManagerService.getSecret('UNSTAKE_INTERVAL').toString(),
     );
 
-    this.menstrualSubscriptionDuration = this.parseMenstrualSubscriptionDuration();
+    this.menstrualSubscriptionDuration =
+      this.parseMenstrualSubscriptionDuration();
 
     const menstrualSubscription = setInterval(async () => {
       await this.handleWaitingUnstaked();
@@ -124,18 +125,33 @@ export class MenstrualSubscriptionService {
 
   parseMenstrualSubscriptionDuration(): { [key: string]: number } {
     try {
-      const menstrualSubscriptionDurationObj: { [key: string]: string } = JSON.parse(this.gCloudSecretManagerService.getSecret('MENSTRUAL_SUBSCRIPTION_DURATION').toString() ?? "{}");
-      const parseMenstrualSubscriptionDuration: Map<string, number> = new Map<string, number>();
+      const menstrualSubscriptionDurationObj: { [key: string]: string } =
+        JSON.parse(
+          this.gCloudSecretManagerService
+            .getSecret('MENSTRUAL_SUBSCRIPTION_DURATION')
+            .toString() ?? '{}',
+        );
+      const parseMenstrualSubscriptionDuration: Map<string, number> = new Map<
+        string,
+        number
+      >();
 
-      Object.entries(menstrualSubscriptionDurationObj).forEach(([key, value]) => {
-        parseMenstrualSubscriptionDuration.set(key, this.strToMilisecond(value));
-      });
+      Object.entries(menstrualSubscriptionDurationObj).forEach(
+        ([key, value]) => {
+          parseMenstrualSubscriptionDuration.set(
+            key,
+            this.strToMilisecond(value),
+          );
+        },
+      );
 
       console.log(Object.fromEntries(parseMenstrualSubscriptionDuration));
       return Object.fromEntries(parseMenstrualSubscriptionDuration);
     } catch (error) {
       console.log(error);
-      this.logger.log(`parse menstrual subscription env error: ${error.message}`);
+      this.logger.log(
+        `parse menstrual subscription env error: ${error.message}`,
+      );
       return {};
     }
   }

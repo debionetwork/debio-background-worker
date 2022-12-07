@@ -1,10 +1,16 @@
-import { SubstrateService } from "@common/substrate";
-import { GCloudSecretManagerService } from "@debionetwork/nestjs-gcloud-secret-manager";
-import { ElasticsearchService } from "@nestjs/elasticsearch";
-import { SchedulerRegistry } from "@nestjs/schedule";
-import { Test, TestingModule } from "@nestjs/testing";
-import { MenstrualSubscriptionService } from "@schedulers/menstrual-subscription/menstrual-subscription.service";
-import { elasticsearchServiceMockFactory, MockLogger, MockType, schedulerRegistryMockFactory, substrateServiceMockFactory } from '../../mock';
+import { SubstrateService } from '@common/substrate';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import { Test, TestingModule } from '@nestjs/testing';
+import { MenstrualSubscriptionService } from '@schedulers/menstrual-subscription/menstrual-subscription.service';
+import {
+  elasticsearchServiceMockFactory,
+  MockLogger,
+  MockType,
+  schedulerRegistryMockFactory,
+  substrateServiceMockFactory,
+} from '../../mock';
 
 describe('Menstrual Subscription Service', () => {
   let menstrualSubscriptionService: MockType<MenstrualSubscriptionService>;
@@ -16,7 +22,8 @@ describe('Menstrual Subscription Service', () => {
     'strToMilisecond',
   );
 
-  const MENSTRUAL_SUBSCRIPTION_DURATION = '{"Monthly": "30:00:00:00", "Quarterly": "90:00:00:00", "Yearly": "365:00:00:00"}';
+  const MENSTRUAL_SUBSCRIPTION_DURATION =
+    '{"Monthly": "30:00:00:00", "Quarterly": "90:00:00:00", "Yearly": "365:00:00:00"}';
   const INTERVAL = '00:00:00:30';
   const TIMER = '6:00:00:00';
 
@@ -73,15 +80,20 @@ describe('Menstrual Subscription Service', () => {
     const PARAM = '06:00:00:00';
     const EXPECTED_RETURN = 6 * 24 * 60 * 60 * 1000;
 
-    expect(menstrualSubscriptionService.strToMilisecond(PARAM)).toBe(EXPECTED_RETURN);
+    expect(menstrualSubscriptionService.strToMilisecond(PARAM)).toBe(
+      EXPECTED_RETURN,
+    );
   });
 
   it('should parse mesntrual subscription duration env value', () => {
-    expect(menstrualSubscriptionService.parseMenstrualSubscriptionDuration()).toEqual(expect.objectContaining({
-      Monthly: 30 * 24 * 60 * 60 * 1000,
-      Quarterly: 3 * 30 * 24 * 60 * 60 * 1000,
-      Yearly: 365 * 24 * 60 * 60 * 1000,
-    }));
+    expect(
+      menstrualSubscriptionService.parseMenstrualSubscriptionDuration(),
+    ).toEqual(
+      expect.objectContaining({
+        Monthly: 30 * 24 * 60 * 60 * 1000,
+        Quarterly: 3 * 30 * 24 * 60 * 60 * 1000,
+        Yearly: 365 * 24 * 60 * 60 * 1000,
+      }),
+    );
   });
-
 });
