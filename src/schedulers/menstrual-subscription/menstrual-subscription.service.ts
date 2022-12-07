@@ -13,6 +13,7 @@ export class MenstrualSubscriptionService {
   private logger: Logger = new Logger(MenstrualSubscriptionService.name);
   private isRunning = false;
   private timer: number;
+  private menstrualSubscriptionDuration: { [key: string]: number };
   constructor(
     private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly elasticsearchService: ElasticsearchService,
@@ -27,6 +28,9 @@ export class MenstrualSubscriptionService {
     const unstakeInterval: number = this.strToMilisecond(
       this.gCloudSecretManagerService.getSecret('UNSTAKE_INTERVAL').toString(),
     );
+
+    this.menstrualSubscriptionDuration =
+      this.parseMenstrualSubscriptionDuration();
 
     const menstrualSubscription = setInterval(async () => {
       await this.handleWaitingUnstaked();
@@ -111,18 +115,45 @@ export class MenstrualSubscriptionService {
     }
   }
 
-  private milisecondsConverter = {
-    Monthly: 30 * 24 * 60 * 60 * 1000,
-    Quarterly: 3 * 30 * 24 * 60 * 60 * 1000,
-    Yearly: 12 * 30 * 24 * 60 * 60 * 1000,
-  };
-
   checkTimeDurationEnd(
     currtime: number,
     date: number,
     duration: string,
   ): boolean {
-    return currtime >= date + this.milisecondsConverter[duration];
+    return currtime >= date + this.menstrualSubscriptionDuration[duration];
+  }
+
+  parseMenstrualSubscriptionDuration(): { [key: string]: number } {
+    try {
+      const menstrualSubscriptionDurationObj: { [key: string]: string } =
+        JSON.parse(
+          this.gCloudSecretManagerService
+            .getSecret('MENSTRUAL_SUBSCRIPTION_DURATION')
+            .toString() ?? '{}',
+        );
+      const parseMenstrualSubscriptionDuration: Map<string, number> = new Map<
+        string,
+        number
+      >();
+
+      Object.entries(menstrualSubscriptionDurationObj).forEach(
+        ([key, value]) => {
+          parseMenstrualSubscriptionDuration.set(
+            key,
+            this.strToMilisecond(value),
+          );
+        },
+      );
+
+      console.log(Object.fromEntries(parseMenstrualSubscriptionDuration));
+      return Object.fromEntries(parseMenstrualSubscriptionDuration);
+    } catch (error) {
+      console.log(error);
+      this.logger.log(
+        `parse menstrual subscription env error: ${error.message}`,
+      );
+      return {};
+    }
   }
 
   strToMilisecond(timeFormat: string): number {
