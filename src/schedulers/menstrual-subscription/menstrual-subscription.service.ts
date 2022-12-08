@@ -145,7 +145,6 @@ export class MenstrualSubscriptionService {
         },
       );
 
-      console.log(Object.fromEntries(parseMenstrualSubscriptionDuration));
       return Object.fromEntries(parseMenstrualSubscriptionDuration);
     } catch (error) {
       console.log(error);
