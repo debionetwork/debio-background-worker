@@ -11,7 +11,8 @@ import { SubscriptionStatus } from '@debionetwork/polkadot-provider/lib/primitiv
 @Injectable()
 export class MenstrualSubscriptionService {
   private logger: Logger = new Logger(MenstrualSubscriptionService.name);
-  private isRunning = false;
+  private isRunningInActive = false;
+  private isRunningInQueue = false;
   private timer: number;
   private menstrualSubscriptionDuration: { [key: string]: number };
   constructor(
@@ -32,20 +33,96 @@ export class MenstrualSubscriptionService {
     this.menstrualSubscriptionDuration =
       this.parseMenstrualSubscriptionDuration();
 
-    const menstrualSubscription = setInterval(async () => {
-      await this.handleWaitingUnstaked();
+    const menstrualSubscriptionInActive = setInterval(async () => {
+      await this.handleInActiveMenstrualSubscription();
+    }, unstakeInterval);
+    const menstrualSubscriptionInQueue = setInterval(async () => {
+      await this.handleInQueueMenstrualSubscription();
     }, unstakeInterval);
     this.schedulerRegistry.addInterval(
-      'menstrual-subscription',
-      menstrualSubscription,
+      'menstrual-subscription-inactive',
+      menstrualSubscriptionInActive,
+    );
+    this.schedulerRegistry.addInterval(
+      'menstrual-subscription-inqueue',
+      menstrualSubscriptionInQueue,
     );
   }
 
-  async handleWaitingUnstaked() {
+  async handleInQueueMenstrualSubscription() {
     try {
-      if (this.isRunning || this.subtrateService.api === undefined) return;
+      if (this.isRunningInQueue || this.subtrateService.api === undefined)
+        return;
 
-      this.isRunning = true;
+      this.isRunningInQueue = true;
+      const menstrualSubscription = await this.elasticsearchService.search({
+        index: 'menstrual-subscription',
+        allow_no_indices: true,
+        body: {
+          query: {
+            match: {
+              status: {
+                query: 'InQueue',
+              },
+            },
+          },
+          sort: [
+            {
+              'created_at.keyword': {
+                unmapped_type: 'keyword',
+                order: 'asc',
+              },
+            },
+          ],
+        },
+        from: 0,
+        size: 10,
+      });
+
+      const listMenstrualSubscription = menstrualSubscription.body.hits.hits;
+      for (const menstrualSubscription of listMenstrualSubscription) {
+        if (this.subtrateService.api === undefined) break;
+
+        const menstrualSubscriptionId = menstrualSubscription['_source']['id'];
+
+        const menstrualSubscriptionData = await queryMenstrualSubscriptionById(
+          this.subtrateService.api,
+          menstrualSubscriptionId,
+        );
+
+        if ((menstrualSubscriptionData.status as any) === 'InQueue') {
+          await this.subtrateService.api.tx.menstrualSubscription
+            .changeMenstrualSubscriptionStatus(
+              menstrualSubscriptionId,
+              'Active',
+            )
+            .signAndSend(this.subtrateService.pair, { nonce: -1 });
+        } else if (menstrualSubscription.status === 'Active') {
+          await this.elasticsearchService.update({
+            index: 'menstrual-subscription',
+            id: menstrualSubscriptionId,
+            refresh: 'wait_for',
+            body: {
+              doc: {
+                status: 'Active',
+              },
+            },
+          });
+        }
+      }
+    } catch (err) {
+      this.logger.error(`active menstrual subscription error ${err}`);
+    } finally {
+      this.isRunningInQueue = false;
+    }
+  }
+
+  async handleInActiveMenstrualSubscription() {
+    try {
+      if (this.isRunningInActive || this.subtrateService.api === undefined)
+        return;
+
+      this.isRunningInActive = true;
       const menstrualSubscription = await this.elasticsearchService.search({
         index: 'menstrual-subscription',
         allow_no_indices: true,
@@ -111,7 +188,7 @@ export class MenstrualSubscriptionService {
     } catch (err) {
       this.logger.error(`inactive menstrual subscription error ${err}`);
     } finally {
-      this.isRunning = false;
+      this.isRunningInActive = false;
     }
   }
 
