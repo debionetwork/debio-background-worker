@@ -23,6 +23,7 @@ describe('Menstrual Subscription Service', () => {
   );
 
   const MENSTRUAL_SUBSCRIPTION_DURATION =
+    process?.env?.MENSTRUAL_SUBSCRIPTION_DURATION ??
     '{"Monthly": "30:00:00:00", "Quarterly": "90:00:00:00", "Yearly": "365:00:00:00"}';
   const INTERVAL = '00:00:00:30';
   const TIMER = '6:00:00:00';

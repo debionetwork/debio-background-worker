@@ -25,8 +25,8 @@ export class UpdateServiceRequestHandler
           source: `
             ctx._source.request.status      = params.status;
             ctx._source.blockMetadata       = params.blockMetaData;
-            ctx._source.updated_at          = params.updatedAt;
-            ctx._source.unstaked_at         = params.unstakedAt;
+            ctx._source.request.updated_at  = params.updatedAt;
+            ctx._source.request.unstaked_at = params.unstakedAt;
           `,
           params: {
             status: status,
