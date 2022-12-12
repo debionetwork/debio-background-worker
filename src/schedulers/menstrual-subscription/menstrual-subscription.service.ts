@@ -90,13 +90,13 @@ export class MenstrualSubscriptionService {
           menstrualSubscriptionId,
         );
 
-        if ((menstrualSubscriptionData.status as any) === 'InQueue') {
-          await this.subtrateService.api.tx.menstrualSubscription
-            .changeMenstrualSubscriptionStatus(
-              menstrualSubscriptionId,
-              'Active',
-            )
-            .signAndSend(this.subtrateService.pair, { nonce: -1 });
+        if (menstrualSubscriptionData.status === SubscriptionStatus.InQueue) {
+          await changeMenstrualSubscriptionStatus(
+            this.subtrateService.api,
+            this.subtrateService.pair,
+            menstrualSubscriptionId,
+            SubscriptionStatus.Active,
+          );
         } else if (menstrualSubscription.status === 'Active') {
           await this.elasticsearchService.update({
             index: 'menstrual-subscription',
