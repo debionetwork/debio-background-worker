@@ -91,14 +91,20 @@ export class MenstrualSubscriptionService {
           menstrualSubscriptionId,
         );
 
-        if (menstrualSubscriptionData.status === SubscriptionStatus.InQueue && menstrualSubscriptionData.paymentStatus === PaymentStatus.Paid) {
+        if (
+          menstrualSubscriptionData.status === SubscriptionStatus.InQueue &&
+          menstrualSubscriptionData.paymentStatus === PaymentStatus.Paid
+        ) {
           await changeMenstrualSubscriptionStatus(
             this.subtrateService.api,
             this.subtrateService.pair,
             menstrualSubscriptionId,
             SubscriptionStatus.Active,
           );
-        } else if (menstrualSubscriptionData.status === SubscriptionStatus.Active && menstrualSubscriptionData.paymentStatus === PaymentStatus.Paid) {
+        } else if (
+          menstrualSubscriptionData.status === SubscriptionStatus.Active &&
+          menstrualSubscriptionData.paymentStatus === PaymentStatus.Paid
+        ) {
           await this.elasticsearchService.update({
             index: 'menstrual-subscription',
             id: menstrualSubscriptionId,
