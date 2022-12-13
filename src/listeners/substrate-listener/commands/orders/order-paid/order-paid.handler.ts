@@ -112,7 +112,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           service_price: serviceDetail.price,
           qc_price: serviceDetail.qcPrice,
           order_id: order.id,
-          order_date: order.createdAt.toDateString(),
+          order_date: this.convertToDate(order.createdAt).toDateString(),
           link_order: `${linkOrder}/process`,
         });
       }
