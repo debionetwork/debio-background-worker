@@ -144,7 +144,6 @@ export class OrderFulfilledHandler
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);
     } catch (err) {
-      console.log(err);
       this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
     }
@@ -169,8 +168,9 @@ export class OrderFulfilledHandler
 
     const dbioCurrency = totalPrice * exchangeFromTo.conversion * daiToDbio;
 
-    const dbioRewardCustomer = dbioCurrency.toFixed(4);
-    const dbioRewardLab = (dbioCurrency / 10).toFixed(4);
+    const dbioRewardCustomer = dbioCurrency.toFixed(0);
+    const dbioRewardLab = (dbioCurrency / 10).toFixed(0);
+
     // Send reward to customer
     await sendRewards(
       this.substrateService.api as any,

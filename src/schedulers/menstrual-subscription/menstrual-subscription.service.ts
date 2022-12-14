@@ -7,6 +7,7 @@ import { keyList } from '@common/secrets';
 import { changeMenstrualSubscriptionStatus } from '@debionetwork/polkadot-provider/lib/command/menstrual-subscription';
 import { queryMenstrualSubscriptionById } from '@debionetwork/polkadot-provider/lib/query/menstrual-subscription';
 import { SubscriptionStatus } from '@debionetwork/polkadot-provider/lib/primitives/subscription-status';
+import { PaymentStatus } from '@debionetwork/polkadot-provider/lib/primitives/payment-status';
 
 @Injectable()
 export class MenstrualSubscriptionService {
@@ -90,14 +91,20 @@ export class MenstrualSubscriptionService {
           menstrualSubscriptionId,
         );
 
-        if (menstrualSubscriptionData.status === SubscriptionStatus.InQueue) {
+        if (
+          menstrualSubscriptionData.status === SubscriptionStatus.InQueue &&
+          menstrualSubscriptionData.paymentStatus === PaymentStatus.Paid
+        ) {
           await changeMenstrualSubscriptionStatus(
             this.subtrateService.api,
             this.subtrateService.pair,
             menstrualSubscriptionId,
             SubscriptionStatus.Active,
           );
-        } else if (menstrualSubscription.status === 'Active') {
+        } else if (
+          menstrualSubscriptionData.status === SubscriptionStatus.Active &&
+          menstrualSubscriptionData.paymentStatus === PaymentStatus.Paid
+        ) {
           await this.elasticsearchService.update({
             index: 'menstrual-subscription',
             id: menstrualSubscriptionId,
@@ -105,6 +112,7 @@ export class MenstrualSubscriptionService {
             body: {
               doc: {
                 status: 'Active',
+                payment_status: 'Paid',
               },
             },
           });
