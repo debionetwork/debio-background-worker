@@ -84,6 +84,7 @@ export class OrderFulfilledHandler
         );
         return;
       }
+
       const labEthAddress: any = await queryEthAdressByAccountId(
         this.substrateService.api as any,
         order['sellerId'],
@@ -166,7 +167,8 @@ export class OrderFulfilledHandler
     const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
     const daiToDbio = 1 / dbioToDai;
 
-    const dbioCurrency = totalPrice * exchangeFromTo.conversion * daiToDbio;
+    const dbioCurrency =
+      totalPrice * exchangeFromTo.conversion * daiToDbio * currencyUnit.DBIO;
 
     const dbioRewardCustomer = dbioCurrency.toFixed(0);
     const dbioRewardLab = (dbioCurrency / 10).toFixed(0);
