@@ -13,7 +13,6 @@ import {
 } from '@common/index';
 import { EscrowAccounts } from '@common/escrow/models/deposit.entity';
 import { IndexerModule } from '@indexer/indexer.module';
-import { EthereumListenerModule } from '@listeners/ethereum-listener/ethereum-listener.module';
 import { SubstrateListenerModule } from '@listeners/substrate-listener/substrate-listener.module';
 import { SchedulersModule } from '@schedulers/schedulers.module';
 import { keyList, SecretKeyList } from '@common/secrets';
@@ -89,7 +88,6 @@ require('dotenv').config();
     IndexerModule,
     SchedulersModule,
     SubstrateListenerModule,
-    EthereumListenerModule,
     MailerModule,
   ],
 })
