@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.3.0](https://github.com/debionetwork/debio-background-worker/compare/2.2.0...2.3.0) (2022-12-16)
+
+
+### Features
+
+* move duration menstrual subscription to env ([#231](https://github.com/debionetwork/debio-background-worker/issues/231)) ([ca423b2](https://github.com/debionetwork/debio-background-worker/commit/ca423b20211ac6112999e915d2688a6689c562d2))
+* scheduler inqueue to active ([#230](https://github.com/debionetwork/debio-background-worker/issues/230)) ([724ed1d](https://github.com/debionetwork/debio-background-worker/commit/724ed1d6e09ee9ac975c0bb0e60fa25213fb946d))
+* transaction log menstrual subscription ([#227](https://github.com/debionetwork/debio-background-worker/issues/227)) ([372daaa](https://github.com/debionetwork/debio-background-worker/commit/372daaa5377b568eba7601422efd7274021d444f))
+
+
+### Bug Fixes
+
+* add menstrual subscription index when initialize ([a3cb8b8](https://github.com/debionetwork/debio-background-worker/commit/a3cb8b8617dc8a9bced5422fec1b45960d25ce41))
+* add menstrual subscription index when initialize ([#221](https://github.com/debionetwork/debio-background-worker/issues/221)) ([a3cb8b8](https://github.com/debionetwork/debio-background-worker/commit/a3cb8b8617dc8a9bced5422fec1b45960d25ce41))
+* amount transaction log menstrual subscription ([#229](https://github.com/debionetwork/debio-background-worker/issues/229)) ([1f59bf7](https://github.com/debionetwork/debio-background-worker/commit/1f59bf7f6fd2e741bf42e283d389b455c9596cb1))
+* change menstrual subscription status inqueue to active ([#236](https://github.com/debionetwork/debio-background-worker/issues/236)) ([0bda662](https://github.com/debionetwork/debio-background-worker/commit/0bda6622c303dc9e53462bc30b7e377976e4bf45))
+* convert to dbio currency unit remove ethereum listener ([#242](https://github.com/debionetwork/debio-background-worker/issues/242)) ([4a12919](https://github.com/debionetwork/debio-background-worker/commit/4a12919358b6bd1f5ab4feb3a78d71a555fec867))
+* currency unit ([#235](https://github.com/debionetwork/debio-background-worker/issues/235)) ([b3632c9](https://github.com/debionetwork/debio-background-worker/commit/b3632c93f4a8307d87dc2bc61d16209b1117e5d7))
+* error listener ([#237](https://github.com/debionetwork/debio-background-worker/issues/237)) ([9db6ba5](https://github.com/debionetwork/debio-background-worker/commit/9db6ba5ea72ac8ef18d97d778154dcf75c09c587))
+* error module ([#232](https://github.com/debionetwork/debio-background-worker/issues/232)) ([0190107](https://github.com/debionetwork/debio-background-worker/commit/0190107f6453d4ade7b797805b0eca7213e06a7e))
+* reward request service  ([#228](https://github.com/debionetwork/debio-background-worker/issues/228)) ([d495e43](https://github.com/debionetwork/debio-background-worker/commit/d495e43cd637464957d4cefaddb4aa9ff9814ac7))
+
 ## [2.2.0](https://github.com/debionetwork/debio-background-worker/compare/2.1.7...2.2.0) (2022-11-30)
 
 
