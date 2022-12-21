@@ -167,11 +167,16 @@ export class OrderFulfilledHandler
     const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
     const daiToDbio = 1 / dbioToDai;
 
-    const dbioCurrency =
-      totalPrice * exchangeFromTo.conversion * daiToDbio * currencyUnit.DBIO;
-
-    const dbioRewardCustomer = dbioCurrency.toFixed(0);
-    const dbioRewardLab = (dbioCurrency / 10).toFixed(0);
+    const rewardCustomer = totalPrice * exchangeFromTo.conversion * daiToDbio;
+    const rewardLab = rewardCustomer / 10;
+    const fixedRewardCustomer = rewardCustomer.toFixed(0);
+    const fixedRewardLab = rewardLab.toFixed(0);
+    const dbioRewardCustomer = (
+      BigInt(fixedRewardCustomer) * BigInt(currencyUnit.DBIO)
+    ).toString();
+    const dbioRewardLab = (
+      BigInt(fixedRewardLab) * BigInt(currencyUnit.DBIO)
+    ).toString();
 
     // Send reward to customer
     await sendRewards(
@@ -187,7 +192,7 @@ export class OrderFulfilledHandler
       entity_type: 'Order',
       entity: 'Order Fulfilled',
       reference_id: order.dnaSampleTrackingId,
-      description: `Congrats! You’ve received ${dbioRewardCustomer} DBIO as a reward for completing the request test for [] from the service requested, kindly check your balance.`,
+      description: `Congrats! You’ve received ${fixedRewardCustomer} DBIO as a reward for completing the request test for [] from the service requested, kindly check your balance.`,
       read: false,
       created_at: this.dateTimeProxy.new(),
       updated_at: this.dateTimeProxy.new(),
@@ -226,7 +231,7 @@ export class OrderFulfilledHandler
       entity_type: 'Reward',
       entity: 'Request Service Staking',
       reference_id: order.dnaSampleTrackingId,
-      description: `Congrats! You’ve received ${dbioRewardLab} DBIO for completing the request test for [] from the service requested.`,
+      description: `Congrats! You’ve received ${fixedRewardLab} DBIO for completing the request test for [] from the service requested.`,
       read: false,
       created_at: this.dateTimeProxy.new(),
       updated_at: this.dateTimeProxy.new(),
