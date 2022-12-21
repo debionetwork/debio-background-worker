@@ -14,10 +14,9 @@ import {
 
 describe('Menstrual Subscription Service', () => {
   let menstrualSubscriptionService: MockType<MenstrualSubscriptionService>;
-  let elasticsearchServiceMock: MockType<ElasticsearchService>; // eslint-disable-line
-  let substrateServiceMock: MockType<SubstrateService>; // eslint-disable-line
-  let schedulerRegistryMock: MockType<SchedulerRegistry>; // eslint-disable-line
-  // eslint-disable-next-line
+  let elasticsearchServiceMock: MockType<ElasticsearchService>;
+  let substrateServiceMock: MockType<SubstrateService>;
+  let schedulerRegistryMock: MockType<SchedulerRegistry>;
   const strToMilisecondSpy = jest.spyOn(
     MenstrualSubscriptionService.prototype,
     'strToMilisecond',
@@ -69,13 +68,13 @@ describe('Menstrual Subscription Service', () => {
     module.useLogger(MockLogger);
 
     menstrualSubscriptionService = module.get(MenstrualSubscriptionService);
-    elasticsearchServiceMock = module.get(ElasticsearchService); // eslint-disable-line
-    substrateServiceMock = module.get(SubstrateService); // eslint-disable-line
-    schedulerRegistryMock = module.get(SchedulerRegistry); // eslint-disable-line
+    elasticsearchServiceMock = module.get(ElasticsearchService);
+    substrateServiceMock = module.get(SubstrateService);
+    schedulerRegistryMock = module.get(SchedulerRegistry);
   });
 
   afterAll(() => {
-    schedulerRegistryMock = null; // eslint-disable-line
+    schedulerRegistryMock = null;
   });
 
   it('should return 30 days in milisecond', () => {
