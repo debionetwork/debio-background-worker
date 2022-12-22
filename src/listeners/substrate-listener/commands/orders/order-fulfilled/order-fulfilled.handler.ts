@@ -147,11 +147,12 @@ export class OrderFulfilledHandler
     } catch (err) {
       this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
+      console.log(err);
     }
   }
 
-  callbackInsertNotificationLogging(data: NotificationDto) {
-    this.notificationService.insert(data);
+  async callbackInsertNotificationLogging(data: NotificationDto) {
+    await this.notificationService.insert(data);
   }
 
   async callbackSendReward(
@@ -202,7 +203,7 @@ export class OrderFulfilledHandler
       block_number: blockNumber,
     };
 
-    this.callbackInsertNotificationLogging(customerNotificationInput);
+    await this.callbackInsertNotificationLogging(customerNotificationInput);
 
     // Write Logging Reward Customer Staking Request Service
     const dataCustomerLoggingInput: TransactionLoggingDto = {
@@ -216,6 +217,8 @@ export class OrderFulfilledHandler
       transaction_status: TransactionStatusList.CustomerStakeRequestService,
     };
     await this.loggingService.create(dataCustomerLoggingInput);
+
+    await this.delay(6000);
 
     // Send reward to lab
     await sendRewards(
@@ -241,7 +244,7 @@ export class OrderFulfilledHandler
       block_number: blockNumber,
     };
 
-    this.callbackInsertNotificationLogging(labNotificationInput);
+    await this.callbackInsertNotificationLogging(labNotificationInput);
 
     // Write Logging Reward Lab
     const dataLabLoggingInput: TransactionLoggingDto = {
@@ -259,5 +262,9 @@ export class OrderFulfilledHandler
 
   private convertToDate(date: Date) {
     return new Date(Number(date.toString().split(',').join('')));
+  }
+
+  private delay(ms: number) {
+    return new Promise((resolve) => setTimeout(() => resolve(true), ms));
   }
 }
