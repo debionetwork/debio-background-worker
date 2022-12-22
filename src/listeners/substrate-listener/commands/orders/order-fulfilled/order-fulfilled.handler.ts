@@ -23,7 +23,6 @@ import { NotificationDto } from '@common/notification/dto/notification.dto';
 import currencyUnit from '../../../models/currencyUnit';
 import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
-import { callSendRewards } from '@common/substrate/command/reward';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)
@@ -117,7 +116,6 @@ export class OrderFulfilledHandler
         );
       }
 
-      await this.escrowService.orderFulfilled(order);
       await this.loggingService.create(orderLogging);
 
       const currDateTime = this.dateTimeProxy.new();
@@ -181,7 +179,7 @@ export class OrderFulfilledHandler
     ).toString();
 
     // Send reward to customer
-    await callSendRewards(
+    await sendRewards(
       this.substrateService.api as any,
       this.substrateService.pair,
       order.customerId,
@@ -209,7 +207,7 @@ export class OrderFulfilledHandler
     // Write Logging Reward Customer Staking Request Service
     const dataCustomerLoggingInput: TransactionLoggingDto = {
       address: order.customerId,
-      amount: totalPrice,
+      amount: rewardCustomer,
       created_at: new Date(),
       currency: 'DBIO',
       parent_id: BigInt(0),
@@ -219,10 +217,8 @@ export class OrderFulfilledHandler
     };
     await this.loggingService.create(dataCustomerLoggingInput);
 
-    await this.delay(6000);
-
     // Send reward to lab
-    await callSendRewards(
+    await sendRewards(
       this.substrateService.api as any,
       this.substrateService.pair,
       order.sellerId,
@@ -250,7 +246,7 @@ export class OrderFulfilledHandler
     // Write Logging Reward Lab
     const dataLabLoggingInput: TransactionLoggingDto = {
       address: order.customerId,
-      amount: totalPrice / 10,
+      amount: rewardLab,
       created_at: new Date(),
       currency: 'DBIO',
       parent_id: BigInt(0),
@@ -263,9 +259,5 @@ export class OrderFulfilledHandler
 
   private convertToDate(date: Date) {
     return new Date(Number(date.toString().split(',').join('')));
-  }
-
-  private delay(ms: number) {
-    return new Promise((resolve) => setTimeout(() => resolve(true), ms));
   }
 }

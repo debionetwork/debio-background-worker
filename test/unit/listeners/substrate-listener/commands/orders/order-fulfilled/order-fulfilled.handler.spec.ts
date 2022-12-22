@@ -77,7 +77,7 @@ describe('Order Fulfilled Handler Event', () => {
 
     orderFulfilledHandler = module.get(OrderFulfilledHandler);
     substrateServiceMock = module.get(SubstrateService);
-    escrowServiceMock = module.get(EscrowService);
+    escrowServiceMock = module.get(EscrowService); // eslint-disable-line
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
     debioConversionServiceMock = module.get(DebioConversionService);
     notificationServiceMock = module.get(NotificationService); // eslint-disable-line
@@ -211,8 +211,6 @@ describe('Order Fulfilled Handler Event', () => {
     expect(sendRewardsSpy).not.toHaveBeenCalled();
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
-    expect(escrowServiceMock.orderFulfilled).not.toHaveBeenCalled();
-    expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
     queryOrderDetailByOrderIDSpy.mockClear();
@@ -338,8 +336,6 @@ describe('Order Fulfilled Handler Event', () => {
       ORDER.toHuman().sellerId,
     );
     expect(finalizeRequestSpy).toHaveBeenCalled();
-    expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
-    expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
     expect(queryServiceByOrderIdSpy).toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
@@ -486,8 +482,6 @@ describe('Order Fulfilled Handler Event', () => {
     expect(sendRewardsSpy).not.toHaveBeenCalledTimes(2);
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalledTimes(2);
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalledTimes(2);
-    expect(escrowServiceMock.orderFulfilled).not.toHaveBeenCalled();
-    expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
     queryOrderDetailByOrderIDSpy.mockClear();
@@ -618,8 +612,6 @@ describe('Order Fulfilled Handler Event', () => {
     expect(sendRewardsSpy).not.toHaveBeenCalledTimes(2);
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalledTimes(2);
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalledTimes(2);
-    expect(escrowServiceMock.orderFulfilled).not.toHaveBeenCalled();
-    expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
     queryOrderDetailByOrderIDSpy.mockClear();
