@@ -23,6 +23,7 @@ import { NotificationDto } from '@common/notification/dto/notification.dto';
 import currencyUnit from '../../../models/currencyUnit';
 import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
+import { callSendRewards } from '@common/substrate/command/reward';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)
@@ -180,7 +181,7 @@ export class OrderFulfilledHandler
     ).toString();
 
     // Send reward to customer
-    await sendRewards(
+    await callSendRewards(
       this.substrateService.api as any,
       this.substrateService.pair,
       order.customerId,
@@ -221,7 +222,7 @@ export class OrderFulfilledHandler
     await this.delay(6000);
 
     // Send reward to lab
-    await sendRewards(
+    await callSendRewards(
       this.substrateService.api as any,
       this.substrateService.pair,
       order.sellerId,
