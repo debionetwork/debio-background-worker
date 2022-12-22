@@ -1,4 +1,4 @@
-import { ApiPromise } from "@polkadot/api";
+import { ApiPromise } from '@polkadot/api';
 
 export async function callSendRewards(
   api: ApiPromise,
