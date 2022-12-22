@@ -45,9 +45,6 @@ describe('Order Fulfilled Handler Event', () => {
   let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   beforeEach(async () => {
-    jest
-      .useFakeTimers()
-      .setSystemTime(new Date('1970-01-01T00:00:00.001Z').getTime());
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
@@ -113,6 +110,7 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
+    
     const DATE = new Date(1669649548467);
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
@@ -205,6 +203,7 @@ describe('Order Fulfilled Handler Event', () => {
     expect(queryServiceByIdSpy).not.toHaveBeenCalled();
     expect(queryServiceRequestById).not.toHaveBeenCalled();
     expect(debioConversionServiceMock.getExchange).not.toHaveBeenCalled();
+    
     expect(sendRewardsSpy).not.toHaveBeenCalled();
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalled();
     expect(queryServiceRequestById).not.toHaveBeenCalled();
@@ -220,6 +219,7 @@ describe('Order Fulfilled Handler Event', () => {
     queryServiceByIdSpy.mockClear();
     queryServiceRequestById.mockClear();
     sendRewardsSpy.mockClear();
+    
     convertToDbioUnitStringSpy.mockClear();
   });
 
@@ -249,6 +249,7 @@ describe('Order Fulfilled Handler Event', () => {
     const queryServiceByOrderIdSpy = jest
       .spyOn(serviceRequestQuery, 'queryServiceRequestByOrderId')
       .mockImplementation();
+    
 
     const DATE = new Date(1669649548467);
     const ORDER = createMockOrder(OrderStatus.Cancelled);
@@ -347,7 +348,7 @@ describe('Order Fulfilled Handler Event', () => {
     queryServiceInvoiceByOrderIdSpy.mockClear();
     sendRewardsSpy.mockClear();
     convertToDbioUnitStringSpy.mockClear();
-  });
+  }, 12000);
 
   it('when eth address isNone true', async () => {
     // Arrange
@@ -369,6 +370,7 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
+    
     const DATE = new Date(1669649548467);
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
@@ -477,6 +479,7 @@ describe('Order Fulfilled Handler Event', () => {
     expect(queryOrderDetailByOrderIDSpy).not.toHaveBeenCalled();
     expect(queryServiceByIdSpy).not.toHaveBeenCalled();
     expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
+    
     expect(sendRewardsSpy).not.toHaveBeenCalled();
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalled();
     expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
@@ -493,7 +496,7 @@ describe('Order Fulfilled Handler Event', () => {
     queryServiceInvoiceByOrderIdSpy.mockClear();
     sendRewardsSpy.mockClear();
     convertToDbioUnitStringSpy.mockClear();
-  });
+  }, 12000);
 
   it('when order and service flow is not StakingRequestService', async () => {
     // Arrange
@@ -515,6 +518,7 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
+    
     const DATE = new Date(1669649548467);
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
@@ -607,6 +611,7 @@ describe('Order Fulfilled Handler Event', () => {
     expect(queryServiceByIdSpy).not.toHaveBeenCalled();
     expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
     expect(debioConversionServiceMock.getExchange).not.toHaveBeenCalled();
+    
     expect(sendRewardsSpy).not.toHaveBeenCalled();
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalled();
     expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
@@ -623,12 +628,13 @@ describe('Order Fulfilled Handler Event', () => {
     queryServiceInvoiceByOrderIdSpy.mockClear();
     sendRewardsSpy.mockClear();
     convertToDbioUnitStringSpy.mockClear();
-  });
+  }, 12000);
 
   it('called reward callback', async () => {
     const sendRewardsSpy = jest
       .spyOn(rewardCommand, 'sendRewards')
       .mockImplementation();
+    
 
     debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
       conversion: 1,
@@ -648,5 +654,5 @@ describe('Order Fulfilled Handler Event', () => {
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
     expect(sendRewardsSpy).toHaveBeenCalledTimes(2);
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledTimes(2);
-  });
+  }, 12000);
 });
