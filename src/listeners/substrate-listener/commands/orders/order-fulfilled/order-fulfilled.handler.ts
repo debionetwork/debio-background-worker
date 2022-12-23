@@ -116,7 +116,6 @@ export class OrderFulfilledHandler
         );
       }
 
-      await this.escrowService.orderFulfilled(order);
       await this.loggingService.create(orderLogging);
 
       const currDateTime = this.dateTimeProxy.new();
@@ -208,7 +207,7 @@ export class OrderFulfilledHandler
     // Write Logging Reward Customer Staking Request Service
     const dataCustomerLoggingInput: TransactionLoggingDto = {
       address: order.customerId,
-      amount: totalPrice,
+      amount: rewardCustomer,
       created_at: new Date(),
       currency: 'DBIO',
       parent_id: BigInt(0),
@@ -217,8 +216,6 @@ export class OrderFulfilledHandler
       transaction_status: TransactionStatusList.CustomerStakeRequestService,
     };
     await this.loggingService.create(dataCustomerLoggingInput);
-
-    await this.delay(6000);
 
     // Send reward to lab
     await sendRewards(
@@ -249,7 +246,7 @@ export class OrderFulfilledHandler
     // Write Logging Reward Lab
     const dataLabLoggingInput: TransactionLoggingDto = {
       address: order.customerId,
-      amount: totalPrice / 10,
+      amount: rewardLab,
       created_at: new Date(),
       currency: 'DBIO',
       parent_id: BigInt(0),
@@ -262,9 +259,5 @@ export class OrderFulfilledHandler
 
   private convertToDate(date: Date) {
     return new Date(Number(date.toString().split(',').join('')));
-  }
-
-  private delay(ms: number) {
-    return new Promise((resolve) => setTimeout(() => resolve(true), ms));
   }
 }
