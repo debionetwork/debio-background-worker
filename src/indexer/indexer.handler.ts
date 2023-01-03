@@ -380,6 +380,8 @@ export class IndexerHandler
         'menstrual-calendar',
         'menstrual-cycle-log',
         'menstrual-subscription',
+        'health-professional',
+        'second-opinion',
       ];
 
       for (const i of indices) {
