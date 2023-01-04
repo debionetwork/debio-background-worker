@@ -17,6 +17,7 @@ import { GeneticAnalysisCommandHandlers } from './events/genetic-analysis';
 import { GeneticAnalysisOrderCommandHandlers } from './events/genetic-analysis-order';
 import { MenstrualCalendarCommandHandlers } from './events/menstrual-calendar';
 import { MenstrualSubscriptionCommandHandlers } from './events/menstrual-subscription';
+import { HealthProfessionalHandlers } from './events/health-professional';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -41,6 +42,7 @@ require('dotenv').config();
     ...GeneticAnalysisOrderCommandHandlers,
     ...MenstrualCalendarCommandHandlers,
     ...MenstrualSubscriptionCommandHandlers,
+    ...HealthProfessionalHandlers,
   ],
 })
 export class IndexerModule {}
