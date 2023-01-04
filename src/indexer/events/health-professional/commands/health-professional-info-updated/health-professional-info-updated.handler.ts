@@ -13,11 +13,7 @@ export class HealthProfessionalInfoUpdatedHandler
   async execute(
     command: HealthProfessionalInfoUpdatedCommandIndexer,
   ): Promise<any> {
-    const {
-      accountId,
-      healthProfessional: { info },
-      blockMetaData,
-    } = command;
+    const { accountId, healthProfessionalInfo, blockMetaData } = command;
 
     await this.elasticsearchService.update({
       id: accountId,
@@ -26,7 +22,7 @@ export class HealthProfessionalInfoUpdatedHandler
       body: {
         doc: {
           info: {
-            ...info,
+            ...healthProfessionalInfo,
           },
           blockMetaData: blockMetaData,
         },

@@ -84,6 +84,16 @@ import {
   MenstrualSubscriptionPriceAddedCommandIndexer,
   MenstrualSubscriptionUpdatedCommandIndexer,
 } from './events/menstrual-subscription';
+import {
+  HealthProfessionalAvailabilityStatusCommandIndexer,
+  HealthProfessionalInfoUpdatedCommandIndexer,
+  HealthProfessionalRegisteredCommandIndexer,
+  HealthProfessionalStakedCommandIndexer,
+  HealthProfessionalUnregisteredCommandIndexer,
+  HealthProfessionalUnstakedAmountCommandIndexer,
+  HealthProfessionalUnstakedCommandIndexer,
+  HealthProfessionalVerificationStatusCommandIndexer,
+} from './events/health-professional';
 
 export const eventRoutes = {
   certifications: {
@@ -182,5 +192,19 @@ export const eventRoutes = {
     MenstrualSubscriptionPaid: MenstrualSubscriptionPaidCommandIndexer,
     MenstrualSubscriptionPriceAdded:
       MenstrualSubscriptionPriceAddedCommandIndexer,
+  },
+  healthProfessional: {
+    HealthProfessionalRegistered: HealthProfessionalRegisteredCommandIndexer,
+    HealthProfessionalUnregistered:
+      HealthProfessionalUnregisteredCommandIndexer,
+    HealthProfessionalInfoUpdated: HealthProfessionalInfoUpdatedCommandIndexer,
+    HealthProfessionalVerificationStatusUpdated:
+      HealthProfessionalVerificationStatusCommandIndexer,
+    HealthProfessionalAvailabilityStatusUpdated:
+      HealthProfessionalAvailabilityStatusCommandIndexer,
+    HealthProfessionalStaked: HealthProfessionalStakedCommandIndexer,
+    HealthProfessionalUnstaked: HealthProfessionalUnstakedCommandIndexer,
+    HealthProfessionalUnstakedAmount:
+      HealthProfessionalUnstakedAmountCommandIndexer,
   },
 };

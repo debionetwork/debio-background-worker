@@ -1,11 +1,11 @@
-import { HealthProfessional } from '@indexer/models/health-professional';
+import { HealthProfessionalInfo } from '@indexer/models/health-professional/info';
 import { BlockMetaData } from '../../../../models/block-meta-data';
 
 export class HealthProfessionalInfoUpdatedCommandIndexer {
-  healthProfessional: HealthProfessional;
+  healthProfessionalInfo: HealthProfessionalInfo;
   accountId: string;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
     this.accountId = data[0].toString();
-    this.healthProfessional = new HealthProfessional(data[1]);
+    this.healthProfessionalInfo = new HealthProfessionalInfo(data[1]);
   }
 }

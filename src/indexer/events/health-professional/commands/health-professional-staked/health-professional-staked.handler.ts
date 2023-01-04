@@ -1,3 +1,4 @@
+import { StakeStatus } from '@indexer/models/stake-status';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
@@ -11,19 +12,15 @@ export class HealthProfessionalStakedHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: HealthProfessionalStakedCommandIndexer): Promise<any> {
-    const {
-      accountId,
-      healthProfessional: { stake_status, stake_amount },
-      blockMetaData,
-    } = command;
+    const { accountId, balance, blockMetaData } = command;
 
     await this.elasticsearchService.create({
       id: accountId,
       index: 'health-professional',
       refresh: 'wait_for',
       body: {
-        stake_amount: stake_amount,
-        stake_status: stake_status,
+        stake_amount: balance,
+        stake_status: StakeStatus.Staked,
         blockMetaData: blockMetaData,
       },
     });
