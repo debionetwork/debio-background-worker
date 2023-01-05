@@ -381,6 +381,8 @@ export class IndexerHandler
         'menstrual-cycle-log',
         'menstrual-subscription',
         'health-professional',
+        'opinion',
+        'opinion-requestor',
       ];
 
       for (const i of indices) {

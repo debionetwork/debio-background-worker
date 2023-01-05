@@ -94,6 +94,16 @@ import {
   HealthProfessionalUnstakedCommandIndexer,
   HealthProfessionalVerificationStatusCommandIndexer,
 } from './events/health-professional';
+import {
+  OpinionAddedCommandIndexer,
+  OpinionRemovedCommandIndexer,
+  OpinionStatusUpdatedCommandIndexer,
+  OpinionUpdatedCommandIndexer,
+} from './events/opinion';
+import {
+  OpinionRequestedCommandIndexer,
+  OpinionRequestorInfoUpdatedCommandIndexer,
+} from './events/opinion-requestor';
 
 export const eventRoutes = {
   certifications: {
@@ -206,5 +216,15 @@ export const eventRoutes = {
     HealthProfessionalUnstaked: HealthProfessionalUnstakedCommandIndexer,
     HealthProfessionalUnstakedAmount:
       HealthProfessionalUnstakedAmountCommandIndexer,
+  },
+  opinion: {
+    OpinionAdded: OpinionAddedCommandIndexer,
+    OpinionUpdated: OpinionUpdatedCommandIndexer,
+    OpinionRemoved: OpinionRemovedCommandIndexer,
+    OpinionStatusUpdated: OpinionStatusUpdatedCommandIndexer,
+  },
+  opinionRequestor: {
+    OpinionRequested: OpinionRequestedCommandIndexer,
+    OpinionRequestorInfoUpdated: OpinionRequestorInfoUpdatedCommandIndexer,
   },
 };
