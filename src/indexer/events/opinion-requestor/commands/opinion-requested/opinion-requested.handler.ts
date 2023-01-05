@@ -11,14 +11,39 @@ export class OpinionRequestedHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: OpinionRequestedCommandIndexer) {
-    const { opinionRequestor, blockMetaData } = command;
+    const {
+      opinionRequestor: {
+        id,
+        account_id,
+        info: {
+          category,
+          description,
+          genetic_data_ids,
+          opinion_ids,
+          myriad_url,
+        },
+        created_at,
+        updated_at,
+      },
+      blockMetaData,
+    } = command;
 
     await this.elasticsearchService.create({
       index: 'opinion-requestor',
-      id: opinionRequestor.id,
+      id: id,
       refresh: 'wait_for',
       body: {
-        ...opinionRequestor,
+        id: id,
+        account_id: account_id,
+        info: {
+          category: category,
+          description: description,
+          genetic_data_ids: genetic_data_ids,
+          opinion_ids: opinion_ids,
+          myriad_url: myriad_url,
+        },
+        created_at: created_at,
+        updated_at: updated_at,
         blockMetaData: blockMetaData,
       },
     });

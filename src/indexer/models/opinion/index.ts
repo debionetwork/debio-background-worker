@@ -7,7 +7,9 @@ export class Opinion {
     this.professional_id = data.professional_id;
     this.info = new OpinionInfo(data.info);
     this.status = data.status;
-    this.created_at = data.created_at;
+    this.created_at = data.created_at
+      ? Number(String(data.created_at).split(',').join(''))
+      : null;
   }
 
   id: string;
@@ -15,5 +17,5 @@ export class Opinion {
   professional_id: string;
   info: OpinionInfo;
   status: string;
-  created_at: Date;
+  created_at: number;
 }

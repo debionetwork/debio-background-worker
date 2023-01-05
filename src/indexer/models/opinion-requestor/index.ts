@@ -6,16 +6,16 @@ export class OpinionRequestor {
     this.account_id = data.account_id;
     this.info = new RequestorInfo(data.info);
     this.created_at = data.created_at
-      ? new Date(Number(String(data.created_at).split(',').join('')))
+      ? Number(String(data.created_at).split(',').join(''))
       : null;
     this.updated_at = data.updated_at
-      ? new Date(Number(String(data.updated_at).split(',').join('')))
+      ? Number(String(data.updated_at).split(',').join(''))
       : null;
   }
 
   id: string;
   account_id: string;
   info: RequestorInfo;
-  created_at: Date;
-  updated_at: Date;
+  created_at: number;
+  updated_at: number;
 }
