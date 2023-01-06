@@ -6,6 +6,6 @@ export class HealthProfessionalRegisteredCommandIndexer {
   accountId: string;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
     this.accountId = data[0].toString();
-    this.healthProfessional = new HealthProfessional(data[1]);
+    this.healthProfessional = new HealthProfessional(data[1].toHuman());
   }
 }

@@ -11,14 +11,35 @@ export class OpinionAddedHandler
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(command: OpinionAddedCommandIndexer) {
-    const { opinion, blockMetaData } = command;
+    const {
+      opinion: {
+        id,
+        requestor_id,
+        professional_id,
+        info: { description, myriad_url, asset_id, currency, amount },
+        status,
+        created_at,
+      },
+      blockMetaData,
+    } = command;
 
     await this.elasticsearchService.create({
       index: 'opinion',
-      id: opinion.id,
+      id: id,
       refresh: 'wait_for',
       body: {
-        ...opinion,
+        id: id,
+        requestor_id: requestor_id,
+        professional_id: professional_id,
+        info: {
+          description: description,
+          myriad_url: myriad_url,
+          asset_id: asset_id,
+          currency: currency,
+          amount: amount,
+        },
+        status: status,
+        created_at: created_at,
         blockMetaData: blockMetaData,
       },
     });

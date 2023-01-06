@@ -22,7 +22,7 @@ export class HealthProfessionalVerificationStatusHandler
       refresh: 'wait_for',
       body: {
         doc: {
-          availability_status: verificationStatus,
+          verification_status: verificationStatus,
           blockMetaData: blockMetaData,
         },
       },
