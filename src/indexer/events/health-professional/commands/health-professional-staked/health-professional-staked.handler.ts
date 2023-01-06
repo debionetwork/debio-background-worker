@@ -14,14 +14,16 @@ export class HealthProfessionalStakedHandler
   async execute(command: HealthProfessionalStakedCommandIndexer): Promise<any> {
     const { accountId, balance, blockMetaData } = command;
 
-    await this.elasticsearchService.create({
+    await this.elasticsearchService.update({
       id: accountId,
       index: 'health-professional',
       refresh: 'wait_for',
       body: {
-        stake_amount: balance,
-        stake_status: StakeStatus.Staked,
-        blockMetaData: blockMetaData,
+        doc: {
+          stake_amount: balance,
+          stake_status: StakeStatus.Staked,
+          blockMetaData: blockMetaData,
+        },
       },
     });
   }
