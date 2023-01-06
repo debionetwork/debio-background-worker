@@ -16,13 +16,15 @@ export class HealthProfessionalUnstakedHandler
   ): Promise<any> {
     const { accountId, blockMetaData } = command;
 
-    await this.elasticsearchService.create({
+    await this.elasticsearchService.update({
       id: accountId,
       index: 'health-professional',
       refresh: 'wait_for',
       body: {
-        stake_status: StakeStatus.Unstaked,
-        blockMetaData: blockMetaData,
+        doc: {
+          stake_status: StakeStatus.Unstaked,
+          blockMetaData: blockMetaData,
+        },
       },
     });
   }
