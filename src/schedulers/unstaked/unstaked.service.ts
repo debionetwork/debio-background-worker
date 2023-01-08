@@ -8,6 +8,7 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '@common/secrets';
+import { strToMilisecond } from '@common/tools';
 
 @Injectable()
 export class UnstakedService implements OnModuleInit {
@@ -22,10 +23,10 @@ export class UnstakedService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.timer = this.strToMilisecond(
+    this.timer = strToMilisecond(
       this.gCloudSecretManagerService.getSecret('UNSTAKE_TIMER').toString(),
     );
-    const unstakeInterval: number = this.strToMilisecond(
+    const unstakeInterval: number = strToMilisecond(
       this.gCloudSecretManagerService.getSecret('UNSTAKE_INTERVAL').toString(),
     );
 
@@ -118,28 +119,5 @@ export class UnstakedService implements OnModuleInit {
     } finally {
       this.isRunning = false;
     }
-  }
-
-  strToMilisecond(timeFormat: string): number {
-    // time format must DD:HH:MM:SS
-    const splitTimeFormat = timeFormat.split(':');
-
-    const d = Number(splitTimeFormat[0]);
-    const h = Number(splitTimeFormat[1]);
-    const m = Number(splitTimeFormat[2]);
-    const s = Number(splitTimeFormat[3]);
-
-    const dayToMilisecond = d * 24 * 60 * 60 * 1000;
-    const hourToMilisecond = h * 60 * 60 * 1000;
-    const minuteToMilisecond = m * 60 * 1000;
-    const secondToMilisecond = s * 1000;
-
-    const result =
-      dayToMilisecond +
-      hourToMilisecond +
-      minuteToMilisecond +
-      secondToMilisecond;
-
-    return result;
   }
 }

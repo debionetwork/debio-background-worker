@@ -2,7 +2,7 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
 import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { SubstrateService } from '@common/index';
+import { strToMilisecond, SubstrateService } from '@common/index';
 import { keyList } from '@common/secrets';
 import { changeMenstrualSubscriptionStatus } from '@debionetwork/polkadot-provider/lib/command/menstrual-subscription';
 import { queryMenstrualSubscriptionById } from '@debionetwork/polkadot-provider/lib/query/menstrual-subscription';
@@ -24,10 +24,10 @@ export class MenstrualSubscriptionService {
   ) {}
 
   onModuleInit() {
-    this.timer = this.strToMilisecond(
+    this.timer = strToMilisecond(
       this.gCloudSecretManagerService.getSecret('UNSTAKE_TIMER').toString(),
     );
-    const unstakeInterval: number = this.strToMilisecond(
+    const unstakeInterval: number = strToMilisecond(
       this.gCloudSecretManagerService.getSecret('UNSTAKE_INTERVAL').toString(),
     );
 
@@ -223,10 +223,7 @@ export class MenstrualSubscriptionService {
 
       Object.entries(menstrualSubscriptionDurationObj).forEach(
         ([key, value]) => {
-          parseMenstrualSubscriptionDuration.set(
-            key,
-            this.strToMilisecond(value),
-          );
+          parseMenstrualSubscriptionDuration.set(key, strToMilisecond(value));
         },
       );
 
@@ -238,28 +235,5 @@ export class MenstrualSubscriptionService {
       );
       return {};
     }
-  }
-
-  strToMilisecond(timeFormat: string): number {
-    // time format must DD:HH:MM:SS
-    const splitTimeFormat = timeFormat.split(':');
-
-    const d = Number(splitTimeFormat[0]);
-    const h = Number(splitTimeFormat[1]);
-    const m = Number(splitTimeFormat[2]);
-    const s = Number(splitTimeFormat[3]);
-
-    const dayToMilisecond = d * 24 * 60 * 60 * 1000;
-    const hourToMilisecond = h * 60 * 60 * 1000;
-    const minuteToMilisecond = m * 60 * 1000;
-    const secondToMilisecond = s * 1000;
-
-    const result =
-      dayToMilisecond +
-      hourToMilisecond +
-      minuteToMilisecond +
-      secondToMilisecond;
-
-    return result;
   }
 }

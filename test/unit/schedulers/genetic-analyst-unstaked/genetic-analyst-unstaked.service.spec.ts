@@ -16,6 +16,7 @@ import { when } from 'jest-when';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { GeneticAnalystUnstakedService } from '@schedulers/genetic-analyst-unstaked/unstaked.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import * as schedulersTools from '@common/tools/schedulers';
 
 jest.useFakeTimers();
 jest.spyOn(global, 'setInterval');
@@ -25,10 +26,7 @@ describe('UnstakedService', () => {
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>;
   let schedulerRegistryMock: MockType<SchedulerRegistry>;
-  const strToMilisecondSpy = jest.spyOn(
-    GeneticAnalystUnstakedService.prototype,
-    'strToMilisecond',
-  );
+  const strToMilisecondSpy = jest.spyOn(schedulersTools, 'strToMilisecond');
 
   const INTERVAL = '00:00:00:30';
   const TIMER = '6:00:00:00';
@@ -137,9 +135,7 @@ describe('UnstakedService', () => {
     const PARAM = '06:00:00:00';
     const EXPECTED_RETURN = 6 * 24 * 60 * 60 * 1000;
 
-    expect(geneticAnalystUnstakedService.strToMilisecond(PARAM)).toBe(
-      EXPECTED_RETURN,
-    );
+    expect(schedulersTools.strToMilisecond(PARAM)).toBe(EXPECTED_RETURN);
   });
 
   it('should not do anything', () => {

@@ -9,3 +9,4 @@ export * from './ethereum';
 export * from './escrow';
 export * from './debio-conversion';
 export * from './location';
+export * from './tools';
