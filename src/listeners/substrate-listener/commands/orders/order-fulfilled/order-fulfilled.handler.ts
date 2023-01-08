@@ -17,7 +17,6 @@ import {
   sendRewards,
   ServiceFlow,
 } from '@debionetwork/polkadot-provider';
-import { EscrowService } from '@common/escrow/escrow.service';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
 import currencyUnit from '../../../models/currencyUnit';
@@ -34,7 +33,6 @@ export class OrderFulfilledHandler
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly exchangeCacheService: DebioConversionService,
-    private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
