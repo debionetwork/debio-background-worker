@@ -17,6 +17,7 @@ import * as labCommand from '@debionetwork/polkadot-provider/lib/command/labs';
 import { when } from 'jest-when';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import * as schedulersTools from '@common/tools/schedulers';
 
 jest.useFakeTimers();
 jest.spyOn(global, 'setInterval');
@@ -26,10 +27,7 @@ describe('LabUnstakedService', () => {
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>;
   let schedulerRegistryMock: MockType<SchedulerRegistry>;
-  const strToMilisecondSpy = jest.spyOn(
-    LabUnstakedService.prototype,
-    'strToMilisecond',
-  );
+  const strToMilisecondSpy = jest.spyOn(schedulersTools, 'strToMilisecond');
 
   const INTERVAL = '00:00:00:30';
   const TIMER = '6:00:00:00';
@@ -126,7 +124,7 @@ describe('LabUnstakedService', () => {
     const PARAM = '06:00:00:00';
     const EXPECTED_RETURN = 6 * 24 * 60 * 60 * 1000;
 
-    expect(labUnstakedService.strToMilisecond(PARAM)).toBe(EXPECTED_RETURN);
+    expect(schedulersTools.strToMilisecond(PARAM)).toBe(EXPECTED_RETURN);
   });
 
   it('should not do anything', () => {

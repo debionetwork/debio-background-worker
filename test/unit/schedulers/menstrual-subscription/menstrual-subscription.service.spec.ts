@@ -11,16 +11,14 @@ import {
   schedulerRegistryMockFactory,
   substrateServiceMockFactory,
 } from '../../mock';
+import * as schedulersTools from '@common/tools/schedulers';
 
 describe('Menstrual Subscription Service', () => {
   let menstrualSubscriptionService: MockType<MenstrualSubscriptionService>;
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>;
   let schedulerRegistryMock: MockType<SchedulerRegistry>;
-  const strToMilisecondSpy = jest.spyOn(
-    MenstrualSubscriptionService.prototype,
-    'strToMilisecond',
-  );
+  const strToMilisecondSpy = jest.spyOn(schedulersTools, 'strToMilisecond');
 
   const MENSTRUAL_SUBSCRIPTION_DURATION =
     process?.env?.MENSTRUAL_SUBSCRIPTION_DURATION ??
@@ -81,9 +79,7 @@ describe('Menstrual Subscription Service', () => {
     const PARAM = '06:00:00:00';
     const EXPECTED_RETURN = 6 * 24 * 60 * 60 * 1000;
 
-    expect(menstrualSubscriptionService.strToMilisecond(PARAM)).toBe(
-      EXPECTED_RETURN,
-    );
+    expect(schedulersTools.strToMilisecond(PARAM)).toBe(EXPECTED_RETURN);
   });
 
   it('should parse mesntrual subscription duration env value', () => {
