@@ -105,12 +105,13 @@ export class OrderFulfilledHandler
           this.substrateService.api as any,
           this.substrateService.pair,
           requestId,
-        );
-
-        await this.callbackSendReward(
-          order,
-          amountToForward / currencyUnit[order.currency],
-          blockNumber,
+          async () => {
+            await this.callbackSendReward(
+              order,
+              amountToForward / currencyUnit[order.currency],
+              blockNumber,
+            );
+          },
         );
       }
 
@@ -182,6 +183,15 @@ export class OrderFulfilledHandler
       this.substrateService.pair,
       order.customerId,
       dbioRewardCustomer,
+      async () => {
+        // Send reward to lab
+        await sendRewards(
+          this.substrateService.api as any,
+          this.substrateService.pair,
+          order.sellerId,
+          dbioRewardLab,
+        );
+      },
     );
 
     // Write Logging Notification Customer Reward From Request Service
@@ -214,14 +224,6 @@ export class OrderFulfilledHandler
       transaction_status: TransactionStatusList.CustomerStakeRequestService,
     };
     await this.loggingService.create(dataCustomerLoggingInput);
-
-    // Send reward to lab
-    await sendRewards(
-      this.substrateService.api as any,
-      this.substrateService.pair,
-      order.sellerId,
-      dbioRewardLab,
-    );
 
     // Write Logging Notification Lab Reward From Request Service
     const labNotificationInput: NotificationDto = {
