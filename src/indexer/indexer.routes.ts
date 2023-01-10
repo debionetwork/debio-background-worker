@@ -90,7 +90,7 @@ import {
   HealthProfessionalRegisteredCommandIndexer,
   HealthProfessionalStakedCommandIndexer,
   HealthProfessionalUnregisteredCommandIndexer,
-  HealthProfessionalUnstakedAmountCommandIndexer,
+  HealthProfessionalWaitingForUnstakedCommandIndexer,
   HealthProfessionalUnstakedCommandIndexer,
   HealthProfessionalVerificationStatusCommandIndexer,
 } from './events/health-professional';
@@ -104,6 +104,11 @@ import {
   OpinionRequestedCommandIndexer,
   OpinionRequestorInfoUpdatedCommandIndexer,
 } from './events/opinion-requestor';
+import {
+  HealthProfessionalQualificationCreatedCommandIndexer,
+  HealthProfessionalQualificationDeletedCommandIndexer,
+  HealthProfessionalQualificationUpdatedCommandIndexer,
+} from './events/health-professional-qualification';
 
 export const eventRoutes = {
   certifications: {
@@ -214,8 +219,16 @@ export const eventRoutes = {
       HealthProfessionalAvailabilityStatusCommandIndexer,
     HealthProfessionalStaked: HealthProfessionalStakedCommandIndexer,
     HealthProfessionalUnstaked: HealthProfessionalUnstakedCommandIndexer,
-    HealthProfessionalUnstakedAmount:
-      HealthProfessionalUnstakedAmountCommandIndexer,
+    HealthProfessionalWaitingForUnstaked:
+      HealthProfessionalWaitingForUnstakedCommandIndexer,
+  },
+  healthProfessionalQualification: {
+    HealthProfessionalQualificationCreated:
+      HealthProfessionalQualificationCreatedCommandIndexer,
+    HealthProfessionalQualificationUpdated:
+      HealthProfessionalQualificationUpdatedCommandIndexer,
+    HealthProfessionalQualificationDeleted:
+      HealthProfessionalQualificationDeletedCommandIndexer,
   },
   opinion: {
     OpinionAdded: OpinionAddedCommandIndexer,

@@ -4,7 +4,7 @@ export * from './commands/health-professional-registered/health-professional-reg
 export * from './commands/health-professional-staked/health-professional-staked.command';
 export * from './commands/health-professional-unregistered/health-professional-unregistered.command';
 export * from './commands/health-professional-unstaked/health-professional-unstaked.command';
-export * from './commands/health-professional-unstaked-amount/health-professional-unstaked-amount.command';
+export * from './commands/health-professional-waiting-for-unstaked/health-professional-waiting-for-unstaked.command';
 export * from './commands/health-professional-verification-status-updated/health-professional-verification-status-updated.command';
 
 import { HealthProfessionalAvailabilityStatusHandler } from './commands/health-professional-availability-status-updated/health-professional-availability-status-updated.handler';
@@ -13,7 +13,7 @@ import { HealthProfessionalRegisteredHandler } from './commands/health-professio
 import { HealthProfessionalStakedHandler } from './commands/health-professional-staked/health-professional-staked.handler';
 import { HealthProfessionalUnregisteredHandler } from './commands/health-professional-unregistered/health-professional-unregistered.handler';
 import { HealthProfessionalUnstakedHandler } from './commands/health-professional-unstaked/health-professional-unstaked.handler';
-import { HealthProfessionalUnstakedAmountHandler } from './commands/health-professional-unstaked-amount/health-professional-unstaked-amount.handler';
+import { HealthProfessionalWaitingForUnstakedHandler } from './commands/health-professional-waiting-for-unstaked/health-professional-waiting-for-unstaked.handler';
 import { HealthProfessionalVerificationStatusHandler } from './commands/health-professional-verification-status-updated/health-professional-verification-status-updated.handler';
 
 export const HealthProfessionalHandlers = [
@@ -23,6 +23,6 @@ export const HealthProfessionalHandlers = [
   HealthProfessionalStakedHandler,
   HealthProfessionalUnregisteredHandler,
   HealthProfessionalUnstakedHandler,
-  HealthProfessionalUnstakedAmountHandler,
+  HealthProfessionalWaitingForUnstakedHandler,
   HealthProfessionalVerificationStatusHandler,
 ];

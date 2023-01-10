@@ -2,19 +2,20 @@ import { StakeStatus } from '@indexer/models/stake-status';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { HealthProfessionalUnstakedAmountCommandIndexer } from './health-professional-unstaked-amount.command';
+import { HealthProfessionalWaitingForUnstakedCommandIndexer } from './health-professional-waiting-for-unstaked.command';
 
 @Injectable()
-@CommandHandler(HealthProfessionalUnstakedAmountCommandIndexer)
-export class HealthProfessionalUnstakedAmountHandler
-  implements ICommandHandler<HealthProfessionalUnstakedAmountCommandIndexer>
+@CommandHandler(HealthProfessionalWaitingForUnstakedCommandIndexer)
+export class HealthProfessionalWaitingForUnstakedHandler
+  implements
+    ICommandHandler<HealthProfessionalWaitingForUnstakedCommandIndexer>
 {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async execute(
-    command: HealthProfessionalUnstakedAmountCommandIndexer,
+    command: HealthProfessionalWaitingForUnstakedCommandIndexer,
   ): Promise<any> {
-    const { accountId, balance, blockMetaData } = command;
+    const { accountId, status, moment, blockMetaData } = command;
 
     await this.elasticsearchService.update({
       id: accountId,
@@ -22,8 +23,8 @@ export class HealthProfessionalUnstakedAmountHandler
       refresh: 'wait_for',
       body: {
         doc: {
-          stake_amount: balance,
-          stake_status: StakeStatus.Unstaked,
+          stake_status: status,
+          unstaked_at: Number(moment.split(',').join('')),
           blockMetaData: blockMetaData,
         },
       },

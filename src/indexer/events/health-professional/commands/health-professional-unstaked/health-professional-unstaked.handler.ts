@@ -14,7 +14,7 @@ export class HealthProfessionalUnstakedHandler
   async execute(
     command: HealthProfessionalUnstakedCommandIndexer,
   ): Promise<any> {
-    const { accountId, blockMetaData } = command;
+    const { accountId, balance, status, moment, blockMetaData } = command;
 
     await this.elasticsearchService.update({
       id: accountId,
@@ -22,7 +22,9 @@ export class HealthProfessionalUnstakedHandler
       refresh: 'wait_for',
       body: {
         doc: {
-          stake_status: StakeStatus.Unstaked,
+          stake_amount: balance,
+          stake_status: status,
+          unstaked_at: Number(moment.split(',').join('')),
           blockMetaData: blockMetaData,
         },
       },
