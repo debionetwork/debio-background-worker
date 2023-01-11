@@ -177,14 +177,14 @@ export class OrderFulfilledHandler
       BigInt(fixedRewardLab) * BigInt(currencyUnit.DBIO)
     ).toString();
 
-    // Send reward to customer
+    // Send reward to Customer
     await sendRewards(
       this.substrateService.api as any,
       this.substrateService.pair,
       order.customerId,
       dbioRewardCustomer,
       async () => {
-        // Send reward to lab
+        // Send reward to Lab
         await sendRewards(
           this.substrateService.api as any,
           this.substrateService.pair,
