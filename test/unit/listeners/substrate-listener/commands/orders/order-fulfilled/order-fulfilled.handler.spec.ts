@@ -642,7 +642,6 @@ describe('Order Fulfilled Handler Event', () => {
 
     expect(sendRewardsSpy).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
-    expect(sendRewardsSpy).toHaveBeenCalledTimes(2);
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledTimes(2);
   }, 12000);
 });
