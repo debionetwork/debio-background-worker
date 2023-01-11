@@ -65,6 +65,7 @@ export class HealthProfessionalRegisteredHandler
           role: role,
         },
         qualifications: qualifications,
+        qualifications_ids: [],
         unstaked_at: unstaked_at,
         stake_amount: stake_amount,
         stake_status: stake_status,

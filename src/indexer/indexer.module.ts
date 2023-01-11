@@ -20,6 +20,7 @@ import { MenstrualSubscriptionCommandHandlers } from './events/menstrual-subscri
 import { HealthProfessionalHandlers } from './events/health-professional';
 import { OpinionCommandHandlers } from './events/opinion';
 import { OpinionRequestorCommandHandlers } from './events/opinion-requestor';
+import { HealthProfessionalQualificationsHandlers } from './events/health-professional-qualification';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -45,6 +46,7 @@ require('dotenv').config();
     ...MenstrualCalendarCommandHandlers,
     ...MenstrualSubscriptionCommandHandlers,
     ...HealthProfessionalHandlers,
+    ...HealthProfessionalQualificationsHandlers,
     ...OpinionCommandHandlers,
     ...OpinionRequestorCommandHandlers,
   ],

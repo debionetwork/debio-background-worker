@@ -19,3 +19,5 @@ export class OpinionRequestor {
   created_at: number;
   updated_at: number;
 }
+
+export * from './info';

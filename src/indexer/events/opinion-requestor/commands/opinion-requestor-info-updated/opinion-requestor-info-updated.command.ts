@@ -1,11 +1,13 @@
+import { RequestorInfo } from '@indexer/models/opinion-requestor';
 import { BlockMetaData } from '../../../../models/block-meta-data';
-import { OpinionRequestor } from '@indexer/models/opinion-requestor';
 
 export class OpinionRequestorInfoUpdatedCommandIndexer {
   accountId: string;
-  opinionRequestor: OpinionRequestor;
+  requestorInfo: RequestorInfo;
+  requestorId: string;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
     this.accountId = data[0].toString();
-    this.opinionRequestor = new OpinionRequestor(data[1].toHuman());
+    this.requestorInfo = new RequestorInfo(data[1].toHuman());
+    this.requestorId = data[2].toString();
   }
 }
