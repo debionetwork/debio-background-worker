@@ -3,13 +3,13 @@ import { RequestorInfo } from './info';
 export class OpinionRequestor {
   constructor(data: any) {
     this.id = data.id;
-    this.account_id = data.account_id;
+    this.account_id = data.accountId;
     this.info = new RequestorInfo(data.info);
-    this.created_at = data.created_at
-      ? Number(String(data.created_at).split(',').join(''))
+    this.created_at = data.createdAt
+      ? Number(String(data.createdAt).split(',').join(''))
       : null;
-    this.updated_at = data.updated_at
-      ? Number(String(data.updated_at).split(',').join(''))
+    this.updated_at = data.updatedAt
+      ? Number(String(data.updatedAt).split(',').join(''))
       : null;
   }
 

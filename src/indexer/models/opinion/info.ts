@@ -3,8 +3,8 @@ import { CurrencyType } from '../currency-type';
 export class OpinionInfo {
   constructor(data: any) {
     this.description = data.description;
-    this.myriad_url = data.myriad_url;
-    this.asset_id = data.asset_id;
+    this.myriad_url = data.myriadUrl;
+    this.asset_id = data.assetId;
     this.currency = data.currency;
     this.amount = data.amount;
   }

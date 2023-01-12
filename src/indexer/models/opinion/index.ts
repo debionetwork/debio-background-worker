@@ -3,12 +3,12 @@ import { OpinionInfo } from './info';
 export class Opinion {
   constructor(data: any) {
     this.id = data.id;
-    this.requestor_id = data.requestor_id;
-    this.professional_id = data.professional_id;
+    this.requestor_id = data.requestorId;
+    this.professional_id = data.professionalId;
     this.info = new OpinionInfo(data.info);
     this.status = data.status;
-    this.created_at = data.created_at
-      ? Number(String(data.created_at).split(',').join(''))
+    this.created_at = data.createdAt
+      ? Number(String(data.createdAt).split(',').join(''))
       : null;
   }
 

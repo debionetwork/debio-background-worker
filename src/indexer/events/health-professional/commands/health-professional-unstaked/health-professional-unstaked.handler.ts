@@ -1,4 +1,3 @@
-import { StakeStatus } from '@indexer/models/stake-status';
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
