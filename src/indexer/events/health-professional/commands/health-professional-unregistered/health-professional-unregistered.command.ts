@@ -1,4 +1,3 @@
-import { HealthProfessional } from '@indexer/models/health-professional';
 import { BlockMetaData } from '../../../../models/block-meta-data';
 
 export class HealthProfessionalUnregisteredCommandIndexer {

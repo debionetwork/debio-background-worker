@@ -18,7 +18,6 @@ describe('Menstrual Subscription Service', () => {
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>;
   let schedulerRegistryMock: MockType<SchedulerRegistry>;
-  const strToMilisecondSpy = jest.spyOn(schedulersTools, 'strToMilisecond');
 
   const MENSTRUAL_SUBSCRIPTION_DURATION =
     process?.env?.MENSTRUAL_SUBSCRIPTION_DURATION ??
@@ -66,12 +65,15 @@ describe('Menstrual Subscription Service', () => {
     module.useLogger(MockLogger);
 
     menstrualSubscriptionService = module.get(MenstrualSubscriptionService);
+    // eslint-disable-next-line
     elasticsearchServiceMock = module.get(ElasticsearchService);
+    // eslint-disable-next-line
     substrateServiceMock = module.get(SubstrateService);
     schedulerRegistryMock = module.get(SchedulerRegistry);
   });
 
   afterAll(() => {
+    // eslint-disable-next-line
     schedulerRegistryMock = null;
   });
 
