@@ -1,4 +1,3 @@
-import { HealthProfessionalQualification } from '@indexer/models/health-professional-qualification';
 import { BlockMetaData } from '../../../../models/block-meta-data';
 
 export class HealthProfessionalQualificationDeletedCommandIndexer {
