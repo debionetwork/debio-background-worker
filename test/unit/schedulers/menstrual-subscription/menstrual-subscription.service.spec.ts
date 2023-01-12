@@ -69,7 +69,6 @@ describe('Menstrual Subscription Service', () => {
     elasticsearchServiceMock = module.get(ElasticsearchService);
     // eslint-disable-next-line
     substrateServiceMock = module.get(SubstrateService);
-    // eslint-disable-next-line
     schedulerRegistryMock = module.get(SchedulerRegistry);
   });
 
