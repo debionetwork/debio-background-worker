@@ -5,14 +5,14 @@ import { HealthProfessionalInfo } from './info';
 
 export class HealthProfessional {
   constructor(data: any) {
-    this.account_id = data.account_id;
+    this.account_id = data.accountId;
     this.qualifications = data.qualifications;
     this.info = new HealthProfessionalInfo(data.info);
-    this.stake_amount = data.stake_amount;
-    this.stake_status = data.stake_status;
-    this.verification_status = data.verification_status;
-    this.availability_status = data.availability_status;
-    this.unstaked_at = data.unstaked_at
+    this.stake_amount = data.stakeAmount;
+    this.stake_status = data.stakeStatus;
+    this.verification_status = data.verificationStatus;
+    this.availability_status = data.availabilityStatus;
+    this.unstaked_at = data.unstakedAt
       ? Number((data.unstaked_at as string).split(',').join(''))
       : null;
   }
