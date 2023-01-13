@@ -105,13 +105,12 @@ export class OrderFulfilledHandler
           this.substrateService.api as any,
           this.substrateService.pair,
           requestId,
-          async () => {
-            await this.callbackSendReward(
-              order,
-              amountToForward / currencyUnit[order.currency],
-              blockNumber,
-            );
-          },
+        );
+
+        await this.callbackSendReward(
+          order,
+          amountToForward / currencyUnit[order.currency],
+          blockNumber,
         );
       }
 
