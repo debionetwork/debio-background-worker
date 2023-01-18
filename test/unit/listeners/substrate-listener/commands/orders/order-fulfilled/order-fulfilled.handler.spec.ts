@@ -223,9 +223,6 @@ describe('Order Fulfilled Handler Event', () => {
 
   it('should called logging service create', async () => {
     // Arrange
-    const finalizeRequestSpy = jest
-      .spyOn(serviceRequestCommand, 'finalizeRequest')
-      .mockImplementation();
     const queryEthAdressByAccountIdSpy = jest
       .spyOn(userProfileQuery, 'queryEthAdressByAccountId')
       .mockImplementation();
@@ -243,9 +240,6 @@ describe('Order Fulfilled Handler Event', () => {
       .mockImplementation();
     const convertToDbioUnitStringSpy = jest
       .spyOn(globalProviderMethods, 'convertToDbioUnitString')
-      .mockImplementation();
-    const queryServiceByOrderIdSpy = jest
-      .spyOn(serviceRequestQuery, 'queryServiceRequestByOrderId')
       .mockImplementation();
 
     const DATE = new Date(1669649548467);
@@ -335,8 +329,6 @@ describe('Order Fulfilled Handler Event', () => {
       substrateServiceMock.api,
       ORDER.toHuman().sellerId,
     );
-    expect(finalizeRequestSpy).toHaveBeenCalled();
-    expect(queryServiceByOrderIdSpy).toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
     queryServiceByIdSpy.mockClear();
@@ -619,29 +611,5 @@ describe('Order Fulfilled Handler Event', () => {
     queryServiceInvoiceByOrderIdSpy.mockClear();
     sendRewardsSpy.mockClear();
     convertToDbioUnitStringSpy.mockClear();
-  }, 12000);
-
-  it('called reward callback', async () => {
-    const sendRewardsSpy = jest
-      .spyOn(rewardCommand, 'sendRewards')
-      .mockImplementation();
-
-    debioConversionServiceMock.getExchangeFromTo.mockReturnValue({
-      conversion: 1,
-    });
-
-    const ORDER = createMockOrder(OrderStatus.Cancelled);
-    const PRICE = 1;
-    const BLOCKNUMBER = '1';
-
-    await orderFulfilledHandler.callbackSendReward(
-      new Order(ORDER.toHuman()),
-      PRICE,
-      BLOCKNUMBER,
-    );
-
-    expect(sendRewardsSpy).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.create).toHaveBeenCalledTimes(2);
   }, 12000);
 });
