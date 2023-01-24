@@ -13,8 +13,6 @@ import { PaymentStatus } from '@debionetwork/polkadot-provider/lib/primitives/pa
 export class MenstrualSubscriptionService {
   private logger: Logger = new Logger(MenstrualSubscriptionService.name);
   private isRunningInActive = false;
-  private isRunningInQueue = false;
-  private timer: number;
   private menstrualSubscriptionDuration: { [key: string]: number };
   constructor(
     private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
@@ -24,9 +22,6 @@ export class MenstrualSubscriptionService {
   ) {}
 
   onModuleInit() {
-    this.timer = strToMilisecond(
-      this.gCloudSecretManagerService.getSecret('UNSTAKE_TIMER').toString(),
-    );
     const unstakeInterval: number = strToMilisecond(
       this.gCloudSecretManagerService.getSecret('UNSTAKE_INTERVAL').toString(),
     );
@@ -37,92 +32,10 @@ export class MenstrualSubscriptionService {
     const menstrualSubscriptionInActive = setInterval(async () => {
       await this.handleInActiveMenstrualSubscription();
     }, unstakeInterval);
-    const menstrualSubscriptionInQueue = setInterval(async () => {
-      await this.handleInQueueMenstrualSubscription();
-    }, unstakeInterval);
     this.schedulerRegistry.addInterval(
       'menstrual-subscription-inactive',
       menstrualSubscriptionInActive,
     );
-    this.schedulerRegistry.addInterval(
-      'menstrual-subscription-inqueue',
-      menstrualSubscriptionInQueue,
-    );
-  }
-
-  async handleInQueueMenstrualSubscription() {
-    try {
-      if (this.isRunningInQueue || this.subtrateService.api === undefined)
-        return;
-
-      this.isRunningInQueue = true;
-      const menstrualSubscription = await this.elasticsearchService.search({
-        index: 'menstrual-subscription',
-        allow_no_indices: true,
-        body: {
-          query: {
-            match: {
-              status: {
-                query: 'InQueue',
-              },
-            },
-          },
-          sort: [
-            {
-              'created_at.keyword': {
-                unmapped_type: 'keyword',
-                order: 'asc',
-              },
-            },
-          ],
-        },
-        from: 0,
-        size: 10,
-      });
-
-      const listMenstrualSubscription = menstrualSubscription.body.hits.hits;
-      for (const menstrualSubscription of listMenstrualSubscription) {
-        if (this.subtrateService.api === undefined) break;
-
-        const menstrualSubscriptionId = menstrualSubscription['_source']['id'];
-
-        const menstrualSubscriptionData = await queryMenstrualSubscriptionById(
-          this.subtrateService.api,
-          menstrualSubscriptionId,
-        );
-
-        if (
-          menstrualSubscriptionData.status === SubscriptionStatus.InQueue &&
-          menstrualSubscriptionData.paymentStatus === PaymentStatus.Paid
-        ) {
-          await changeMenstrualSubscriptionStatus(
-            this.subtrateService.api,
-            this.subtrateService.pair,
-            menstrualSubscriptionId,
-            SubscriptionStatus.Active,
-          );
-        } else if (
-          menstrualSubscriptionData.status === SubscriptionStatus.Active &&
-          menstrualSubscriptionData.paymentStatus === PaymentStatus.Paid
-        ) {
-          await this.elasticsearchService.update({
-            index: 'menstrual-subscription',
-            id: menstrualSubscriptionId,
-            refresh: 'wait_for',
-            body: {
-              doc: {
-                status: 'Active',
-                payment_status: 'Paid',
-              },
-            },
-          });
-        }
-      }
-    } catch (err) {
-      this.logger.error(`active menstrual subscription error ${err}`);
-    } finally {
-      this.isRunningInQueue = false;
-    }
   }
 
   async handleInActiveMenstrualSubscription() {
@@ -181,6 +94,8 @@ export class MenstrualSubscriptionService {
               },
             },
           });
+
+          await this.checkInQueueByAddress(menstrualSubscriptionData.addressId);
         } else if (
           menstrualSubscriptionData.status === 'Active' &&
           this.checkTimeDurationEnd(currtime, date, duration)
@@ -191,12 +106,98 @@ export class MenstrualSubscriptionService {
             menstrualSubscriptionId,
             SubscriptionStatus.Inactive,
           );
+
+          await this.checkInQueueByAddress(menstrualSubscriptionData.addressId);
         }
       }
     } catch (err) {
       this.logger.error(`inactive menstrual subscription error ${err}`);
     } finally {
       this.isRunningInActive = false;
+    }
+  }
+
+  async checkInQueueByAddress(address: string) {
+    try {
+      const menstrualSubscription = await this.elasticsearchService.search({
+        index: 'menstrual-subscription',
+        allow_no_indices: true,
+        body: {
+          query: {
+            bool: {
+              must: [
+                {
+                  match: {
+                    status: {
+                      query: 'InQueue',
+                    },
+                  },
+                },
+                {
+                  match: {
+                    address_id: {
+                      query: address,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          sort: [
+            {
+              'created_at.keyword': {
+                unmapped_type: 'keyword',
+                order: 'asc',
+              },
+            },
+          ],
+        },
+        from: 0,
+        size: 10,
+      });
+
+      const listMenstrualSubscription = menstrualSubscription.body.hits.hits;
+      for (const menstrualSubscription of listMenstrualSubscription) {
+        if (this.subtrateService.api === undefined) break;
+
+        const menstrualSubscriptionId = menstrualSubscription['_source']['id'];
+
+        const menstrualSubscriptionData = await queryMenstrualSubscriptionById(
+          this.subtrateService.api,
+          menstrualSubscriptionId,
+        );
+
+        if (
+          menstrualSubscriptionData.status === SubscriptionStatus.InQueue &&
+          menstrualSubscriptionData.paymentStatus === PaymentStatus.Paid
+        ) {
+          await changeMenstrualSubscriptionStatus(
+            this.subtrateService.api,
+            this.subtrateService.pair,
+            menstrualSubscriptionId,
+            SubscriptionStatus.Active,
+          );
+          break;
+        } else if (
+          menstrualSubscriptionData.status === SubscriptionStatus.Active &&
+          menstrualSubscriptionData.paymentStatus === PaymentStatus.Paid
+        ) {
+          await this.elasticsearchService.update({
+            index: 'menstrual-subscription',
+            id: menstrualSubscriptionId,
+            refresh: 'wait_for',
+            body: {
+              doc: {
+                status: SubscriptionStatus.Active,
+                payment_status: PaymentStatus.Paid,
+              },
+            },
+          });
+          break;
+        }
+      }
+    } catch (err) {
+      this.logger.error(`active menstrual subscription error ${err}`);
     }
   }
 
