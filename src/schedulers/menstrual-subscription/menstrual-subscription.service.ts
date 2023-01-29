@@ -8,6 +8,7 @@ import { changeMenstrualSubscriptionStatus } from '@debionetwork/polkadot-provid
 import { queryMenstrualSubscriptionById } from '@debionetwork/polkadot-provider/lib/query/menstrual-subscription';
 import { SubscriptionStatus } from '@debionetwork/polkadot-provider/lib/primitives/subscription-status';
 import { PaymentStatus } from '@debionetwork/polkadot-provider/lib/primitives/payment-status';
+import { Duration } from '@debionetwork/polkadot-provider/lib/primitives/duration';
 
 @Injectable()
 export class MenstrualSubscriptionService {
@@ -38,21 +39,30 @@ export class MenstrualSubscriptionService {
     );
   }
 
-  async handleInActiveMenstrualSubscription() {
+  async checkActiveMenstrualSubscription(duration: Duration) {
     try {
-      if (this.isRunningInActive || this.subtrateService.api === undefined)
-        return;
-
-      this.isRunningInActive = true;
       const menstrualSubscription = await this.elasticsearchService.search({
         index: 'menstrual-subscription',
         allow_no_indices: true,
         body: {
           query: {
-            match: {
-              status: {
-                query: 'Active',
-              },
+            bool: {
+              must: [
+                {
+                  match: {
+                    status: {
+                      query: 'Active',
+                    },
+                  },
+                },
+                {
+                  match: {
+                    duration: {
+                      query: duration,
+                    },
+                  },
+                },
+              ],
             },
           },
           sort: [
@@ -112,6 +122,21 @@ export class MenstrualSubscriptionService {
       }
     } catch (err) {
       this.logger.error(`inactive menstrual subscription error ${err}`);
+    }
+  }
+
+  async handleInActiveMenstrualSubscription() {
+    try {
+      if (this.isRunningInActive || this.subtrateService.api === undefined)
+        return;
+  
+      this.isRunningInActive = true;
+      const durations = Object.values(Duration);
+      for (const duration of durations) {
+        this.checkActiveMenstrualSubscription(duration);
+      }
+    } catch(err) {
+      this.logger.error(`handle inactive menstrual subscription error ${err}`);
     } finally {
       this.isRunningInActive = false;
     }
