@@ -129,13 +129,13 @@ export class MenstrualSubscriptionService {
     try {
       if (this.isRunningInActive || this.subtrateService.api === undefined)
         return;
-  
+
       this.isRunningInActive = true;
       const durations = Object.values(Duration);
       for (const duration of durations) {
         this.checkActiveMenstrualSubscription(duration);
       }
-    } catch(err) {
+    } catch (err) {
       this.logger.error(`handle inactive menstrual subscription error ${err}`);
     } finally {
       this.isRunningInActive = false;
