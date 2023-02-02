@@ -12,7 +12,6 @@ import {
 import {
   Order,
   queryEthAdressByAccountId,
-  sendRewards,
   ServiceFlow,
 } from '@debionetwork/polkadot-provider';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
@@ -148,7 +147,7 @@ export class OrderFulfilledHandler
       const exchange = await this.exchangeCacheService.getExchange();
       const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
       const daiToDbio = 1 / dbioToDai;
-  
+
       const rewardCustomer = totalPrice * exchangeFromTo.conversion * daiToDbio;
       const rewardLab = rewardCustomer / 10;
       const fixedRewardCustomer = rewardCustomer.toFixed(0);
@@ -160,8 +159,10 @@ export class OrderFulfilledHandler
         BigInt(fixedRewardLab) * BigInt(currencyUnit.DBIO)
       ).toString();
 
-      await this.substrateService.api.tx.rewards.rewardFunds(order.customerId, dbioRewardCustomer).signAndSend(this.substrateService.pair, {nonce: -1});
-  
+      await this.substrateService.api.tx.rewards
+        .rewardFunds(order.customerId, dbioRewardCustomer)
+        .signAndSend(this.substrateService.pair, { nonce: -1 });
+
       // Write Logging Notification Customer Reward From Request Service
       const customerNotificationInput: NotificationDto = {
         role: 'Customer',
@@ -177,9 +178,9 @@ export class OrderFulfilledHandler
         to: order.customerId,
         block_number: blockNumber,
       };
-  
+
       await this.callbackInsertNotificationLogging(customerNotificationInput);
-  
+
       // Write Logging Reward Customer Staking Request Service
       const dataCustomerLoggingInput: TransactionLoggingDto = {
         address: order.customerId,
@@ -193,8 +194,10 @@ export class OrderFulfilledHandler
       };
       await this.loggingService.create(dataCustomerLoggingInput);
 
-      await this.substrateService.api.tx.rewards.rewardFunds(order.sellerId, dbioRewardLab).signAndSend(this.substrateService.pair, {nonce: -1});
-  
+      await this.substrateService.api.tx.rewards
+        .rewardFunds(order.sellerId, dbioRewardLab)
+        .signAndSend(this.substrateService.pair, { nonce: -1 });
+
       // Write Logging Notification Lab Reward From Request Service
       const labNotificationInput: NotificationDto = {
         role: 'Lab',
@@ -210,9 +213,9 @@ export class OrderFulfilledHandler
         to: order.sellerId,
         block_number: blockNumber,
       };
-  
+
       await this.callbackInsertNotificationLogging(labNotificationInput);
-  
+
       // Write Logging Reward Lab
       const dataLabLoggingInput: TransactionLoggingDto = {
         address: order.customerId,
@@ -226,7 +229,7 @@ export class OrderFulfilledHandler
       };
       await this.loggingService.create(dataLabLoggingInput);
     } catch (err) {
-      console.log("error", err);
+      console.log('error', err);
     }
   }
 
