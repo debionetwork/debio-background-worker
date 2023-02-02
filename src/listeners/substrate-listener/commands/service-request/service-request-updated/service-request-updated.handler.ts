@@ -1,10 +1,6 @@
 import {
-  Order,
-  queryOrderDetailByOrderID,
   queryServiceRequestById,
   RequestStatus,
-  sendRewards,
-  ServiceFlow,
   ServiceRequest,
   setOrderPaid,
 } from '@debionetwork/polkadot-provider';
@@ -13,7 +9,6 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
 import {
   DateTimeProxy,
-  DebioConversionService,
   NotificationService,
   SubstrateService,
   TransactionLoggingService,
@@ -22,7 +17,6 @@ import { TransactionLoggingDto } from '@common/transaction-logging/dto/transacti
 import { ServiceRequestUpdatedCommand } from './service-request-updated.command';
 import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
-import currencyUnit from '@listeners/substrate-listener/models/currencyUnit';
 
 @Injectable()
 @CommandHandler(ServiceRequestUpdatedCommand)
@@ -34,7 +28,6 @@ export class ServiceRequestUpdatedHandler
   );
 
   constructor(
-    private readonly exchangeCacheService: DebioConversionService,
     private readonly loggingService: TransactionLoggingService,
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly substrateService: SubstrateService,
@@ -49,45 +42,19 @@ export class ServiceRequestUpdatedHandler
       await queryServiceRequestById(this.substrateService.api, requestId)
     ).normalize();
 
-    if (status === RequestStatus.Claimed) {
-      await this.onStatusClaimed(serviceRequest, blockMetaData.blockNumber);
-    } else if (status === RequestStatus.Processed) {
-      await this.onStatusProcess(serviceRequest);
-    } else if (status === RequestStatus.Unstaked) {
-      await this.onStatusUnstaked(serviceRequest);
-    } else if (status === RequestStatus.WaitingForUnstaked) {
-      await this.onStatusWaitingForUnstaked(serviceRequest);
-    } else if (status === RequestStatus.Finalized) {
-      await this.onStatusFinalized(
-        serviceRequest,
-        blockMetaData.blockNumber.toString(),
-      );
-    }
-  }
-
-  async onStatusFinalized(serviceRequest: ServiceRequest, blockNumber: string) {
-    const orderDetail = await queryOrderDetailByOrderID(
-      this.substrateService.api,
-      serviceRequest.orderId,
-    );
-
-    const totalPrice = orderDetail.prices.reduce(
-      (acc, price) => acc + Number(price.value.split(',').join('')),
-      0,
-    );
-    const totalAdditionalPrice = orderDetail.additionalPrices.reduce(
-      (acc, price) => acc + Number(price.value.split(',').join('')),
-      0,
-    );
-
-    const amountToForward = totalPrice + totalAdditionalPrice;
-
-    if (orderDetail.orderFlow === ServiceFlow.StakingRequestService) {
-      await this.callbackSendReward(
-        orderDetail,
-        amountToForward / currencyUnit[orderDetail.currency],
-        blockNumber,
-      );
+    switch (status) {
+      case RequestStatus.Claimed:
+        await this.onStatusClaimed(serviceRequest, blockMetaData.blockNumber);
+        break;
+      case RequestStatus.Processed:
+        await this.onStatusProcess(serviceRequest);
+        break;
+      case RequestStatus.Unstaked:
+        await this.onStatusUnstaked(serviceRequest);
+        break;
+      case RequestStatus.WaitingForUnstaked:
+        await this.onStatusWaitingForUnstaked(serviceRequest);
+        break;
     }
   }
 
@@ -173,112 +140,5 @@ export class ServiceRequestUpdatedHandler
     };
 
     await this.notificationService.insert(serviceAvailableNotificationInput);
-  }
-
-  private async callbackInsertNotificationLogging(data: NotificationDto) {
-    await this.notificationService.insert(data);
-  }
-
-  private async callbackSendReward(
-    order: Order,
-    totalPrice: number,
-    blockNumber: string,
-  ) {
-    const exchangeFromTo = await this.exchangeCacheService.getExchangeFromTo(
-      order.currency.toUpperCase(),
-      'DAI',
-    );
-    const exchange = await this.exchangeCacheService.getExchange();
-    const dbioToDai = exchange ? exchange['dbioToDai'] : 1;
-    const daiToDbio = 1 / dbioToDai;
-
-    const rewardCustomer = totalPrice * exchangeFromTo.conversion * daiToDbio;
-    const rewardLab = rewardCustomer / 10;
-    const fixedRewardCustomer = rewardCustomer.toFixed(0);
-    const fixedRewardLab = rewardLab.toFixed(0);
-    const dbioRewardCustomer = (
-      BigInt(fixedRewardCustomer) * BigInt(currencyUnit.DBIO)
-    ).toString();
-    const dbioRewardLab = (
-      BigInt(fixedRewardLab) * BigInt(currencyUnit.DBIO)
-    ).toString();
-
-    // Send reward to Customer
-    await sendRewards(
-      this.substrateService.api as any,
-      this.substrateService.pair,
-      order.customerId,
-      dbioRewardCustomer,
-    );
-
-    // Write Logging Notification Customer Reward From Request Service
-    const customerNotificationInput: NotificationDto = {
-      role: 'Customer',
-      entity_type: 'Order',
-      entity: 'Order Fulfilled',
-      reference_id: order.dnaSampleTrackingId,
-      description: `Congrats! You’ve received ${fixedRewardCustomer} DBIO as a reward for completing the request test for [] from the service requested, kindly check your balance.`,
-      read: false,
-      created_at: this.dateTimeProxy.new(),
-      updated_at: this.dateTimeProxy.new(),
-      deleted_at: null,
-      from: 'Debio Network',
-      to: order.customerId,
-      block_number: blockNumber,
-    };
-
-    await this.callbackInsertNotificationLogging(customerNotificationInput);
-
-    // Write Logging Reward Customer Staking Request Service
-    const dataCustomerLoggingInput: TransactionLoggingDto = {
-      address: order.customerId,
-      amount: rewardCustomer,
-      created_at: new Date(),
-      currency: 'DBIO',
-      parent_id: BigInt(0),
-      ref_number: order.id,
-      transaction_type: TransactionTypeList.Reward,
-      transaction_status: TransactionStatusList.CustomerStakeRequestService,
-    };
-    await this.loggingService.create(dataCustomerLoggingInput);
-
-    // Send reward to Lab
-    await sendRewards(
-      this.substrateService.api as any,
-      this.substrateService.pair,
-      order.sellerId,
-      dbioRewardLab,
-    );
-
-    // Write Logging Notification Lab Reward From Request Service
-    const labNotificationInput: NotificationDto = {
-      role: 'Lab',
-      entity_type: 'Reward',
-      entity: 'Request Service Staking',
-      reference_id: order.dnaSampleTrackingId,
-      description: `Congrats! You’ve received ${fixedRewardLab} DBIO for completing the request test for [] from the service requested.`,
-      read: false,
-      created_at: this.dateTimeProxy.new(),
-      updated_at: this.dateTimeProxy.new(),
-      deleted_at: null,
-      from: 'Debio Network',
-      to: order.sellerId,
-      block_number: blockNumber,
-    };
-
-    await this.callbackInsertNotificationLogging(labNotificationInput);
-
-    // Write Logging Reward Lab
-    const dataLabLoggingInput: TransactionLoggingDto = {
-      address: order.customerId,
-      amount: rewardLab,
-      created_at: new Date(),
-      currency: 'DBIO',
-      parent_id: BigInt(0),
-      ref_number: order.id,
-      transaction_type: TransactionTypeList.Reward,
-      transaction_status: TransactionStatusList.LabProvideRequestedService,
-    };
-    await this.loggingService.create(dataLabLoggingInput);
   }
 }
