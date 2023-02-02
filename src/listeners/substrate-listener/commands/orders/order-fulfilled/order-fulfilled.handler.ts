@@ -60,7 +60,6 @@ export class OrderFulfilledHandler
 
       const amountToForward = totalPrice + totalAdditionalPrice;
 
-      console.log(order.orderFlow === ServiceFlow.StakingRequestService ? "true" : "false");
       // Logging data input
       const orderLogging: TransactionLoggingDto = {
         address: order.customerId,
