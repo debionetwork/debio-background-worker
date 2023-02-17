@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.4.0](https://github.com/debionetwork/debio-background-worker/compare/2.3.0...2.4.0) (2023-02-14)
+
+
+### Features
+
+* health professional indexer ([#255](https://github.com/debionetwork/debio-background-worker/issues/255)) ([8e87af6](https://github.com/debionetwork/debio-background-worker/commit/8e87af66e5c167785c6387bcff2944d0adb64fc1))
+* move reward to finalize request update ([#273](https://github.com/debionetwork/debio-background-worker/issues/273)) ([257df01](https://github.com/debionetwork/debio-background-worker/commit/257df01f837b8bcd6e5861e9471942d6fc9131a2))
+* second opinion indexer handler ([#256](https://github.com/debionetwork/debio-background-worker/issues/256)) ([30a6067](https://github.com/debionetwork/debio-background-worker/commit/30a6067dfbf32eb288fa637f0f647b0bd2e73fe4))
+
+
+### Bug Fixes
+
+* add delay between reward ([#249](https://github.com/debionetwork/debio-background-worker/issues/249)) ([32dd85e](https://github.com/debionetwork/debio-background-worker/commit/32dd85e7b2d5a343fa56ff198432016568d5fe6c))
+* error update on stake ([#258](https://github.com/debionetwork/debio-background-worker/issues/258)) ([b214b29](https://github.com/debionetwork/debio-background-worker/commit/b214b2914439319051da333bfa6243c74a0a0b40))
+* format data class ([#257](https://github.com/debionetwork/debio-background-worker/issues/257)) ([c4a1f07](https://github.com/debionetwork/debio-background-worker/commit/c4a1f0712d7e9ab7d5e1b928d417fb0a84594041))
+* health professional indexer ([#269](https://github.com/debionetwork/debio-background-worker/issues/269)) ([abf944b](https://github.com/debionetwork/debio-background-worker/commit/abf944b11c7290b4ab7d925ce9c66fd4bc3692d8))
+* indexer second opinion ([#266](https://github.com/debionetwork/debio-background-worker/issues/266)) ([8c449db](https://github.com/debionetwork/debio-background-worker/commit/8c449db7f509f2d9bd84601cd927a029a83450c8))
+* menstrual subscription ([#280](https://github.com/debionetwork/debio-background-worker/issues/280)) ([da7151e](https://github.com/debionetwork/debio-background-worker/commit/da7151ec68d3f8095a93d839e28fc96abc99dc9b))
+* reward failed ([#252](https://github.com/debionetwork/debio-background-worker/issues/252)) ([db13adc](https://github.com/debionetwork/debio-background-worker/commit/db13adc278d7e01bb8a4b0cc5fadb81ee1b79668))
+* reward finalized ([#284](https://github.com/debionetwork/debio-background-worker/issues/284)) ([a09db94](https://github.com/debionetwork/debio-background-worker/commit/a09db94ce592bc39a8f02e184cee99f7acf88c68))
+* reward finalized ([#285](https://github.com/debionetwork/debio-background-worker/issues/285)) ([b5ec933](https://github.com/debionetwork/debio-background-worker/commit/b5ec93395ce04d4f649c2833cd23440a91c2dca6))
+* reward not called ([#270](https://github.com/debionetwork/debio-background-worker/issues/270)) ([fd3fc29](https://github.com/debionetwork/debio-background-worker/commit/fd3fc29975f6b3e545f67b787960007e7e06f2ef))
+* reward order fulfilled  ([#277](https://github.com/debionetwork/debio-background-worker/issues/277)) ([2d19fee](https://github.com/debionetwork/debio-background-worker/commit/2d19feef0eef27b9e8984f9260d7e0f7ada32cb8))
+* reward, handle with convert to bigint ([#247](https://github.com/debionetwork/debio-background-worker/issues/247)) ([b6d6f95](https://github.com/debionetwork/debio-background-worker/commit/b6d6f95c1d63a0be22063bcb8bea367b861a9c88))
+* run check inqueu subscription if some subscription is inactive ([#276](https://github.com/debionetwork/debio-background-worker/issues/276)) ([8510bf7](https://github.com/debionetwork/debio-background-worker/commit/8510bf76cd5e2b9b64965a8c210c230ac90a4974))
+* run when finished ([#267](https://github.com/debionetwork/debio-background-worker/issues/267)) ([320e9af](https://github.com/debionetwork/debio-background-worker/commit/320e9af701f85415d2669997d4f0a03bbe6a1274))
+
 ## [2.3.0](https://github.com/debionetwork/debio-background-worker/compare/2.2.0...2.3.0) (2022-12-16)
 
 
