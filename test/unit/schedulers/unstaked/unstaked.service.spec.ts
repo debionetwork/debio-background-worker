@@ -67,7 +67,7 @@ describe('UnstakedService', () => {
         ],
       },
       from: 0,
-      size: 10,
+      size: 1000,
     };
   };
 
