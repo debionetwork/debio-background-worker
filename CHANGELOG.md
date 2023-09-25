@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/debionetwork/debio-background-worker/compare/2.4.0...2.4.1) (2023-09-25)
+
+
+### Bug Fixes
+
+* unstake index search size ([#366](https://github.com/debionetwork/debio-background-worker/issues/366)) ([f67b12a](https://github.com/debionetwork/debio-background-worker/commit/f67b12a21fc3780bc690ae5ad56dc3b2f473ef84))
+
 ## [2.4.0](https://github.com/debionetwork/debio-background-worker/compare/2.3.0...2.4.0) (2023-02-14)
 
 
