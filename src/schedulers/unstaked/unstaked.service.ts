@@ -62,7 +62,7 @@ export class UnstakedService implements OnModuleInit {
           ],
         },
         from: 0,
-        size: 1000,
+        size: 10,
       });
 
       const listRequestService = createRequestService.body.hits.hits;
