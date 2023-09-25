@@ -62,7 +62,7 @@ export class UnstakedService implements OnModuleInit {
           ],
         },
         from: 0,
-        size: 10,
+        size: 1000,
       });
 
       const listRequestService = createRequestService.body.hits.hits;
@@ -89,30 +89,7 @@ export class UnstakedService implements OnModuleInit {
               },
             },
           });
-        } else {
-          const timeWaitingUnstaked: string =
-            requestService['_source']['request']['unstaked_at'];
-
-          if (!timeWaitingUnstaked) {
-            continue;
-          }
-
-          const numberTimeWaitingUnstaked = Number(
-            timeWaitingUnstaked.replace(/,/gi, ''),
-          );
-
-          const timeNext6Days = numberTimeWaitingUnstaked + this.timer;
-          const timeNow = new Date().getTime();
-          const diffTime = timeNext6Days - timeNow;
-
-          if (diffTime <= 0) {
-            await retrieveUnstakedAmount(
-              this.subtrateService.api as any,
-              this.subtrateService.pair,
-              requestId,
-            );
-          }
-        }
+        } 
       }
     } catch (err) {
       this.logger.error(`unstaked error ${err}`);
