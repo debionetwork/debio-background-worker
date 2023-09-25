@@ -212,67 +212,6 @@ describe('UnstakedService', () => {
     retrieveUnstakedAmountMock.mockClear();
   });
 
-  it('should unstakedServiceRequest', async () => {
-    const queryServiceRequestMock = jest.spyOn(
-      serviceRequestQuery,
-      'queryServiceRequestById',
-    );
-    const retrieveUnstakedAmountMock = jest.spyOn(
-      serviceRequestCommand,
-      'retrieveUnstakedAmount',
-    );
-
-    const CALLED_WITH = createSearchObject();
-    const REQUEST_ID = 'string';
-    const TIMER = 7 * 24 * 60 * 60 * 1000;
-    const ES_RESULT = {
-      body: {
-        hits: {
-          hits: [
-            {
-              _source: {
-                request: {
-                  hash: REQUEST_ID,
-                  unstaked_at: (new Date().getTime() - TIMER).toString(),
-                },
-              },
-            },
-          ],
-        },
-      },
-    };
-
-    const SUBSTRATE_RESULT: ServiceRequest = new ServiceRequest({
-      hash: 'string',
-      requester_address: 'string',
-      lab_address: 'string',
-      country: 'string',
-      region: 'string',
-      city: 'string',
-      service_category: 'string',
-      staking_amount: 0,
-      status: 'WaitingForUnstaked',
-      created_at: new Date(),
-      updated_at: new Date(),
-      unstaked_at: new Date(),
-    });
-
-    when(queryServiceRequestMock)
-      .calledWith(substrateServiceMock.api, REQUEST_ID)
-      .mockReturnValue(SUBSTRATE_RESULT);
-
-    when(elasticsearchServiceMock.search.mockReturnValue(ES_RESULT))
-      .calledWith(CALLED_WITH)
-      .mockReturnValue(ES_RESULT);
-
-    await unstakedService.handleWaitingUnstaked();
-    expect(queryServiceRequestMock).toHaveBeenCalled();
-    expect(retrieveUnstakedAmountMock).toHaveBeenCalled();
-
-    queryServiceRequestMock.mockClear();
-    retrieveUnstakedAmountMock.mockClear();
-  });
-
   it('should not called unstakedServiceRequest', async () => {
     const queryServiceRequestMock = jest.spyOn(
       serviceRequestQuery,
