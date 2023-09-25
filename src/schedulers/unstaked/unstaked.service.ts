@@ -2,10 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { SubstrateService } from '@common/index';
-import {
-  queryServiceRequestById,
-  retrieveUnstakedAmount,
-} from '@debionetwork/polkadot-provider';
+import { queryServiceRequestById } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '@common/secrets';
 import { strToMilisecond } from '@common/tools';
