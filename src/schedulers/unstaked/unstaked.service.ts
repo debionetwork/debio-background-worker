@@ -2,7 +2,10 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { SubstrateService } from '@common/index';
-import { queryServiceRequestById } from '@debionetwork/polkadot-provider';
+import {
+  queryServiceRequestById,
+  retrieveUnstakedAmount,
+} from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '@common/secrets';
 import { strToMilisecond } from '@common/tools';
@@ -86,6 +89,29 @@ export class UnstakedService implements OnModuleInit {
               },
             },
           });
+        } else {
+          const timeWaitingUnstaked: string =
+            requestService['_source']['request']['unstaked_at'];
+
+          if (!timeWaitingUnstaked) {
+            continue;
+          }
+
+          const numberTimeWaitingUnstaked = Number(
+            timeWaitingUnstaked.replace(/,/gi, ''),
+          );
+
+          const timeNext6Days = numberTimeWaitingUnstaked + this.timer;
+          const timeNow = new Date().getTime();
+          const diffTime = timeNext6Days - timeNow;
+
+          if (diffTime <= 0) {
+            await retrieveUnstakedAmount(
+              this.subtrateService.api as any,
+              this.subtrateService.pair,
+              requestId,
+            );
+          }
         }
       }
     } catch (err) {
