@@ -61,12 +61,10 @@ describe('Menstrual Subscription Service', () => {
   it('should parse mesntrual subscription duration env value', () => {
     expect(
       menstrualSubscriptionService.parseMenstrualSubscriptionDuration(),
-    ).toEqual(
-      expect.objectContaining({
-        Monthly: 30 * 24 * 60 * 60 * 1000,
-        Quarterly: 3 * 30 * 24 * 60 * 60 * 1000,
-        Yearly: 365 * 24 * 60 * 60 * 1000,
-      }),
-    );
+    ).toEqual({
+      Monthly: 30 * 24 * 60 * 60 * 1000,
+      Quarterly: 3 * 30 * 24 * 60 * 60 * 1000,
+      Yearly: 365 * 24 * 60 * 60 * 1000,
+    });
   });
 });

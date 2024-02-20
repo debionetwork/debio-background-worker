@@ -35,10 +35,15 @@ export const config = {
   MYRIAD_MENTAL_HEALTH_TIMELINE_ID:
     process.env.MENTAL_HEALTH_EXPERIENCE_ID ?? '',
   PINATA_JWT: process.env.PINATA_SECRET_KEY ?? '',
-  GA_ORDER_LINK: process.env.GA_ORDER_LINK ?? '',
-  LAB_ORDER_LINK: process.env.LAB_ORDER_LINK ?? '',
-  UNSTAKE_INTERVAL: process.env.UNSTAKE_INTERVAL ?? '',
-  UNSTAKE_TIMER: process.env.UNSTAKE_TIMER ?? '',
+  GA_ORDER_LINK:
+    process.env.GA_ORDER_LINK ??
+    'https://analyst.testnet.debio.network/order-details/',
+  LAB_ORDER_LINK:
+    process.env.LAB_ORDER_LINK ??
+    ' https://lab.testnet.debio.network/lab/orders/',
+  UNSTAKE_INTERVAL: process.env.UNSTAKE_INTERVAL ?? '00:00:00:30',
+  UNSTAKE_TIMER: process.env.UNSTAKE_TIMER ?? '6:00:00:00',
   MENSTRUAL_SUBSCRIPTION_DURATION:
-    process.env.MENSTRUAL_SUBSCRIPTION_DURATION ?? '',
+    process.env.MENSTRUAL_SUBSCRIPTION_DURATION ??
+    '{"Monthly": "30:00:00:00", "Quarterly": "90:00:00:00", "Yearly": "365:00:00:00"}',
 };
