@@ -58,18 +58,14 @@ import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrat
 import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { OrderFailedHandler } from '@listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
-import { keyList, SecretKeyList } from '@common/secrets';
 import { deleteService, deregisterLab } from '@debionetwork/polkadot-provider';
 import { OrderFulfilledHandler } from '@listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
 import { OrderPaidHandler } from '@listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+import { config } from '../../../../../../src/config';
 
 describe('Order Failed Integration Tests', () => {
   let app: INestApplication;
@@ -111,10 +107,6 @@ describe('Order Failed Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -131,18 +123,13 @@ describe('Order Failed Integration Tests', () => {
         DebioConversionModule,
         MailerModule.forRootAsync({
           imports: [
-            GCloudSecretManagerModule.withConfig(
-              process.env.PARENT,
-              SecretKeyList,
-            ),
           ],
-          inject: [GCloudSecretManagerService],
+          inject: [],
           useFactory: async (
-            gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
           ) => {
             console.log(
-              gCloudSecretManagerService.getSecret('EMAIL').toString(),
-              gCloudSecretManagerService.getSecret('PASS_EMAIL').toString(),
+              config.EMAIL.toString(),
+              config.PASS_EMAIL.toString(),
             );
             return {
               transport: {
@@ -150,12 +137,8 @@ describe('Order Failed Integration Tests', () => {
                 port: 587,
                 secure: false,
                 auth: {
-                  user: gCloudSecretManagerService
-                    .getSecret('EMAIL')
-                    .toString(),
-                  pass: gCloudSecretManagerService
-                    .getSecret('PASS_EMAIL')
-                    .toString(),
+                  user: config.EMAIL.toString(),
+                  pass: config.PASS_EMAIL.toString(),
                 },
               },
               template: {
@@ -186,8 +169,6 @@ describe('Order Failed Integration Tests', () => {
         OrderPaidHandler,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     app = module.createNestApplication();

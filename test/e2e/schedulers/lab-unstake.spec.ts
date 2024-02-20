@@ -15,17 +15,12 @@ import { LabUnstakedService } from '@schedulers/lab-unstake/lab-unstake.service'
 import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { Lab } from '@debionetwork/polkadot-provider';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList, keyList } from '@common/secrets';
+import { config } from '../../../src/config';
 
 describe('Lab Unstaked Scheduler (e2e)', () => {
   let schedulerRegistry: SchedulerRegistry;
   let labUnstakedService: LabUnstakedService;
   let substrateService: SubstrateService;
-  let gCloudSecretManagerService: GCloudSecretManagerService<keyList>;
   let elasticsearchService: ElasticsearchService;
 
   let app: INestApplication;
@@ -60,23 +55,14 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         ElasticsearchModule.registerAsync({
-          inject: [GCloudSecretManagerService],
+          inject: [],
           useFactory: async (
-            gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
           ) => ({
             node: process.env.ELASTICSEARCH_NODE,
             auth: {
-              username: gCloudSecretManagerService
-                .getSecret('ELASTICSEARCH_USERNAME')
-                .toString(),
-              password: gCloudSecretManagerService
-                .getSecret('ELASTICSEARCH_PASSWORD')
-                .toString(),
+              username: config.ELASTICSEARCH_USERNAME.toString(),
+              password: config.ELASTICSEARCH_PASSWORD.toString(),
             },
           }),
         }),
@@ -85,17 +71,13 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
         ScheduleModule.forRoot(),
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     schedulerRegistry = module.get(SchedulerRegistry);
     substrateService = module.get(SubstrateService);
-    gCloudSecretManagerService = module.get(GCloudSecretManagerService);
     elasticsearchService = module.get(ElasticsearchService);
 
     labUnstakedService = new LabUnstakedService(
-      gCloudSecretManagerService,
       elasticsearchService,
       substrateService,
       schedulerRegistry,

@@ -23,7 +23,6 @@ import { NotificationService } from '@common/notification/notification.service';
 import { BlockMetaData } from '@listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestCreatedCommand } from '@listeners/substrate-listener/commands/service-request';
 import { when } from 'jest-when';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Service Request Created Handler Event', () => {
   let serviceRequesCreatedHandler: ServiceRequestCreatedHandler;
@@ -96,10 +95,6 @@ describe('Service Request Created Handler Event', () => {
         {
           provide: DateTimeProxy,
           useFactory: dateTimeProxyMockFactory,
-        },
-        {
-          provide: GCloudSecretManagerService,
-          useFactory: googleSecretManagerServiceMockFactory,
         },
         ServiceRequestCreatedHandler,
       ],

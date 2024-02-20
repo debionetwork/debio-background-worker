@@ -32,12 +32,7 @@ import { labDataMock } from '../../../../../mock/models/labs/labs.mock';
 import { serviceDataMock } from '../../../../../mock/models/labs/services.mock';
 import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { SecretKeyList } from '@common/secrets';
 
 describe('Service Created Integration Tests', () => {
   let app: INestApplication;
@@ -81,10 +76,6 @@ describe('Service Created Integration Tests', () => {
   beforeAll(async () => {
     const modules: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -109,8 +100,6 @@ describe('Service Created Integration Tests', () => {
         ...ServiceCommandHandlers,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     app = modules.createNestApplication();

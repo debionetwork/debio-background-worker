@@ -23,7 +23,6 @@ import { when } from 'jest-when';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { NotificationService } from '@common/notification/notification.service';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
@@ -74,10 +73,6 @@ describe('Order Paid Handler Event', () => {
         {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
-        },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
         },
         OrderPaidHandler,
       ],

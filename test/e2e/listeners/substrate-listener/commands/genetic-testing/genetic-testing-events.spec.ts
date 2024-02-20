@@ -58,10 +58,6 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
 import { createConnection } from 'typeorm';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { DataStakedHandler } from '@listeners/substrate-listener/commands/genetic-testing/data-staked/data-staked.handler';
 import { SecretKeyList } from '@common/secrets';
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
@@ -110,10 +106,6 @@ describe('Data Staked Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -140,8 +132,6 @@ describe('Data Staked Integration Tests', () => {
         DnaSampleResultReadyCommandHandler,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     app = module.createNestApplication();

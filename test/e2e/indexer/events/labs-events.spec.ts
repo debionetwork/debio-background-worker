@@ -20,10 +20,6 @@ import { ProcessEnvModule } from '@common/proxies/process-env/process-env.module
 import { IndexerHandler } from '@indexer/indexer.handler';
 import { initializeApi } from '../../polkadot-init';
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { IndexerModule } from '@indexer/indexer.module';
 import { LabCommandHandlers } from '@indexer/events/labs';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
@@ -70,10 +66,6 @@ describe('Event Command Service Request Claimed', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
@@ -82,8 +74,6 @@ describe('Event Command Service Request Claimed', () => {
       ],
       providers: [IndexerHandler, ...LabCommandHandlers],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     elasticsearchService =

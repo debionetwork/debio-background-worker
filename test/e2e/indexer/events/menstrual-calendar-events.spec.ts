@@ -3,10 +3,6 @@ import { ApiPromise } from '@polkadot/api';
 // import { MenstrualCycleLog } from '@indexer/models/menstrual-calendar/menstrual-cycle-log';
 // import { MenstrualCalendar } from '@indexer/models/menstrual-calendar/menstrual-calendar';
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { SecretKeyList } from '@common/secrets';
 import { CommonModule, ProcessEnvModule } from '@common/index';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -60,7 +56,6 @@ describe('Menstrual Calendar Test Events', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
@@ -69,8 +64,6 @@ describe('Menstrual Calendar Test Events', () => {
       ],
       providers: [IndexerHandler, ...MenstrualCalendarCommandHandlers],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     elasticsearchService =

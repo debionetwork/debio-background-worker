@@ -1,8 +1,4 @@
 import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
-import {
   Certification,
   createCertification,
   deleteCertification,
@@ -27,7 +23,6 @@ import { LabCommandHandlers } from '@indexer/events/labs';
 import { initializeApi } from '../../polkadot-init';
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { certificationDataMock } from '../../../mock/models/certifications/certification-mock';
-import { SecretKeyList } from '@common/secrets';
 
 describe('Certification Event', () => {
   let app: INestApplication;
@@ -70,7 +65,6 @@ describe('Certification Event', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
@@ -83,8 +77,6 @@ describe('Certification Event', () => {
         ...CertificationsCommandHandlers,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     elasticsearchService =

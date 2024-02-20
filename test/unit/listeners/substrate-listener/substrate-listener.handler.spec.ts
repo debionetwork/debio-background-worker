@@ -18,7 +18,6 @@ import {
 } from './substrate-listener.mock.data';
 import { Logger } from '@nestjs/common';
 import { BlockMetaData } from '@listeners/substrate-listener/models/block-metadata.event-model';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 const eventsSpy = jest.spyOn(API_MOCK.query.system, 'events');
 const getBlockSpy = jest.spyOn(API_MOCK.rpc.chain, 'getBlock');
@@ -69,10 +68,6 @@ describe('Substrate Listener Handler Unit Test', () => {
         { provide: QueryBus, useFactory: queryBusMockFactory },
         { provide: CommandBus, useFactory: commandBusMockFactory },
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
       ],
     }).compile();
 

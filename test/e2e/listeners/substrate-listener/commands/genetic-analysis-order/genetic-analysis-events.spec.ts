@@ -58,17 +58,13 @@ import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitiv
 import { geneticAnalystServiceDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
 import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { GeneticAnalysisOrderCreatedHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysys-order-created/genetic-analysis-order-created.handler';
 import { GeneticAnalysisOrderFulfilledHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
 import { GeneticAnalysisOrderPaidHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
-import { keyList, SecretKeyList } from '@common/secrets';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { config } from 'src/config';
 
 describe('Genetic Analysis Order Created Integration Test', () => {
   let app: INestApplication;
@@ -108,10 +104,6 @@ describe('Genetic Analysis Order Created Integration Test', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -127,14 +119,9 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         NotificationModule,
         MailerModule.forRootAsync({
           imports: [
-            GCloudSecretManagerModule.withConfig(
-              process.env.PARENT,
-              SecretKeyList,
-            ),
           ],
-          inject: [GCloudSecretManagerService],
+          inject: [],
           useFactory: async (
-            gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
           ) => {
             return {
               transport: {
@@ -142,9 +129,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
                 secure: false,
                 auth: {
                   user: process.env.EMAIL,
-                  pass: gCloudSecretManagerService
-                    .getSecret('PASS_EMAIL')
-                    .toString(),
+                  pass: config.PASS_EMAIL.toString(),
                 },
               },
               template: {
@@ -175,8 +160,6 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         GeneticAnalysisOrderPaidHandler,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     app = module.createNestApplication();

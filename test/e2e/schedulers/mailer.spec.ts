@@ -17,19 +17,14 @@ import { Keyring } from '@polkadot/api';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dummyCredentials } from '../config';
 import { SubstrateService } from '@common/substrate/substrate.service';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { SecretKeyList, keyList } from '@common/secrets';
+import { config } from '../../../src/config';
 
 describe('Mailer Scheduler (e2e)', () => {
   let service: MailerService;
   let mailerManager: MailerManager;
   let substrateService: SubstrateService;
   let emailNotificationService: EmailNotificationService;
-  let gCloudSecretManagerService: GCloudSecretManagerService<keyList>;
 
   let app: INestApplication;
 
@@ -73,23 +68,14 @@ describe('Mailer Scheduler (e2e)', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ProcessEnvModule,
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         ElasticsearchModule.registerAsync({
-          inject: [GCloudSecretManagerService],
+          inject: [],
           useFactory: async (
-            gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
           ) => ({
             node: process.env.ELASTICSEARCH_NODE,
             auth: {
-              username: gCloudSecretManagerService
-                .getSecret('ELASTICSEARCH_USERNAME')
-                .toString(),
-              password: gCloudSecretManagerService
-                .getSecret('ELASTICSEARCH_PASSWORD')
-                .toString(),
+              username: config.ELASTICSEARCH_USERNAME.toString(),
+              password: config.ELASTICSEARCH_PASSWORD.toString(),
             },
           }),
         }),
@@ -105,17 +91,13 @@ describe('Mailer Scheduler (e2e)', () => {
         EmailNotificationModule,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     mailerManager = module.get(MailerManager);
     substrateService = module.get(SubstrateService);
     emailNotificationService = module.get(EmailNotificationService);
-    gCloudSecretManagerService = module.get(GCloudSecretManagerService);
 
     service = new MailerService(
-      gCloudSecretManagerService,
       mailerManager,
       emailNotificationService,
       substrateService,

@@ -21,7 +21,6 @@ import {
 import { GeneticAnalysisOrderPaidHandler } from '@listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
 import { when } from 'jest-when';
 import { NotificationService } from '@common/notification/notification.service';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Genetic Analysis Order Paid Handler Event', () => {
   let geneticAnalysisOrderPaidHandler: GeneticAnalysisOrderPaidHandler;
@@ -68,10 +67,6 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
         {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
-        },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
         },
         GeneticAnalysisOrderPaidHandler,
       ],

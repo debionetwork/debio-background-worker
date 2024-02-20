@@ -30,12 +30,7 @@ import { geneticAnalystsDataMock } from '../../../../../mock/models/genetic-anal
 import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { GeneticAnalystRegisteredHandler } from '@listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-registered/genetic-analyst-registered.handler';
-import { SecretKeyList } from '@common/secrets';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { GeneticAnalystVerificationStatusHandler } from '@listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
 
@@ -77,10 +72,6 @@ describe('Genetic analyst verification status', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -105,8 +96,6 @@ describe('Genetic analyst verification status', () => {
         GeneticAnalystVerificationStatusHandler,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     app = module.createNestApplication();

@@ -1,7 +1,3 @@
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { INestApplication } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
@@ -35,7 +31,6 @@ import {
 import { labDataMock } from '../../../mock/models/labs/labs.mock';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { serviceDataMock } from '../../../mock/models/labs/services.mock';
-import { SecretKeyList } from '@common/secrets';
 
 describe('Indexer Genetic Testing Event', () => {
   let app: INestApplication;
@@ -56,33 +51,9 @@ describe('Indexer Genetic Testing Event', () => {
     error: jest.fn(),
   };
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-    ]);
-
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
@@ -91,8 +62,6 @@ describe('Indexer Genetic Testing Event', () => {
       ],
       providers: [IndexerHandler, ...GeneticTestingCommandHandlers],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     elasticsearchService =

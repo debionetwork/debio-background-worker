@@ -51,12 +51,7 @@ import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitiv
 import { geneticAnalystServiceDataMock } from '../../../../../mock/models/genetic-analysts/genetic-analyst-service.mock';
 import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { GeneticAnalysisRejectedHandler } from '@listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-rejected/genetic-analysis-rejected.handler';
-import { SecretKeyList } from '@common/secrets';
 
 describe('Genetic Analysis Order Created Integration Test', () => {
   let app: INestApplication;
@@ -96,10 +91,6 @@ describe('Genetic Analysis Order Created Integration Test', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -129,8 +120,6 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         GeneticAnalysisRejectedHandler,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     app = module.createNestApplication();

@@ -1,5 +1,4 @@
 import { SubstrateService } from '@common/substrate';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -44,10 +43,6 @@ describe('Menstrual Subscription Service', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MenstrualSubscriptionService,
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
         {
           provide: ElasticsearchService,
           useFactory: elasticsearchServiceMockFactory,

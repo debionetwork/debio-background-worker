@@ -1,7 +1,3 @@
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { INestApplication } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
@@ -74,7 +70,6 @@ describe('Orders Events', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
@@ -83,8 +78,6 @@ describe('Orders Events', () => {
       ],
       providers: [IndexerHandler, ...OrderCommandHandlers],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     elasticsearchService =

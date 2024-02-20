@@ -34,11 +34,6 @@ import { RequestServiceCommandHandlers } from '@indexer/events/service-request';
 import { ScheduleModule } from '@nestjs/schedule';
 import { IndexerModule } from '@indexer/indexer.module';
 import { serviceRequestMock } from '../../../mock/models/service-request/service-request.mock';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList } from '@common/secrets';
 
 describe('Event Command Service Request Claimed', () => {
   let app: INestApplication;
@@ -82,10 +77,6 @@ describe('Event Command Service Request Claimed', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
@@ -99,8 +90,6 @@ describe('Event Command Service Request Claimed', () => {
         ...RequestServiceCommandHandlers,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     elasticsearchService =

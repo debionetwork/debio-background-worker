@@ -20,7 +20,6 @@ import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { when } from 'jest-when';
 import { NotificationService } from '@common/notification/notification.service';
 import { ServiceCreatedCommand } from '@listeners/substrate-listener/commands/services';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Service Created Handler Event', () => {
   let serviceCreatedHandle: ServiceCreatedHandler;
@@ -71,10 +70,6 @@ describe('Service Created Handler Event', () => {
         {
           provide: DateTimeProxy,
           useFactory: dateTimeProxyMockFactory,
-        },
-        {
-          provide: GCloudSecretManagerService,
-          useFactory: googleSecretManagerServiceMockFactory,
         },
         ServiceCreatedHandler,
       ],

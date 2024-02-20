@@ -39,11 +39,6 @@ import { geneticAnalystServiceDataMock } from '../../../../../mock/models/geneti
 import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import { GeneticAnalystServiceCommandHandler } from '@listeners/substrate-listener/commands/genetic-analyst-services';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList } from '@common/secrets';
 
 describe('Genetic Analyst Service Created Event', () => {
   let app: INestApplication;
@@ -83,10 +78,6 @@ describe('Genetic Analyst Service Created Event', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -109,8 +100,6 @@ describe('Genetic Analyst Service Created Event', () => {
         ...GeneticAnalystServiceCommandHandler,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     app = module.createNestApplication();

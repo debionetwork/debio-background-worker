@@ -15,7 +15,6 @@ import * as geneticAnalystCommand from '@debionetwork/polkadot-provider/lib/comm
 import { when } from 'jest-when';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { GeneticAnalystUnstakedService } from '@schedulers/genetic-analyst-unstaked/unstaked.service';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import * as schedulersTools from '@common/tools/schedulers';
 
 jest.useFakeTimers();
@@ -85,10 +84,6 @@ describe('UnstakedService', () => {
         {
           provide: ProcessEnvProxy,
           useClass: ProcessEnvProxyMock,
-        },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
         },
         {
           provide: ElasticsearchService,

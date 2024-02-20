@@ -1,8 +1,4 @@
 import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
-import {
   deregisterGeneticAnalyst,
   GeneticAnalyst,
   queryGeneticAnalystByAccountId,
@@ -72,7 +68,6 @@ describe('Genetic Analyst Events', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
@@ -81,8 +76,6 @@ describe('Genetic Analyst Events', () => {
       ],
       providers: [IndexerHandler, ...GeneticAnalystsCommandHandlers],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     elasticsearchService =

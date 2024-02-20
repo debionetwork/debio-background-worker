@@ -31,12 +31,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
 import { LabStakeSuccessfullHandler } from '@listeners/substrate-listener/commands/labs/stake-successfull/stake-successful.handler';
 import { createConnection } from 'typeorm';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
-import { SecretKeyList } from '@common/secrets';
 import { labUnstakedHandler } from '@listeners/substrate-listener/commands/labs/unstake-successfull/unstaked-successful.handler';
 import { LabUpdateVerificationStatusHandler } from '@listeners/substrate-listener/commands/labs/update-verification-status/update-verification-status.handler';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
@@ -78,10 +73,6 @@ describe('lab staking Integration Tests', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -107,8 +98,6 @@ describe('lab staking Integration Tests', () => {
         LabUpdateVerificationStatusHandler,
       ],
     })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     app = module.createNestApplication();
