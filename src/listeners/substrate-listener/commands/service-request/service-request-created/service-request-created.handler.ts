@@ -11,10 +11,9 @@ import {
 import { CountryService } from '@common/location/country.service';
 import { StateService } from '@common/location/state.service';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '@common/secrets';
 import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
+import { config } from '../../../../../config';
 
 @Injectable()
 @CommandHandler(ServiceRequestCreatedCommand)
@@ -26,7 +25,6 @@ export class ServiceRequestCreatedHandler
   );
 
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly loggingService: TransactionLoggingService,
     private readonly countryService: CountryService,
     private readonly stateService: StateService,
@@ -111,7 +109,7 @@ export class ServiceRequestCreatedHandler
     };
 
     await this.mailerManager.sendCustomerStakingRequestServiceEmail(
-      this.gCloudSecretManagerService.getSecret('EMAILS').split(','),
+      config.EMAILS.split(','),
       context,
     );
   }

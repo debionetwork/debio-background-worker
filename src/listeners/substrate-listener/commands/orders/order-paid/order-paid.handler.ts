@@ -15,11 +15,10 @@ import {
   queryServiceById,
 } from '@debionetwork/polkadot-provider';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '@common/secrets';
 import currencyUnit from '../../../models/currencyUnit';
 import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
+import { config } from '../../../../../config';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -32,7 +31,6 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly substrateService: SubstrateService,
     private readonly mailerManager: MailerManager,
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
   async execute(command: OrderPaidCommand) {
@@ -102,9 +100,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
         );
 
         const linkOrder =
-          this.gCloudSecretManagerService
-            .getSecret('LAB_ORDER_LINK')
-            .toString() ?? '' + order.id;
+          config.LAB_ORDER_LINK.toString() ?? '' + order.id;
 
         await this.mailerManager.sendNewOrderToLab(labDetail.info.email, {
           specimen_number: order.dnaSampleTrackingId,

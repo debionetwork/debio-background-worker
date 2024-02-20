@@ -1,10 +1,5 @@
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { SecretKeyList, keyList } from '@common/secrets';
 import {
   EmailNotificationModule,
   MailModule,
@@ -15,28 +10,21 @@ import {
 import { MailerService } from './mailer/mailer.service';
 import { UnstakedService } from './unstaked/unstaked.service';
 import { MenstrualSubscriptionService } from './menstrual-subscription/menstrual-subscription.service';
+import { config } from '../config';
 
 @Module({
   imports: [
     ElasticsearchModule.registerAsync({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
       ],
-      inject: [GCloudSecretManagerService],
+      inject: [],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
-          node: gCloudSecretManagerService
-            .getSecret('ELASTICSEARCH_NODE')
-            .toString(),
+          node: config.ELASTICSEARCH_NODE.toString(),
           auth: {
-            username: gCloudSecretManagerService
-              .getSecret('ELASTICSEARCH_USERNAME')
-              .toString(),
-            password: gCloudSecretManagerService
-              .getSecret('ELASTICSEARCH_PASSWORD')
-              .toString(),
+            username: config.ELASTICSEARCH_USERNAME.toString(),
+            password: config.ELASTICSEARCH_PASSWORD.toString(),
           },
         };
       },

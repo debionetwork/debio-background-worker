@@ -8,15 +8,13 @@ import {
   LabRegister,
 } from '@common/index';
 import { queryLabById } from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '@common/secrets';
+import { config } from '../../config';
 
 @Injectable()
 export class MailerService {
   private logger: Logger = new Logger(MailerService.name);
   private isRunning = false;
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly mailerManager: MailerManager,
     private readonly emailNotificationService: EmailNotificationService,
     private readonly substrateService: SubstrateService,
@@ -44,7 +42,7 @@ export class MailerService {
         );
 
         await this.mailerManager.sendLabRegistrationEmail(
-          this.gCloudSecretManagerService.getSecret('EMAILS').split(','),
+          config.EMAILS.split(','),
           labRegister,
         );
 

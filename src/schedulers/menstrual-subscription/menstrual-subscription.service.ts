@@ -1,14 +1,13 @@
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { strToMilisecond, SubstrateService } from '@common/index';
-import { keyList } from '@common/secrets';
 import { changeMenstrualSubscriptionStatus } from '@debionetwork/polkadot-provider/lib/command/menstrual-subscription';
 import { queryMenstrualSubscriptionById } from '@debionetwork/polkadot-provider/lib/query/menstrual-subscription';
 import { SubscriptionStatus } from '@debionetwork/polkadot-provider/lib/primitives/subscription-status';
 import { PaymentStatus } from '@debionetwork/polkadot-provider/lib/primitives/payment-status';
 import { Duration } from '@debionetwork/polkadot-provider/lib/primitives/duration';
+import { config } from '../../config';
 
 @Injectable()
 export class MenstrualSubscriptionService {
@@ -16,7 +15,6 @@ export class MenstrualSubscriptionService {
   private isRunningInActive = false;
   private menstrualSubscriptionDuration: { [key: string]: number };
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly elasticsearchService: ElasticsearchService,
     private readonly subtrateService: SubstrateService,
     private readonly schedulerRegistry: SchedulerRegistry,
@@ -24,7 +22,7 @@ export class MenstrualSubscriptionService {
 
   onModuleInit() {
     const unstakeInterval: number = strToMilisecond(
-      this.gCloudSecretManagerService.getSecret('UNSTAKE_INTERVAL').toString(),
+      config.UNSTAKE_INTERVAL.toString(),
     );
 
     this.menstrualSubscriptionDuration =
@@ -238,9 +236,7 @@ export class MenstrualSubscriptionService {
     try {
       const menstrualSubscriptionDurationObj: { [key: string]: string } =
         JSON.parse(
-          this.gCloudSecretManagerService
-            .getSecret('MENSTRUAL_SUBSCRIPTION_DURATION')
-            .toString() ?? '{}',
+          config.MENSTRUAL_SUBSCRIPTION_DURATION.toString() ?? '{}',
         );
       const parseMenstrualSubscriptionDuration: Map<string, number> = new Map<
         string,

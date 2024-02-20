@@ -35,4 +35,9 @@ export const config = {
   MYRIAD_MENTAL_HEALTH_TIMELINE_ID:
     process.env.MENTAL_HEALTH_EXPERIENCE_ID ?? '',
   PINATA_JWT: process.env.PINATA_SECRET_KEY ?? '',
+  GA_ORDER_LINK : process.env.GA_ORDER_LINK ?? '',
+  LAB_ORDER_LINK : process.env.LAB_ORDER_LINK ?? '',
+  UNSTAKE_INTERVAL : process.env.UNSTAKE_INTERVAL ?? '',
+  UNSTAKE_TIMER : process.env.UNSTAKE_TIMER ?? '',
+  MENSTRUAL_SUBSCRIPTION_DURATION : process.env.MENSTRUAL_SUBSCRIPTION_DURATION ?? '',
 };
