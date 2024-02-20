@@ -7,6 +7,8 @@ export const config = {
   REDIS_HOST: process.env.HOST_REDIS ?? 'localhost',
   REDIS_PORT: process.env.PORT_REDIS ?? '6379',
   REDIS_PASSWORD: process.env.REDIS_PASSWORD ?? 'root',
+  REDIS_STORE_URL: process.env.REDIS_STORE_URL ?? 'localhost:6379',
+  REDIS_STORE_USERNAME: process.env.REDIS_STORE_USERNAME ?? '',
   COINMARKETCAP_API_KEY: process.env.API_KEY_COINMARKETCAP ?? '',
   COINMARKETCAP_HOST:
     process.env.COINMARKETCAP_HOST ?? 'https://pro-api.coinmarketcap.com/v2',

@@ -1,29 +1,21 @@
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
-import { keyList } from '@common/secrets';
+import { config } from 'src/config';
 
 @Injectable()
 export class DebioConversionService {
   private readonly logger: Logger = new Logger(DebioConversionService.name);
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
   async getExchange() {
     try {
       const res = await axios.get(
-        `${this.gCloudSecretManagerService
-          .getSecret('REDIS_STORE_URL')
-          .toString()}/cache`,
+        `${config.REDIS_STORE_URL.toString()}/cache`,
         {
           auth: {
-            username: this.gCloudSecretManagerService
-              .getSecret('REDIS_STORE_USERNAME')
-              .toString(),
-            password: this.gCloudSecretManagerService
-              .getSecret('REDIS_STORE_PASSWORD')
-              .toString(),
+            username: config.REDIS_STORE_USERNAME.toString(),
+            password: config.REDIS_PASSWORD.toString(),
           },
         },
       );
@@ -37,21 +29,15 @@ export class DebioConversionService {
   async getExchangeFromTo(from: string, to: string) {
     try {
       const res = await axios.get(
-        `${this.gCloudSecretManagerService
-          .getSecret('REDIS_STORE_URL')
-          .toString()}/cache`,
+        `${config.REDIS_STORE_URL.toString()}/cache`,
         {
           params: {
             from,
             to,
           },
           auth: {
-            username: this.gCloudSecretManagerService
-              .getSecret('REDIS_STORE_USERNAME')
-              .toString(),
-            password: this.gCloudSecretManagerService
-              .getSecret('REDIS_STORE_PASSWORD')
-              .toString(),
+            username: config.REDIS_STORE_USERNAME.toString(),
+            password: config.REDIS_PASSWORD.toString(),
           },
         },
       );
