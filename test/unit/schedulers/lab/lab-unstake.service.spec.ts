@@ -31,20 +31,6 @@ describe('LabUnstakedService', () => {
   const INTERVAL = '00:00:00:30';
   const TIMER = '6:00:00:00';
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['UNSTAKE_INTERVAL', INTERVAL],
-      ['UNSTAKE_TIMER', TIMER],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   const createSearchObject = () => {
     return {
       index: 'labs',

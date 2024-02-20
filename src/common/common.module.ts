@@ -11,8 +11,7 @@ require('dotenv').config();
     ElasticsearchModule.registerAsync({
       imports: [],
       inject: [],
-      useFactory: async (
-      ) => ({
+      useFactory: async () => ({
         node: config.ELASTICSEARCH_NODE.toString(),
         auth: {
           username: config.ELASTICSEARCH_USERNAME.toString(),

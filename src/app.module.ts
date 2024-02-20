@@ -11,7 +11,6 @@ import { EscrowAccounts } from '@common/escrow/models/deposit.entity';
 import { IndexerModule } from '@indexer/indexer.module';
 import { SubstrateListenerModule } from '@listeners/substrate-listener/substrate-listener.module';
 import { SchedulersModule } from '@schedulers/schedulers.module';
-import { keyList, SecretKeyList } from '@common/secrets';
 import { config } from './config';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -29,9 +28,7 @@ require('dotenv').config();
         }),
       ],
       inject: [ProcessEnvProxy],
-      useFactory: async (
-        processEnvProxy: ProcessEnvProxy,
-      ) => {
+      useFactory: async (processEnvProxy: ProcessEnvProxy) => {
         return {
           type: 'postgres',
           host: processEnvProxy.env.HOST_POSTGRES,
@@ -54,9 +51,7 @@ require('dotenv').config();
         }),
       ],
       inject: [ProcessEnvProxy],
-      useFactory: async (
-        processEnvProxy: ProcessEnvProxy,
-      ) => {
+      useFactory: async (processEnvProxy: ProcessEnvProxy) => {
         return {
           type: 'postgres',
           host: processEnvProxy.env.HOST_POSTGRES,

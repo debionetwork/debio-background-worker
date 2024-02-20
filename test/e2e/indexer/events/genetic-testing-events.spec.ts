@@ -61,8 +61,7 @@ describe('Indexer Genetic Testing Event', () => {
         IndexerModule,
       ],
       providers: [IndexerHandler, ...GeneticTestingCommandHandlers],
-    })
-      .compile();
+    }).compile();
 
     elasticsearchService =
       module.get<ElasticsearchService>(ElasticsearchService);

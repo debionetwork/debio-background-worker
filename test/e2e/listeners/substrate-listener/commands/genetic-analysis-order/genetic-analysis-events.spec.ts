@@ -64,7 +64,7 @@ import { GeneticAnalysisOrderPaidHandler } from '@listeners/substrate-listener/c
 import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { config } from 'src/config';
+import { config } from '../../../../../../src/config';
 
 describe('Genetic Analysis Order Created Integration Test', () => {
   let app: INestApplication;
@@ -80,26 +80,6 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     warn: jest.fn(),
     error: jest.fn(),
   };
-
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-    ]);
-
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -118,11 +98,9 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         DateTimeModule,
         NotificationModule,
         MailerModule.forRootAsync({
-          imports: [
-          ],
+          imports: [],
           inject: [],
-          useFactory: async (
-          ) => {
+          useFactory: async () => {
             return {
               transport: {
                 host: 'smtp.gmail.com',
@@ -159,8 +137,7 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         GeneticAnalysisOrderFulfilledHandler,
         GeneticAnalysisOrderPaidHandler,
       ],
-    })
-      .compile();
+    }).compile();
 
     app = module.createNestApplication();
     await app.init();

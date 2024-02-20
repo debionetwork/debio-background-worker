@@ -42,11 +42,9 @@ import { config } from '../../config';
     DateTimeModule,
     NotificationModule,
     ElasticsearchModule.registerAsync({
-      imports: [
-      ],
+      imports: [],
       inject: [],
-      useFactory: async (
-      ) => {
+      useFactory: async () => {
         return {
           node: config.ELASTICSEARCH_NODE.toString(),
           auth: {
@@ -57,11 +55,9 @@ import { config } from '../../config';
       },
     }),
     MailerModule.forRootAsync({
-      imports: [
-      ],
+      imports: [],
       inject: [],
-      useFactory: async (
-      ) => {
+      useFactory: async () => {
         return {
           transport: {
             host: 'smtp.gmail.com',

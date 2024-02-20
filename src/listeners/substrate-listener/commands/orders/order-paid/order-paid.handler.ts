@@ -99,8 +99,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           order.serviceId,
         );
 
-        const linkOrder =
-          config.LAB_ORDER_LINK.toString() ?? '' + order.id;
+        const linkOrder = config.LAB_ORDER_LINK.toString() ?? '' + order.id;
 
         await this.mailerManager.sendNewOrderToLab(labDetail.info.email, {
           specimen_number: order.dnaSampleTrackingId,

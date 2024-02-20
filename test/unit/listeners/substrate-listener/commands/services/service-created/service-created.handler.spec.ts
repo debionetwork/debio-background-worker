@@ -9,7 +9,6 @@ import { ServiceFlow, ServiceInfo } from '@debionetwork/polkadot-provider';
 import { ServiceCreatedHandler } from '@listeners/substrate-listener/commands/services/service-created/service-created.handler';
 import {
   dateTimeProxyMockFactory,
-  googleSecretManagerServiceMockFactory,
   mailerManagerMockFactory,
   mockBlockNumber,
   MockType,

@@ -8,9 +8,7 @@ import { config } from '../../config';
 @Injectable()
 export class MailerManager {
   private readonly _logger: Logger = new Logger(MailerManager.name);
-  constructor(
-    private readonly mailerService: MailerService,
-  ) {}
+  constructor(private readonly mailerService: MailerService) {}
 
   async sendNewOrderToLab(to: string, context: NewOrderLab) {
     const subject = `New Order #1`;
@@ -37,10 +35,7 @@ export class MailerManager {
     context: CustomerStakingRequestService,
   ) {
     let subject = `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`;
-    if (
-      config.POSTGRES_HOST.toString() ===
-      'localhost'
-    ) {
+    if (config.POSTGRES_HOST.toString() === 'localhost') {
       subject = `Testing New Service Request Email`;
     }
     this.mailerService.sendMail({
@@ -53,10 +48,7 @@ export class MailerManager {
 
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
     let subject = `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`;
-    if (
-      config.POSTGRES_HOST.toString() ===
-      'localhost'
-    ) {
+    if (config.POSTGRES_HOST.toString() === 'localhost') {
       subject = `Testing New Lab Register Email`;
     }
     const files: any[] = [];

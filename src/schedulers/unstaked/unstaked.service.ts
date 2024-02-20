@@ -21,9 +21,7 @@ export class UnstakedService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.timer = strToMilisecond(
-      config.UNSTAKE_TIMER.toString(),
-    );
+    this.timer = strToMilisecond(config.UNSTAKE_TIMER.toString());
     const unstakeInterval: number = strToMilisecond(
       config.UNSTAKE_INTERVAL.toString(),
     );

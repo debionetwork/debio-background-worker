@@ -1,7 +1,7 @@
 import { CacheModule, Module } from '@nestjs/common';
 import { CachesService } from './caches.service';
 import * as redisStore from 'cache-manager-redis-store';
-import { config } from 'src/config';
+import { config } from '../../config';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -10,8 +10,7 @@ require('dotenv').config(); // eslint-disable-line
     CacheModule.registerAsync({
       imports: [],
       inject: [],
-      useFactory: async (
-      ) => {
+      useFactory: async () => {
         return {
           store: redisStore,
           host: config.REDIS_HOST.toString(),

@@ -51,28 +51,6 @@ describe('Service Created Integration Tests', () => {
     error: jest.fn(),
   };
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['POSTGRES_HOST', 'localhost'],
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-      ['EMAILS', process.env.EMAILS],
-    ]);
-
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const modules: TestingModule = await Test.createTestingModule({
       imports: [
@@ -99,8 +77,7 @@ describe('Service Created Integration Tests', () => {
         SubstrateListenerHandler,
         ...ServiceCommandHandlers,
       ],
-    })
-      .compile();
+    }).compile();
 
     app = modules.createNestApplication();
     await app.init();

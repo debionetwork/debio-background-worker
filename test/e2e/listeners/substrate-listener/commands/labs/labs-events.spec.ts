@@ -53,23 +53,6 @@ describe('lab staking Integration Tests', () => {
     error: jest.fn(),
   };
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -97,8 +80,7 @@ describe('lab staking Integration Tests', () => {
         labUnstakedHandler,
         LabUpdateVerificationStatusHandler,
       ],
-    })
-      .compile();
+    }).compile();
 
     app = module.createNestApplication();
     await app.init();

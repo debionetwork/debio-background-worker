@@ -15,11 +15,9 @@ import { config } from '../config';
 @Module({
   imports: [
     ElasticsearchModule.registerAsync({
-      imports: [
-      ],
+      imports: [],
       inject: [],
-      useFactory: async (
-      ) => {
+      useFactory: async () => {
         return {
           node: config.ELASTICSEARCH_NODE.toString(),
           auth: {

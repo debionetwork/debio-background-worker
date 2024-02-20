@@ -4,7 +4,7 @@ import {
   SubstrateService,
   TransactionLoggingService,
 } from '@common/index';
-import { Order, OrderStatus } from '@debionetwork/polkadot-provider';
+import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderCreatedCommand } from '@listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -27,7 +27,6 @@ import { TransactionRequest } from '@common/transaction-logging/models/transacti
 
 import * as globalProviderMethods from '@debionetwork/polkadot-provider/lib/index';
 import * as rewardCommand from '@debionetwork/polkadot-provider/lib/command/rewards';
-import * as serviceRequestCommand from '@debionetwork/polkadot-provider/lib/command/service-request';
 import * as userProfileQuery from '@debionetwork/polkadot-provider/lib/query/user-profile';
 import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
 import * as ordersQuery from '@debionetwork/polkadot-provider/lib/query/labs/orders';

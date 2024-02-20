@@ -18,7 +18,6 @@ import { CommonModule, ProcessEnvModule } from '@common/index';
 import { IndexerHandler } from '@indexer/indexer.handler';
 import { IndexerModule } from '@indexer/indexer.module';
 import { geneticAnalystQualificationsDataMock } from '../../../mock/models/genetic-analysts/genetic-analyst-qualifications.mock';
-import { SecretKeyList } from '@common/secrets';
 
 describe('Genetic Analyst Qualification Events', () => {
   let app: INestApplication;
@@ -37,26 +36,6 @@ describe('Genetic Analyst Qualification Events', () => {
     error: jest.fn(),
   };
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-    ]);
-
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -67,8 +46,7 @@ describe('Genetic Analyst Qualification Events', () => {
         IndexerModule,
       ],
       providers: [IndexerHandler],
-    })
-      .compile();
+    }).compile();
 
     elasticsearchService =
       module.get<ElasticsearchService>(ElasticsearchService);

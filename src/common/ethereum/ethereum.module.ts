@@ -16,8 +16,7 @@ import { config } from '../../config';
         }),
       ],
       inject: [],
-      useFactory: async (
-      ) => {
+      useFactory: async () => {
         return {
           network: config.WEB3_RPC_HTTPS.toString(),
           useDefaultProvider: true,

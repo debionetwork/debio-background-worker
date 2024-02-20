@@ -5,7 +5,6 @@ import {
   mailerManagerMockFactory,
   emailNotificationServiceMockFactory,
   substrateServiceMockFactory,
-  googleSecretManagerServiceMockFactory,
 } from '../../mock';
 import { MailerService } from '@schedulers/mailer/mailer.service';
 import {

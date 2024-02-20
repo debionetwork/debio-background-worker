@@ -3,7 +3,6 @@ import { ApiPromise } from '@polkadot/api';
 // import { MenstrualCycleLog } from '@indexer/models/menstrual-calendar/menstrual-cycle-log';
 // import { MenstrualCalendar } from '@indexer/models/menstrual-calendar/menstrual-calendar';
 import { Test, TestingModule } from '@nestjs/testing';
-import { SecretKeyList } from '@common/secrets';
 import { CommonModule, ProcessEnvModule } from '@common/index';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -33,26 +32,6 @@ describe('Menstrual Calendar Test Events', () => {
     error: jest.fn(),
   };
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-    ]);
-
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -63,8 +42,7 @@ describe('Menstrual Calendar Test Events', () => {
         IndexerModule,
       ],
       providers: [IndexerHandler, ...MenstrualCalendarCommandHandlers],
-    })
-      .compile();
+    }).compile();
 
     elasticsearchService =
       module.get<ElasticsearchService>(ElasticsearchService);

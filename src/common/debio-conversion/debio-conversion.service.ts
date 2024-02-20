@@ -1,12 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
-import { config } from 'src/config';
+import { config } from '../../config';
 
 @Injectable()
 export class DebioConversionService {
   private readonly logger: Logger = new Logger(DebioConversionService.name);
-  constructor(
-  ) {}
 
   async getExchange() {
     try {

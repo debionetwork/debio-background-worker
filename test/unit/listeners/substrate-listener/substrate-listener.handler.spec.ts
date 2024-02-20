@@ -44,16 +44,6 @@ describe('Substrate Listener Handler Unit Test', () => {
   }));
 
   const NODE_ENV = 'development';
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([['NODE_ENV', NODE_ENV]]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
   class ProcessEnvProxyMock {
     env = {
       NODE_ENV,

@@ -57,9 +57,7 @@ export class IndexerHandler
       delete this.wsProvider;
     }
 
-    this.wsProvider = new WsProvider(
-      config.SUBSTRATE_URL.toString(),
-    );
+    this.wsProvider = new WsProvider(config.SUBSTRATE_URL.toString());
 
     this.wsProvider.on('connected', () => {
       this.logger.log(`WS Connected`);

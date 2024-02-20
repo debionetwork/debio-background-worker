@@ -82,28 +82,6 @@ describe('Order Failed Integration Tests', () => {
     error: jest.fn(),
   };
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-      ['LAB_ORDER_LINK', process.env.LAB_ORDER_LINK],
-      ['POSTGRES_HOST', process.env.POSTGRES_HOST],
-    ]);
-
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -122,15 +100,10 @@ describe('Order Failed Integration Tests', () => {
         NotificationModule,
         DebioConversionModule,
         MailerModule.forRootAsync({
-          imports: [
-          ],
+          imports: [],
           inject: [],
-          useFactory: async (
-          ) => {
-            console.log(
-              config.EMAIL.toString(),
-              config.PASS_EMAIL.toString(),
-            );
+          useFactory: async () => {
+            console.log(config.EMAIL.toString(), config.PASS_EMAIL.toString());
             return {
               transport: {
                 host: 'smtp.gmail.com',
@@ -168,8 +141,7 @@ describe('Order Failed Integration Tests', () => {
         OrderFulfilledHandler,
         OrderPaidHandler,
       ],
-    })
-      .compile();
+    }).compile();
 
     app = module.createNestApplication();
     await app.init();

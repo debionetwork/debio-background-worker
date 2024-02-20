@@ -28,23 +28,6 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
   let notificationServiceMock: MockType<NotificationService>;
   let proceccEnvProxy: MockType<ProcessEnvProxy>; // eslint-disable-line
 
-  const GA_ORDER_LINK = 'http://localhost/lab/orders/';
-  const POSTGRES_HOST = 'localhost';
-
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['GA_ORDER_LINK', GA_ORDER_LINK],
-      ['POSTGRES_HOST', POSTGRES_HOST],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [

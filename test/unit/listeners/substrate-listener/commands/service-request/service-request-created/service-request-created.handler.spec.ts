@@ -7,7 +7,6 @@ import {
   transactionLoggingServiceMockFactory,
   notificationServiceMockFactory,
   dateTimeProxyMockFactory,
-  googleSecretManagerServiceMockFactory,
 } from '../../../../../mock';
 import {
   MailerManager,

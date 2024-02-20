@@ -96,7 +96,7 @@ export class GeneticAnalysisOrderPaidHandler
         );
 
       const linkOrder =
-      config.GA_ORDER_LINK ?.toString() ?? '' + geneticAnalysisOrder.id;
+        config.GA_ORDER_LINK?.toString() ?? '' + geneticAnalysisOrder.id;
 
       await this.mailerManager.sendNewOrderToGa(
         geneticAnaystDetail.info.email,

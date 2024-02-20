@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { SubstrateService } from './substrate.service';
 
 @Module({
-  imports: [
-  ],
+  imports: [],
   providers: [SubstrateService],
   exports: [SubstrateService],
 })

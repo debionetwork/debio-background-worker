@@ -8,11 +8,9 @@ import { config } from '../../config';
 @Module({
   imports: [
     MailerModule.forRootAsync({
-      imports: [
-      ],
+      imports: [],
       inject: [],
-      useFactory: async (
-      ) => {
+      useFactory: async () => {
         return {
           transport: {
             host: 'smtp.gmail.com',

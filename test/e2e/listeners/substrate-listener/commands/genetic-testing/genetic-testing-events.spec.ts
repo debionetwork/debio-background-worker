@@ -59,7 +59,6 @@ import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrat
 import { createConnection } from 'typeorm';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { DataStakedHandler } from '@listeners/substrate-listener/commands/genetic-testing/data-staked/data-staked.handler';
-import { SecretKeyList } from '@common/secrets';
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
 import { Notification } from '@common/notification/models/notification.entity';
 import { DnaSampleRejectedCommandHandler } from '@listeners/substrate-listener/commands/genetic-testing/dna-sample-rejected/dna-sample-rejected.handler';
@@ -79,29 +78,6 @@ describe('Data Staked Integration Tests', () => {
     warn: jest.fn(),
     error: jest.fn(),
   };
-
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-      ['REDIS_STORE_URL', process.env.REDIS_STORE_URL],
-      ['REDIS_STORE_USERNAME', process.env.REDIS_STORE_USERNAME],
-      ['REDIS_STORE_PASSWORD', process.env.REDIS_STORE_PASSWORD],
-    ]);
-
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -131,8 +107,7 @@ describe('Data Staked Integration Tests', () => {
         DnaSampleRejectedCommandHandler,
         DnaSampleResultReadyCommandHandler,
       ],
-    })
-      .compile();
+    }).compile();
 
     app = module.createNestApplication();
     await app.init();

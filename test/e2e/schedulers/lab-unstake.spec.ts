@@ -25,24 +25,6 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
 
   let app: INestApplication;
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['UNSTAKE_TIMER', process.env.UNSTAKE_TIMER],
-      ['UNSTAKE_INTERVAL', process.env.UNSTAKE_INTERVAL],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   global.console = {
     ...console,
     log: jest.fn(),
@@ -57,8 +39,7 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
       imports: [
         ElasticsearchModule.registerAsync({
           inject: [],
-          useFactory: async (
-          ) => ({
+          useFactory: async () => ({
             node: process.env.ELASTICSEARCH_NODE,
             auth: {
               username: config.ELASTICSEARCH_USERNAME.toString(),
@@ -70,8 +51,7 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
         SubstrateModule,
         ScheduleModule.forRoot(),
       ],
-    })
-      .compile();
+    }).compile();
 
     schedulerRegistry = module.get(SchedulerRegistry);
     substrateService = module.get(SubstrateService);

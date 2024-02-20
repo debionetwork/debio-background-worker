@@ -31,23 +31,6 @@ describe('Order Paid Handler Event', () => {
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let proceccEnvProxy: MockType<ProcessEnvProxy>; // eslint-disable-line
 
-  const LAB_ORDER_LINK = 'http://localhost/lab/orders/';
-  const POSTGRES_HOST = 'localhost';
-
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['LAB_ORDER_LINK', LAB_ORDER_LINK],
-      ['POSTGRES_HOST', POSTGRES_HOST],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeEach(async () => {
     jest
       .useFakeTimers()

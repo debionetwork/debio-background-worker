@@ -235,9 +235,7 @@ export class MenstrualSubscriptionService {
   parseMenstrualSubscriptionDuration(): { [key: string]: number } {
     try {
       const menstrualSubscriptionDurationObj: { [key: string]: string } =
-        JSON.parse(
-          config.MENSTRUAL_SUBSCRIPTION_DURATION.toString() ?? '{}',
-        );
+        JSON.parse(config.MENSTRUAL_SUBSCRIPTION_DURATION.toString() ?? '{}');
       const parseMenstrualSubscriptionDuration: Map<string, number> = new Map<
         string,
         number
