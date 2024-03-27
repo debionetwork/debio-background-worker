@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](https://github.com/debionetwork/debio-background-worker/compare/2.4.1...2.4.2) (2024-03-27)
+
+
+### Bug Fixes
+
+* dependency on google secret ([#396](https://github.com/debionetwork/debio-background-worker/issues/396)) ([14d8d2b](https://github.com/debionetwork/debio-background-worker/commit/14d8d2b22ecdea5971bc55f1c711ff62b04261c1))
+
 ## [2.4.1](https://github.com/debionetwork/debio-background-worker/compare/2.4.0...2.4.1) (2023-09-25)
 
 
