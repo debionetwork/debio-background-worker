@@ -58,18 +58,14 @@ import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrat
 import { Notification } from '@common/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { OrderFailedHandler } from '@listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
-import { keyList, SecretKeyList } from '@common/secrets';
 import { deleteService, deregisterLab } from '@debionetwork/polkadot-provider';
 import { OrderFulfilledHandler } from '@listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
 import { OrderPaidHandler } from '@listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+import { config } from '../../../../../../src/config';
 
 describe('Order Failed Integration Tests', () => {
   let app: INestApplication;
@@ -86,35 +82,9 @@ describe('Order Failed Integration Tests', () => {
     error: jest.fn(),
   };
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-      ['LAB_ORDER_LINK', process.env.LAB_ORDER_LINK],
-      ['POSTGRES_HOST', process.env.POSTGRES_HOST],
-    ]);
-
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -130,32 +100,18 @@ describe('Order Failed Integration Tests', () => {
         NotificationModule,
         DebioConversionModule,
         MailerModule.forRootAsync({
-          imports: [
-            GCloudSecretManagerModule.withConfig(
-              process.env.PARENT,
-              SecretKeyList,
-            ),
-          ],
-          inject: [GCloudSecretManagerService],
-          useFactory: async (
-            gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-          ) => {
-            console.log(
-              gCloudSecretManagerService.getSecret('EMAIL').toString(),
-              gCloudSecretManagerService.getSecret('PASS_EMAIL').toString(),
-            );
+          imports: [],
+          inject: [],
+          useFactory: async () => {
+            console.log(config.EMAIL.toString(), config.PASS_EMAIL.toString());
             return {
               transport: {
                 host: 'smtp.gmail.com',
                 port: 587,
                 secure: false,
                 auth: {
-                  user: gCloudSecretManagerService
-                    .getSecret('EMAIL')
-                    .toString(),
-                  pass: gCloudSecretManagerService
-                    .getSecret('PASS_EMAIL')
-                    .toString(),
+                  user: config.EMAIL.toString(),
+                  pass: config.PASS_EMAIL.toString(),
                 },
               },
               template: {
@@ -185,10 +141,7 @@ describe('Order Failed Integration Tests', () => {
         OrderFulfilledHandler,
         OrderPaidHandler,
       ],
-    })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
-      .compile();
+    }).compile();
 
     app = module.createNestApplication();
     await app.init();

@@ -6,8 +6,7 @@ import {
   queryGeneticAnalystByAccountId,
   retrieveGeneticAnalystUnstakeAmount,
 } from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '@common/secrets';
+import { config } from '../../config';
 
 @Injectable()
 export class GeneticAnalystUnstakedService implements OnModuleInit {
@@ -15,18 +14,15 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
   private isRunning = false;
   private timer: number;
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly elasticsearchService: ElasticsearchService,
     private readonly subtrateService: SubstrateService,
     private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
   onModuleInit() {
-    this.timer = strToMilisecond(
-      this.gCloudSecretManagerService.getSecret('UNSTAKE_TIMER').toString(),
-    );
+    this.timer = strToMilisecond(config.UNSTAKE_TIMER.toString());
     const unstakeInterval: number = strToMilisecond(
-      this.gCloudSecretManagerService.getSecret('UNSTAKE_INTERVAL').toString(),
+      config.UNSTAKE_INTERVAL.toString(),
     );
 
     const unstaked = setInterval(async () => {

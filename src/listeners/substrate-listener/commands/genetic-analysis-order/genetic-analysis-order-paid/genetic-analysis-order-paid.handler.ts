@@ -14,10 +14,9 @@ import {
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
 } from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '@common/secrets';
 import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
+import { config } from '../../../../../config';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderPaidCommand)
@@ -34,7 +33,6 @@ export class GeneticAnalysisOrderPaidHandler
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly substrateService: SubstrateService,
     private readonly mailerManager: MailerManager,
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
   async execute(command: GeneticAnalysisOrderPaidCommand) {
@@ -98,9 +96,7 @@ export class GeneticAnalysisOrderPaidHandler
         );
 
       const linkOrder =
-        this.gCloudSecretManagerService
-          .getSecret('GA_ORDER_LINK')
-          ?.toString() ?? '' + geneticAnalysisOrder.id;
+        config.GA_ORDER_LINK?.toString() ?? '' + geneticAnalysisOrder.id;
 
       await this.mailerManager.sendNewOrderToGa(
         geneticAnaystDetail.info.email,

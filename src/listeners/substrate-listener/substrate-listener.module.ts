@@ -23,15 +23,11 @@ import { LabCommandHandlers } from './commands/labs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-services';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
-import { SecretKeyList, keyList } from '@common/secrets';
 import { MenstrualSubscriptionCommandHandler } from './commands/menstrual-subscription';
+import { config } from '../../config';
 
 @Module({
   imports: [
@@ -46,45 +42,29 @@ import { MenstrualSubscriptionCommandHandler } from './commands/menstrual-subscr
     DateTimeModule,
     NotificationModule,
     ElasticsearchModule.registerAsync({
-      imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
-      ],
-      inject: [GCloudSecretManagerService],
-      useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-      ) => {
+      imports: [],
+      inject: [],
+      useFactory: async () => {
         return {
-          node: gCloudSecretManagerService
-            .getSecret('ELASTICSEARCH_NODE')
-            .toString(),
+          node: config.ELASTICSEARCH_NODE.toString(),
           auth: {
-            username: gCloudSecretManagerService
-              .getSecret('ELASTICSEARCH_USERNAME')
-              .toString(),
-            password: gCloudSecretManagerService
-              .getSecret('ELASTICSEARCH_PASSWORD')
-              .toString(),
+            username: config.ELASTICSEARCH_USERNAME.toString(),
+            password: config.ELASTICSEARCH_PASSWORD.toString(),
           },
         };
       },
     }),
     MailerModule.forRootAsync({
-      imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
-      ],
-      inject: [GCloudSecretManagerService],
-      useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-      ) => {
+      imports: [],
+      inject: [],
+      useFactory: async () => {
         return {
           transport: {
             host: 'smtp.gmail.com',
             secure: false,
             auth: {
-              user: gCloudSecretManagerService.getSecret('EMAIL').toString(),
-              pass: gCloudSecretManagerService
-                .getSecret('PASS_EMAIL')
-                .toString(),
+              user: config.EMAIL.toString(),
+              pass: config.PASS_EMAIL.toString(),
             },
           },
           template: {

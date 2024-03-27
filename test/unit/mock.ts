@@ -25,7 +25,6 @@ import { CountryService } from '@common/location/country.service';
 import { StateService } from '@common/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { NotificationService } from '@common/notification/notification.service';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ErrorLoggingService } from '@common/error-logging/error-logging.service';
 
 export function mockFunction(args) {} // eslint-disable-line
@@ -365,13 +364,6 @@ export const schedulerRegistryMockFactory: () => MockType<SchedulerRegistry> =
   jest.fn(() => ({
     addInterval: jest.fn(),
   }));
-
-export const googleSecretManagerServiceMockFactory: () => MockType<
-  GCloudSecretManagerService<any>
-> = jest.fn(() => ({
-  loadSecrets: jest.fn((entity) => entity),
-  getSecret: jest.fn((entity) => entity),
-}));
 
 export const errorLoggingServiceMockFactory: () => MockType<ErrorLoggingService> =
   jest.fn(() => ({

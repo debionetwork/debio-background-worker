@@ -34,11 +34,6 @@ import { RequestServiceCommandHandlers } from '@indexer/events/service-request';
 import { ScheduleModule } from '@nestjs/schedule';
 import { IndexerModule } from '@indexer/indexer.module';
 import { serviceRequestMock } from '../../../mock/models/service-request/service-request.mock';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList } from '@common/secrets';
 
 describe('Event Command Service Request Claimed', () => {
   let app: INestApplication;
@@ -59,33 +54,9 @@ describe('Event Command Service Request Claimed', () => {
     error: jest.fn(),
   };
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-    ]);
-
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         CommonModule,
         ProcessEnvModule,
         CqrsModule,
@@ -98,10 +69,7 @@ describe('Event Command Service Request Claimed', () => {
         ...ServiceCommandHandlers,
         ...RequestServiceCommandHandlers,
       ],
-    })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
-      .compile();
+    }).compile();
 
     elasticsearchService =
       module.get<ElasticsearchService>(ElasticsearchService);
@@ -263,19 +231,11 @@ describe('Event Command Service Request Claimed', () => {
     const claimRequestPromise: Promise<ServiceRequest> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
-        claimRequest(
-          api,
-          pair,
-          serviceRequest.hash,
-          service.id,
-          '900000000000000000',
-          '100000000000000000',
-          () => {
-            queryServiceRequestById(api, serviceRequest.hash).then((res) => {
-              resolve(res);
-            });
-          },
-        );
+        claimRequest(api, pair, serviceRequest.hash, service.id, () => {
+          queryServiceRequestById(api, serviceRequest.hash).then((res) => {
+            resolve(res);
+          });
+        });
       },
     );
 

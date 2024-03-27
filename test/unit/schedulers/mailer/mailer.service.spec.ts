@@ -5,7 +5,6 @@ import {
   mailerManagerMockFactory,
   emailNotificationServiceMockFactory,
   substrateServiceMockFactory,
-  googleSecretManagerServiceMockFactory,
 } from '../../mock';
 import { MailerService } from '@schedulers/mailer/mailer.service';
 import {
@@ -13,7 +12,6 @@ import {
   MailerManager,
   SubstrateService,
 } from '@common/index';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('MailerService', () => {
   let mailManagerMock: MockType<MailerManager>;
@@ -35,10 +33,6 @@ describe('MailerService', () => {
         {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
-        },
-        {
-          provide: GCloudSecretManagerService,
-          useFactory: googleSecretManagerServiceMockFactory,
         },
       ],
     }).compile();

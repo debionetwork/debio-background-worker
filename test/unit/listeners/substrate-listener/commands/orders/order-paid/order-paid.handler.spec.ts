@@ -23,7 +23,6 @@ import { when } from 'jest-when';
 import { TransactionLoggingDto } from '@common/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '@common/transaction-logging/models/transaction-request.entity';
 import { NotificationService } from '@common/notification/notification.service';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
 
@@ -31,23 +30,6 @@ describe('Order Paid Handler Event', () => {
   let orderPaidHandler: OrderPaidHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let proceccEnvProxy: MockType<ProcessEnvProxy>; // eslint-disable-line
-
-  const LAB_ORDER_LINK = 'http://localhost/lab/orders/';
-  const POSTGRES_HOST = 'localhost';
-
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['LAB_ORDER_LINK', LAB_ORDER_LINK],
-      ['POSTGRES_HOST', POSTGRES_HOST],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   beforeEach(async () => {
     jest
@@ -74,10 +56,6 @@ describe('Order Paid Handler Event', () => {
         {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
-        },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
         },
         OrderPaidHandler,
       ],

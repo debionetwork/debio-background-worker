@@ -1,7 +1,3 @@
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -15,7 +11,7 @@ import { EscrowAccounts } from '@common/escrow/models/deposit.entity';
 import { IndexerModule } from '@indexer/indexer.module';
 import { SubstrateListenerModule } from '@listeners/substrate-listener/substrate-listener.module';
 import { SchedulersModule } from '@schedulers/schedulers.module';
-import { keyList, SecretKeyList } from '@common/secrets';
+import { config } from './config';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -23,7 +19,6 @@ require('dotenv').config();
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
     TypeOrmModule.forRootAsync({
       imports: [
         ProcessEnvModule.setDefault({
@@ -31,23 +26,15 @@ require('dotenv').config();
           HOST_POSTGRES: 'HOST_POSTGRES',
           DB_POSTGRES: 'debio_escrow_dev',
         }),
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
       ],
-      inject: [ProcessEnvProxy, GCloudSecretManagerService],
-      useFactory: async (
-        processEnvProxy: ProcessEnvProxy,
-        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-      ) => {
+      inject: [ProcessEnvProxy],
+      useFactory: async (processEnvProxy: ProcessEnvProxy) => {
         return {
           type: 'postgres',
           host: processEnvProxy.env.HOST_POSTGRES,
           port: 5432,
-          username: gCloudSecretManagerService
-            .getSecret('POSTGRES_USERNAME')
-            .toString(),
-          password: gCloudSecretManagerService
-            .getSecret('POSTGRES_PASSWORD')
-            .toString(),
+          username: config.POSTGRES_USERNAME.toString(),
+          password: config.POSTGRES_PASSWORD.toString(),
           database: processEnvProxy.env.DB_POSTGRES,
           entities: [EscrowAccounts],
           autoLoadEntities: true,
@@ -62,23 +49,15 @@ require('dotenv').config();
           HOST_POSTGRES: 'HOST_POSTGRES',
           DB_LOCATION: 'debio_locations',
         }),
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
       ],
-      inject: [ProcessEnvProxy, GCloudSecretManagerService],
-      useFactory: async (
-        processEnvProxy: ProcessEnvProxy,
-        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-      ) => {
+      inject: [ProcessEnvProxy],
+      useFactory: async (processEnvProxy: ProcessEnvProxy) => {
         return {
           type: 'postgres',
           host: processEnvProxy.env.HOST_POSTGRES,
           port: 5432,
-          username: gCloudSecretManagerService
-            .getSecret('POSTGRES_USERNAME')
-            .toString(),
-          password: gCloudSecretManagerService
-            .getSecret('POSTGRES_PASSWORD')
-            .toString(),
+          username: config.POSTGRES_USERNAME.toString(),
+          password: config.POSTGRES_PASSWORD.toString(),
           database: processEnvProxy.env.DB_LOCATION,
           entities: [...LocationEntities],
           autoLoadEntities: true,

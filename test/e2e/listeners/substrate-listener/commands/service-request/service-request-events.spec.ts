@@ -48,12 +48,7 @@ import { serviceRequestMock } from '../../../../../mock/models/labs/service-requ
 import { createConnection } from 'typeorm';
 import { Notification } from '@common/notification/models/notification.entity';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ServiceRequestStakingAmountExcessRefunded } from '@listeners/substrate-listener/commands/service-request/service-request-excess/service-request-excess.handler';
-import { SecretKeyList } from '@common/secrets';
 import { ServiceRequestStakingAmountRefundedHandler } from '@listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.handler';
 
 describe('Service Request Excess Integration Tests', () => {
@@ -71,33 +66,9 @@ describe('Service Request Excess Integration Tests', () => {
     error: jest.fn(),
   };
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-    ]);
-
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -122,10 +93,7 @@ describe('Service Request Excess Integration Tests', () => {
         ServiceRequestStakingAmountExcessRefunded,
         ServiceRequestStakingAmountRefundedHandler,
       ],
-    })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
-      .compile();
+    }).compile();
 
     app = module.createNestApplication();
     await app.init();

@@ -1,5 +1,4 @@
 import { SubstrateService } from '@common/substrate';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -19,35 +18,10 @@ describe('Menstrual Subscription Service', () => {
   let substrateServiceMock: MockType<SubstrateService>;
   let schedulerRegistryMock: MockType<SchedulerRegistry>;
 
-  const MENSTRUAL_SUBSCRIPTION_DURATION =
-    process?.env?.MENSTRUAL_SUBSCRIPTION_DURATION ??
-    '{"Monthly": "30:00:00:00", "Quarterly": "90:00:00:00", "Yearly": "365:00:00:00"}';
-  const INTERVAL = '00:00:00:30';
-  const TIMER = '6:00:00:00';
-
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['MENSTRUAL_SUBSCRIPTION_DURATION', MENSTRUAL_SUBSCRIPTION_DURATION],
-      ['UNSTAKE_INTERVAL', INTERVAL],
-      ['UNSTAKE_TIMER', TIMER],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MenstrualSubscriptionService,
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
         {
           provide: ElasticsearchService,
           useFactory: elasticsearchServiceMockFactory,
@@ -87,12 +61,10 @@ describe('Menstrual Subscription Service', () => {
   it('should parse mesntrual subscription duration env value', () => {
     expect(
       menstrualSubscriptionService.parseMenstrualSubscriptionDuration(),
-    ).toEqual(
-      expect.objectContaining({
-        Monthly: 30 * 24 * 60 * 60 * 1000,
-        Quarterly: 3 * 30 * 24 * 60 * 60 * 1000,
-        Yearly: 365 * 24 * 60 * 60 * 1000,
-      }),
-    );
+    ).toEqual({
+      Monthly: 30 * 24 * 60 * 60 * 1000,
+      Quarterly: 3 * 30 * 24 * 60 * 60 * 1000,
+      Yearly: 365 * 24 * 60 * 60 * 1000,
+    });
   });
 });

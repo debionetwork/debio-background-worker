@@ -15,7 +15,6 @@ import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/
 import * as serviceRequestCommand from '@debionetwork/polkadot-provider/lib/command/service-request';
 import { when } from 'jest-when';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import * as schedulersTools from '@common/tools/schedulers';
 
 jest.useFakeTimers();
@@ -30,20 +29,6 @@ describe('UnstakedService', () => {
 
   const INTERVAL = '00:00:00:30';
   const TIMER = '6:00:00:00';
-
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['UNSTAKE_INTERVAL', INTERVAL],
-      ['UNSTAKE_TIMER', TIMER],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   const createSearchObject = () => {
     return {
@@ -75,10 +60,6 @@ describe('UnstakedService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UnstakedService,
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
         {
           provide: ElasticsearchService,
           useFactory: elasticsearchServiceMockFactory,

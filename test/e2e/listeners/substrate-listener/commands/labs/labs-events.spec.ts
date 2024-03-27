@@ -31,12 +31,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { SubstrateListenerHandler } from '@listeners/substrate-listener/substrate-listener.handler';
 import { LabStakeSuccessfullHandler } from '@listeners/substrate-listener/commands/labs/stake-successfull/stake-successful.handler';
 import { createConnection } from 'typeorm';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
 import { StakeStatus } from '@debionetwork/polkadot-provider/lib/primitives/stake-status';
-import { SecretKeyList } from '@common/secrets';
 import { labUnstakedHandler } from '@listeners/substrate-listener/commands/labs/unstake-successfull/unstaked-successful.handler';
 import { LabUpdateVerificationStatusHandler } from '@listeners/substrate-listener/commands/labs/update-verification-status/update-verification-status.handler';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
@@ -58,30 +53,9 @@ describe('lab staking Integration Tests', () => {
     error: jest.fn(),
   };
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(
-          process.env.GCS_PARENT,
-          SecretKeyList,
-        ),
         TypeOrmModule.forRoot({
           type: 'postgres',
           ...dummyCredentials,
@@ -106,10 +80,7 @@ describe('lab staking Integration Tests', () => {
         labUnstakedHandler,
         LabUpdateVerificationStatusHandler,
       ],
-    })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
-      .compile();
+    }).compile();
 
     app = module.createNestApplication();
     await app.init();
