@@ -18,7 +18,7 @@ import { NotificationDto } from '@common/notification/dto/notification.dto';
 import currencyUnit from '../../../models/currencyUnit';
 import { TransactionTypeList } from '@common/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '@common/transaction-status/models/transaction-status.list';
-import { config } from '../../../../../config';
+import { config } from 'src/config';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)

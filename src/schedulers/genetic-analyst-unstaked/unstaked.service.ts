@@ -6,7 +6,7 @@ import {
   queryGeneticAnalystByAccountId,
   retrieveGeneticAnalystUnstakeAmount,
 } from '@debionetwork/polkadot-provider';
-import { config } from '../../config';
+import { config } from 'src/config';
 
 @Injectable()
 export class GeneticAnalystUnstakedService implements OnModuleInit {

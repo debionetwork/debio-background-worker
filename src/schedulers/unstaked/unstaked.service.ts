@@ -7,7 +7,7 @@ import {
   retrieveUnstakedAmount,
 } from '@debionetwork/polkadot-provider';
 import { strToMilisecond } from '@common/tools';
-import { config } from '../../config';
+import { config } from 'src/config';
 
 @Injectable()
 export class UnstakedService implements OnModuleInit {

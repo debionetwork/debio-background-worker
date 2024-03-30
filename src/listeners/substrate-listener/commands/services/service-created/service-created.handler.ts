@@ -11,7 +11,7 @@ import {
 import { Lab, queryLabById, Service } from '@debionetwork/polkadot-provider';
 import { ServiceCreatedCommand } from './service-created.command';
 import { NotificationDto } from '@common/notification/dto/notification.dto';
-import { config } from '../../../../../config';
+import { config } from 'src/config';
 
 @Injectable()
 @CommandHandler(ServiceCreatedCommand)

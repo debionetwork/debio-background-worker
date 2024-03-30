@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
 import AsyncLock from 'async-lock';
 import { ErrorLoggingService } from '../error-logging';
 import { ErrorLoggingDto } from '../error-logging/dto/error-logging.dto';
-import { config } from '../../config';
+import { config } from 'src/config';
 
 const lock = new AsyncLock();
 const ESCROW_WALLET_LOCK_KEY = 'escrow-wallet-lock';

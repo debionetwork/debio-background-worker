@@ -10,7 +10,7 @@ import {
 import { MailerService } from './mailer/mailer.service';
 import { UnstakedService } from './unstaked/unstaked.service';
 import { MenstrualSubscriptionService } from './menstrual-subscription/menstrual-subscription.service';
-import { config } from '../config';
+import { config } from 'src/config';
 
 @Module({
   imports: [

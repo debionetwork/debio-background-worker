@@ -6,7 +6,7 @@ import {
   queryLabById,
   retrieveLabUnstakeAmount,
 } from '@debionetwork/polkadot-provider';
-import { config } from '../../config';
+import { config } from 'src/config';
 
 @Injectable()
 export class LabUnstakedService implements OnModuleInit {

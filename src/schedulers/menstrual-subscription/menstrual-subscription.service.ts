@@ -7,7 +7,7 @@ import { queryMenstrualSubscriptionById } from '@debionetwork/polkadot-provider/
 import { SubscriptionStatus } from '@debionetwork/polkadot-provider/lib/primitives/subscription-status';
 import { PaymentStatus } from '@debionetwork/polkadot-provider/lib/primitives/payment-status';
 import { Duration } from '@debionetwork/polkadot-provider/lib/primitives/duration';
-import { config } from '../../config';
+import { config } from 'src/config';
 
 @Injectable()
 export class MenstrualSubscriptionService {
