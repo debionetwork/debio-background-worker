@@ -11,7 +11,7 @@ import { EscrowAccounts } from '@common/escrow/models/deposit.entity';
 import { IndexerModule } from '@indexer/indexer.module';
 import { SubstrateListenerModule } from '@listeners/substrate-listener/substrate-listener.module';
 import { SchedulersModule } from '@schedulers/schedulers.module';
-import { config } from './config';
+import { config } from 'src/config';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();

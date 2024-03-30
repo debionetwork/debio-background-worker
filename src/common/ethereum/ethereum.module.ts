@@ -3,7 +3,7 @@ import { EthersModule } from 'nestjs-ethers';
 import { EthereumService } from './ethereum.service';
 import { CachesModule } from '../caches';
 import { ProcessEnvModule } from '../proxies';
-import { config } from '../../config';
+import { config } from 'src/config';
 
 @Module({
   imports: [

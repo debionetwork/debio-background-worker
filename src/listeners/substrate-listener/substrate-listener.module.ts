@@ -27,7 +27,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { MenstrualSubscriptionCommandHandler } from './commands/menstrual-subscription';
-import { config } from '../../config';
+import { config } from 'src/config';
 
 @Module({
   imports: [

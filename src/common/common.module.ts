@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { config } from '../config';
+import { config } from 'src/config';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();

@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CustomerStakingRequestService, LabRegister } from './models';
 import { NewOrderGA } from './models/new-order-ga.model';
 import { NewOrderLab } from './models/new-order-lab.model';
-import { config } from '../../config';
+import { config } from 'src/config';
 
 @Injectable()
 export class MailerManager {
