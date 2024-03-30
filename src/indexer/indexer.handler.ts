@@ -15,7 +15,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { u32 } from '@polkadot/types';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { eventRoutes } from './indexer.routes';
-import { config } from '../../src/config';
+import { config } from 'src/config';
 
 @Injectable()
 export class IndexerHandler
